@@ -1,3 +1,3 @@
 module.exports = () => {
-  return '<div id="root"></div>'
+  return '<body style="margin: 0"><div id="root"></div></body>'
 }
