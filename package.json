@@ -19,7 +19,8 @@
   },
   "scripts": {
     "start": "ace start",
-    "fmt": "ace format -w"
+    "fmt": "ace format -w",
+    "storybook": "ace storybook"
   },
   "context-path": ""
 }
