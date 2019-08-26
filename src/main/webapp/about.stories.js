@@ -1,17 +1,12 @@
 import React from 'react'
 import { storiesOf } from '@connexta/ace/@storybook/react'
 import About from './about'
-import {
-  withKnobs,
-  text,
-  boolean,
-  number,
-} from '@connexta/ace/@storybook/addon-knobs'
+import { withKnobs, text } from '@connexta/ace/@storybook/addon-knobs'
 
-const stories = storiesOf('aboutRoute', module)
+const stories = storiesOf('About', module)
 stories.addDecorator(withKnobs)
 
-stories.add('someStory', () => {
+stories.add('Basic', () => {
   return (
     <About
       branding={text('branding', 'DDF')}
