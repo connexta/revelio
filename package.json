@@ -20,7 +20,8 @@
   "scripts": {
     "start": "ace start",
     "fmt": "ace format -w",
-    "storybook": "ace storybook"
+    "storybook": "ace storybook",
+    "prestart": "ace disable-idp"
   },
-  "context-path": ""
+  "context-path": "/search/catalog"
 }

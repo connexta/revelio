@@ -4,8 +4,10 @@ import { AppContainer } from '@connexta/ace/react-hot-loader'
 import Routes from './routes'
 import { Provider } from 'react-redux'
 import createStore from './store'
+import { fetchProperties } from './store/properties'
 
 const store = createStore()
+store.dispatch(fetchProperties)
 
 const render = Routes => {
   ReactDOM.render(

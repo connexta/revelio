@@ -1,10 +1,12 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
 
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
+import { getBranding } from './store/properties'
 
 const AboutInfo = ({ title, value }) => {
   return (
@@ -52,4 +54,8 @@ const AboutRoute = props => {
   return <About {...info} />
 }
 
-export default AboutRoute
+const mapStateToProps = state => {
+  return getBranding(state)
+}
+
+export default connect(mapStateToProps)(AboutRoute)
