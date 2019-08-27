@@ -7,7 +7,7 @@ import createStore from './store'
 import { fetchProperties } from './store/properties'
 
 const store = createStore()
-store.dispatch(fetchProperties)
+store.dispatch(fetchProperties())
 
 const render = Routes => {
   ReactDOM.render(
