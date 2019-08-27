@@ -7,7 +7,7 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
 import { getBranding } from './store/properties'
-import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from '@material-ui/core/LinearProgress'
 
 const AboutInfo = ({ title, value }) => {
   return (
@@ -22,19 +22,19 @@ const AboutInfo = ({ title, value }) => {
   )
 }
 
-const AboutContent = (props) => {
+const AboutContent = props => {
   const { version, identifier, releaseDate, branding, product } = props
   return (
-        <CardContent>
-          <Typography variant="h4" component="h1">
-            {branding} {product}
-          </Typography>
-          <Divider style={{ marginBottom: 15, marginTop: 10 }} />
+    <CardContent>
+      <Typography variant="h4" component="h1">
+        {branding} {product}
+      </Typography>
+      <Divider style={{ marginBottom: 15, marginTop: 10 }} />
 
-          <AboutInfo title="Version" value={version} />
-          <AboutInfo title="Unique Identifier" value={identifier} />
-          <AboutInfo title="Release Date" value={releaseDate} />
-        </CardContent>
+      <AboutInfo title="Version" value={version} />
+      <AboutInfo title="Unique Identifier" value={identifier} />
+      <AboutInfo title="Release Date" value={releaseDate} />
+    </CardContent>
   )
 }
 
@@ -44,7 +44,11 @@ const About = props => {
   return (
     <div style={{ maxWidth: 600, margin: '20px auto' }}>
       <Card>
-        {version? <AboutContent {...props} /> : <LinearProgress style={{  margin: 20 }}/> }
+        {version ? (
+          <AboutContent {...props} />
+        ) : (
+          <LinearProgress style={{ margin: 20 }} />
+        )}
       </Card>
     </div>
   )
