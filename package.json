@@ -4,11 +4,15 @@
   "main": "src/main/webapp/app.js",
   "license": "MIT",
   "devDependencies": {
-    "@connexta/ace": "https://github.com/connexta/ace.git#329aa051f483635b566e76cf2704a3431b675195"
+    "@connexta/ace": "https://github.com/connexta/ace.git#329aa051f483635b566e76cf2704a3431b675195",
+    "mocha": "^6.2.0",
+    "node-fetch": "^2.6.0",
+    "rpc-websockets": "4.0.0"
   },
   "dependencies": {
     "@material-ui/core": "^4.3.2",
     "@material-ui/icons": "^4.2.1",
+    "immutable": "3.8.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-redux": "^7.1.0",
@@ -20,6 +24,7 @@
   "scripts": {
     "start": "ace start",
     "fmt": "ace format -w",
+    "test": "mocha src/main/webapp/intrigue-api/test",
     "storybook": "ace storybook",
     "prestart": "ace disable-idp"
   },
