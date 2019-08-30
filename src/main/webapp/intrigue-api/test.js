@@ -5,7 +5,11 @@ const query = {
   srcs: ['ddf.distribution'],
   start: 1,
   count: 250,
-  cql: `("anyText" ILIKE '%')`,
+  cql: {
+    property: "anyText",
+    type: "ILIKE",
+    value: "*"
+  },
   sorts: [
     {
       attribute: 'modified',

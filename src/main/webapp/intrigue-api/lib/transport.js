@@ -2,6 +2,13 @@ const fetch = require('node-fetch')
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 const Client = require('rpc-websockets').Client
 
+const { write } = require('../cql')
+
+const processQuery = ({ cql, ...query }) => {
+  const cqlString = "(" + write(cql) + ")"
+  return JSON.stringify({ cql: cqlString, ...query })
+}
+
 const handleError = (code, data) => {
   let e = null
 
@@ -28,7 +35,7 @@ const createHttpTransport = opts => {
     const res = await fetch(url, {
       headers: opts.headers,
       method: 'POST',
-      body: JSON.stringify(query),
+      body: processQuery(query),
       ...opts.httpOpts,
     })
 
@@ -67,7 +74,7 @@ const createWsTransport = opts => {
     const client = await rpc
 
     try {
-      return await client.call('query', [JSON.stringify(query)])
+      return await client.call('query', [processQuery(query)])
     } catch (e) {
       handleError(e.code, e)
     }
