@@ -39,7 +39,7 @@ const TextSearch = props => {
   )
 }
 
-const populateDefaultQuery = filterTree => ({
+const populateDefaultFilterTree = filterTree => ({
   // hello source to test error case
   srcs: ['ddf.distribution', 'cache'],
   start: 1,
@@ -62,7 +62,7 @@ export const BasicSearch = props => {
     <Paper style={{ maxWidth: 600, margin: '20px auto' }}>
       <TextSearch
         onSearch={filterTree => {
-          props.onSearch(populateDefaultQuery(filterTree))
+          props.onSearch(populateDefaultFilterTree(filterTree))
         }}
       />
     </Paper>
