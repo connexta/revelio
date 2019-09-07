@@ -1,0 +1,135 @@
+{
+  "type": "AND",
+  "filters": [
+    {
+      "type": "ILIKE",
+      "property": "anyText",
+      "value": "Then"
+    },
+    {
+      "type": "INTERSECTS",
+      "property": "anyGeo",
+      "value": "POLYGON((-108.721313 32.105568,-108.721313 37.124358,-99.349993 37.124358,-99.349993 31.105568,-108.721313 31.105568))",
+      "geojson": {
+        "type": "Feature",
+        "bbox": [31.105568, 37.124358, -108.721313, -99.349993],
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [-108.721313, 37.124358],
+              [-99.349993, 37.124358],
+              [-99.349993, 31.105568],
+              [-108.721313, 31.105568],
+              [-108.721313, 37.124358]
+            ]
+          ]
+        },
+        "properties": {
+          "type": "BoundingBox",
+          "north": 37.124358,
+          "east": -99.349993,
+          "south": 31.105568,
+          "west": -108.721313
+        }
+      }
+    },
+
+    {
+      "type": "OR",
+      "filters": [
+        {
+          "type": "DURING",
+          "property": "created",
+          "value": "2019-09-19T00:00:00.000Z/2019-09-23T00:00:00.000Z",
+          "from": "2019-09-19T00:00:00.000Z",
+          "to": "2019-09-23T00:00:00.000Z"
+        },
+        {
+          "type": "DURING",
+          "property": "effective",
+          "value": "2019-09-19T00:00:00.000Z/2019-09-23T00:00:00.000Z",
+          "from": "2019-09-19T00:00:00.000Z",
+          "to": "2019-09-23T00:00:00.000Z"
+        },
+        {
+          "type": "DURING",
+          "property": "modified",
+          "value": "2019-09-19T00:00:00.000Z/2019-09-23T00:00:00.000Z",
+          "from": "2019-09-19T00:00:00.000Z",
+          "to": "2019-09-23T00:00:00.000Z"
+        },
+        {
+          "type": "DURING",
+          "property": "metacard.created",
+          "value": "2019-09-19T00:00:00.000Z/2019-09-23T00:00:00.000Z",
+          "from": "2019-09-19T00:00:00.000Z",
+          "to": "2019-09-23T00:00:00.000Z"
+        },
+        {
+          "type": "DURING",
+          "property": "metacard.modified",
+          "value": "2019-09-19T00:00:00.000Z/2019-09-23T00:00:00.000Z",
+          "from": "2019-09-19T00:00:00.000Z",
+          "to": "2019-09-23T00:00:00.000Z"
+        }
+      ]
+    },
+
+    {
+      "type": "OR",
+      "filters": [
+        {
+          "type": "ILIKE",
+          "property": "metadata-content-type",
+          "value": "Dataset"
+        },
+        {
+          "type": "ILIKE",
+          "property": "metadata-content-type",
+          "value": "Moving Image"
+        },
+        {
+          "type": "ILIKE",
+          "property": "metadata-content-type",
+          "value": "Interactive Resource"
+        },
+        {
+          "type": "ILIKE",
+          "property": "metadata-content-type",
+          "value": "Still Image"
+        },
+        {
+          "type": "ILIKE",
+          "property": "metadata-content-type",
+          "value": "Collection"
+        },
+        {
+          "type": "ILIKE",
+          "property": "datatype",
+          "value": "Dataset"
+        },
+        {
+          "type": "ILIKE",
+          "property": "datatype",
+          "value": "Moving Image"
+        },
+        {
+          "type": "ILIKE",
+          "property": "datatype",
+          "value": "Interactive Resource"
+        },
+        {
+          "type": "ILIKE",
+          "property": "datatype",
+          "value": "Still Image"
+        },
+        {
+          "type": "ILIKE",
+          "property": "datatype",
+          "value": "Collection"
+        }
+      ]
+    }
+  ]
+}
