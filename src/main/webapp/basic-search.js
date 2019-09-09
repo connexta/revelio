@@ -39,7 +39,7 @@ const TextSearch = props => {
   )
 }
 
-const populateDefaultFilterTree = filterTree => ({
+const populateDefaultQuery = filterTree => ({
   // hello source to test error case
   srcs: ['ddf.distribution', 'cache'],
   start: 1,
