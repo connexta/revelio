@@ -1,3 +1,5 @@
+const { Map, fromJS } = require('immutable')
+
 const timeProperties = [
   'created',
   'datetime.end',
@@ -14,44 +16,50 @@ export const fromFilterTree = filterTree => {
   return filterTree.filters.reduce((accumulator, filter) => {
     const { property, value, filters } = filter
     if (property === 'anyText') {
-      accumulator.text = value
+      return accumulator.set('text', value)
     } else if (property === 'anyGeo') {
-      accumulator.location = { value, geojson: filter.geojson }
+      return accumulator.set(
+        'location',
+        fromJS({ value, geojson: filter.geojson })
+      )
     } else if (filters && filters[0]) {
       if (timeProperties.includes(filters[0].property)) {
-        accumulator.timeRange = {
-          ...filters[0],
-          applyTo: filters.map(({ property }) => property),
-        }
+        return accumulator.set(
+          'timeRange',
+          fromJS({
+            ...filters[0],
+            applyTo: filters.map(({ property }) => property),
+          })
+        )
       }
 
       if (datatypeProperties.includes(filters[0].property)) {
         const applyTo = new Set(filters.map(({ value }) => value))
-        accumulator.datatypes = { applyTo: [...applyTo] }
+        return accumulator.setIn(['datatypes', 'applyTo'], [...applyTo])
       }
     }
 
     return accumulator
-  }, {})
+  }, Map())
 }
 
 export const toFilterTree = basicData => {
   const getTimeRangeFilter = () => {
-    const { applyTo, ...rest } = basicData.timeRange
+    const { applyTo, ...rest } = basicData.get('timeRange').toJSON()
     if (!applyTo || !rest) {
       return null
     }
     return {
       type: 'OR',
       filters: applyTo.map(property => ({
-        property,
         ...rest,
+        property,
       })),
     }
   }
 
   const getDatatypesFilter = () => {
-    const { applyTo } = basicData.datatypes
+    const { applyTo } = basicData.get('datatypes').toJSON()
     if (!applyTo) {
       return null
     }
@@ -71,19 +79,19 @@ export const toFilterTree = basicData => {
     }
   }
 
-  const text = basicData.text
+  const text = basicData.get('text')
     ? {
         type: 'ILIKE',
         property: 'anyText',
-        value: basicData.text,
+        value: basicData.get('text'),
       }
     : null
-  const location = basicData.location
+  const location = basicData.get('location')
     ? {
         type: 'INTERSECTS',
         property: 'anyGeo',
-        value: basicData.location.value,
-        geojson: basicData.location.geojson,
+        value: basicData.getIn(['location', 'value']),
+        geojson: basicData.getIn(['location', 'geojson']),
       }
     : null
   const timeRange = getTimeRangeFilter()
