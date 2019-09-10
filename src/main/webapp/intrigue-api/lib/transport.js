@@ -4,8 +4,15 @@ const Client = require('rpc-websockets').Client
 
 const { write } = require('../cql')
 
-const processQuery = ({ cql, ...query }) => {
-  const cqlString = "(" + write(cql) + ")"
+const getCql = ({ filterTree, cql }) => {
+  if (filterTree !== undefined) {
+    return '(' + write(filterTree) + ')'
+  }
+  return cql
+}
+
+const processQuery = ({ filterTree, cql, ...query }) => {
+  const cqlString = getCql({ filterTree, cql })
   return JSON.stringify({ cql: cqlString, ...query })
 }
 
@@ -101,7 +108,7 @@ const modes = {
 }
 
 exports.createTransport = (opts = {}) => {
-  const options = { ...defaultOptions, ...opts }
+  const options = { ...defaultOptions, ...opts, ...window.location }
   const { type = 'http', hostname } = options
 
   const auth = Buffer.from('admin:admin').toString('base64')

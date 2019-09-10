@@ -6,9 +6,9 @@ const query = {
   start: 1,
   count: 250,
   cql: {
-    property: "anyText",
-    type: "ILIKE",
-    value: "*"
+    property: 'anyText',
+    type: 'ILIKE',
+    value: '*',
   },
   sorts: [
     {

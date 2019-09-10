@@ -5,10 +5,15 @@ const { combineReducers } = require('redux')
 
 const { createTransport } = require('./transport')
 
+const rootStateKey = 'query.reducer'
+
+const getLocalState = state => state[rootStateKey]
 // actions
 
+const getTransport = state => getLocalState(state).transport
+
 const initTransport = type => async (dispatch, getState) => {
-  const { transport } = getState()
+  const transport = getTransport(getState())
 
   if (transport !== null) {
     await transport.close()
@@ -21,7 +26,7 @@ const initTransport = type => async (dispatch, getState) => {
 }
 
 const closeTransport = () => async (dispatch, getState) => {
-  const { transport } = getState()
+  const transport = getTransport(getState())
 
   if (transport !== null) {
     await transport.close()
@@ -33,9 +38,12 @@ const closeTransport = () => async (dispatch, getState) => {
   })
 }
 
-const getTransport = state => state.transport
-
 const startQuery = query => ({ type: 'query/START-QUERY', query })
+
+const sourceError = response => ({
+  type: 'query/SOURCE-ERROR',
+  response,
+})
 
 const sourceReturned = response => ({
   type: 'query/SOURCE-RETURNED',
@@ -50,9 +58,14 @@ const executeQuery = ({ srcs, ...query }) => async (dispatch, getState) => {
   dispatch(startQuery(query))
 
   const responses = srcs.map(async src => {
-    //const json = await httpQuery({ src, ...query })
-    const json = await send({ src, ...query })
-    return dispatch(sourceReturned(json))
+    try {
+      const json = await send({ src, ...query })
+      return dispatch(sourceReturned(json))
+    } catch (e) {
+      return dispatch(
+        sourceError({ error: e, queryId: query.id, sourceId: src })
+      )
+    }
   })
 
   return Promise.all(responses)
@@ -86,7 +99,7 @@ const sourceResponse = (state = Map(), action) => {
   switch (action.type) {
     case 'query/START-QUERY':
       return state.set(action.query.id, Map())
-    case 'query/SOURCE-RETURNED':
+    case 'query/SOURCE-RETURNED': {
       const { types, results, ...sourceResponse } = action.response
       const queryId = action.response.id
 
@@ -98,8 +111,15 @@ const sourceResponse = (state = Map(), action) => {
           results: results.map(result => result.metacard.properties.id),
         })
       })
+    }
+
     case 'query/CLEAR-QUERY':
       return state.remove(action.queryId)
+    case 'query/SOURCE-ERROR': {
+      const { queryId, sourceId, error } = action.response
+      return state.setIn([queryId, sourceId], error)
+    }
+
     default:
       return state
   }
@@ -131,7 +151,7 @@ const types = (state = Map(), action) => {
 }
 
 const getSourceStatus = queryId => state => {
-  const responses = state.sourceResponse.get(queryId)
+  const responses = getLocalState(state).sourceResponse.get(queryId)
 
   if (responses === undefined) {
     return {}
@@ -142,37 +162,42 @@ const getSourceStatus = queryId => state => {
 }
 
 const getTypes = state => {
-  return state.types.toJSON()
+  return getLocatlState(state).types.toJSON()
 }
 
 const getQueryResponse = queryId => state => {
-  return state.sourceResponse.get(queryId).toJSON()
+  return getLocalState(state)
+    .sourceResponse.get(queryId)
+    .toJSON()
 }
 
 const getMetacards = state => {
-  return state.results.toJSON()
+  return getLocalState(state).results.toJSON()
 }
 
 const getMetacard = metacardId => state => {
-  const metacard = state.results.get(metacardId)
+  const metacard = getLocalState(state).results.get(metacardId)
   if (metacard !== undefined) {
     return metacard
   }
 }
 
-const reducer = combineReducers({
-  transport,
-  queries,
-  results,
-  sourceResponse,
-  types,
-})
+const reducers = {
+  [rootStateKey]: combineReducers({
+    transport,
+    queries,
+    results,
+    sourceResponse,
+    types,
+  }),
+}
 
 module.exports = {
-  reducer,
+  reducers,
   initTransport,
   closeTransport,
   executeQuery,
   getSourceStatus,
   getMetacards,
+  rootStateKey,
 }

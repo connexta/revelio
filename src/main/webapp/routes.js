@@ -17,6 +17,7 @@ import {
 } from 'react-router-dom'
 import AboutRoute from './about'
 import SourcesRoute from './sources'
+import BasicSearchRoute from './basic-search'
 
 const Link = props => {
   return (
@@ -58,7 +59,7 @@ const createRoute = (path, title, Icon = AccessibleForwardIcon, component) => {
 const routes = [
   createRoute('/', 'Home'),
   createRoute('/workspace', 'Workspace'),
-  createRoute('/search', 'Search', SearchIcon),
+  createRoute('/search', 'Search', SearchIcon, BasicSearchRoute),
   createRoute('/upload', 'Upload'),
   createRoute('/sources', 'Sources', CloudIcon, SourcesRoute),
   createRoute('/search-forms', 'Search Forms'),

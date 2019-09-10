@@ -5,9 +5,11 @@ import Routes from './routes'
 import { Provider } from 'react-redux'
 import createStore from './store'
 import { fetchProperties } from './store/properties'
+import { initTransport } from './intrigue-api/lib/cache'
 
 const store = createStore()
 store.dispatch(fetchProperties())
+store.dispatch(initTransport('http'))
 
 const render = Routes => {
   ReactDOM.render(
