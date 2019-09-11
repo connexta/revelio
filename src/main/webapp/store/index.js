@@ -5,7 +5,7 @@ import results from './results'
 
 import { reducers } from '../intrigue-api/lib/cache'
 
-const rootReducer = combineReducers({ properties, ...results, ...reducers })
+const rootReducer = combineReducers({ ...properties, ...results, ...reducers })
 
 const composeEnhancers =
   process.env.NODE_ENV === 'production'
