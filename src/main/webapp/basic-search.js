@@ -6,6 +6,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import Button from '@material-ui/core/Button'
+import Fab from '@material-ui/core/Fab'
 import Paper from '@material-ui/core/Paper'
 import TextField from '@material-ui/core/TextField'
 import Select from '@material-ui/core/Select'
@@ -16,7 +17,7 @@ import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
 import RemoveIcon from '@material-ui/icons/Remove'
-
+import ListItemText from '@material-ui/core/ListItemText'
 import Input from '@material-ui/core/Input'
 import Checkbox from '@material-ui/core/Checkbox'
 
@@ -57,7 +58,7 @@ const TimeRange = props => {
   const [timeRange, setTimeRange] = React.useState(props.timeRange)
 
   return (
-    <React.Fragment>
+    <div style={{ overflow: 'auto' }}>
       <FormControl fullWidth>
         <InputLabel>Time Range</InputLabel>
         <Select
@@ -80,7 +81,7 @@ const TimeRange = props => {
         setTimeRange={setTimeRange}
         setFilterTree={setFilterTree}
       />
-    </React.Fragment>
+    </div>
   )
 }
 
@@ -174,35 +175,37 @@ const TimeRangeDuring = props => {
           setFilterTree({ ...timeRange, applyTo })
         }}
       />
-      <SingleDatePicker
-        label="Limit search to after this time"
-        setDate={date => {
-          const tr = {
-            type: timeRange.type,
-            applyTo: timeRange.applyTo,
-            to: timeRange.to,
-            from: date,
-            value: `${date}/${timeRange.to}`,
-          }
-          setTimeRange(tr)
-          setFilterTree(tr)
-        }}
-      />
-
-      <SingleDatePicker
-        label="Limit search to before this time"
-        setDate={date => {
-          const tr = {
-            type: timeRange.type,
-            applyTo: timeRange.applyTo,
-            from: timeRange.from,
-            to: date,
-            value: `${timeRange.from}/${date}`,
-          }
-          setTimeRange(tr)
-          setFilterTree(tr)
-        }}
-      />
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <SingleDatePicker
+          label="From"
+          setDate={date => {
+            const tr = {
+              type: timeRange.type,
+              applyTo: timeRange.applyTo,
+              to: timeRange.to,
+              from: date,
+              value: `${date}/${timeRange.to}`,
+            }
+            setTimeRange(tr)
+            setFilterTree(tr)
+          }}
+        />
+        <div style={{ width: 20 }} />
+        <SingleDatePicker
+          label="To"
+          setDate={date => {
+            const tr = {
+              type: timeRange.type,
+              applyTo: timeRange.applyTo,
+              from: timeRange.from,
+              to: date,
+              value: `${timeRange.from}/${date}`,
+            }
+            setTimeRange(tr)
+            setFilterTree(tr)
+          }}
+        />
+      </div>
     </React.Fragment>
   )
 }
@@ -293,12 +296,20 @@ const TimeRangeApplyTo = props => {
     writeApplyTo(e.target.value)
   }
 
+  // <FormControl fullWidth>
+  //   <InputLabel>Match Types</InputLabel>
+  //   <Select multiple value={applyTo} onChange={handleChange}>
+  //     {datatypes.map(datatype => (
+  //       <MenuItem value={datatype}>{datatype}</MenuItem>
+  //     ))}
+  //   </Select>
+  // </FormControl>
   return (
     <FormControl fullWidth>
       <InputLabel>Apply Time Range To</InputLabel>
       <Select
+        checkbox-item
         multiple
-        displayEmpty
         value={applyTo}
         onChange={handleChange}
         input={<Input />}
@@ -306,12 +317,10 @@ const TimeRangeApplyTo = props => {
           return selected.join(', ')
         }}
       >
-        <MenuItem disabled value="">
-          <em>Placeholder</em>
-        </MenuItem>
         {timeProperties.map(name => (
           <MenuItem key={name} value={name}>
-            {name}
+            <Checkbox checked={applyTo.indexOf(name) > -1} />
+            <ListItemText primary={name} />
           </MenuItem>
         ))}
       </Select>
@@ -331,6 +340,7 @@ const SingleDatePicker = props => {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <KeyboardDatePicker
+        fullWidth
         disableToolbar
         variant="inline"
         format="MM/dd/yyyy"
@@ -392,6 +402,7 @@ const AddButton = ({ addFilter }) => {
 
 const SearchButton = props => (
   <Button
+    style={props.style}
     fullWidth
     variant="contained"
     color="primary"
@@ -460,9 +471,18 @@ export const BasicSearch = props => {
   // console.log(filterTree);
   // console.log(selectedFilters);
 
+  const spacing = 30
+
   return (
-    <Paper style={{ maxWidth: 600, margin: '20px auto' }}>
-      <div style={{ display: 'flex', alignItems: 'center', margin: '20px' }}>
+    <Paper
+      style={{
+        maxWidth: 600,
+        margin: '20px auto',
+        padding: spacing,
+        boxSizing: 'border-box',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <TextSearch
           text={text}
           handleChange={e =>
@@ -479,20 +499,32 @@ export const BasicSearch = props => {
       {selectedFilters.map(filter => {
         return (
           <div
-            style={{ display: 'flex', alignItems: 'center', margin: '20px' }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              marginTop: spacing,
+            }}
           >
+            <div style={{ marginRight: spacing }}>
+              <Fab
+                size="small"
+                color="secondary"
+                onClick={() =>
+                  setSelectedFilters(selectedFilters.delete(filter))
+                }
+              >
+                <RemoveIcon />
+              </Fab>
+            </div>
+
             {filters[filter]()}
-            <Button
-              onClick={() => setSelectedFilters(selectedFilters.delete(filter))}
-            >
-              <RemoveIcon />
-            </Button>
           </div>
         )
       })}
 
       <SearchButton
         fullWidth
+        style={{ marginTop: spacing }}
         onSearch={() => {
           //console.log(filterTree);
           console.log(
@@ -523,9 +555,20 @@ const datatypes = [
 const MatchTypes = ({ applyTo = [], handleChange }) => (
   <FormControl fullWidth>
     <InputLabel>Match Types</InputLabel>
-    <Select multiple value={applyTo} onChange={handleChange}>
+    <Select
+      checkbox-item
+      multiple
+      value={applyTo}
+      onChange={handleChange}
+      renderValue={selected => {
+        return selected.join(', ')
+      }}
+    >
       {datatypes.map(datatype => (
-        <MenuItem value={datatype}>{datatype}</MenuItem>
+        <MenuItem value={datatype}>
+          <Checkbox checked={applyTo.indexOf(datatype) > -1} />
+          <ListItemText primary={datatype} />
+        </MenuItem>
       ))}
     </Select>
   </FormControl>
