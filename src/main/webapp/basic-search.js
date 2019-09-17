@@ -20,6 +20,8 @@ import RemoveIcon from '@material-ui/icons/Remove'
 import ListItemText from '@material-ui/core/ListItemText'
 import Input from '@material-ui/core/Input'
 import Checkbox from '@material-ui/core/Checkbox'
+import Divider from '@material-ui/core/Divider'
+import TimeRange from './time-range'
 
 import { executeQuery } from './intrigue-api/lib/cache'
 
@@ -34,12 +36,6 @@ import {
 } from './basic-search-helper'
 const { Map, List, Set, fromJS } = require('immutable')
 
-import DateFnsUtils from '@date-io/date-fns'
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers'
-
 //console.log(fromFilterTree(exampleFilterTree));
 const TextSearch = ({ text, handleChange }) => {
   return (
@@ -50,310 +46,6 @@ const TextSearch = ({ text, handleChange }) => {
       value={text}
       onChange={handleChange}
     />
-  )
-}
-
-const TimeRange = props => {
-  const { setFilterTree } = props
-  const [timeRange, setTimeRange] = React.useState(props.timeRange)
-
-  return (
-    <div style={{ overflow: 'auto' }}>
-      <FormControl fullWidth>
-        <InputLabel>Time Range</InputLabel>
-        <Select
-          value={timeRange.type}
-          onChange={e => {
-            setTimeRange({ ...timeRange, type: e.target.value })
-            setFilterTree({ ...timeRange, type: e.target.value })
-          }}
-        >
-          <MenuItem value={'AFTER'}>After</MenuItem>
-          <MenuItem value={'BEFORE'}>Before</MenuItem>
-          <MenuItem value={'DURING'}>Between</MenuItem>
-          <MenuItem value={'='}>Relative</MenuItem>
-        </Select>
-      </FormControl>
-
-      <TimeRangeWhen
-        type={timeRange.type}
-        timeRange={timeRange}
-        setTimeRange={setTimeRange}
-        setFilterTree={setFilterTree}
-      />
-    </div>
-  )
-}
-
-const TimeRangeWhen = props => {
-  const { type } = props
-  switch (type) {
-    case 'AFTER':
-      return <TimeRangeAfter {...props} />
-    case 'BEFORE':
-      return <TimeRangeBefore {...props} />
-    case 'DURING':
-      return <TimeRangeDuring {...props} />
-    case '=':
-      return <TimeRangeRelative {...props} />
-    default:
-      return null
-  }
-}
-
-const TimeRangeAfter = props => {
-  const { setTimeRange, timeRange, setFilterTree } = props
-
-  return (
-    <React.Fragment>
-      <TimeRangeApplyTo
-        timeRange={timeRange}
-        writeApplyTo={applyTo => {
-          setTimeRange({ ...timeRange, applyTo })
-          setFilterTree({ ...timeRange, applyTo })
-        }}
-      />
-      <SingleDatePicker
-        label="Limit search to after this time"
-        setDate={date => {
-          setTimeRange({
-            type: timeRange.type,
-            applyTo: timeRange.applyTo,
-            value: date,
-          })
-          setFilterTree({
-            type: timeRange.type,
-            applyTo: timeRange.applyTo,
-            value: date,
-          })
-        }}
-      />
-    </React.Fragment>
-  )
-}
-
-const TimeRangeBefore = props => {
-  const { setTimeRange, timeRange, setFilterTree } = props
-
-  return (
-    <React.Fragment>
-      <TimeRangeApplyTo
-        timeRange={timeRange}
-        writeApplyTo={applyTo => {
-          setTimeRange({ ...timeRange, applyTo })
-          setFilterTree({ ...timeRange, applyTo })
-        }}
-      />
-      <SingleDatePicker
-        label="Limit search to before this time"
-        setDate={date => {
-          setTimeRange({
-            type: timeRange.type,
-            applyTo: timeRange.applyTo,
-            value: date,
-          })
-          setFilterTree({
-            type: timeRange.type,
-            applyTo: timeRange.applyTo,
-            value: date,
-          })
-        }}
-      />
-    </React.Fragment>
-  )
-}
-
-const TimeRangeDuring = props => {
-  const { setTimeRange, timeRange, setFilterTree } = props
-
-  return (
-    <React.Fragment>
-      <TimeRangeApplyTo
-        timeRange={timeRange}
-        writeApplyTo={applyTo => {
-          setTimeRange({ ...timeRange, applyTo })
-          setFilterTree({ ...timeRange, applyTo })
-        }}
-      />
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <SingleDatePicker
-          label="From"
-          setDate={date => {
-            const tr = {
-              type: timeRange.type,
-              applyTo: timeRange.applyTo,
-              to: timeRange.to,
-              from: date,
-              value: `${date}/${timeRange.to}`,
-            }
-            setTimeRange(tr)
-            setFilterTree(tr)
-          }}
-        />
-        <div style={{ width: 20 }} />
-        <SingleDatePicker
-          label="To"
-          setDate={date => {
-            const tr = {
-              type: timeRange.type,
-              applyTo: timeRange.applyTo,
-              from: timeRange.from,
-              to: date,
-              value: `${timeRange.from}/${date}`,
-            }
-            setTimeRange(tr)
-            setFilterTree(tr)
-          }}
-        />
-      </div>
-    </React.Fragment>
-  )
-}
-
-const TimeRangeRelative = props => {
-  const [unit, setUnit] = React.useState('days')
-  const [last, setLast] = React.useState(1)
-  const { setTimeRange, timeRange, setFilterTree } = props
-
-  const uglyMap = {
-    minutes: howMany => `RELATIVE(PT${howMany}M)`,
-    hours: howMany => `RELATIVE(PT${howMany}H)`,
-    days: howMany => `RELATIVE(P${howMany}D)`,
-    months: howMany => `RELATIVE(P${howMany}M)`,
-    years: howMany => `RELATIVE(P${howMany}Y)`,
-  }
-
-  return (
-    <React.Fragment>
-      <TimeRangeApplyTo
-        timeRange={timeRange}
-        writeApplyTo={applyTo => {
-          setTimeRange({ ...timeRange, applyTo })
-          setFilterTree({ ...timeRange, applyTo })
-        }}
-      />
-      <FormControl fullWidth>
-        <InputLabel>Unit</InputLabel>
-        <Select
-          value={unit}
-          onChange={e => {
-            setUnit(e.target.value)
-            const tr = {
-              type: timeRange.type,
-              property: timeRange.property,
-              applyTo: timeRange.applyTo,
-              value: uglyMap[e.target.value](last),
-            }
-            setTimeRange(tr)
-            setFilterTree(tr)
-          }}
-        >
-          <MenuItem value={`minutes`}>Minutes</MenuItem>
-          <MenuItem value={`hours`}>Hours</MenuItem>
-          <MenuItem value={`days`}>Days</MenuItem>
-          <MenuItem value={`months`}>Months</MenuItem>
-          <MenuItem value={`years`}>Years</MenuItem>
-        </Select>
-        <TextField
-          label="Unit"
-          variant="outlined"
-          fullWidth
-          value={last}
-          onChange={e => {
-            setLast(e.target.value)
-            const tr = {
-              type: timeRange.type,
-              property: timeRange.property,
-              applyTo: timeRange.applyTo,
-              value: uglyMap[unit](e.target.value),
-            }
-            setTimeRange(tr)
-            setFilterTree(tr)
-          }}
-        />
-      </FormControl>
-    </React.Fragment>
-  )
-}
-
-const TimeRangeApplyTo = props => {
-  const { timeRange, writeApplyTo } = props
-  const [applyTo, setApplyTo] = React.useState(props.timeRange.applyTo)
-  const timeProperties = [
-    'created',
-    'datetime.end',
-    'datetime.start',
-    'effective',
-    'expiration',
-    'metacard.created',
-    'metacard.modified',
-    'metacard.version.versioned-on',
-    'modified',
-  ]
-
-  const handleChange = e => {
-    setApplyTo(e.target.value)
-    writeApplyTo(e.target.value)
-  }
-
-  // <FormControl fullWidth>
-  //   <InputLabel>Match Types</InputLabel>
-  //   <Select multiple value={applyTo} onChange={handleChange}>
-  //     {datatypes.map(datatype => (
-  //       <MenuItem value={datatype}>{datatype}</MenuItem>
-  //     ))}
-  //   </Select>
-  // </FormControl>
-  return (
-    <FormControl fullWidth>
-      <InputLabel>Apply Time Range To</InputLabel>
-      <Select
-        checkbox-item
-        multiple
-        value={applyTo}
-        onChange={handleChange}
-        input={<Input />}
-        renderValue={selected => {
-          return selected.join(', ')
-        }}
-      >
-        {timeProperties.map(name => (
-          <MenuItem key={name} value={name}>
-            <Checkbox checked={applyTo.indexOf(name) > -1} />
-            <ListItemText primary={name} />
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  )
-}
-
-const SingleDatePicker = props => {
-  const [selectedDate, setSelectedDate] = React.useState(new Date())
-  const { setDate, label } = props
-
-  function handleDateChange(date) {
-    setSelectedDate(date)
-    setDate(date)
-  }
-
-  return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <KeyboardDatePicker
-        fullWidth
-        disableToolbar
-        variant="inline"
-        format="MM/dd/yyyy"
-        margin="normal"
-        id="date-picker-inline"
-        label={label}
-        value={selectedDate}
-        onChange={handleDateChange}
-        KeyboardButtonProps={{
-          'aria-label': 'change date',
-        }}
-      />
-    </MuiPickersUtilsProvider>
   )
 }
 
@@ -471,18 +163,25 @@ export const BasicSearch = props => {
   // console.log(filterTree);
   // console.log(selectedFilters);
 
-  const spacing = 30
+  const spacing = 20
 
   return (
     <Paper
       style={{
         maxWidth: 600,
         margin: '20px auto',
-        padding: spacing,
-        boxSizing: 'border-box',
+        //padding: spacing,
+        //boxSizing: 'border-box',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          padding: spacing,
+          boxSizing: 'border-box',
+        }}
+      >
         <TextSearch
           text={text}
           handleChange={e =>
@@ -498,26 +197,31 @@ export const BasicSearch = props => {
 
       {selectedFilters.map(filter => {
         return (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginTop: spacing,
-            }}
-          >
-            <div style={{ marginRight: spacing }}>
-              <Fab
-                size="small"
-                color="secondary"
-                onClick={() =>
-                  setSelectedFilters(selectedFilters.delete(filter))
-                }
-              >
-                <RemoveIcon />
-              </Fab>
-            </div>
+          <div style={{ width: '100%' }}>
+            <Divider style={{ marginBottom: 15, marginTop: 10 }} />
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                padding: spacing,
+                boxSizing: 'border-box',
+              }}
+            >
+              <div style={{ marginRight: spacing }}>
+                <Fab
+                  size="small"
+                  color="secondary"
+                  onClick={() => {
+                    setFilterTree(filterTree.set(filter, Map()))
+                    setSelectedFilters(selectedFilters.delete(filter))
+                  }}
+                >
+                  <RemoveIcon />
+                </Fab>
+              </div>
 
-            {filters[filter]()}
+              {filters[filter]()}
+            </div>
           </div>
         )
       })}
