@@ -59,13 +59,13 @@ const populateDefaultQuery = filterTree => ({
 
 export const BasicSearch = props => {
   return (
-      <Paper style={{ maxWidth: 600, margin: '20px auto' }}>
-        <TextSearch
-          onSearch={filterTree => {
-            props.onSearch(populateDefaultQuery(filterTree))
-          }}
-        />
-      </Paper>
+    <Paper style={{ maxWidth: 600, margin: '20px auto' }}>
+      <TextSearch
+        onSearch={filterTree => {
+          props.onSearch(populateDefaultQuery(filterTree))
+        }}
+      />
+    </Paper>
   )
 }
 
