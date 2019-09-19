@@ -41,15 +41,22 @@ const LA = {
 let results = []
 
 results.push({
-  ...LA,
-  id: '-1',
-  description: 'A very large, very crowded city.',
+  metacard: {
+    properties: {
+      ...LA,
+      id: '-1',
+    },
+  },
 })
 
 for (let i = 0; i < 100; i++) {
   results.push({
-    ...LA,
-    id: i.toString(),
+    metacard: {
+      properties: {
+        ...LA,
+        id: i.toString(),
+      },
+    },
   })
 }
 
