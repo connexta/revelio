@@ -48,7 +48,7 @@ export const fromFilterTree = filterTree => {
 
       if (datatypeProperties.includes(filters[0].property)) {
         const applyTo = new Set(filters.map(({ value }) => value))
-        return accumulator.setIn([DATATYPES_KEY, APPLY_TO_KEY], [...applyTo])
+        return accumulator.set(DATATYPES_KEY, applyTo)
       }
     }
 
@@ -75,7 +75,7 @@ export const toFilterTree = basicData => {
   }
 
   const getDatatypesFilter = () => {
-    const applyTo = basicData.getIn([DATATYPES_KEY, APPLY_TO_KEY])
+    const applyTo = basicData.get(DATATYPES_KEY)
     if (!applyTo) {
       return null
     }

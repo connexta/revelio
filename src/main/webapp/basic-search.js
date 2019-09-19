@@ -48,6 +48,21 @@ const timeAttributes = [
   'modified',
 ]
 
+const datatypes = [
+  'Interactive Resource',
+  'Moving Image',
+  'Still Image',
+  'Dataset',
+  'Collection',
+  'Event',
+  'Service',
+  'Software',
+  'Sound',
+  'Text',
+  'Image',
+  'Physical Object',
+]
+
 const TextSearch = ({ text, handleChange }) => {
   return (
     <TextField
@@ -134,170 +149,52 @@ const populateDefaultQuery = filterTree => ({
   batchId: '5a3f400c2e1e410e8d37494500173ca4',
 })
 
-export const BasicSearch = props => {
-  const [filterTree, setFilterTree] = React.useState(
-    //Map({ text: '*' })
-    fromFilterTree(exampleFilterTree)
-  )
-
-  const { datatypes, text, location, timeRange } = filterTree.toJSON()
-
-  const matchTypes = () => {
-    return (
-      <MatchTypes
-        applyTo={filterTree.getIn([DATATYPES_KEY, APPLY_TO_KEY])}
-        handleChange={e => {
-          const next = filterTree.setIn(
-            [DATATYPES_KEY, APPLY_TO_KEY],
-            e.target.value
-          )
-          setFilterTree(next)
-        }}
-      />
-    )
-  }
-
-  const filters = {
-    location: () => <Location />,
-    timeRange: () => (
-      <div style={{ flex: '1', overflow: 'hidden' }}>
-        <TimeRange
-          fullWidth
-          timeRange={filterTree.getIn([TIME_RANGE_KEY, 'value'])}
-          setTimeRange={timeRange => {
-            const next = filterTree.setIn([TIME_RANGE_KEY, 'value'], timeRange)
-            setFilterTree(next)
-          }}
-        />
-        <FormControl fullWidth>
-          <AttributeSelector
-            attributes={filterTree.getIn([TIME_RANGE_KEY, APPLY_TO_KEY])}
-            setAttributes={attributes => {
-              const next = filterTree.setIn(
-                [TIME_RANGE_KEY, APPLY_TO_KEY],
-                attributes
-              )
-              setFilterTree(next)
-            }}
-          />
-        </FormControl>
-      </div>
-    ),
-    datatypes: matchTypes,
-  }
-
-  const spacing = 20
-
+const MatchTypes = ({ state = [], setState }) => {
   return (
-    <Paper
-      style={{
-        maxWidth: 600,
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          padding: spacing,
-          boxSizing: 'border-box',
+    <FormControl fullWidth>
+      <InputLabel>Match Types</InputLabel>
+      <Select
+        multiple
+        value={state}
+        onChange={e => setState(e.target.value)}
+        renderValue={selected => {
+          return selected.join(', ')
         }}
       >
-        <TextSearch
-          text={text}
-          handleChange={e =>
-            setFilterTree(filterTree.set(TEXT_KEY, e.target.value))
-          }
-        />
-        <AddButton
-          addFilter={filter => {
-            setFilterTree(filterTree.merge({ [filter]: {} }))
-          }}
-        />
-      </div>
-
-      {filterTree
-        .remove('text')
-        .map((state, filter) => {
-          return (
-            <div key={filter} style={{ width: '100%' }}>
-              <Divider style={{ marginBottom: 15, marginTop: 10 }} />
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: spacing,
-                  boxSizing: 'border-box',
-                }}
-              >
-                <div style={{ marginRight: spacing }}>
-                  <Fab
-                    size="small"
-                    color="secondary"
-                    onClick={() => {
-                      setFilterTree(filterTree.remove(filter))
-                    }}
-                  >
-                    <RemoveIcon />
-                  </Fab>
-                </div>
-
-                {filters[filter]()}
-              </div>
-            </div>
-          )
-        })
-        .valueSeq()}
-
-      <SearchButton
-        fullWidth
-        style={{ marginTop: spacing }}
-        onSearch={() => {
-          console.log(
-            'Sending query with filterTree: ',
-            toFilterTree(filterTree)
-          )
-          props.onSearch(populateDefaultQuery(toFilterTree(filterTree)))
-        }}
-      />
-    </Paper>
+        {datatypes.map(datatype => (
+          <MenuItem key={datatype} value={datatype}>
+            <Checkbox checked={state.indexOf(datatype) > -1} />
+            <ListItemText primary={datatype} />
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   )
 }
 
-const datatypes = [
-  'Interactive Resource',
-  'Moving Image',
-  'Still Image',
-  'Dataset',
-  'Collection',
-  'Event',
-  'Service',
-  'Software',
-  'Sound',
-  'Text',
-  'Image',
-  'Physical Object',
-]
-
-const MatchTypes = ({ applyTo = [], handleChange }) => (
-  <FormControl fullWidth>
-    <InputLabel>Match Types</InputLabel>
-    <Select
-      multiple
-      value={applyTo}
-      onChange={handleChange}
-      renderValue={selected => {
-        return selected.join(', ')
-      }}
-    >
-      {datatypes.map(datatype => (
-        <MenuItem key={datatype} value={datatype}>
-          <Checkbox checked={applyTo.indexOf(datatype) > -1} />
-          <ListItemText primary={datatype} />
-        </MenuItem>
-      ))}
-    </Select>
-  </FormControl>
-)
+const BasicTimeRange = ({ state = Map(), setState }) => {
+  return (
+    <div style={{ flex: '1', overflow: 'hidden' }}>
+      <TimeRange
+        fullWidth
+        timeRange={state.get('value')}
+        setTimeRange={timeRange => {
+          const next = state.set('value', timeRange)
+          setState(next)
+        }}
+      />
+      <FormControl fullWidth>
+        <AttributeSelector
+          attributes={state.get(APPLY_TO_KEY)}
+          setAttributes={attributes => {
+            const next = state.set(APPLY_TO_KEY, attributes)
+            setState(next)
+          }}
+        />
+      </FormControl>
+    </div>
+  )
+}
 
 const AttributeSelector = props => {
   const { attributes = [], setAttributes } = props
@@ -331,8 +228,10 @@ const locationTypes = [
   'Bounding Box',
   'Keyword',
 ]
+
 const Location = () => {
   const [type, setType] = React.useState('Any')
+
   return (
     <FormControl fullWidth>
       <InputLabel>Location</InputLabel>
@@ -344,6 +243,103 @@ const Location = () => {
         ))}
       </Select>
     </FormControl>
+  )
+}
+
+const filters = {
+  location: Location,
+  timeRange: BasicTimeRange,
+  datatypes: MatchTypes,
+}
+
+export const BasicSearch = props => {
+  const [filterTree, setFilterTree] = React.useState(
+    Map({ text: '*' })
+    //fromFilterTree(exampleFilterTree)
+  )
+
+  const text = filterTree.get('text')
+
+  const spacing = 20
+
+  return (
+    <Paper
+      style={{
+        maxWidth: 600,
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          padding: spacing,
+          boxSizing: 'border-box',
+        }}
+      >
+        <TextSearch
+          text={text}
+          handleChange={e =>
+            setFilterTree(filterTree.set(TEXT_KEY, e.target.value))
+          }
+        />
+        <AddButton
+          addFilter={filter => {
+            setFilterTree(filterTree.merge({ [filter]: undefined }))
+          }}
+        />
+      </div>
+
+      {filterTree
+        .remove('text')
+        .map((state, filter) => {
+          const Component = filters[filter]
+
+          return (
+            <div key={filter} style={{ width: '100%' }}>
+              <Divider style={{ marginBottom: 15, marginTop: 10 }} />
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: spacing,
+                  boxSizing: 'border-box',
+                }}
+              >
+                <div style={{ marginRight: spacing }}>
+                  <Fab
+                    size="small"
+                    color="secondary"
+                    onClick={() => {
+                      setFilterTree(filterTree.remove(filter))
+                    }}
+                  >
+                    <RemoveIcon />
+                  </Fab>
+                </div>
+                <Component
+                  state={state}
+                  setState={state => {
+                    setFilterTree(filterTree.set(filter, state))
+                  }}
+                />
+              </div>
+            </div>
+          )
+        })
+        .valueSeq()}
+
+      <SearchButton
+        fullWidth
+        style={{ marginTop: spacing }}
+        onSearch={() => {
+          console.log(
+            'Sending query with filterTree: ',
+            toFilterTree(filterTree)
+          )
+          props.onSearch(populateDefaultQuery(toFilterTree(filterTree)))
+        }}
+      />
+    </Paper>
   )
 }
 
