@@ -17,23 +17,30 @@ const timeProperties = [
   'metacard.version.versioned-on',
   'modified',
 ]
+
 const datatypeProperties = ['metadata-content-type', 'datatype']
+
 export const fromFilterTree = filterTree => {
   return filterTree.filters.reduce((accumulator, filter) => {
     const { property, value, filters } = filter
+
     if (property === 'anyText') {
       return accumulator.set(TEXT_KEY, value)
-    } else if (property === 'anyGeo') {
+    }
+
+    if (property === 'anyGeo') {
       return accumulator.set(
         LOCATION_KEY,
         fromJS({ value, geojson: filter.geojson })
       )
-    } else if (filters && filters[0]) {
+    }
+
+    if (filters && filters[0]) {
       if (timeProperties.includes(filters[0].property)) {
         return accumulator.set(
           TIME_RANGE_KEY,
-          fromJS({
-            ...filters[0],
+          Map({
+            value: filters[0],
             applyTo: filters.map(({ property }) => property),
           })
         )
@@ -51,10 +58,13 @@ export const fromFilterTree = filterTree => {
 
 export const toFilterTree = basicData => {
   const getTimeRangeFilter = () => {
-    const { applyTo, ...rest } = basicData.get(TIME_RANGE_KEY).toJSON()
+    const applyTo = basicData.getIn([TIME_RANGE_KEY, 'applyTo'])
+    const rest = basicData.getIn([TIME_RANGE_KEY, 'value'])
+
     if (!applyTo || !rest) {
       return null
     }
+
     return {
       type: 'OR',
       filters: applyTo.map(property => ({
@@ -92,7 +102,7 @@ export const toFilterTree = basicData => {
         value: basicData.get(TEXT_KEY),
       }
     : null
-  const location = basicData.get(LOCATION_KEY)
+  const location = !basicData.get(LOCATION_KEY).isEmpty()
     ? {
         type: 'INTERSECTS',
         property: 'anyGeo',

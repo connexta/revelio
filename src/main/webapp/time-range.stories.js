@@ -12,6 +12,17 @@ import {
 
 const stories = storiesOf('TimeRange', module)
 
+stories.addDecorator(Story => <Story />)
+
 stories.add('basic', () => {
-  return <TimeRange setFilterTree={action('setFilterTree')} />
+  const [timeRange, setTimeRange] = React.useState({})
+  return (
+    <TimeRange
+      timeRange={timeRange}
+      setTimeRange={timeRange => {
+        setTimeRange(timeRange)
+        action('setTimeRange')(timeRange)
+      }}
+    />
+  )
 })

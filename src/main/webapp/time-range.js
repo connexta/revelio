@@ -18,170 +18,6 @@ import {
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers'
 
-const TimeRange = props => {
-  const { setFilterTree } = props
-  const [timeRange, setTimeRange] = React.useState(props.timeRange || {})
-  const TimeRangeWhen = getTimeRangeWhen(timeRange.type)
-
-  return (
-    <div style={{ overflow: 'auto', flex: '1' }}>
-      <div style={{ display: 'flex' }}>
-        <FormControl fullWidth>
-          <InputLabel>Time Range</InputLabel>
-          <Select
-            value={timeRange.type}
-            onChange={e => {
-              setTimeRange({ ...timeRange, type: e.target.value })
-              setFilterTree({ ...timeRange, type: e.target.value })
-            }}
-          >
-            <MenuItem value={'AFTER'}>After</MenuItem>
-            <MenuItem value={'BEFORE'}>Before</MenuItem>
-            <MenuItem value={'DURING'}>Between</MenuItem>
-            <MenuItem value={'='}>Relative</MenuItem>
-          </Select>
-        </FormControl>
-        <div style={{ width: 20 }} />
-        <TimeRangeApplyTo
-          timeRange={timeRange}
-          writeApplyTo={applyTo => {
-            setTimeRange({ ...timeRange, applyTo })
-          }}
-        />
-      </div>
-
-      <TimeRangeWhen
-        type={timeRange.type}
-        timeRange={timeRange}
-        setTimeRange={setTimeRange}
-        setFilterTree={setFilterTree}
-      />
-    </div>
-  )
-}
-
-const TimeRangeAfter = props => {
-  const { timeRange = {}, setFilterTree } = props
-
-  return (
-    <DatePicker
-      label="Limit search to after this time"
-      setDate={date => {
-        setFilterTree({
-          type: timeRange.type,
-          applyTo: timeRange.applyTo,
-          value: date,
-        })
-      }}
-    />
-  )
-}
-
-// TODO: fire gordo
-
-const TimeRangeBefore = props => {
-  const { timeRange = {}, setFilterTree } = props
-
-  return (
-    <DatePicker
-      label="Limit search to before this time"
-      setDate={date => {
-        setFilterTree({
-          type: timeRange.type,
-          applyTo: timeRange.applyTo,
-          value: date,
-        })
-      }}
-    />
-  )
-}
-
-const TimeRangeDuring = props => {
-  const { timeRange = {}, setFilterTree } = props
-
-  return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <DatePicker
-        label="From"
-        setDate={date => {
-          timeRange.from = date
-          timeRange.value = `${date}/${timeRange.to}`
-          setFilterTree(timeRange)
-        }}
-      />
-      <div style={{ width: 20 }} />
-      <DatePicker
-        label="To"
-        setDate={date => {
-          timeRange.to = date
-          timeRange.value = `${timeRange.from}/${date}`
-          setFilterTree(timeRange)
-        }}
-      />
-    </div>
-  )
-}
-
-const TimeRangeRelative = props => {
-  const [unit, setUnit] = React.useState('days')
-  const [last, setLast] = React.useState(1)
-  const { timeRange = {}, setFilterTree } = props
-
-  const uglyMap = {
-    minutes: howMany => `RELATIVE(PT${howMany}M)`,
-    hours: howMany => `RELATIVE(PT${howMany}H)`,
-    days: howMany => `RELATIVE(P${howMany}D)`,
-    months: howMany => `RELATIVE(P${howMany}M)`,
-    years: howMany => `RELATIVE(P${howMany}Y)`,
-  }
-
-  return (
-    <div style={{ overflow: 'auto', flex: '1', paddingTop: 10 }}>
-      <div style={{ display: 'flex' }}>
-        <FormControl fullWidth>
-          <InputLabel>Unit</InputLabel>
-          <Select
-            value={unit}
-            onChange={e => {
-              setUnit(e.target.value)
-              const tr = {
-                type: timeRange.type,
-                property: timeRange.property,
-                applyTo: timeRange.applyTo,
-                value: uglyMap[e.target.value](last),
-              }
-              setFilterTree(tr)
-            }}
-          >
-            <MenuItem value={`minutes`}>Minutes</MenuItem>
-            <MenuItem value={`hours`}>Hours</MenuItem>
-            <MenuItem value={`days`}>Days</MenuItem>
-            <MenuItem value={`months`}>Months</MenuItem>
-            <MenuItem value={`years`}>Years</MenuItem>
-          </Select>
-        </FormControl>
-        <div style={{ width: 20 }} />
-        <TextField
-          label="Unit"
-          variant="outlined"
-          fullWidth
-          value={last}
-          onChange={e => {
-            setLast(e.target.value)
-            const tr = {
-              type: timeRange.type,
-              property: timeRange.property,
-              applyTo: timeRange.applyTo,
-              value: uglyMap[unit](e.target.value),
-            }
-            setFilterTree(tr)
-          }}
-        />
-      </div>
-    </div>
-  )
-}
-
 const timeProperties = [
   'created',
   'datetime.end',
@@ -194,39 +30,196 @@ const timeProperties = [
   'modified',
 ]
 
-const TimeRangeApplyTo = props => {
-  const { timeRange, writeApplyTo } = props
-  const [applyTo, setApplyTo] = React.useState(props.timeRange.applyTo || [])
+const uglyMap = {
+  minutes: howMany => `RELATIVE(PT${howMany}M)`,
+  hours: howMany => `RELATIVE(PT${howMany}H)`,
+  days: howMany => `RELATIVE(P${howMany}D)`,
+  months: howMany => `RELATIVE(P${howMany}M)`,
+  years: howMany => `RELATIVE(P${howMany}Y)`,
+}
 
-  const handleChange = e => {
-    setApplyTo(e.target.value)
-    writeApplyTo(e.target.value)
+const getDate = date => {
+  const dateCheck = new Date(date)
+
+  if (isNaN(dateCheck.valueOf())) {
+    return new Date()
   }
 
+  return dateCheck
+}
+
+const defaultRange = range => {
+  if (range === undefined || range.type === undefined) {
+    return {}
+  }
+
+  const { type } = range
+
+  if (type === 'DURING') {
+    const from = getDate(range.from)
+    const to = getDate(range.to)
+    const value = `${from} / ${to}`
+
+    return {
+      type,
+      value,
+      from,
+      to,
+    }
+  }
+
+  if (type === '=') {
+    const value = uglyMap.days(1)
+    return {
+      type,
+      value,
+    }
+  }
+
+  return {
+    type, // AFTER | BEFORE
+    value: getDate(range.value),
+  }
+}
+
+const TimeRange = props => {
+  const timeRange = defaultRange(props.timeRange)
+  const setTimeRange = timeRange => {
+    if (typeof setTimeRange === 'function') {
+      const range = defaultRange(timeRange)
+      props.setTimeRange(range)
+    }
+  }
+
+  const TimeRangeWhen = getTimeRangeWhen(timeRange.type)
+
   return (
-    <FormControl fullWidth>
-      <InputLabel>Apply Time Range To</InputLabel>
-      <Select
-        multiple
-        value={applyTo}
-        onChange={handleChange}
-        input={<Input />}
-        renderValue={selected => selected.join(', ')}
-      >
-        {timeProperties.map(name => (
-          <MenuItem key={name} value={name}>
-            <Checkbox checked={applyTo.indexOf(name) > -1} />
-            <ListItemText primary={name} />
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <div style={{ overflow: 'auto', flex: '1' }}>
+      <div style={{ display: 'flex' }}>
+        <FormControl fullWidth>
+          <InputLabel>Time Range</InputLabel>
+          <Select
+            value={timeRange.type}
+            onChange={e => {
+              setTimeRange({ ...timeRange, type: e.target.value })
+            }}
+          >
+            <MenuItem value={'AFTER'}>After</MenuItem>
+            <MenuItem value={'BEFORE'}>Before</MenuItem>
+            <MenuItem value={'DURING'}>Between</MenuItem>
+            <MenuItem value={'='}>Relative</MenuItem>
+          </Select>
+        </FormControl>
+      </div>
+
+      <TimeRangeWhen
+        type={timeRange.type}
+        timeRange={timeRange}
+        setTimeRange={setTimeRange}
+      />
+    </div>
+  )
+}
+
+const createTimeRange = label => props => {
+  const { timeRange = {}, setTimeRange } = props
+
+  return (
+    <DatePicker
+      label={label}
+      defaultDate={getDate(timeRange.value)}
+      setDate={date => {
+        setTimeRange({
+          type: timeRange.type,
+          value: date,
+        })
+      }}
+    />
+  )
+}
+
+const TimeRangeAfter = createTimeRange('Limit search to after this time')
+const TimeRangeBefore = createTimeRange('Limit search to before this time')
+
+const TimeRangeDuring = props => {
+  const { timeRange = {}, setTimeRange } = props
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <DatePicker
+        label="From"
+        defaultDate={getDate(timeRange.from)}
+        setDate={date => {
+          const value = `${date}/${timeRange.to}`
+          setTimeRange({ ...timeRange, from: date, value })
+        }}
+      />
+      <div style={{ width: 20 }} />
+      <DatePicker
+        label="To"
+        defaultDate={getDate(timeRange.to)}
+        setDate={date => {
+          timeRange.to = date
+          const value = `${timeRange.from}/${date}`
+          setTimeRange({ ...timeRange, to: date, value })
+        }}
+      />
+    </div>
+  )
+}
+
+const TimeRangeRelative = props => {
+  const [unit, setUnit] = React.useState('days')
+  const [last, setLast] = React.useState(1)
+  const { timeRange = {}, setTimeRange } = props
+
+  return (
+    <div style={{ overflow: 'auto', flex: '1', paddingTop: 10 }}>
+      <div style={{ display: 'flex' }}>
+        <TextField
+          label="Last"
+          variant="outlined"
+          fullWidth
+          value={last}
+          onChange={e => {
+            setLast(e.target.value)
+            const tr = {
+              type: timeRange.type,
+              value: uglyMap[unit](e.target.value),
+            }
+            setTimeRange(tr)
+          }}
+        />
+        <div style={{ width: 20 }} />
+        <FormControl fullWidth>
+          <InputLabel>Unit</InputLabel>
+          <Select
+            value={unit}
+            onChange={e => {
+              setUnit(e.target.value)
+              const tr = {
+                type: timeRange.type,
+                value: uglyMap[e.target.value](last),
+              }
+              setTimeRange(tr)
+            }}
+          >
+            <MenuItem value={`minutes`}>Minutes</MenuItem>
+            <MenuItem value={`hours`}>Hours</MenuItem>
+            <MenuItem value={`days`}>Days</MenuItem>
+            <MenuItem value={`months`}>Months</MenuItem>
+            <MenuItem value={`years`}>Years</MenuItem>
+          </Select>
+        </FormControl>
+      </div>
+    </div>
   )
 }
 
 const DatePicker = props => {
-  const [selectedDate, setSelectedDate] = React.useState(new Date())
-  const { setDate, label } = props
+  const { setDate, label, defaultDate } = props
+  console.log('defaultDate', defaultDate)
+  const [selectedDate, setSelectedDate] = React.useState(defaultDate)
 
   function handleDateChange(date) {
     setSelectedDate(date)

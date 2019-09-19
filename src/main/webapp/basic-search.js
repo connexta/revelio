@@ -36,6 +36,18 @@ import {
 } from './basic-search-helper'
 const { Map, List, Set, fromJS } = require('immutable')
 
+const timeAttributes = [
+  'created',
+  'datetime.end',
+  'datetime.start',
+  'effective',
+  'expiration',
+  'metacard.created',
+  'metacard.modified',
+  'metacard.version.versioned-on',
+  'modified',
+]
+
 //console.log(fromFilterTree(exampleFilterTree));
 const TextSearch = ({ text, handleChange }) => {
   return (
@@ -54,6 +66,7 @@ const filterMap = {
   timeRange: 'Time Range',
   datatypes: 'Match Types',
 }
+
 const AddButton = ({ addFilter }) => {
   const [anchorEl, setAnchorEl] = React.useState(null)
   function handleClick(event) {
@@ -135,26 +148,45 @@ export const BasicSearch = props => {
   const matchTypes = () => {
     return (
       <MatchTypes
-        applyTo={datatypes.applyTo}
-        handleChange={e =>
-          setFilterTree(
-            filterTree.setIn([DATATYPES_KEY, APPLY_TO_KEY], e.target.value)
+        applyTo={filterTree.getIn([DATATYPES_KEY, APPLY_TO_KEY])}
+        handleChange={e => {
+          const next = filterTree.setIn(
+            [DATATYPES_KEY, APPLY_TO_KEY],
+            e.target.value
           )
-        }
+          setFilterTree(next)
+        }}
       />
     )
   }
 
+  console.log(filterTree.getIn([TIME_RANGE_KEY, APPLY_TO_KEY]))
+
   const filters = {
     location: () => <Location />,
     timeRange: () => (
-      <TimeRange
-        fullWidth
-        timeRange={timeRange}
-        setFilterTree={timeRange => {
-          setFilterTree(filterTree.set(TIME_RANGE_KEY, fromJS(timeRange)))
-        }}
-      />
+      <div style={{ flex: '1', overflow: 'hidden' }}>
+        <TimeRange
+          fullWidth
+          timeRange={filterTree.getIn([TIME_RANGE_KEY, 'value'])}
+          setTimeRange={timeRange => {
+            const next = filterTree.setIn([TIME_RANGE_KEY, 'value'], timeRange)
+            setFilterTree(next)
+          }}
+        />
+        <FormControl fullWidth>
+          <AttributeSelector
+            attributes={filterTree.getIn([TIME_RANGE_KEY, APPLY_TO_KEY])}
+            setAttributes={attributes => {
+              const next = filterTree.setIn(
+                [TIME_RANGE_KEY, APPLY_TO_KEY],
+                attributes
+              )
+              setFilterTree(next)
+            }}
+          />
+        </FormControl>
+      </div>
     ),
     datatypes: matchTypes,
   }
@@ -256,6 +288,7 @@ const datatypes = [
   'Image',
   'Physical Object',
 ]
+
 const MatchTypes = ({ applyTo = [], handleChange }) => (
   <FormControl fullWidth>
     <InputLabel>Match Types</InputLabel>
@@ -277,6 +310,30 @@ const MatchTypes = ({ applyTo = [], handleChange }) => (
     </Select>
   </FormControl>
 )
+
+const AttributeSelector = props => {
+  const { attributes = [], setAttributes } = props
+
+  return (
+    <FormControl fullWidth>
+      <InputLabel>Apply Time Range To</InputLabel>
+      <Select
+        multiple
+        value={attributes}
+        onChange={e => setAttributes(e.target.value)}
+        input={<Input />}
+        renderValue={selected => selected.join(', ')}
+      >
+        {timeAttributes.map(name => (
+          <MenuItem key={name} value={name}>
+            <Checkbox checked={attributes.indexOf(name) > -1} />
+            <ListItemText primary={name} />
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  )
+}
 
 const locationTypes = [
   'Any',
