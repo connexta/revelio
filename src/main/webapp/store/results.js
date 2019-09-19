@@ -26,6 +26,6 @@ const selection = (state = Set(), action) => {
   }
 }
 
-export const getSelected = state => getLocalState(state).selection
+export const getSelected = state => getLocalState(state)
 
 export default { [ns]: selection }

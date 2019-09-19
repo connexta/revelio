@@ -99,7 +99,7 @@ const TimeRange = props => {
         <FormControl fullWidth>
           <InputLabel>Time Range</InputLabel>
           <Select
-            value={timeRange.type}
+            value={timeRange.type || ''}
             onChange={e => {
               setTimeRange({ ...timeRange, type: e.target.value })
             }}

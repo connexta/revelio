@@ -48,7 +48,6 @@ const timeAttributes = [
   'modified',
 ]
 
-//console.log(fromFilterTree(exampleFilterTree));
 const TextSearch = ({ text, handleChange }) => {
   return (
     <TextField
@@ -91,6 +90,7 @@ const AddButton = ({ addFilter }) => {
       >
         {Object.keys(filterMap).map(filter => (
           <MenuItem
+            key={filter}
             value={filter}
             onClick={() => {
               addFilter(filter)
@@ -118,7 +118,7 @@ const SearchButton = props => (
 )
 
 const populateDefaultQuery = filterTree => ({
-  srcs: ['ddf.distribution', 'cache'],
+  srcs: ['ddf.distribution'],
   start: 1,
   count: 250,
   filterTree,
@@ -136,13 +136,10 @@ const populateDefaultQuery = filterTree => ({
 
 export const BasicSearch = props => {
   const [filterTree, setFilterTree] = React.useState(
+    //Map({ text: '*' })
     fromFilterTree(exampleFilterTree)
   )
-  //console.log(filterTree);
 
-  const [selectedFilters, setSelectedFilters] = React.useState(
-    Set(Object.keys(filterMap).filter(filter => filterTree.get(filter)))
-  )
   const { datatypes, text, location, timeRange } = filterTree.toJSON()
 
   const matchTypes = () => {
@@ -159,8 +156,6 @@ export const BasicSearch = props => {
       />
     )
   }
-
-  console.log(filterTree.getIn([TIME_RANGE_KEY, APPLY_TO_KEY]))
 
   const filters = {
     location: () => <Location />,
@@ -190,10 +185,6 @@ export const BasicSearch = props => {
     ),
     datatypes: matchTypes,
   }
-  //console.log(exampleFilterTree);
-  //console.log(fromFilterTree(exampleFilterTree));
-  // console.log(filterTree);
-  // console.log(selectedFilters);
 
   const spacing = 20
 
@@ -201,9 +192,6 @@ export const BasicSearch = props => {
     <Paper
       style={{
         maxWidth: 600,
-        margin: '20px auto',
-        //padding: spacing,
-        //boxSizing: 'border-box',
       }}
     >
       <div
@@ -222,47 +210,48 @@ export const BasicSearch = props => {
         />
         <AddButton
           addFilter={filter => {
-            setSelectedFilters(selectedFilters.add(filter))
+            setFilterTree(filterTree.merge({ [filter]: {} }))
           }}
         />
       </div>
 
-      {selectedFilters.map(filter => {
-        return (
-          <div style={{ width: '100%' }}>
-            <Divider style={{ marginBottom: 15, marginTop: 10 }} />
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: spacing,
-                boxSizing: 'border-box',
-              }}
-            >
-              <div style={{ marginRight: spacing }}>
-                <Fab
-                  size="small"
-                  color="secondary"
-                  onClick={() => {
-                    setFilterTree(filterTree.set(filter, Map()))
-                    setSelectedFilters(selectedFilters.delete(filter))
-                  }}
-                >
-                  <RemoveIcon />
-                </Fab>
-              </div>
+      {filterTree
+        .remove('text')
+        .map((state, filter) => {
+          return (
+            <div key={filter} style={{ width: '100%' }}>
+              <Divider style={{ marginBottom: 15, marginTop: 10 }} />
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: spacing,
+                  boxSizing: 'border-box',
+                }}
+              >
+                <div style={{ marginRight: spacing }}>
+                  <Fab
+                    size="small"
+                    color="secondary"
+                    onClick={() => {
+                      setFilterTree(filterTree.remove(filter))
+                    }}
+                  >
+                    <RemoveIcon />
+                  </Fab>
+                </div>
 
-              {filters[filter]()}
+                {filters[filter]()}
+              </div>
             </div>
-          </div>
-        )
-      })}
+          )
+        })
+        .valueSeq()}
 
       <SearchButton
         fullWidth
         style={{ marginTop: spacing }}
         onSearch={() => {
-          //console.log(filterTree);
           console.log(
             'Sending query with filterTree: ',
             toFilterTree(filterTree)
@@ -293,7 +282,6 @@ const MatchTypes = ({ applyTo = [], handleChange }) => (
   <FormControl fullWidth>
     <InputLabel>Match Types</InputLabel>
     <Select
-      checkbox-item
       multiple
       value={applyTo}
       onChange={handleChange}
@@ -302,7 +290,7 @@ const MatchTypes = ({ applyTo = [], handleChange }) => (
       }}
     >
       {datatypes.map(datatype => (
-        <MenuItem value={datatype}>
+        <MenuItem key={datatype} value={datatype}>
           <Checkbox checked={applyTo.indexOf(datatype) > -1} />
           <ListItemText primary={datatype} />
         </MenuItem>
@@ -350,7 +338,9 @@ const Location = () => {
       <InputLabel>Location</InputLabel>
       <Select value={type} onChange={e => setType(e.target.value)}>
         {locationTypes.map(type => (
-          <MenuItem value={type}>{type}</MenuItem>
+          <MenuItem key={type} value={type}>
+            {type}
+          </MenuItem>
         ))}
       </Select>
     </FormControl>

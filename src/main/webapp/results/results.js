@@ -72,6 +72,7 @@ const Description = props => {
 }
 
 const getCellContent = (attribute, result, Thumbnail) => {
+  const { properties } = result.metacard
   switch (attribute) {
     case 'thumbnail':
       return (
@@ -82,40 +83,45 @@ const getCellContent = (attribute, result, Thumbnail) => {
             justifyContent: 'center',
           }}
         >
-          <Thumbnail {...result} />
+          <Thumbnail result={result} />
         </div>
       )
     case 'description':
-      return <Description text={result.description} />
+      return <Description text={properties.description} />
     default:
       return (
-        <Typography style={{ ...cellStyles }}>{result[attribute]}</Typography>
+        <Typography style={{ ...cellStyles }}>
+          {properties[attribute]}
+        </Typography>
       )
   }
 }
 
+const getId = result => result.metacard.properties.id
+
 const Result = props => {
-  const { attributes, selected, id, onClick, Thumbnail, ...rest } = props
+  const { attributes, selected, onClick, Thumbnail, result } = props
+  const id = getId(result)
   return (
     <TableRow onClick={onClick} key={id} selected={selected}>
       {attributes.map(attribute => (
         <TableCell key={attribute}>
-          {getCellContent(attribute.toLowerCase(), { id, ...rest }, Thumbnail)}
+          {getCellContent(attribute.toLowerCase(), result, Thumbnail)}
         </TableCell>
       ))}
     </TableRow>
   )
 }
 
-const DDFThumbnail = props => {
-  const src = props.actions.find(
-    ({ id }) => id === 'catalog.data.metacard.thumbnail'
-  )
-  return <DefaultThumbnail src={src} {...props} />
+const DDFThumbnail = ({ result }) => {
+  const { url } =
+    result.actions.find(({ id }) => id === 'catalog.data.metacard.thumbnail') ||
+    {}
+  return <DefaultThumbnail src={url} />
 }
 
 const computeSelected = (selection, results, start, end, e) => {
-  const clicked = results[end].id
+  const clicked = getId(results[end])
   if (e.ctrlKey || e.metaKey) {
     return selection.has(clicked)
       ? selection.remove(clicked)
@@ -126,10 +132,10 @@ const computeSelected = (selection, results, start, end, e) => {
       start < end
         ? results.slice(start, end + 1)
         : results.slice(end, start + 1)
-    const group = Set(slice.map(({ id }) => id))
+    const group = Set(slice.map(result => getId(result)))
     return group.union(selection)
   }
-  return selection.has(clicked) ? Set() : Set([results[end].id])
+  return selection.has(clicked) ? Set() : Set([getId(results[end])])
 }
 
 const Results = props => {
@@ -140,11 +146,11 @@ const Results = props => {
 
   return (
     <div style={{ height: '100%' }}>
-      <Toolbar style={{ height: '10%' }}>
+      {/*<Toolbar style={{ height: '10%' }}>
         <Typography variant="h5" component="h1">
           Search Results
         </Typography>
-      </Toolbar>
+      </Toolbar>*/}
       <Paper style={{ height: '90%', overflow: 'auto' }}>
         <Table>
           <TableHead>
@@ -157,26 +163,30 @@ const Results = props => {
             </TableRow>
           </TableHead>
           <TableBody style={{ userSelect: allowTextSelect ? 'auto' : 'none' }}>
-            {results.map((result, i) => (
-              <Result
-                {...result}
-                Thumbnail={Thumbnail}
-                attributes={attributes}
-                selected={selection.has(result.id)}
-                onClick={e => {
-                  e.stopPropagation()
-                  const selected = computeSelected(
-                    selection,
-                    results,
-                    lastSelected,
-                    i,
-                    e
-                  )
-                  onSelect(selected)
-                  setLastSelected(e.shiftKey ? lastSelected : i)
-                }}
-              />
-            ))}
+            {results.map((result, i) => {
+              const id = getId(result)
+              return (
+                <Result
+                  key={id}
+                  result={result}
+                  Thumbnail={Thumbnail}
+                  attributes={attributes}
+                  selected={selection.has(id)}
+                  onClick={e => {
+                    e.stopPropagation()
+                    const selected = computeSelected(
+                      selection,
+                      results,
+                      lastSelected,
+                      i,
+                      e
+                    )
+                    onSelect(selected)
+                    setLastSelected(e.shiftKey ? lastSelected : i)
+                  }}
+                />
+              )
+            })}
           </TableBody>
         </Table>
       </Paper>

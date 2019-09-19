@@ -133,7 +133,7 @@ const results = (state = Map(), action) => {
       return state.withMutations(state => {
         action.response.results.forEach(result => {
           const metacardId = result.metacard.properties.id
-          state.set([sourceId, metacardId], result)
+          state.set(metacardId, result)
         })
       })
     default:
@@ -166,9 +166,23 @@ const getTypes = state => {
 }
 
 const getQueryResponse = queryId => state => {
-  return getLocalState(state)
-    .sourceResponse.get(queryId)
-    .toJSON()
+  const sourceResponse = getLocalState(state).sourceResponse.get(queryId)
+  if (sourceResponse === undefined) {
+    return []
+  }
+  const response = sourceResponse.get('ddf.distribution')
+
+  if (response === undefined) {
+    return []
+  }
+
+  if (response.code !== undefined) {
+    return []
+  }
+
+  return response.results.map(id => {
+    return getLocalState(state).results.get(id)
+  })
 }
 
 const getMetacards = state => {
@@ -176,6 +190,7 @@ const getMetacards = state => {
 }
 
 const getMetacard = metacardId => state => {
+  debugger
   const metacard = getLocalState(state).results.get(metacardId)
   if (metacard !== undefined) {
     return metacard
@@ -200,4 +215,5 @@ module.exports = {
   getSourceStatus,
   getMetacards,
   rootStateKey,
+  getQueryResponse,
 }

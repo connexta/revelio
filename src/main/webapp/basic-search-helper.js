@@ -58,7 +58,7 @@ export const fromFilterTree = filterTree => {
 
 export const toFilterTree = basicData => {
   const getTimeRangeFilter = () => {
-    const applyTo = basicData.getIn([TIME_RANGE_KEY, 'applyTo'])
+    const applyTo = basicData.getIn([TIME_RANGE_KEY, APPLY_TO_KEY])
     const rest = basicData.getIn([TIME_RANGE_KEY, 'value'])
 
     if (!applyTo || !rest) {
@@ -75,7 +75,7 @@ export const toFilterTree = basicData => {
   }
 
   const getDatatypesFilter = () => {
-    const { applyTo } = basicData.get(DATATYPES_KEY).toJSON()
+    const applyTo = basicData.getIn([DATATYPES_KEY, APPLY_TO_KEY])
     if (!applyTo) {
       return null
     }
@@ -95,14 +95,15 @@ export const toFilterTree = basicData => {
     }
   }
 
-  const text = basicData.get(TEXT_KEY)
+  const text = basicData.has(TEXT_KEY)
     ? {
         type: 'ILIKE',
         property: 'anyText',
         value: basicData.get(TEXT_KEY),
       }
     : null
-  const location = !basicData.get(LOCATION_KEY).isEmpty()
+
+  const location = basicData.has(LOCATION_KEY)
     ? {
         type: 'INTERSECTS',
         property: 'anyGeo',

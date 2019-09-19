@@ -601,6 +601,13 @@ function write(filter) {
           : property + ' ' + filter.type
       }
     case temporalClass:
+      const toStringDate = date => {
+        if (typeof date.toISOString === 'function') {
+          return date.toISOString()
+        }
+        return date.toString()
+      }
+
       switch (filter.type) {
         case 'BEFORE':
         case 'AFTER':
@@ -609,7 +616,7 @@ function write(filter) {
             ' ' +
             filter.type +
             ' ' +
-            filter.value.toString(dateTimeFormat)
+            toStringDate(filter.value)
           )
         case 'DURING':
           return (
@@ -617,9 +624,9 @@ function write(filter) {
             ' ' +
             filter.type +
             ' ' +
-            filter.from.toString(dateTimeFormat) +
+            toStringDate(filter.from) +
             '/' +
-            filter.to.toString(dateTimeFormat)
+            toStringDate(filter.to)
           )
       }
       break
