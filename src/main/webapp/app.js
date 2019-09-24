@@ -26,4 +26,9 @@ render(Routes)
 
 if (process.env.NODE_ENV !== 'production') {
   module.hot.accept('./routes', () => render(require('./routes').default))
+  module.hot.accept('./store', () => {
+    const { rootReducer } = require('./store')
+    store.replaceReducer(rootReducer)
+  })
+  module.hot.accept('./intrigue-api/lib/cache', () => {})
 }
