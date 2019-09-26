@@ -27,6 +27,7 @@ import {
 import AboutRoute from './about'
 import SourcesRoute from './sources'
 import SimpleSearch from './simple-search'
+import ResultForms from './result-forms'
 
 const Link = props => {
   return (
@@ -72,7 +73,7 @@ const routes = [
   createRoute('/upload', 'Upload', PublishIcon),
   createRoute('/sources', 'Sources', CloudIcon, SourcesRoute),
   createRoute('/search-forms', 'Search Forms', FindInPageIcon),
-  createRoute('/result-forms', 'Result Forms', ViewListIcon),
+  createRoute('/result-forms', 'Result Forms', ViewListIcon, ResultForms),
   createRoute('/about', 'About', InfoSharpIcon, AboutRoute),
 ]
 

@@ -105,7 +105,7 @@ const metacardTypes = async () => {
   return Object.keys(types).map(k => types[k])
 }
 
-const Query: QueryResolvers = {
+const Query = {
   user,
   sources,
   metacards,
@@ -114,8 +114,93 @@ const Query: QueryResolvers = {
   systemProperties,
 }
 
+const createMetacard = async (parent, args) => {
+  const { attrs } = args
+
+  const body = {
+    geometry: null,
+    type: 'Feature',
+    properties: attrs,
+  }
+
+  const res = await fetch('./internal/catalog/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+
+  const id = res.headers.get('id')
+  const metacardCreated = new Date().toISOString()
+  const metacardModified = metacardCreated
+
+  return {
+    ...toCamelCaseAttrs(attrs),
+    id,
+    metacardCreated,
+    metacardModified,
+    metacardOwner: 'You',
+  }
+}
+
+const saveMetacard = async (parent, args) => {
+  const { id, ...attrs } = args.attrs
+
+  const attributes = Object.keys(attrs).map(attribute => {
+    const value = attrs[attribute]
+    return {
+      attribute,
+      values: Array.isArray(value) ? value : [value],
+    }
+  })
+
+  const body = [
+    {
+      ids: [id],
+      attributes,
+    },
+  ]
+
+  const res = await fetch('./internal/metacards', {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+
+  if (res.ok) {
+    const metacardModified = new Date().toISOString()
+    return {
+      id,
+      metacardModified,
+      ...toCamelCaseAttrs(attrs),
+    }
+  }
+}
+
+const deleteMetacard = async (parent, args) => {
+  const { id } = args
+
+  const res = await fetch(`./internal/catalog/${id}`, {
+    method: 'DELETE',
+  })
+
+  if (res.ok) {
+    return id
+  }
+}
+
+const Mutation = {
+  createMetacard,
+  saveMetacard,
+  deleteMetacard,
+}
+
 const resolvers = {
   Query,
+  Mutation,
 }
 
 const executableSchema = makeExecutableSchema({

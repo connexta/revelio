@@ -371,3 +371,14 @@ type Query {
   metacards(q: QueryRequest): QueryResponse
   metacardsByTag(tag: String): QueryResponse
 }
+
+type MutationResponse {
+  metacard: Json
+  attributes: [MetacardAttributes]
+}
+
+type Mutation {
+  createMetacard(attrs: Json): MetacardAttributes
+  saveMetacard(attrs: Json): MetacardAttributes
+  deleteMetacard(id: ID): ID
+}
