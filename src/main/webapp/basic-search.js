@@ -1,7 +1,3 @@
-// stuff I need to do
-// get the right date format
-// time range validation?
-// pull out time range stuff and storybook it
 import React from 'react'
 import { connect } from 'react-redux'
 
@@ -12,6 +8,7 @@ import TextField from '@material-ui/core/TextField'
 import Select from '@material-ui/core/Select'
 import FormControl from '@material-ui/core/FormControl'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
+import FormHelperText from '@material-ui/core/FormHelperText'
 import FormLabel from '@material-ui/core/FormLabel'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -21,7 +18,10 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Input from '@material-ui/core/Input'
 import Checkbox from '@material-ui/core/Checkbox'
 import Divider from '@material-ui/core/Divider'
-import TimeRange from './time-range'
+import TimeRange, {
+  validate as validateTimeRange,
+  createTimeRange,
+} from './time-range'
 
 import { executeQuery } from './intrigue-api/lib/cache'
 
@@ -149,11 +149,13 @@ const populateDefaultQuery = filterTree => ({
   batchId: '5a3f400c2e1e410e8d37494500173ca4',
 })
 
-const MatchTypes = ({ state = [], setState }) => {
+const MatchTypes = ({ state = [], setState, errors = {} }) => {
+  errors = errors.matchTypesErrors || {}
   return (
     <FormControl fullWidth>
       <InputLabel>Match Types</InputLabel>
       <Select
+        error={errors.datatypes}
         multiple
         value={state}
         onChange={e => setState(e.target.value)}
@@ -168,24 +170,29 @@ const MatchTypes = ({ state = [], setState }) => {
           </MenuItem>
         ))}
       </Select>
+      <FormHelperText error={errors.datatypes}>
+        {errors.datatypes}
+      </FormHelperText>
     </FormControl>
   )
 }
 
-const BasicTimeRange = ({ state = Map(), setState }) => {
+const BasicTimeRange = ({ state = Map(), setState, errors }) => {
   return (
     <div style={{ flex: '1', overflow: 'hidden' }}>
       <TimeRange
+        errors={errors.timeRangeErrors}
         fullWidth
         timeRange={state.get('value')}
-        setTimeRange={timeRange => {
-          const next = state.set('value', timeRange)
+        setTimeRange={updatedTimeRange => {
+          const next = state.set('value', updatedTimeRange)
           setState(next)
         }}
       />
       <FormControl fullWidth>
         <AttributeSelector
           attributes={state.get(APPLY_TO_KEY)}
+          errors={errors.attributeSelectorErrors}
           setAttributes={attributes => {
             const next = state.set(APPLY_TO_KEY, attributes)
             setState(next)
@@ -197,12 +204,13 @@ const BasicTimeRange = ({ state = Map(), setState }) => {
 }
 
 const AttributeSelector = props => {
-  const { attributes = [], setAttributes } = props
+  const { attributes = [], setAttributes, errors = {} } = props
 
   return (
     <FormControl fullWidth>
       <InputLabel>Apply Time Range To</InputLabel>
       <Select
+        error={errors.applyTo}
         multiple
         value={attributes}
         onChange={e => setAttributes(e.target.value)}
@@ -216,6 +224,7 @@ const AttributeSelector = props => {
           </MenuItem>
         ))}
       </Select>
+      <FormHelperText error={errors.applyTo}>{errors.applyTo}</FormHelperText>
     </FormControl>
   )
 }
@@ -252,11 +261,21 @@ const filters = {
   datatypes: MatchTypes,
 }
 
+const defaultFilters = {
+  timeRange: Map({
+    value: createTimeRange({ type: 'BEFORE' }),
+    applyTo: ['created'],
+  }),
+}
+
 export const BasicSearch = props => {
   const [filterTree, setFilterTree] = React.useState(
     Map({ text: '*' })
     //fromFilterTree(exampleFilterTree)
   )
+
+  const [submitted, setSubmitted] = React.useState(false)
+  const errors = validate(filterTree)
 
   const text = filterTree.get('text')
 
@@ -284,7 +303,11 @@ export const BasicSearch = props => {
         />
         <AddButton
           addFilter={filter => {
-            setFilterTree(filterTree.merge({ [filter]: undefined }))
+            setFilterTree(
+              filterTree.merge({
+                [filter]: defaultFilters[filter],
+              })
+            )
           }}
         />
       </div>
@@ -321,6 +344,7 @@ export const BasicSearch = props => {
                   setState={state => {
                     setFilterTree(filterTree.set(filter, state))
                   }}
+                  errors={submitted ? errors : {}}
                 />
               </div>
             </div>
@@ -336,11 +360,78 @@ export const BasicSearch = props => {
             'Sending query with filterTree: ',
             toFilterTree(filterTree)
           )
-          props.onSearch(populateDefaultQuery(toFilterTree(filterTree)))
+
+          if (!submitted) {
+            setSubmitted(true)
+          }
+
+          if (isEmpty(errors)) {
+            console.log('YEP, SEND IT')
+            props.onSearch(populateDefaultQuery(toFilterTree(filterTree)))
+          } else {
+            console.log('FIXYOSTUFF', errors)
+          }
         }}
       />
     </Paper>
   )
+}
+
+const isEmpty = checkThis => {
+  return Object.keys(checkThis).length === 0
+}
+
+const validateAttributeSelector = (applyTo = []) => {
+  const errors = {}
+
+  if (applyTo.length === 0) {
+    errors.applyTo = 'Must choose at least one attribute'
+  }
+
+  return errors
+}
+
+const validateMatchTypes = (datatypes = []) => {
+  const errors = {}
+
+  if (datatypes.length === 0) {
+    errors.datatypes = 'Must choose at least one type to match against'
+  }
+
+  return errors
+}
+
+const combineValidators = () => {}
+
+const validate = (filterMap = {}) => {
+  let errors = {}
+
+  if (filterMap.has(TIME_RANGE_KEY)) {
+    const timeRangeErrors = validateTimeRange(
+      filterMap.getIn([TIME_RANGE_KEY, 'value'])
+    )
+
+    if (!isEmpty(timeRangeErrors)) {
+      errors['timeRangeErrors'] = timeRangeErrors
+    }
+
+    const attributeSelectorErrors = validateAttributeSelector(
+      filterMap.getIn([TIME_RANGE_KEY, APPLY_TO_KEY])
+    )
+    if (!isEmpty(attributeSelectorErrors)) {
+      errors['attributeSelectorErrors'] = attributeSelectorErrors
+    }
+  }
+
+  if (filterMap.has(DATATYPES_KEY)) {
+    const matchTypesErrors = validateMatchTypes(
+      filterMap.getIn([DATATYPES_KEY])
+    )
+    if (!isEmpty(matchTypesErrors)) {
+      errors['matchTypesErrors'] = matchTypesErrors
+    }
+  }
+  return errors
 }
 
 const mapDispatchToProps = { onSearch: executeQuery }

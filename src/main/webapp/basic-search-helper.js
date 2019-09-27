@@ -18,6 +18,29 @@ const timeProperties = [
   'modified',
 ]
 
+const uglyMap = {
+  minutes: howMany => `RELATIVE(PT${howMany}M)`,
+  hours: howMany => `RELATIVE(PT${howMany}H)`,
+  days: howMany => `RELATIVE(P${howMany}D)`,
+  months: howMany => `RELATIVE(P${howMany}M)`,
+  years: howMany => `RELATIVE(P${howMany}Y)`,
+}
+
+const relativeUnits = {
+  P: {
+    D: 'days',
+    M: 'months',
+    Y: 'years',
+  },
+  PT: {
+    H: 'hours',
+    M: 'minutes',
+  },
+}
+
+// Create the Map
+const unitsMap = Map(fromJS(relativeUnits))
+
 const datatypeProperties = ['metadata-content-type', 'datatype']
 
 export const fromFilterTree = filterTree => {
@@ -37,6 +60,12 @@ export const fromFilterTree = filterTree => {
 
     if (filters && filters[0]) {
       if (timeProperties.includes(filters[0].property)) {
+        if (filters[0].type === '=') {
+          const { last, unit } = parseRelative(filters[0].value)
+          filters[0].last = last
+          filters[0].unit = unit
+        }
+
         return accumulator.set(
           TIME_RANGE_KEY,
           Map({
@@ -56,6 +85,18 @@ export const fromFilterTree = filterTree => {
   }, Map())
 }
 
+const parseRelative = relative => {
+  const matches = relative.match(/RELATIVE\((\D*)(\d*)(\D*)\)/)
+  if (matches && matches.length > 3) {
+    const [full, timeOrDay, last, unitKey] = matches
+    const unit = unitsMap.getIn([timeOrDay, unitKey])
+
+    return { last, unit }
+  }
+
+  return {}
+}
+
 export const toFilterTree = basicData => {
   const getTimeRangeFilter = () => {
     const applyTo = basicData.getIn([TIME_RANGE_KEY, APPLY_TO_KEY])
@@ -63,6 +104,11 @@ export const toFilterTree = basicData => {
 
     if (!applyTo || !rest) {
       return null
+    }
+
+    if (rest.type === '=') {
+      const { last, unit } = rest
+      rest.value = uglyMap[unit](last)
     }
 
     return {
