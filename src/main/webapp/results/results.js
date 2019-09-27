@@ -145,52 +145,45 @@ const Results = props => {
   const allowTextSelect = !useKeyPressed('Shift')
 
   return (
-    <div style={{ height: '100%' }}>
-      {/*<Toolbar style={{ height: '10%' }}>
-        <Typography variant="h5" component="h1">
-          Search Results
-        </Typography>
-      </Toolbar>*/}
-      <Paper style={{ overflow: 'auto' }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              {attributes.map(attribute => (
-                <TableCell key={attribute}>
-                  <Typography>{attribute}</Typography>
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody style={{ userSelect: allowTextSelect ? 'auto' : 'none' }}>
-            {results.map((result, i) => {
-              const id = getId(result)
-              return (
-                <Result
-                  key={id}
-                  result={result}
-                  Thumbnail={Thumbnail}
-                  attributes={attributes}
-                  selected={selection.has(id)}
-                  onClick={e => {
-                    e.stopPropagation()
-                    const selected = computeSelected(
-                      selection,
-                      results,
-                      lastSelected,
-                      i,
-                      e
-                    )
-                    onSelect(selected)
-                    setLastSelected(e.shiftKey ? lastSelected : i)
-                  }}
-                />
-              )
-            })}
-          </TableBody>
-        </Table>
-      </Paper>
-    </div>
+    <Paper style={{ overflow: 'auto', maxHeight: '100%' }}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            {attributes.map(attribute => (
+              <TableCell key={attribute}>
+                <Typography>{attribute}</Typography>
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody style={{ userSelect: allowTextSelect ? 'auto' : 'none' }}>
+          {results.map((result, i) => {
+            const id = getId(result)
+            return (
+              <Result
+                key={id}
+                result={result}
+                Thumbnail={Thumbnail}
+                attributes={attributes}
+                selected={selection.has(id)}
+                onClick={e => {
+                  e.stopPropagation()
+                  const selected = computeSelected(
+                    selection,
+                    results,
+                    lastSelected,
+                    i,
+                    e
+                  )
+                  onSelect(selected)
+                  setLastSelected(e.shiftKey ? lastSelected : i)
+                }}
+              />
+            )
+          })}
+        </TableBody>
+      </Table>
+    </Paper>
   )
 }
 

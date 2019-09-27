@@ -44,8 +44,7 @@ const clearQuery = queryId => ({ type: 'query/CLEAR-QUERY', queryId })
 
 const cancelQuery = (queryId, sourceId) => (dispatch, getState) => {
   const { sourceRequest } = getLocalState(getState())
-  const id = List([queryId, sourceId])
-  const request = sourceRequest.get(id)
+  const request = sourceRequest.getIn([queryId, sourceId])
 
   dispatch({
     type: 'query/SOURCE-CANCELED',
@@ -60,7 +59,11 @@ const cancelQuery = (queryId, sourceId) => (dispatch, getState) => {
 
 const getSourceStatus = (state, { queryId, sourceId }) => {
   const { sourceStatus } = getLocalState(state)
-  return sourceStatus.getIn([queryId, sourceId])
+  return sourceStatus.getIn([queryId, sourceId], {}).type
+}
+
+const isCanceled = (state, id) => {
+  return getSourceStatus(state, id) === 'source.canceled'
 }
 
 const sleep = timeout =>
@@ -85,6 +88,8 @@ const executeQuery = ({ srcs, ...query }) => async (dispatch, getState) => {
       })
     }
 
+    const id = { queryId: query.id, sourceId: src }
+
     try {
       const req = send({ src, ...query })
 
@@ -95,41 +100,29 @@ const executeQuery = ({ srcs, ...query }) => async (dispatch, getState) => {
 
       const json = await req.json()
 
-      if (
-        getSourceStatus(getState(), { queryId: query.id, sourceId: src }) ===
-        'source.canceled'
-      ) {
+      if (isCanceled(getState(), id)) {
         return
       }
 
       next({ type: 'query/SOURCE-RETURNED' })
 
-      if (
-        getSourceStatus(getState(), { queryId: query.id, sourceId: src }) ===
-        'source.canceled'
-      ) {
+      if (isCanceled(getState(), id)) {
         return
       }
 
       next({
         type: 'query/SOURCE-RESULTS',
+        info: json.status,
         response: json,
       })
     } catch (e) {
-      const status = getSourceStatus(getState(), {
-        queryId: query.id,
-        sourceId: src,
-      })
-      if (status === 'source.canceled') {
+      if (isCanceled(getState(), id)) {
         return
       }
+
       return next({
         type: 'query/SOURCE-ERROR',
-        response: {
-          queryId,
-          sourceId,
-          error: e,
-        },
+        info: e,
       })
     }
   })
@@ -160,7 +153,7 @@ const queries = (state = Map(), action) => {
   }
 }
 
-// [queryId, sourceId] -> info
+// queryId -> sourceId -> info
 const sourceReducer = fn => (state = Map(), action) => {
   if (action.type === 'query/CLEAR-QUERY') {
     return state.remove(action.queryId)
@@ -195,6 +188,10 @@ const sourceRequest = sourceReducer((state, action) => {
 // { queryId -> sourceId -> sourceResponse }
 const sourceResponse = (state = Map(), action) => {
   switch (action.type) {
+    case 'query/SOURCE-START': {
+      const { queryId, sourceId } = action
+      return state.removeIn([queryId, sourceId])
+    }
     case 'query/RUN-QUERY':
       return state.update(action.query.id, (responses = Map()) => {
         return responses.removeAll(action.query.srcs)
@@ -218,15 +215,21 @@ const sourceResponse = (state = Map(), action) => {
   }
 }
 
-const sourceStatus = sourceReducer((state, action) => {
+const sourceStatus = sourceReducer((state = {}, action) => {
   const statusMap = Map({
     'query/SOURCE-START': 'source.pending',
+    'query/SOURCE-RESULTS': 'source.success',
     'query/SOURCE-RETURNED': 'source.success',
     'query/SOURCE-ERROR': 'source.error',
     'query/SOURCE-CANCELED': 'source.canceled',
   })
 
-  return statusMap.get(action.type, state)
+  if (statusMap.has(action.type)) {
+    const type = statusMap.get(action.type)
+    return { type, info: action.info }
+  }
+
+  return state
 })
 
 // { [sourceId metacardId] -> result }

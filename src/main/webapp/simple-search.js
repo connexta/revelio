@@ -5,6 +5,7 @@ import Results from './results/results'
 import QueryStatus from './query-status'
 
 import Typography from '@material-ui/core/Typography'
+import TablePagination from '@material-ui/core/TablePagination'
 
 import {
   executeQuery,
@@ -32,17 +33,43 @@ const mapDispatchToProps = {
   onCancel: cancelQuery,
 }
 
+const getPageWindow = (data, pageIndex, pageSize) => {
+  const i = pageIndex * pageSize
+  const j = i + pageSize
+  return data.slice(i, j)
+}
+
 const SimpleSearch = props => {
   const [query, setQuery] = useState(undefined)
-
   const { results = [], isPending, onSearch, onClear, onCancel } = props
 
+  const [pageSize, setPageSize] = useState(10)
+  const [pageIndex, setPageIndex] = useState(0)
+  const page = getPageWindow(results, pageIndex, pageSize)
+
   return (
-    <div style={{ margin: '0 auto', padding: 20 }}>
+    <div
+      style={{
+        margin: '0 auto',
+        padding: 20,
+        boxSizing: 'border-box',
+        height: 'calc(100% - 64px)',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <Typography variant="h4" style={{ marginBottom: 20 }}>
         Simple Search
       </Typography>
-      <div style={{ display: 'flex', overflow: 'hidden', padding: 1 }}>
+      <div
+        style={{
+          display: 'flex',
+          overflow: 'hidden',
+          padding: 1,
+          boxSizing: 'border-box',
+          flex: '1',
+        }}
+      >
         <div style={{ width: 360, minWidth: 360 }}>
           <BasicSearch
             onSearch={query => {
@@ -57,15 +84,36 @@ const SimpleSearch = props => {
               onSearch({ ...query, srcs })
             }}
             onCancel={srcs => {
-              onCancel(queryId, srcs)
+              srcs.forEach(src => {
+                onCancel(queryId, src)
+              })
             }}
           />
         </div>
         <div style={{ minWidth: 20 }} />
-        <div style={{ flex: '1 1', overflow: 'auto', padding: 1 }}>
+        <div
+          style={{
+            display: 'flex',
+            flex: '1',
+            flexDirection: 'column',
+          }}
+        >
           <Results
-            results={results}
+            results={page}
             attributes={['title', /*'thumbnail',*/ 'created']}
+          />
+          <TablePagination
+            count={results.length}
+            page={pageIndex}
+            component="div"
+            rowsPerPage={pageSize}
+            onChangePage={(_, n) => {
+              setPageIndex(n)
+            }}
+            onChangeRowsPerPage={e => {
+              setPageIndex(0)
+              setPageSize(e.target.value)
+            }}
           />
         </div>
       </div>
