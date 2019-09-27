@@ -151,7 +151,7 @@ const Results = props => {
           Search Results
         </Typography>
       </Toolbar>*/}
-      <Paper style={{ height: '90%', overflow: 'auto' }}>
+      <Paper style={{ overflow: 'auto' }}>
         <Table>
           <TableHead>
             <TableRow>

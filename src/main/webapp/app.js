@@ -30,5 +30,8 @@ if (process.env.NODE_ENV !== 'production') {
     const { rootReducer } = require('./store')
     store.replaceReducer(rootReducer)
   })
-  module.hot.accept('./intrigue-api/lib/cache', () => {})
+  module.hot.accept('./intrigue-api/lib/cache', () => {
+    const { initTransport } = require('./intrigue-api/lib/cache')
+    store.dispatch(initTransport('http'))
+  })
 }

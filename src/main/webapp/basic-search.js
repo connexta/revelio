@@ -79,6 +79,7 @@ const filterMap = {
   location: 'Location',
   timeRange: 'Time Range',
   datatypes: 'Match Types',
+  sources: 'Sources',
 }
 
 const AddButton = ({ addFilter }) => {
@@ -132,8 +133,8 @@ const SearchButton = props => (
   </Button>
 )
 
-const populateDefaultQuery = filterTree => ({
-  srcs: ['ddf.distribution'],
+const populateDefaultQuery = (filterTree, srcs = ['ddf.distribution']) => ({
+  srcs,
   start: 1,
   count: 250,
   filterTree,
@@ -173,6 +174,31 @@ const MatchTypes = ({ state = [], setState, errors = {} }) => {
       <FormHelperText error={errors.datatypes}>
         {errors.datatypes}
       </FormHelperText>
+    </FormControl>
+  )
+}
+
+const MatchSources = ({ state = ['ddf.distribution'], setState }) => {
+  const sources = ['ddf.distribution', 'csw', 'opensearch']
+
+  return (
+    <FormControl fullWidth>
+      <InputLabel>Sources</InputLabel>
+      <Select
+        multiple
+        value={state}
+        onChange={e => setState(e.target.value)}
+        renderValue={selected => {
+          return selected.join(', ')
+        }}
+      >
+        {sources.map(source => (
+          <MenuItem key={source} value={source}>
+            <Checkbox checked={state.indexOf(source) > -1} />
+            <ListItemText primary={source} />
+          </MenuItem>
+        ))}
+      </Select>
     </FormControl>
   )
 }
@@ -259,6 +285,7 @@ const filters = {
   location: Location,
   timeRange: BasicTimeRange,
   datatypes: MatchTypes,
+  sources: MatchSources,
 }
 
 const defaultFilters = {
@@ -367,7 +394,12 @@ export const BasicSearch = props => {
 
           if (isEmpty(errors)) {
             console.log('YEP, SEND IT')
-            props.onSearch(populateDefaultQuery(toFilterTree(filterTree)))
+            props.onSearch(
+              populateDefaultQuery(
+                toFilterTree(filterTree),
+                filterTree.get('sources')
+              )
+            )
           } else {
             console.log('FIXYOSTUFF', errors)
           }

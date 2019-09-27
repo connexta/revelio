@@ -14,3 +14,5 @@ const composeEnhancers =
 
 export default () =>
   createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)))
+
+export { rootReducer }

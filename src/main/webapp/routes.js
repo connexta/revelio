@@ -1,20 +1,29 @@
+import React from 'react'
+
 import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
 import Drawer from '@material-ui/core/Drawer'
 import IconButton from '@material-ui/core/IconButton'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
+
 import AccessibleForwardIcon from '@material-ui/icons/AccessibleForward'
 import CloudIcon from '@material-ui/icons/Cloud'
+import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark'
+import FindInPageIcon from '@material-ui/icons/FindInPage'
+import HomeIcon from '@material-ui/icons/Home'
 import InfoSharpIcon from '@material-ui/icons/InfoSharp'
 import MenuIcon from '@material-ui/icons/Menu'
+import PublishIcon from '@material-ui/icons/Publish'
 import SearchIcon from '@material-ui/icons/Search'
-import React from 'react'
+import ViewListIcon from '@material-ui/icons/ViewList'
+
 import {
   HashRouter as Router,
   Link as ReactLink,
   Route,
 } from 'react-router-dom'
+
 import AboutRoute from './about'
 import SourcesRoute from './sources'
 import SimpleSearch from './simple-search'
@@ -57,13 +66,13 @@ const createRoute = (path, title, Icon = AccessibleForwardIcon, component) => {
 }
 
 const routes = [
-  createRoute('/', 'Home'),
-  createRoute('/workspace', 'Workspace'),
+  createRoute('/', 'Home', HomeIcon),
+  createRoute('/workspaces', 'Workspaces', CollectionsBookmarkIcon),
   createRoute('/search', 'Search', SearchIcon, SimpleSearch),
-  createRoute('/upload', 'Upload'),
+  createRoute('/upload', 'Upload', PublishIcon),
   createRoute('/sources', 'Sources', CloudIcon, SourcesRoute),
-  createRoute('/search-forms', 'Search Forms'),
-  createRoute('/result-forms', 'Result Forms'),
+  createRoute('/search-forms', 'Search Forms', FindInPageIcon),
+  createRoute('/result-forms', 'Result Forms', ViewListIcon),
   createRoute('/about', 'About', InfoSharpIcon, AboutRoute),
 ]
 

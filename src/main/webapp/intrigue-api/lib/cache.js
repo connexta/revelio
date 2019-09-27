@@ -38,33 +38,99 @@ const closeTransport = () => async (dispatch, getState) => {
   })
 }
 
-const startQuery = query => ({ type: 'query/START-QUERY', query })
-
-const sourceError = response => ({
-  type: 'query/SOURCE-ERROR',
-  response,
-})
-
-const sourceReturned = response => ({
-  type: 'query/SOURCE-RETURNED',
-  response,
-})
+const runQuery = query => ({ type: 'query/RUN-QUERY', query })
 
 const clearQuery = queryId => ({ type: 'query/CLEAR-QUERY', queryId })
+
+const cancelQuery = (queryId, sourceId) => (dispatch, getState) => {
+  const { sourceRequest } = getLocalState(getState())
+  const id = List([queryId, sourceId])
+  const request = sourceRequest.get(id)
+
+  dispatch({
+    type: 'query/SOURCE-CANCELED',
+    queryId,
+    sourceId,
+  })
+
+  if (request !== undefined) {
+    request.abort()
+  }
+}
+
+const getSourceStatus = (state, { queryId, sourceId }) => {
+  const { sourceStatus } = getLocalState(state)
+  return sourceStatus.getIn([queryId, sourceId])
+}
+
+const sleep = timeout =>
+  new Promise(resolve => {
+    setTimeout(resolve, timeout)
+  })
 
 const executeQuery = ({ srcs, ...query }) => async (dispatch, getState) => {
   const { send } = getTransport(getState())
 
-  dispatch(startQuery(query))
+  dispatch(runQuery({ srcs, ...query }))
 
   const responses = srcs.map(async src => {
+    const sourceId = src
+    const queryId = query.id
+
+    const next = action => {
+      dispatch({
+        ...action,
+        sourceId,
+        queryId,
+      })
+    }
+
     try {
-      const json = await send({ src, ...query })
-      return dispatch(sourceReturned(json))
+      const req = send({ src, ...query })
+
+      next({
+        type: 'query/SOURCE-START',
+        request: req,
+      })
+
+      const json = await req.json()
+
+      if (
+        getSourceStatus(getState(), { queryId: query.id, sourceId: src }) ===
+        'source.canceled'
+      ) {
+        return
+      }
+
+      next({ type: 'query/SOURCE-RETURNED' })
+
+      if (
+        getSourceStatus(getState(), { queryId: query.id, sourceId: src }) ===
+        'source.canceled'
+      ) {
+        return
+      }
+
+      next({
+        type: 'query/SOURCE-RESULTS',
+        response: json,
+      })
     } catch (e) {
-      return dispatch(
-        sourceError({ error: e, queryId: query.id, sourceId: src })
-      )
+      const status = getSourceStatus(getState(), {
+        queryId: query.id,
+        sourceId: src,
+      })
+      if (status === 'source.canceled') {
+        return
+      }
+      return next({
+        type: 'query/SOURCE-ERROR',
+        response: {
+          queryId,
+          sourceId,
+          error: e,
+        },
+      })
     }
   })
 
@@ -85,7 +151,7 @@ const transport = (state = null, action) => {
 // { queryId -> query }
 const queries = (state = Map(), action) => {
   switch (action.type) {
-    case 'query/START-QUERY':
+    case 'query/RUN-QUERY':
       return state.set(action.query.id, action.query)
     case 'query/CLEAR-QUERY':
       return state.remove(action.queryId)
@@ -94,18 +160,49 @@ const queries = (state = Map(), action) => {
   }
 }
 
+// [queryId, sourceId] -> info
+const sourceReducer = fn => (state = Map(), action) => {
+  if (action.type === 'query/CLEAR-QUERY') {
+    return state.remove(action.queryId)
+  }
+
+  if (action.queryId && action.sourceId) {
+    const { queryId, sourceId } = action
+    return state.updateIn([queryId, sourceId], state => {
+      return fn(state, action)
+    })
+  }
+
+  return state
+}
+
+const sourceRequest = sourceReducer((state, action) => {
+  switch (action.type) {
+    case 'query/SOURCE-START':
+      return action.request
+
+    case 'query/SOURCE-ERROR':
+    case 'query/SOURCE-CANCELED':
+    case 'query/SOURCE-RETURNED':
+      return null
+
+    default:
+      return state
+  }
+})
+
+//if you modify a query, running a specific source search should use the new criteria
 // { queryId -> sourceId -> sourceResponse }
 const sourceResponse = (state = Map(), action) => {
   switch (action.type) {
-    case 'query/START-QUERY':
-      return state.set(action.query.id, Map())
-    case 'query/SOURCE-RETURNED': {
+    case 'query/RUN-QUERY':
+      return state.update(action.query.id, (responses = Map()) => {
+        return responses.removeAll(action.query.srcs)
+      })
+    case 'query/SOURCE-RESULTS': {
+      const { queryId, sourceId } = action
       const { types, results, ...sourceResponse } = action.response
-      const queryId = action.response.id
-
-      return state.update(queryId, map => {
-        const sourceId = sourceResponse.status.id
-
+      return state.update(queryId, (map = Map()) => {
         return map.set(sourceId, {
           ...sourceResponse,
           results: results.map(result => result.metacard.properties.id),
@@ -115,20 +212,27 @@ const sourceResponse = (state = Map(), action) => {
 
     case 'query/CLEAR-QUERY':
       return state.remove(action.queryId)
-    case 'query/SOURCE-ERROR': {
-      const { queryId, sourceId, error } = action.response
-      return state.setIn([queryId, sourceId], error)
-    }
 
     default:
       return state
   }
 }
 
+const sourceStatus = sourceReducer((state, action) => {
+  const statusMap = Map({
+    'query/SOURCE-START': 'source.pending',
+    'query/SOURCE-RETURNED': 'source.success',
+    'query/SOURCE-ERROR': 'source.error',
+    'query/SOURCE-CANCELED': 'source.canceled',
+  })
+
+  return statusMap.get(action.type, state)
+})
+
 // { [sourceId metacardId] -> result }
 const results = (state = Map(), action) => {
   switch (action.type) {
-    case 'query/SOURCE-RETURNED':
+    case 'query/SOURCE-RESULTS':
       const sourceId = action.response.status.id
       return state.withMutations(state => {
         action.response.results.forEach(result => {
@@ -143,22 +247,24 @@ const results = (state = Map(), action) => {
 
 const types = (state = Map(), action) => {
   switch (action.type) {
-    case 'query/SOURCE-RETURNED':
+    case 'query/SOURCE-RESULTS':
       return state.merge(action.response.types)
     default:
       return state
   }
 }
 
-const getSourceStatus = queryId => state => {
-  const responses = getLocalState(state).sourceResponse.get(queryId)
+const getQueryStatus = queryId => state => {
+  const status = getLocalState(state).sourceStatus.get(queryId, Map())
+  return status.toJSON()
+}
 
-  if (responses === undefined) {
-    return {}
-  }
+const isQueryPending = queryId => state => {
+  const pending = getLocalState(state)
+    .sourceStatus.get(queryId, Map())
+    .filter(status => status === 'source.pending')
 
-  // { sourceId -> status }
-  return responses.map(response => response.status).toJSON()
+  return pending.size !== 0
 }
 
 const getTypes = state => {
@@ -166,19 +272,9 @@ const getTypes = state => {
 }
 
 const getQueryResponse = queryId => state => {
-  const sourceResponse = getLocalState(state).sourceResponse.get(queryId)
-  if (sourceResponse === undefined) {
-    return []
-  }
-  const response = sourceResponse.get('ddf.distribution')
+  const sourceResponse = getLocalState(state).sourceResponse.get(queryId, Map())
 
-  if (response === undefined) {
-    return []
-  }
-
-  if (response.code !== undefined) {
-    return []
-  }
+  const response = sourceResponse.get('ddf.distribution', { results: [] })
 
   return response.results.map(id => {
     return getLocalState(state).results.get(id)
@@ -190,7 +286,6 @@ const getMetacards = state => {
 }
 
 const getMetacard = metacardId => state => {
-  debugger
   const metacard = getLocalState(state).results.get(metacardId)
   if (metacard !== undefined) {
     return metacard
@@ -202,6 +297,8 @@ const reducers = {
     transport,
     queries,
     results,
+    sourceStatus,
+    sourceRequest,
     sourceResponse,
     types,
   }),
@@ -210,9 +307,12 @@ const reducers = {
 module.exports = {
   reducers,
   initTransport,
+  isQueryPending,
+  clearQuery,
+  cancelQuery,
   closeTransport,
   executeQuery,
-  getSourceStatus,
+  getQueryStatus,
   getMetacards,
   rootStateKey,
   getQueryResponse,
