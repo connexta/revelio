@@ -73,6 +73,7 @@ const SimpleSearch = props => {
         <div style={{ width: 360, minWidth: 360 }}>
           <BasicSearch
             onSearch={query => {
+              setPageIndex(0)
               setQuery(query)
               onClear(queryId)
               onSearch(query)
@@ -81,6 +82,7 @@ const SimpleSearch = props => {
           <QueryStatus
             sources={props.status}
             onRun={srcs => {
+              setPageIndex(0)
               onSearch({ ...query, srcs })
             }}
             onCancel={srcs => {
