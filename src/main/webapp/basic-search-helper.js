@@ -1,4 +1,5 @@
 const { Map, fromJS } = require('immutable')
+import { getDistanceInMeters } from './distance-utils'
 
 export const APPLY_TO_KEY = 'applyTo'
 export const DATATYPES_KEY = 'datatypes'
@@ -43,6 +44,32 @@ const unitsMap = Map(fromJS(relativeUnits))
 
 const datatypeProperties = ['metadata-content-type', 'datatype']
 
+const parseGeoFilter = (filter = {}) => {
+  const geojson = Map(filter.geojson)
+  if (filter.value.includes('POINT')) {
+    return {
+      type: 'pointRadius',
+      location: Map({
+        lon: geojson.getIn(['geometry', 'coordinates'])[0],
+        lat: geojson.getIn(['geometry', 'coordinates'])[1],
+        bufferWidth: geojson.getIn(['properties', 'buffer', 'width']),
+        unit: geojson.getIn(['properties', 'buffer', 'unit']),
+      }),
+    }
+  }
+
+  if (filter.value.includes('POLYGON')) {
+    return {
+      type: 'polygon',
+      location: Map({
+        coordinates: geojson.getIn(['geometry', 'coordinates']),
+        bufferWidth: geojson.getIn(['properties', 'buffer', 'width']),
+        unit: geojson.getIn(['properties', 'buffer', 'unit']),
+      }),
+    }
+  }
+}
+
 export const fromFilterTree = filterTree => {
   return filterTree.filters.reduce((accumulator, filter) => {
     const { property, value, filters } = filter
@@ -52,10 +79,7 @@ export const fromFilterTree = filterTree => {
     }
 
     if (property === 'anyGeo') {
-      return accumulator.set(
-        LOCATION_KEY,
-        fromJS({ value, geojson: filter.geojson })
-      )
+      return accumulator.set(LOCATION_KEY, Map(parseGeoFilter(filter)))
     }
 
     if (filters && filters[0]) {
@@ -76,7 +100,7 @@ export const fromFilterTree = filterTree => {
       }
 
       if (datatypeProperties.includes(filters[0].property)) {
-        const applyTo = new Set(filters.map(({ value }) => value))
+        const applyTo = Array.from(new Set(filters.map(({ value }) => value)))
         return accumulator.set(DATATYPES_KEY, applyTo)
       }
     }
@@ -95,6 +119,71 @@ const parseRelative = relative => {
   }
 
   return {}
+}
+
+const pointRadiusFilter = ({ unit, bufferWidth, lat, lon }) => ({
+  type: 'DWITHIN',
+  property: 'anyGeo',
+  value: {
+    type: 'GEOMETRY',
+    value: `POINT(${lon} ${lat})`,
+  },
+  distance: getDistanceInMeters({ distance: bufferWidth, units: unit }),
+  geojson: {
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: [lon, lat],
+    },
+    properties: {
+      type: 'Point',
+      buffer: {
+        width: bufferWidth,
+        unit,
+      },
+    },
+  },
+})
+
+const parsePolygon = polygon =>
+  polygon.map(([lon, lat]) => `${lon} ${lat}`).join()
+const parsePolygons = polygons => polygons.map(parsePolygon).join()
+
+const polygonFilter = ({ coordinates, bufferWidth, unit }) => ({
+  type: bufferWidth > 0 ? 'DWITHIN' : 'INTERSECTS',
+  property: 'anyGeo',
+  value: {
+    type: 'GEOMETRY',
+    value: `POLYGON((${parsePolygons(coordinates)}))`,
+  },
+  ...(bufferWidth > 0 && { distance: bufferWidth }),
+  geojson: {
+    type: 'Feature',
+    geometry: {
+      type: 'Polygon',
+      coordinates,
+    },
+    properties: {
+      type: 'Polygon',
+      buffer: {
+        width: bufferWidth,
+        unit,
+      },
+    },
+  },
+})
+
+const locationToFilterMap = {
+  pointRadius: pointRadiusFilter,
+  polygon: polygonFilter,
+}
+
+const getLocationFilter = (data = Map()) => {
+  const { type, location } = data.toJSON()
+  if (!type || !location) {
+    return null
+  }
+  return locationToFilterMap[type](location.toJSON())
 }
 
 export const toFilterTree = basicData => {
@@ -149,14 +238,7 @@ export const toFilterTree = basicData => {
       }
     : null
 
-  const location = basicData.has(LOCATION_KEY)
-    ? {
-        type: 'INTERSECTS',
-        property: 'anyGeo',
-        value: basicData.getIn([LOCATION_KEY, 'value']),
-        geojson: basicData.getIn([LOCATION_KEY, 'geojson']),
-      }
-    : null
+  const location = getLocationFilter(basicData.get(LOCATION_KEY))
   const timeRange = getTimeRangeFilter()
   const datatypes = getDatatypesFilter()
 

@@ -24,7 +24,8 @@ import TimeRange, {
 } from './time-range'
 
 import { executeQuery } from './intrigue-api/lib/cache'
-
+import Polygon from './polygon'
+import PointRadius from './point-radius'
 import exampleFilterTree from './filterTree.json'
 import {
   toFilterTree,
@@ -33,8 +34,9 @@ import {
   DATATYPES_KEY,
   TEXT_KEY,
   APPLY_TO_KEY,
+  LOCATION_KEY,
 } from './basic-search-helper'
-const { Map, List, Set, fromJS } = require('immutable')
+import { Map, List, Set, fromJS } from 'immutable'
 
 const timeAttributes = [
   'created',
@@ -160,9 +162,7 @@ const MatchTypes = ({ state = [], setState, errors = {} }) => {
         multiple
         value={state}
         onChange={e => setState(e.target.value)}
-        renderValue={selected => {
-          return selected.join(', ')
-        }}
+        renderValue={selected => selected.join(', ')}
       >
         {datatypes.map(datatype => (
           <MenuItem key={datatype} value={datatype}>
@@ -241,7 +241,9 @@ const AttributeSelector = props => {
         value={attributes}
         onChange={e => setAttributes(e.target.value)}
         input={<Input />}
-        renderValue={selected => selected.join(', ')}
+        renderValue={selected => {
+          return selected.join(', ')
+        }}
       >
         {timeAttributes.map(name => (
           <MenuItem key={name} value={name}>
@@ -255,34 +257,54 @@ const AttributeSelector = props => {
   )
 }
 
-const locationTypes = [
-  'Any',
-  'Line',
-  'Polygon',
-  'Point-Radius',
-  'Bounding Box',
-  'Keyword',
-]
+const locationComponents = Map({
+  line: null,
+  polygon: Polygon,
+  pointRadius: PointRadius,
+  boundingBox: null,
+  keyWord: null,
+})
 
-const Location = () => {
-  const [type, setType] = React.useState('Any')
+const locationTypes = Map({
+  line: 'Line',
+  polygon: 'Polygon',
+  pointRadius: 'Point-Radius',
+  boundingBox: 'Bounding Box',
+  keyword: 'Keyword',
+})
 
+const Location = ({ state = Map(), setState }) => {
+  const type = state.get('type')
+  const Component = locationComponents.get(type)
   return (
     <FormControl fullWidth>
       <InputLabel>Location</InputLabel>
-      <Select value={type} onChange={e => setType(e.target.value)}>
-        {locationTypes.map(type => (
-          <MenuItem key={type} value={type}>
-            {type}
-          </MenuItem>
-        ))}
+      <Select
+        value={type ? type : 'line'}
+        onChange={e => {
+          setState(state.clear().set('type', e.target.value))
+        }}
+      >
+        {locationTypes
+          .map((value, key) => (
+            <MenuItem key={key} value={key}>
+              {value}
+            </MenuItem>
+          ))
+          .valueSeq()}
       </Select>
+      {Component ? (
+        <Component
+          state={state.get('location')}
+          onChange={location => setState(state.set('location', location))}
+        />
+      ) : null}
     </FormControl>
   )
 }
 
 const filters = {
-  location: Location,
+  [LOCATION_KEY]: Location,
   timeRange: BasicTimeRange,
   datatypes: MatchTypes,
   sources: MatchSources,
@@ -298,7 +320,7 @@ const defaultFilters = {
 export const BasicSearch = props => {
   const [filterTree, setFilterTree] = React.useState(
     Map({ text: '*' })
-    //fromFilterTree(exampleFilterTree)
+    // fromFilterTree(exampleFilterTree)
   )
 
   const [submitted, setSubmitted] = React.useState(false)
@@ -307,7 +329,7 @@ export const BasicSearch = props => {
   const text = filterTree.get('text')
 
   const spacing = 20
-
+  //React.useEffect(() => console.log(filterTree), [filterTree])
   return (
     <Paper
       style={{
