@@ -3,26 +3,42 @@ import { Map } from 'immutable'
 import React from 'react'
 import Units from './units'
 
+export const validate = (location = Map()) => {
+  const errors = {}
+  const { coordinates = [], bufferWidth = 0 } = location.toJSON()
+
+  if (typeof coordinates === 'string') {
+    errors.coordinates = `Invalid polygon`
+  }
+
+  if (bufferWidth < 0) {
+    errors.bufferWidth = `Buffer width must be greater or equal to 0`
+  }
+  return errors
+}
+
 const Polygon = props => {
-  const { state = Map(), onChange } = props
-  const { coordinates = '', bufferWidth = 0, unit = 'meters' } = state.toJSON()
+  const { value = Map(), onChange, errors } = props
+  const { coordinates = '', bufferWidth = 0, unit = 'meters' } = value.toJSON()
 
   return (
     <div style={{ paddingTop: 10 }}>
       <TextField
         fullWidth
         label="Polygon"
+        error={errors.coordinates}
+        helperText={errors.coordinates}
         value={
           typeof coordinates === 'string'
             ? coordinates
             : JSON.stringify(coordinates)
         }
         onChange={e => {
-          let value = e.target.value
+          let coordinates = e.target.value
           try {
-            value = JSON.parse(value)
+            coordinates = JSON.parse(coordinates)
           } catch (e) {}
-          onChange(state.set('coordinates', value))
+          onChange(value.set('coordinates', coordinates))
         }}
       />
       <div style={{ display: 'flex', paddingTop: 10 }}>
@@ -31,9 +47,11 @@ const Polygon = props => {
             fullWidth
             type="number"
             label="Buffer Width"
+            error={errors.bufferWidth}
+            helperText={errors.bufferWidth}
             value={bufferWidth}
             onChange={e => {
-              onChange(state.set('bufferWidth', e.target.value))
+              onChange(value.set('bufferWidth', e.target.value))
             }}
           />
         </div>
@@ -41,7 +59,7 @@ const Polygon = props => {
         <Units
           value={unit}
           onChange={e => {
-            onChange(state.set('unit', e.target.value))
+            onChange(value.set('unit', e.target.value))
           }}
         />
       </div>

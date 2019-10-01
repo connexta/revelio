@@ -1,36 +1,58 @@
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 import TextField from '@material-ui/core/TextField'
-import { Map } from 'immutable'
+import { Map, fromJS } from 'immutable'
 import React from 'react'
 import Units from './units'
 
+export const validate = (location = Map()) => {
+  const errors = {}
+  const { lat, lon, bufferWidth } = location.toJSON()
+
+  if (lat < -90 || lat > 90) {
+    errors.lat = `Latitude must be between -90 and 90`
+  }
+
+  if (lon < -90 || lon > 90) {
+    errors.lon = `Longitude must be between -90 and 90`
+  }
+
+  if (bufferWidth < 0) {
+    errors.bufferWidth = `Buffer width must be greater or equal to 0`
+  }
+  return errors
+}
+
 const LatLon = props => {
-  const { state, onChange } = props
+  const { value, onChange, errors } = props
   const {
     lat = '',
     lon = '',
     bufferWidth = 0,
     unit = 'meters',
-  } = state.toJSON()
+  } = value.toJSON()
   return (
     <div style={{ paddingTop: 10 }}>
       <TextField
         fullWidth
         label="Lat"
         type="number"
+        error={errors.lat}
+        helperText={errors.lat}
         value={lat}
         onChange={e => {
-          onChange(state.set('lat', e.target.value))
+          onChange(value.set('lat', e.target.value))
         }}
       />
       <TextField
         fullWidth
         label="Lon"
         type="number"
+        error={errors.lon}
+        helperText={errors.lon}
         value={lon}
         onChange={e => {
-          onChange(state.set('lon', e.target.value))
+          onChange(value.set('lon', e.target.value))
         }}
       />
       <div style={{ display: 'flex', paddingTop: 10 }}>
@@ -39,9 +61,11 @@ const LatLon = props => {
             fullWidth
             type="number"
             label="Buffer Width"
+            error={errors.bufferWidth}
+            helperText={errors.bufferWidth}
             value={bufferWidth}
             onChange={e => {
-              onChange(state.set('bufferWidth', e.target.value))
+              onChange(value.set('bufferWidth', e.target.value))
             }}
           />
         </div>
@@ -49,7 +73,7 @@ const LatLon = props => {
         <Units
           value={unit}
           onChange={e => {
-            onChange(state.set('unit', e.target.value))
+            onChange(value.set('unit', e.target.value))
           }}
         />
       </div>
@@ -64,7 +88,7 @@ const tabMap = {
   3: null,
 }
 const PointRadius = props => {
-  const { state = Map(), onChange } = props
+  const { value = Map(), onChange, errors } = props
   const [tab, setTab] = React.useState(0)
   const Component = tabMap[tab]
   return (
@@ -84,7 +108,9 @@ const PointRadius = props => {
         <Tab label="USNG / MGRS" />
         <Tab label="UTM / UPS" />
       </Tabs>
-      {Component ? <Component state={state} onChange={onChange} /> : null}
+      {Component ? (
+        <Component value={value} onChange={onChange} errors={errors} />
+      ) : null}
     </div>
   )
 }

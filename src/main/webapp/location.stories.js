@@ -1,5 +1,6 @@
 import Polygon from './polygon'
 import PointRadius from './point-radius'
+import Location from './location'
 import React from 'react'
 import { storiesOf } from '@connexta/ace/@storybook/react'
 import { text, select } from '@connexta/ace/@storybook/addon-knobs'
@@ -27,7 +28,7 @@ stories.add('polygon', () => {
   const [state, setState] = React.useState(polygonState)
   return (
     <Polygon
-      state={state}
+      value={state}
       onChange={newState => {
         setState(newState)
         action('onChange')(newState)
@@ -48,6 +49,24 @@ stories.add('point-radius', () => {
   return (
     <PointRadius
       state={state}
+      onChange={newState => {
+        setState(newState)
+        action('onChange')(newState)
+      }}
+    />
+  )
+})
+
+stories.add('basic', () => {
+  const [state, setState] = React.useState(
+    Map({
+      type: 'polygon',
+      location: polygonState,
+    })
+  )
+  return (
+    <Location
+      value={state}
       onChange={newState => {
         setState(newState)
         action('onChange')(newState)

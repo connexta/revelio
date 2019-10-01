@@ -1,42 +1,35 @@
-import React from 'react'
-import { connect } from 'react-redux'
-
 import Button from '@material-ui/core/Button'
-import Fab from '@material-ui/core/Fab'
-import Paper from '@material-ui/core/Paper'
-import TextField from '@material-ui/core/TextField'
-import Select from '@material-ui/core/Select'
-import FormControl from '@material-ui/core/FormControl'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import FormHelperText from '@material-ui/core/FormHelperText'
-import FormLabel from '@material-ui/core/FormLabel'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import Menu from '@material-ui/core/Menu'
-import RemoveIcon from '@material-ui/icons/Remove'
-import ListItemText from '@material-ui/core/ListItemText'
-import Input from '@material-ui/core/Input'
 import Checkbox from '@material-ui/core/Checkbox'
 import Divider from '@material-ui/core/Divider'
-import TimeRange, {
-  validate as validateTimeRange,
-  createTimeRange,
-} from './time-range'
-
-import { executeQuery } from './intrigue-api/lib/cache'
-import Polygon from './polygon'
-import PointRadius from './point-radius'
-import exampleFilterTree from './filterTree.json'
+import Fab from '@material-ui/core/Fab'
+import FormControl from '@material-ui/core/FormControl'
+import FormHelperText from '@material-ui/core/FormHelperText'
+import Input from '@material-ui/core/Input'
+import InputLabel from '@material-ui/core/InputLabel'
+import ListItemText from '@material-ui/core/ListItemText'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import Paper from '@material-ui/core/Paper'
+import Select from '@material-ui/core/Select'
+import TextField from '@material-ui/core/TextField'
+import RemoveIcon from '@material-ui/icons/Remove'
+import { Map } from 'immutable'
+import React from 'react'
+import { connect } from 'react-redux'
 import {
-  toFilterTree,
-  fromFilterTree,
-  TIME_RANGE_KEY,
-  DATATYPES_KEY,
-  TEXT_KEY,
   APPLY_TO_KEY,
+  DATATYPES_KEY,
   LOCATION_KEY,
+  TEXT_KEY,
+  TIME_RANGE_KEY,
+  toFilterTree,
 } from './basic-search-helper'
-import { Map, List, Set, fromJS } from 'immutable'
+import { executeQuery } from './intrigue-api/lib/cache'
+import Location, { validate as validateLocation } from './location'
+import TimeRange, {
+  createTimeRange,
+  validate as validateTimeRange,
+} from './time-range'
 
 const timeAttributes = [
   'created',
@@ -257,54 +250,18 @@ const AttributeSelector = props => {
   )
 }
 
-const locationComponents = Map({
-  line: null,
-  polygon: Polygon,
-  pointRadius: PointRadius,
-  boundingBox: null,
-  keyWord: null,
-})
-
-const locationTypes = Map({
-  line: 'Line',
-  polygon: 'Polygon',
-  pointRadius: 'Point-Radius',
-  boundingBox: 'Bounding Box',
-  keyword: 'Keyword',
-})
-
-const Location = ({ state = Map(), setState }) => {
-  const type = state.get('type')
-  const Component = locationComponents.get(type)
+const BasicLocation = ({ state = Map(), setState, errors }) => {
   return (
-    <FormControl fullWidth>
-      <InputLabel>Location</InputLabel>
-      <Select
-        value={type ? type : 'line'}
-        onChange={e => {
-          setState(state.clear().set('type', e.target.value))
-        }}
-      >
-        {locationTypes
-          .map((value, key) => (
-            <MenuItem key={key} value={key}>
-              {value}
-            </MenuItem>
-          ))
-          .valueSeq()}
-      </Select>
-      {Component ? (
-        <Component
-          state={state.get('location')}
-          onChange={location => setState(state.set('location', location))}
-        />
-      ) : null}
-    </FormControl>
+    <Location
+      value={state}
+      onChange={setState}
+      errors={errors.locationErrors}
+    />
   )
 }
 
 const filters = {
-  [LOCATION_KEY]: Location,
+  [LOCATION_KEY]: BasicLocation,
   timeRange: BasicTimeRange,
   datatypes: MatchTypes,
   sources: MatchSources,
@@ -314,6 +271,13 @@ const defaultFilters = {
   timeRange: Map({
     value: createTimeRange({ type: 'BEFORE' }),
     applyTo: ['created'],
+  }),
+  [LOCATION_KEY]: Map({
+    type: 'pointRadius',
+    location: Map({
+      bufferWidth: 0,
+      unit: 'meters',
+    }),
   }),
 }
 
@@ -457,8 +421,15 @@ const validateMatchTypes = (datatypes = []) => {
 
 const combineValidators = () => {}
 
-const validate = (filterMap = {}) => {
+const validate = (filterMap = Map()) => {
   let errors = {}
+
+  if (filterMap.has(LOCATION_KEY)) {
+    const locationErrors = validateLocation(filterMap.getIn([LOCATION_KEY]))
+    if (!isEmpty(locationErrors)) {
+      errors['locationErrors'] = locationErrors
+    }
+  }
 
   if (filterMap.has(TIME_RANGE_KEY)) {
     const timeRangeErrors = validateTimeRange(
