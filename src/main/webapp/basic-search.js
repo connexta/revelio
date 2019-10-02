@@ -151,7 +151,7 @@ const MatchTypes = ({ state = [], setState, errors = {} }) => {
     <FormControl fullWidth>
       <InputLabel>Match Types</InputLabel>
       <Select
-        error={errors.datatypes}
+        error={errors.datatypes !== undefined}
         multiple
         value={state}
         onChange={e => setState(e.target.value)}
@@ -164,7 +164,7 @@ const MatchTypes = ({ state = [], setState, errors = {} }) => {
           </MenuItem>
         ))}
       </Select>
-      <FormHelperText error={errors.datatypes}>
+      <FormHelperText error={errors.datatypes !== undefined}>
         {errors.datatypes}
       </FormHelperText>
     </FormControl>
@@ -229,7 +229,7 @@ const AttributeSelector = props => {
     <FormControl fullWidth>
       <InputLabel>Apply Time Range To</InputLabel>
       <Select
-        error={errors.applyTo}
+        error={errors.applyTo !== undefined}
         multiple
         value={attributes}
         onChange={e => setAttributes(e.target.value)}
@@ -245,7 +245,9 @@ const AttributeSelector = props => {
           </MenuItem>
         ))}
       </Select>
-      <FormHelperText error={errors.applyTo}>{errors.applyTo}</FormHelperText>
+      <FormHelperText error={errors.applyTo !== undefined}>
+        {errors.applyTo}
+      </FormHelperText>
     </FormControl>
   )
 }
