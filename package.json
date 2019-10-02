@@ -1,5 +1,5 @@
 {
-  "name": "mfeb",
+  "name": "revelio",
   "version": "1.0.0",
   "main": "src/main/webapp/app.js",
   "license": "MIT",
@@ -29,8 +29,10 @@
   "scripts": {
     "start": "ace start",
     "fmt": "ace format -w",
-    "test": "mocha src/main/webapp/intrigue-api/test",
+    "test:api": "mocha src/main/webapp/intrigue-api/test",
+    "test": "ace format",
     "storybook": "ace storybook",
+    "build": "yarn storybook --static",
     "prestart": "ace disable-idp"
   },
   "context-path": "/search/catalog"
