@@ -18,7 +18,7 @@ export const validate = (location = Map()) => {
 }
 
 const Polygon = props => {
-  const { value = Map(), onChange, errors } = props
+  const { value = Map(), onChange, errors = {} } = props
   const { coordinates = '', bufferWidth = 0, unit = 'meters' } = value.toJSON()
 
   return (
@@ -26,7 +26,7 @@ const Polygon = props => {
       <TextField
         fullWidth
         label="Polygon"
-        error={errors.coordinates}
+        error={errors.coordinates !== undefined}
         helperText={errors.coordinates}
         value={
           typeof coordinates === 'string'
@@ -47,7 +47,7 @@ const Polygon = props => {
             fullWidth
             type="number"
             label="Buffer Width"
-            error={errors.bufferWidth}
+            error={errors.bufferWidth !== undefined}
             helperText={errors.bufferWidth}
             value={bufferWidth}
             onChange={e => {

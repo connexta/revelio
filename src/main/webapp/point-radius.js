@@ -1,7 +1,7 @@
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 import TextField from '@material-ui/core/TextField'
-import { Map, fromJS } from 'immutable'
+import { Map } from 'immutable'
 import React from 'react'
 import Units from './units'
 
@@ -13,8 +13,8 @@ export const validate = (location = Map()) => {
     errors.lat = `Latitude must be between -90 and 90`
   }
 
-  if (lon < -90 || lon > 90) {
-    errors.lon = `Longitude must be between -90 and 90`
+  if (lon < -180 || lon > 180) {
+    errors.lon = `Longitude must be between -180 and 180`
   }
 
   if (bufferWidth < 0) {
@@ -37,7 +37,7 @@ const LatLon = props => {
         fullWidth
         label="Lat"
         type="number"
-        error={errors.lat}
+        error={errors.lat !== undefined}
         helperText={errors.lat}
         value={lat}
         onChange={e => {
@@ -48,7 +48,7 @@ const LatLon = props => {
         fullWidth
         label="Lon"
         type="number"
-        error={errors.lon}
+        error={errors.lon !== undefined}
         helperText={errors.lon}
         value={lon}
         onChange={e => {
@@ -61,7 +61,7 @@ const LatLon = props => {
             fullWidth
             type="number"
             label="Buffer Width"
-            error={errors.bufferWidth}
+            error={errors.bufferWidth !== undefined}
             helperText={errors.bufferWidth}
             value={bufferWidth}
             onChange={e => {
@@ -88,7 +88,7 @@ const tabMap = {
   3: null,
 }
 const PointRadius = props => {
-  const { value = Map(), onChange, errors } = props
+  const { value = Map(), onChange, errors = {} } = props
   const [tab, setTab] = React.useState(0)
   const Component = tabMap[tab]
   return (

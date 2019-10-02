@@ -293,7 +293,6 @@ export const BasicSearch = props => {
   const text = filterTree.get('text')
 
   const spacing = 20
-  //React.useEffect(() => console.log(filterTree), [filterTree])
   return (
     <Paper
       style={{
@@ -369,25 +368,15 @@ export const BasicSearch = props => {
         fullWidth
         style={{ marginTop: spacing }}
         onSearch={() => {
-          console.log(
-            'Sending query with filterTree: ',
-            toFilterTree(filterTree)
-          )
-
-          if (!submitted) {
-            setSubmitted(true)
-          }
+          setSubmitted(true)
 
           if (isEmpty(errors)) {
-            console.log('YEP, SEND IT')
             props.onSearch(
               populateDefaultQuery(
                 toFilterTree(filterTree),
                 filterTree.get('sources')
               )
             )
-          } else {
-            console.log('FIXYOSTUFF', errors)
           }
         }}
       />

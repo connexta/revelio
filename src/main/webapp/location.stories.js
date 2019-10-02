@@ -6,6 +6,9 @@ import { storiesOf } from '@connexta/ace/@storybook/react'
 import { text, select } from '@connexta/ace/@storybook/addon-knobs'
 import { action } from '@connexta/ace/@storybook/addon-actions'
 import { Map } from 'immutable'
+import { validate as validatePolygon } from './polygon'
+import { validate as validatePointRadius } from './point-radius'
+import { validate } from './location'
 
 const stories = storiesOf('Location', module)
 stories.addDecorator(Story => <Story />)
@@ -20,12 +23,13 @@ const polygonState = Map({
       [-108.721313, 37.124358],
     ],
   ],
-  bufferWidth: 12,
+  bufferWidth: -1,
   unit: 'meters',
 })
 
-stories.add('polygon', () => {
+stories.add('invalid polygon', () => {
   const [state, setState] = React.useState(polygonState)
+  React.useEffect(() => action('validate')(validatePolygon(state)), [state])
   return (
     <Polygon
       value={state}
@@ -33,26 +37,29 @@ stories.add('polygon', () => {
         setState(newState)
         action('onChange')(newState)
       }}
+      errors={validatePolygon(state)}
     />
   )
 })
 
 const pointRadiusState = Map({
-  lat: 30.767914,
-  lon: -123.888006,
+  lat: 91,
+  lon: -23.888006,
   bufferWidth: 432.410439,
   unit: 'miles',
 })
 
-stories.add('point-radius', () => {
+stories.add('invalid point-radius', () => {
   const [state, setState] = React.useState(pointRadiusState)
+  React.useEffect(() => action('validate')(validatePointRadius(state)), [state])
   return (
     <PointRadius
-      state={state}
+      value={state}
       onChange={newState => {
         setState(newState)
         action('onChange')(newState)
       }}
+      errors={validatePointRadius(state)}
     />
   )
 })
@@ -60,10 +67,10 @@ stories.add('point-radius', () => {
 stories.add('basic', () => {
   const [state, setState] = React.useState(
     Map({
-      type: 'polygon',
-      location: polygonState,
+      type: 'line',
     })
   )
+  React.useEffect(() => action('validate')(validate(state)), [state])
   return (
     <Location
       value={state}
@@ -71,6 +78,7 @@ stories.add('basic', () => {
         setState(newState)
         action('onChange')(newState)
       }}
+      errors={validate(state)}
     />
   )
 })

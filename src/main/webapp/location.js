@@ -7,41 +7,45 @@ import React from 'react'
 import PointRadius, { validate as validatePointRadius } from './point-radius'
 import Polygon, { validate as validatePolygon } from './polygon'
 
-const validationFunctions = Map({
-  line: () => ({}),
-  polygon: validatePolygon,
-  pointRadius: validatePointRadius,
-  boundingBox: () => ({}),
-  keyWord: () => ({}),
-})
+const locationTypes = {
+  line: {
+    label: 'Line',
+    component: null,
+    validate: () => ({}),
+  },
+  polygon: {
+    label: 'Polygon',
+    component: Polygon,
+    validate: validatePolygon,
+  },
+  pointRadius: {
+    label: 'Point-Radius',
+    component: PointRadius,
+    validate: validatePointRadius,
+  },
+  boundingBox: {
+    label: 'Bounding Box',
+    component: null,
+    validate: () => ({}),
+  },
+  keyword: {
+    label: 'Line',
+    component: null,
+    validate: () => ({}),
+  },
+}
 
 export const validate = (location = Map()) => {
   const type = location.get('type')
-  return validationFunctions.get(type)(location.get('location'))
+  return locationTypes[type].validate(location.get('location'))
 }
-
-const locationComponents = Map({
-  line: null,
-  polygon: Polygon,
-  pointRadius: PointRadius,
-  boundingBox: null,
-  keyWord: null,
-})
-
-const locationTypes = Map({
-  line: 'Line',
-  polygon: 'Polygon',
-  pointRadius: 'Point-Radius',
-  boundingBox: 'Bounding Box',
-  keyword: 'Keyword',
-})
 
 const Location = ({ value = Map(), onChange, errors = {} }) => {
   const [locations, setLocations] = React.useState(
     Map({ [value.get('type')]: value })
   )
   const type = value.get('type')
-  const Component = locationComponents.get(type)
+  const Component = locationTypes[type].component
   const onSelection = e => {
     setLocations(locations.set(type, value.get('location')))
     onChange(
@@ -54,13 +58,11 @@ const Location = ({ value = Map(), onChange, errors = {} }) => {
     <FormControl fullWidth>
       <InputLabel>Location</InputLabel>
       <Select value={type ? type : 'line'} onChange={onSelection}>
-        {locationTypes
-          .map((value, key) => (
-            <MenuItem key={key} value={key}>
-              {value}
-            </MenuItem>
-          ))
-          .valueSeq()}
+        {Object.keys(locationTypes).map(key => (
+          <MenuItem key={key} value={key}>
+            {locationTypes[key].label}
+          </MenuItem>
+        ))}
       </Select>
       {Component ? (
         <Component
