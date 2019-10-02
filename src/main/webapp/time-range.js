@@ -94,7 +94,7 @@ const TimeRange = props => {
         <FormControl fullWidth>
           <InputLabel>Time Range</InputLabel>
           <Select
-            error={errors.type}
+            error={errors.type !== undefined}
             value={timeRange.type || ''}
             onChange={e => {
               const type = e.target.value
@@ -108,7 +108,9 @@ const TimeRange = props => {
             <MenuItem value={'DURING'}>Between</MenuItem>
             <MenuItem value={'='}>Relative</MenuItem>
           </Select>
-          <FormHelperText error={errors.type}>{errors.type}</FormHelperText>
+          <FormHelperText error={errors.type !== undefined}>
+            {errors.type}
+          </FormHelperText>
         </FormControl>
       </div>
 
@@ -129,7 +131,7 @@ const createTimeRangeComponent = label => props => {
     <DatePicker
       label={label}
       value={timeRange.value}
-      error={errors.value}
+      error={errors.value !== undefined}
       helperText={errors.value}
       onChange={date => {
         setTimeRange({
@@ -155,7 +157,7 @@ const TimeRangeDuring = props => {
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <DatePicker
         label="From"
-        error={errors.from}
+        error={errors.from !== undefined}
         helperText={errors.from}
         value={timeRange.from}
         onChange={date => {
@@ -166,7 +168,7 @@ const TimeRangeDuring = props => {
       <div style={{ width: 20 }} />
       <DatePicker
         label="To"
-        error={errors.to}
+        error={errors.to !== undefined}
         helperText={errors.to}
         value={timeRange.to}
         onChange={date => {
@@ -188,7 +190,7 @@ const TimeRangeRelative = props => {
         <div>
           <TextField
             label="Last"
-            error={errors.last}
+            error={errors.last !== undefined}
             variant="outlined"
             fullWidth
             value={timeRange.last}
@@ -200,14 +202,16 @@ const TimeRangeRelative = props => {
               })
             }}
           />
-          <FormHelperText error={errors.last}>{errors.last}</FormHelperText>
+          <FormHelperText error={errors.last !== undefined}>
+            {errors.last}
+          </FormHelperText>
         </div>
         <div style={{ width: 20 }} />
         <FormControl fullWidth>
           <InputLabel>Unit</InputLabel>
           <Select
             value={timeRange.unit}
-            error={errors.unit}
+            error={errors.unit !== undefined}
             onChange={e => {
               setTimeRange({
                 type: timeRange.type,
@@ -235,7 +239,7 @@ const DatePicker = props => {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <KeyboardDatePicker
-        error={error}
+        error={error !== undefined}
         helperText={helperText}
         fullWidth
         disableToolbar
