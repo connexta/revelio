@@ -275,11 +275,7 @@ const defaultFilters = {
     applyTo: ['created'],
   }),
   [LOCATION_KEY]: Map({
-    type: 'pointRadius',
-    location: Map({
-      bufferWidth: 0,
-      unit: 'meters',
-    }),
+    type: 'line',
   }),
 }
 

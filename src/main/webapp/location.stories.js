@@ -1,17 +1,35 @@
-import Polygon from './polygon'
-import PointRadius from './point-radius'
-import Location from './location'
-import React from 'react'
-import { storiesOf } from '@connexta/ace/@storybook/react'
-import { text, select } from '@connexta/ace/@storybook/addon-knobs'
 import { action } from '@connexta/ace/@storybook/addon-actions'
+import { storiesOf } from '@connexta/ace/@storybook/react'
 import { Map } from 'immutable'
-import { validate as validatePolygon } from './polygon'
-import { validate as validatePointRadius } from './point-radius'
-import { validate } from './location'
+import React from 'react'
+import Line, { validate as validateLine } from './line'
+import Location, { validate } from './location'
+import PointRadius, { validate as validatePointRadius } from './point-radius'
+import Polygon, { validate as validatePolygon } from './polygon'
 
 const stories = storiesOf('Location', module)
 stories.addDecorator(Story => <Story />)
+
+const lineState = Map({
+  coordinates: [[[0, 0], [1, 1], [2, 2], [3, 3]]],
+  bufferWidth: -1,
+  unit: 'meters',
+})
+
+stories.add('invalid line', () => {
+  const [state, setState] = React.useState(polygonState)
+  React.useEffect(() => action('validate')(validateLine(state)), [state])
+  return (
+    <Line
+      value={state}
+      onChange={newState => {
+        setState(newState)
+        action('onChange')(newState)
+      }}
+      errors={validateLine(state)}
+    />
+  )
+})
 
 const polygonState = Map({
   coordinates: [
