@@ -2,6 +2,7 @@ import TextField from '@material-ui/core/TextField'
 import { Map } from 'immutable'
 import React from 'react'
 import Units from './units'
+import { getDistanceInMeters } from './distance-utils'
 
 export const validate = (location = Map()) => {
   const errors = {}
@@ -15,6 +16,38 @@ export const validate = (location = Map()) => {
     errors.bufferWidth = `Buffer width must be greater or equal to 0`
   }
   return errors
+}
+
+const parsePolygon = polygon =>
+  polygon.map(([lon, lat]) => `${lon} ${lat}`).join()
+
+export const generateFilter = (location = Map()) => {
+  const { coordinates, bufferWidth, unit } = location.toJSON()
+  return {
+    type: bufferWidth > 0 ? 'DWITHIN' : 'INTERSECTS',
+    property: 'anyGeo',
+    value: {
+      type: 'GEOMETRY',
+      value: `POLYGON((${parsePolygon(coordinates)}))`,
+    },
+    ...(bufferWidth > 0 && {
+      distance: getDistanceInMeters({ distance: bufferWidth, units: unit }),
+    }),
+    geojson: {
+      type: 'Feature',
+      geometry: {
+        type: 'Polygon',
+        coordinates,
+      },
+      properties: {
+        type: 'Polygon',
+        buffer: {
+          width: bufferWidth,
+          unit,
+        },
+      },
+    },
+  }
 }
 
 const Polygon = props => {

@@ -1,6 +1,5 @@
 const { Map, fromJS } = require('immutable')
-import { getDistanceInMeters } from './distance-utils'
-
+import { locationTypes } from './location'
 export const APPLY_TO_KEY = 'applyTo'
 export const DATATYPES_KEY = 'datatypes'
 export const LOCATION_KEY = 'location'
@@ -121,69 +120,12 @@ const parseRelative = relative => {
   return {}
 }
 
-const pointRadiusFilter = ({ unit, bufferWidth, lat, lon }) => ({
-  type: 'DWITHIN',
-  property: 'anyGeo',
-  value: {
-    type: 'GEOMETRY',
-    value: `POINT(${lon} ${lat})`,
-  },
-  distance: getDistanceInMeters({ distance: bufferWidth, units: unit }),
-  geojson: {
-    type: 'Feature',
-    geometry: {
-      type: 'Point',
-      coordinates: [lon, lat],
-    },
-    properties: {
-      type: 'Point',
-      buffer: {
-        width: bufferWidth,
-        unit,
-      },
-    },
-  },
-})
-
-const parsePolygon = polygon =>
-  polygon.map(([lon, lat]) => `${lon} ${lat}`).join()
-const parsePolygons = polygons => polygons.map(parsePolygon).join()
-
-const polygonFilter = ({ coordinates, bufferWidth, unit }) => ({
-  type: bufferWidth > 0 ? 'DWITHIN' : 'INTERSECTS',
-  property: 'anyGeo',
-  value: {
-    type: 'GEOMETRY',
-    value: `POLYGON((${parsePolygons(coordinates)}))`,
-  },
-  ...(bufferWidth > 0 && { distance: bufferWidth }),
-  geojson: {
-    type: 'Feature',
-    geometry: {
-      type: 'Polygon',
-      coordinates,
-    },
-    properties: {
-      type: 'Polygon',
-      buffer: {
-        width: bufferWidth,
-        unit,
-      },
-    },
-  },
-})
-
-const locationToFilterMap = {
-  pointRadius: pointRadiusFilter,
-  polygon: polygonFilter,
-}
-
 const getLocationFilter = (data = Map()) => {
   const { type, location } = data.toJSON()
   if (!type || !location) {
     return null
   }
-  return locationToFilterMap[type](location.toJSON())
+  return locationTypes[type].generateFilter(location)
 }
 
 export const toFilterTree = basicData => {

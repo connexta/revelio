@@ -4,34 +4,49 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import { Map } from 'immutable'
 import React from 'react'
-import PointRadius, { validate as validatePointRadius } from './point-radius'
-import Polygon, { validate as validatePolygon } from './polygon'
+import Line, {
+  generateFilter as generateLineFilter,
+  validate as validateLine,
+} from './line'
+import PointRadius, {
+  generateFilter as generatePointRadiusFilter,
+  validate as validatePointRadius,
+} from './point-radius'
+import Polygon, {
+  generateFilter as generatePolygonFilter,
+  validate as validatePolygon,
+} from './polygon'
 
-const locationTypes = {
+export const locationTypes = {
   line: {
     label: 'Line',
-    component: null,
-    validate: () => ({}),
+    component: Line,
+    validate: validateLine,
+    generateFilter: generateLineFilter,
   },
   polygon: {
     label: 'Polygon',
     component: Polygon,
     validate: validatePolygon,
+    generateFilter: generatePolygonFilter,
   },
   pointRadius: {
     label: 'Point-Radius',
     component: PointRadius,
     validate: validatePointRadius,
+    generateFilter: generatePointRadiusFilter,
   },
   boundingBox: {
     label: 'Bounding Box',
     component: null,
     validate: () => ({}),
+    generateFilter: () => null,
   },
   keyword: {
     label: 'Line',
     component: null,
     validate: () => ({}),
+    generateFilter: () => null,
   },
 }
 
