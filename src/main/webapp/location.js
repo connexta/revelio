@@ -43,7 +43,7 @@ export const locationTypes = {
     generateFilter: () => null,
   },
   keyword: {
-    label: 'Line',
+    label: 'Keyword',
     component: null,
     validate: () => ({}),
     generateFilter: () => null,

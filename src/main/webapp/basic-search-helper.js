@@ -153,7 +153,8 @@ export const toFilterTree = basicData => {
 
   const getDatatypesFilter = () => {
     const applyTo = basicData.get(DATATYPES_KEY)
-    if (!applyTo) {
+    debugger
+    if (!applyTo || applyTo.length === 0) {
       return null
     }
     const datatypeFilters = applyTo.map(value => ({

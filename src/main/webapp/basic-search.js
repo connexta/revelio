@@ -294,7 +294,9 @@ export const BasicSearch = props => {
   return (
     <Paper
       style={{
+        overflow: 'auto',
         maxWidth: 600,
+        maxHeight: '100%',
       }}
     >
       <div
@@ -397,13 +399,7 @@ const validateAttributeSelector = (applyTo = []) => {
 }
 
 const validateMatchTypes = (datatypes = []) => {
-  const errors = {}
-
-  if (datatypes.length === 0) {
-    errors.datatypes = 'Must choose at least one type to match against'
-  }
-
-  return errors
+  return {}
 }
 
 const combineValidators = () => {}
