@@ -4,7 +4,7 @@
   "main": "src/main/webapp/app.js",
   "license": "MIT",
   "devDependencies": {
-    "@connexta/ace": "https://github.com/connexta/ace.git#329aa051f483635b566e76cf2704a3431b675195",
+    "@connexta/ace": "https://github.com/connexta/ace.git#53fd31d89bd5562d8ae187d078db7d7adea3a778",
     "mocha": "^5.2.0",
     "node-fetch": "^2.6.0",
     "rpc-websockets": "4.0.0"
