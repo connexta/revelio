@@ -4,13 +4,11 @@ import { AppContainer } from '@connexta/ace/react-hot-loader'
 import Routes from './routes'
 import { Provider } from 'react-redux'
 import createStore from './store'
-import { fetchProperties } from './store/properties'
 import { initTransport } from './intrigue-api/lib/cache'
 import { createClient } from './intrigue-api/graphql'
 import { ApolloProvider } from '@apollo/react-hooks'
 
 const store = createStore()
-store.dispatch(fetchProperties())
 store.dispatch(initTransport('http'))
 
 const render = (Routes, client) => {
