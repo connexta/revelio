@@ -1,3 +1,8 @@
+import React from 'react'
+
+import { useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
+
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Divider from '@material-ui/core/Divider'
@@ -8,7 +13,6 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Typography from '@material-ui/core/Typography'
 import OnlineIcon from '@material-ui/icons/CloudDoneOutlined'
 import OfflineIcon from '@material-ui/icons/OfflineBoltOutlined'
-import React from 'react'
 
 const sourcesMessage = offlineCount => {
   if (offlineCount === 0) {
@@ -22,7 +26,7 @@ const sourcesMessage = offlineCount => {
   return `${offlineCount} sources are currently down`
 }
 
-const Sources = props => {
+export const Sources = props => {
   const { sources } = props
   const offlineCount = sources.filter(source => !source.available).length
   const getIcon = source => (source.available ? OnlineIcon : OfflineIcon)
@@ -57,25 +61,39 @@ const Sources = props => {
   )
 }
 
-const SourcesRoute = props => {
-  const sources = [
-    {
-      sourceActions: [],
-      available: true,
-      id: 'cswFed',
-      contentTypes: [],
-      version: '2.0.2',
-    },
-    {
-      sourceActions: [],
-      available: false,
-      id: 'ddf.distribution',
-      contentTypes: [],
-      version: '',
-    },
-  ]
+const pollInterval = gql`
+  query SourcePollInterval {
+    systemProperties {
+      sourcePollInterval
+    }
+  }
+`
 
-  return <Sources sources={props.sources || sources} />
+const useSourcePollInterval = init => {
+  const { data, loading, error } = useQuery(pollInterval)
+
+  if (loading || error) {
+    return init
+  }
+
+  return data.systemProperties.sourcePollInterval
 }
 
-export default SourcesRoute
+const sources = gql`
+  query SourcesPages {
+    sources {
+      available
+      id
+    }
+  }
+`
+
+export default props => {
+  const pollInterval = useSourcePollInterval(60000)
+
+  const { loading, error, data = {} } = useQuery(sources, {
+    pollInterval,
+  })
+
+  return <Sources sources={loading ? [] : data.sources} />
+}
