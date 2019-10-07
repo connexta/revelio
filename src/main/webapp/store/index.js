@@ -1,11 +1,10 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
-import properties from './properties'
 import results from './results'
 
 import { reducers } from '../intrigue-api/lib/cache'
 
-const rootReducer = combineReducers({ ...properties, ...results, ...reducers })
+const rootReducer = combineReducers({ ...results, ...reducers })
 
 const composeEnhancers =
   process.env.NODE_ENV === 'production'
