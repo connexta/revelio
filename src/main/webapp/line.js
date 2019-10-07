@@ -9,7 +9,7 @@ export const validate = (location = Map()) => {
   const { coordinates = [], bufferWidth = 0 } = location.toJSON()
 
   if (typeof coordinates === 'string') {
-    errors.coordinates = `Invalid polygon`
+    errors.coordinates = `Invalid Line`
   }
 
   if (bufferWidth < 0) {
@@ -18,8 +18,7 @@ export const validate = (location = Map()) => {
   return errors
 }
 
-const parsePolygon = polygon =>
-  polygon.map(([lon, lat]) => `${lon} ${lat}`).join()
+const parseLine = line => line.map(([lon, lat]) => `${lon} ${lat}`).join()
 
 export const generateFilter = (location = Map()) => {
   const { coordinates, bufferWidth, unit } = location.toJSON()
@@ -28,7 +27,7 @@ export const generateFilter = (location = Map()) => {
     property: 'anyGeo',
     value: {
       type: 'GEOMETRY',
-      value: `POLYGON((${parsePolygon(coordinates)}))`,
+      value: `LINESTRING(${parseLine(coordinates)})`,
     },
     ...(bufferWidth > 0 && {
       distance: getDistanceInMeters({ distance: bufferWidth, units: unit }),
@@ -36,11 +35,11 @@ export const generateFilter = (location = Map()) => {
     geojson: {
       type: 'Feature',
       geometry: {
-        type: 'Polygon',
+        type: 'LineString',
         coordinates,
       },
       properties: {
-        type: 'Polygon',
+        type: 'LineString',
         buffer: {
           width: bufferWidth,
           unit,
@@ -50,7 +49,7 @@ export const generateFilter = (location = Map()) => {
   }
 }
 
-const Polygon = props => {
+const Line = props => {
   const { value = Map(), onChange, errors = {} } = props
   const { coordinates = '', bufferWidth = 0, unit = 'meters' } = value.toJSON()
 
@@ -58,7 +57,7 @@ const Polygon = props => {
     <div style={{ paddingTop: 10 }}>
       <TextField
         fullWidth
-        label="Polygon"
+        label="Line"
         error={errors.coordinates !== undefined}
         helperText={errors.coordinates}
         value={
@@ -100,4 +99,4 @@ const Polygon = props => {
   )
 }
 
-export default Polygon
+export default Line

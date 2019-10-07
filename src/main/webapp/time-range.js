@@ -239,7 +239,7 @@ const DatePicker = props => {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <KeyboardDatePicker
-        error={error !== undefined}
+        error={error}
         helperText={helperText}
         fullWidth
         disableToolbar

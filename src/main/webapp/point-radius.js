@@ -23,6 +23,33 @@ export const validate = (location = Map()) => {
   return errors
 }
 
+export const generateFilter = (location = Map()) => {
+  const { unit, bufferWidth, lat, lon } = location.toJSON()
+  return {
+    type: 'DWITHIN',
+    property: 'anyGeo',
+    value: {
+      type: 'GEOMETRY',
+      value: `POINT(${lon} ${lat})`,
+    },
+    distance: getDistanceInMeters({ distance: bufferWidth, units: unit }),
+    geojson: {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [lon, lat],
+      },
+      properties: {
+        type: 'Point',
+        buffer: {
+          width: bufferWidth,
+          unit,
+        },
+      },
+    },
+  }
+}
+
 const LatLon = props => {
   const { value, onChange, errors } = props
   const {
