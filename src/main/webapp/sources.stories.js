@@ -1,6 +1,6 @@
 import React from 'react'
 import { storiesOf } from '@connexta/ace/@storybook/react'
-import Sources from './sources'
+import { Sources } from './sources'
 import { withKnobs, number, select } from '@connexta/ace/@storybook/addon-knobs'
 
 const stories = storiesOf('Sources', module)

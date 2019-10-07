@@ -1,5 +1,8 @@
 import React from 'react'
-import { connect } from 'react-redux'
+
+import { useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
+
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
 
@@ -7,7 +10,6 @@ import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
-import { getAboutInfo, fetchProperties } from './store/properties'
 import LinearProgress from '@material-ui/core/LinearProgress'
 
 const Info = ({ title, value }) => {
@@ -83,13 +85,22 @@ export const About = props => {
   )
 }
 
-const mapStateToProps = getAboutInfo
+const query = gql`
+  query AboutPage {
+    systemProperties {
+      product
+      branding
+      identifier
+      version
+      releaseDate
+    }
+  }
+`
 
-const mapDispatchToProps = {
-  onFetchProperties: fetchProperties,
+export default () => {
+  const { loading, error, data = {} } = useQuery(query)
+  const attributes = data.systemProperties
+  const props = { error, attributes }
+
+  return <About {...props} />
 }
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(About)
