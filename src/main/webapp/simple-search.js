@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { BasicSearch } from './basic-search'
-import Results from './results/results'
+import ResultTable from './results/results'
 import QueryStatus from './query-status'
 
 import Typography from '@material-ui/core/Typography'
@@ -41,7 +41,7 @@ const getPageWindow = (data, pageIndex, pageSize) => {
 
 const SimpleSearch = props => {
   const [query, setQuery] = useState(undefined)
-  const { results = [], isPending, onSearch, onClear, onCancel } = props
+  const { results = [], onSearch, onClear, onCancel } = props
 
   const [pageSize, setPageSize] = useState(10)
   const [pageIndex, setPageIndex] = useState(0)
@@ -100,7 +100,7 @@ const SimpleSearch = props => {
             flexDirection: 'column',
           }}
         >
-          <Results
+          <ResultTable
             results={page}
             attributes={['title', /*'thumbnail',*/ 'created']}
           />

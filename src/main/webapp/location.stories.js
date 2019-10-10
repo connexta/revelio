@@ -17,7 +17,7 @@ const lineState = Map({
 })
 
 stories.add('invalid line', () => {
-  const [state, setState] = React.useState(polygonState)
+  const [state, setState] = React.useState(lineState)
   React.useEffect(() => action('validate')(validateLine(state)), [state])
   return (
     <Line

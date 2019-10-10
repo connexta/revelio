@@ -5,14 +5,19 @@ import { makeExecutableSchema } from 'graphql-tools'
 import { createTransport } from './lib/transport'
 
 import fetch from './fetch'
+
+/* eslint-disable import/no-unresolved */
 import typeDefs from 'raw-loader!./schema.graphql'
+/* eslint-enable */
 
 const cache = new InMemoryCache()
 
 const getBuildInfo = () => {
+  /* eslint-disable */
   const commitHash = __COMMIT_HASH__
   const isDirty = __IS_DIRTY__
   const commitDate = __COMMIT_DATE__
+  /* eslint-enable */
 
   return {
     commitHash,

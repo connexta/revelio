@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField'
 import { Map } from 'immutable'
 import React from 'react'
 import Units from './units'
+import { getDistanceInMeters } from './distance-utils'
 
 export const validate = (location = Map()) => {
   const errors = {}

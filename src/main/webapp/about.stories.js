@@ -1,7 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@connexta/ace/@storybook/react'
 import { About } from './about'
-import { withKnobs, text, select } from '@connexta/ace/@storybook/addon-knobs'
+import { withKnobs, text } from '@connexta/ace/@storybook/addon-knobs'
 import { action } from '@connexta/ace/@storybook/addon-actions'
 
 const stories = storiesOf('About', module)

@@ -1,9 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@connexta/ace/@storybook/react'
-//import { text, select } from '@connexta/ace/@storybook/addon-knobs'
 import { action } from '@connexta/ace/@storybook/addon-actions'
-import TimeRange from './time-range'
-import { validate } from './time-range'
+import TimeRange, { validate } from './time-range'
 
 const stories = storiesOf('TimeRange', module)
 

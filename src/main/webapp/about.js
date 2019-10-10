@@ -98,7 +98,7 @@ const query = gql`
 `
 
 export default () => {
-  const { loading, error, data = {} } = useQuery(query)
+  const { error, data = {} } = useQuery(query)
   const attributes = data.systemProperties
   const props = { error, attributes }
 
