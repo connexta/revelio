@@ -24,6 +24,7 @@
     "apollo-link-http": "^1.5.16",
     "apollo-link-schema": "^1.2.4",
     "date-fns": "^2.0.0-beta.5",
+    "geospatialdraw": "https://github.com/connexta/geospatialdraw.git#revelio",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
     "graphql-tools": "^4.0.5",
@@ -35,7 +36,8 @@
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
     "redux": "^4.0.4",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "styled-components": "4.3.2"
   },
   "scripts": {
     "start": "ace start",
