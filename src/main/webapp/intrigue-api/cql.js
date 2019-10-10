@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /**
  * Copyright (c) Codice Foundation
  *

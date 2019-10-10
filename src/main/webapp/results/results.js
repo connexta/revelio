@@ -6,7 +6,6 @@ import { useKeyPressed } from '../react-hooks'
 
 import Paper from '@material-ui/core/Card'
 import Table from '@material-ui/core/Table'
-import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'

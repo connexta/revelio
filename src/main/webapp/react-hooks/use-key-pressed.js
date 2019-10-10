@@ -3,26 +3,29 @@ import { useEffect, useState } from 'react'
 const useKeyPressed = aKey => {
   const [pressed, setPressed] = useState(false)
 
-  const onDown = ({ key }) => {
-    if (key === aKey) {
-      setPressed(true)
-    }
-  }
+  useEffect(
+    () => {
+      const onDown = ({ key }) => {
+        if (key === aKey) {
+          setPressed(true)
+        }
+      }
 
-  const onUp = ({ key }) => {
-    if (key === aKey) {
-      setPressed(false)
-    }
-  }
+      const onUp = ({ key }) => {
+        if (key === aKey) {
+          setPressed(false)
+        }
+      }
 
-  useEffect(() => {
-    document.addEventListener('keydown', onDown)
-    document.addEventListener('keyup', onUp)
-    return () => {
-      document.removeEventListener('keydown', onDown)
-      document.removeEventListener('keyup', onUp)
-    }
-  }, [])
+      document.addEventListener('keydown', onDown)
+      document.addEventListener('keyup', onUp)
+      return () => {
+        document.removeEventListener('keydown', onDown)
+        document.removeEventListener('keyup', onUp)
+      }
+    },
+    [aKey]
+  )
 
   return pressed
 }

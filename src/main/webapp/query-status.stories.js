@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
-import { Set } from 'immutable'
+import React from 'react'
 import { storiesOf } from '@connexta/ace/@storybook/react'
-import { withKnobs, number, select } from '@connexta/ace/@storybook/addon-knobs'
+import { withKnobs } from '@connexta/ace/@storybook/addon-knobs'
 import { action } from '@connexta/ace/@storybook/addon-actions'
 
 const stories = storiesOf('QueryStatus', module)

@@ -18,18 +18,6 @@ import {
 
 import { Map } from 'immutable'
 
-const timeProperties = [
-  'created',
-  'datetime.end',
-  'datetime.start',
-  'effective',
-  'expiration',
-  'metacard.created',
-  'metacard.modified',
-  'metacard.version.versioned-on',
-  'modified',
-]
-
 const relativeUnits = ['minutes', 'hours', 'days', 'months', 'years']
 
 const isValidDate = date => {
@@ -284,7 +272,7 @@ export const validate = (timeRange = {}) => {
       errors.type = 'Type must supplied'
       break
 
-    case 'DURING':
+    case 'DURING': {
       const { to, from } = timeRange
       if (!isValidDate(to)) {
         errors.to = `'To' date must be a valid date`
@@ -301,8 +289,9 @@ export const validate = (timeRange = {}) => {
         }
       }
       break
+    }
 
-    case '=':
+    case '=': {
       const { last, unit } = timeRange
       if (isNaN(last) || last < 1) {
         errors.last = 'Value must be > 0'
@@ -312,6 +301,7 @@ export const validate = (timeRange = {}) => {
         errors.unit = 'Must include a valid unit'
       }
       break
+    }
 
     default:
       if (!isValidDate(value)) {

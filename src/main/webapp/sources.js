@@ -88,10 +88,10 @@ const sources = gql`
   }
 `
 
-export default props => {
+export default () => {
   const pollInterval = useSourcePollInterval(60000)
 
-  const { loading, error, data = {} } = useQuery(sources, {
+  const { loading, data = {} } = useQuery(sources, {
     pollInterval,
   })
 

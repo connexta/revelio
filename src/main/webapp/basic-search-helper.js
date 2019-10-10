@@ -111,7 +111,9 @@ export const fromFilterTree = filterTree => {
 const parseRelative = relative => {
   const matches = relative.match(/RELATIVE\((\D*)(\d*)(\D*)\)/)
   if (matches && matches.length > 3) {
+    /* eslint-disable no-unused-vars */
     const [full, timeOrDay, last, unitKey] = matches
+    /* eslint-enable */
     const unit = unitsMap.getIn([timeOrDay, unitKey])
 
     return { last, unit }
@@ -153,7 +155,6 @@ export const toFilterTree = basicData => {
 
   const getDatatypesFilter = () => {
     const applyTo = basicData.get(DATATYPES_KEY)
-    debugger
     if (!applyTo || applyTo.length === 0) {
       return null
     }

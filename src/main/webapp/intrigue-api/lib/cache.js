@@ -1,4 +1,4 @@
-const { Map, List } = require('immutable')
+const { Map } = require('immutable')
 const { combineReducers } = require('redux')
 
 // transport
@@ -65,11 +65,6 @@ const getSourceStatus = (state, { queryId, sourceId }) => {
 const isCanceled = (state, id) => {
   return getSourceStatus(state, id) === 'source.canceled'
 }
-
-const sleep = timeout =>
-  new Promise(resolve => {
-    setTimeout(resolve, timeout)
-  })
 
 const executeQuery = ({ srcs, ...query }) => async (dispatch, getState) => {
   const { send } = getTransport(getState())
@@ -198,7 +193,7 @@ const sourceResponse = (state = Map(), action) => {
       })
     case 'query/SOURCE-RESULTS': {
       const { queryId, sourceId } = action
-      const { types, results, ...sourceResponse } = action.response
+      const { results, ...sourceResponse } = action.response
       return state.update(queryId, (map = Map()) => {
         return map.set(sourceId, {
           ...sourceResponse,
@@ -235,14 +230,14 @@ const sourceStatus = sourceReducer((state = {}, action) => {
 // { [sourceId metacardId] -> result }
 const results = (state = Map(), action) => {
   switch (action.type) {
-    case 'query/SOURCE-RESULTS':
-      const sourceId = action.response.status.id
+    case 'query/SOURCE-RESULTS': {
       return state.withMutations(state => {
         action.response.results.forEach(result => {
           const metacardId = result.metacard.properties.id
           state.set(metacardId, result)
         })
       })
+    }
     default:
       return state
   }
@@ -270,8 +265,8 @@ const isQueryPending = queryId => state => {
   return pending.size !== 0
 }
 
-const getTypes = state => {
-  return getLocatlState(state).types.toJSON()
+export const getTypes = state => {
+  return getLocalState(state).types.toJSON()
 }
 
 const getQueryResponse = queryId => state => {
@@ -286,13 +281,6 @@ const getQueryResponse = queryId => state => {
 
 const getMetacards = state => {
   return getLocalState(state).results.toJSON()
-}
-
-const getMetacard = metacardId => state => {
-  const metacard = getLocalState(state).results.get(metacardId)
-  if (metacard !== undefined) {
-    return metacard
-  }
 }
 
 const reducers = {

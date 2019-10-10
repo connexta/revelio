@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 
 import CancelIcon from '@material-ui/icons/Cancel'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -14,8 +14,6 @@ import ErrorIcon from '@material-ui/icons/Error'
 import Grid from '@material-ui/core/Grid'
 
 const formatStatus = (status = 'Unknown', info = {}) => {
-  const props = {}
-
   if (status === 'source.canceled' || status === 'source.error') {
     return (
       <Typography variant="subtitle2" color="secondary">

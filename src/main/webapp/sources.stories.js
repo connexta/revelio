@@ -6,23 +6,6 @@ import { withKnobs, number, select } from '@connexta/ace/@storybook/addon-knobs'
 const stories = storiesOf('Sources', module)
 stories.addDecorator(withKnobs)
 
-const sources = [
-  {
-    sourceActions: [],
-    available: true,
-    id: 'cswFed',
-    contentTypes: [],
-    version: '2.0.2',
-  },
-  {
-    sourceActions: [],
-    available: false,
-    id: 'ddf.distribution',
-    contentTypes: [],
-    version: '',
-  },
-]
-
 const available = availability => {
   if (availability === 'all') {
     return true

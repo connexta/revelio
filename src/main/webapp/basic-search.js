@@ -398,11 +398,9 @@ const validateAttributeSelector = (applyTo = []) => {
   return errors
 }
 
-const validateMatchTypes = (datatypes = []) => {
+const validateMatchTypes = () => {
   return {}
 }
-
-const combineValidators = () => {}
 
 const validate = (filterMap = Map()) => {
   let errors = {}
