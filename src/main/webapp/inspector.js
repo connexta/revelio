@@ -1,5 +1,8 @@
 import React from 'react'
 
+import { useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
+
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -7,9 +10,6 @@ import Paper from '@material-ui/core/Card'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 import Typography from '@material-ui/core/Typography'
-
-// read these from config
-const summaryAttributes = ['created', 'modified', 'thumbnail']
 
 const Info = ({ title, value }) => {
   let count = 1
@@ -42,7 +42,7 @@ const Info = ({ title, value }) => {
 
 const MultiResultInfo = ({ title, values }) => {
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       <Typography variant="h6" component="h2">
         {title}
       </Typography>
@@ -112,23 +112,30 @@ const Details = props => {
 }
 
 const Summary = props => {
-  const { results } = props
-  const result = results instanceof Array ? results[0] : results
-  const properties = result.metacard.properties
+  const { results, summaryAttributes } = props
 
-  const filteredProperties = summaryAttributes.map(attr => {
-    const property = properties[attr]
-    if (property != undefined) {
-      return { [attr]: property }
-    } else {
-      return {}
-    }
-  })
+  let summaryProperties = { Warning: 'No summary attributes were provided.' }
+  if (summaryAttributes && summaryAttributes.length) {
+    const result = results instanceof Array ? results[0] : results
+    const properties = result.metacard.properties
 
-  const summaryProperties = filteredProperties.reduce((acc, property) => ({
-    ...acc,
-    ...property,
-  }))
+    const filteredProperties = summaryAttributes.map(attr => {
+      const property = properties[attr]
+      if (property != undefined) {
+        return { [attr]: property }
+      } else {
+        return {}
+      }
+    })
+
+    summaryProperties = filteredProperties.reduce(
+      (acc, property) => ({
+        ...acc,
+        ...property,
+      }),
+      {}
+    )
+  }
 
   return (
     <Paper>
@@ -187,8 +194,6 @@ const getTabComponent = results => {
 
 const ResultTabs = props => {
   const [tab, setTab] = React.useState(0)
-  const { results } = props
-
   const Component = resultTabMap[tab]
 
   return (
@@ -205,15 +210,13 @@ const ResultTabs = props => {
         <Tab label="Summary" />
         <Tab label="Details" />
       </Tabs>
-      {Component ? <Component results={results} /> : null}
+      {Component ? <Component {...props} /> : null}
     </div>
   )
 }
 
 const MultiResultTabs = props => {
   const [tab, setTab] = React.useState(0)
-  const { results } = props
-
   const Component = multiResultTabMap[tab]
 
   return (
@@ -229,18 +232,34 @@ const MultiResultTabs = props => {
       >
         <Tab label="Details" />
       </Tabs>
-      {Component ? <Component results={results} /> : null}
+      {Component ? <Component {...props} /> : null}
     </div>
   )
 }
 
-const Inspector = props => {
+export const Inspector = props => {
   const [tab, setTab] = React.useState(0)
-  const { results } = props
+  const { results, summaryAttributes } = props
 
   const TabComponent = getTabComponent(results)
 
-  return <TabComponent results={results} />
+  return (
+    <TabComponent results={results} summaryAttributes={summaryAttributes} />
+  )
 }
 
-export default Inspector
+const query = gql`
+  query {
+    systemProperties {
+      summaryShow
+    }
+  }
+`
+
+export default () => {
+  const { loading, error, data = {} } = useQuery(query)
+  const summaryAttributes = data.systemProperties.summaryShow
+  const props = { error, summaryAttributes }
+
+  return <Inspector {...props} />
+}

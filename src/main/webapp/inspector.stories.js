@@ -1,11 +1,12 @@
 import React from 'react'
 import { storiesOf } from '@connexta/ace/@storybook/react'
 import { action } from '@connexta/ace/@storybook/addon-actions'
-import { select } from '@connexta/ace/@storybook/addon-knobs'
+import { select, array } from '@connexta/ace/@storybook/addon-knobs'
 
 import result from './sampleResult.json'
 import results from './sampleMultiResult.json'
-import Inspector from './inspector'
+import { Inspector } from './inspector'
+import { About } from './about'
 
 const stories = storiesOf('Inspector', module)
 
@@ -20,5 +21,12 @@ stories.add('basic', () => {
     },
     result
   )
-  return <Inspector results={sampleResult} />
+  const summaryAttributes = array('Summary Attributes', [
+    'created',
+    'modified',
+    'thumbnail',
+  ])
+  return (
+    <Inspector results={sampleResult} summaryAttributes={summaryAttributes} />
+  )
 })
