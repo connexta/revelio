@@ -5,6 +5,9 @@
   "license": "MIT",
   "devDependencies": {
     "@connexta/ace": "https://github.com/connexta/ace.git#53fd31d89bd5562d8ae187d078db7d7adea3a778",
+    "@typescript-eslint/parser": "^2.3.3",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-react-hooks": "^2.1.2",
     "mocha": "^5.2.0",
     "node-fetch": "^2.6.0",
     "rpc-websockets": "4.0.0"
@@ -38,7 +41,7 @@
     "start": "ace start",
     "fmt": "ace format -w",
     "test:api": "mocha src/main/webapp/intrigue-api/test",
-    "test": "ace format",
+    "test": "ace format && eslint src",
     "storybook": "ace storybook",
     "build": "yarn storybook --static",
     "prestart": "ace disable-idp"
