@@ -49,7 +49,7 @@ stories.add('search for geometry', () => {
   return (
     <WorldMap
       projection={PROJECTION}
-      isDrawing={true}
+      isDrawing={isDrawing}
       mapStyle={RENDERER_STYLE}
       drawStyle={DRAWING_STYLE}
       drawShape={searchGeo.shape}
