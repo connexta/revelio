@@ -3,6 +3,7 @@ import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
+import LinearProgress from '@material-ui/core/LinearProgress'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -12,16 +13,9 @@ import Tabs from '@material-ui/core/Tabs'
 import Typography from '@material-ui/core/Typography'
 
 const Info = ({ title, value }) => {
-  let count = 1
-  if (value instanceof Array) {
-    count = value.length
-  }
-  let countLabel = ''
-  if (count > 1) {
-    countLabel = ` (${count} values)`
-  }
-
+  const count = value instanceof Array ? value.length : 1
   const values = value instanceof Array ? value : [value]
+  const countLabel = count > 1 ? ` (${count} values)` : ''
 
   return (
     <div>
@@ -31,7 +25,7 @@ const Info = ({ title, value }) => {
       </Typography>
       {values.map(itemValue => {
         return (
-          <Typography color="textSecondary" gutterBottom>
+          <Typography key={itemValue} color="textSecondary" gutterBottom>
             {itemValue}
           </Typography>
         )
@@ -66,15 +60,18 @@ const MultiResultInfo = ({ title, values }) => {
 }
 
 const MultiResultPropertiesList = props => {
-  const { properties } = props
-  return Object.entries(properties)
+  const { results } = props
+  const attributeSet = getAttributeSet(results)
+
+  return Array.from(attributeSet)
     .sort()
-    .map(entry => {
-      const key = entry[0]
-      const values = entry[1]
+    .map(key => {
+      const values = results.map(result => {
+        return result.metacard.properties[key] || 'No Value'
+      })
       return (
-        <div>
-          <ListItem key={key} divider>
+        <div key={key}>
+          <ListItem divider>
             <MultiResultInfo title={key} values={values} />
           </ListItem>
         </div>
@@ -90,8 +87,8 @@ const PropertiesList = props => {
       const key = entry[0]
       const value = entry[1]
       return (
-        <div>
-          <ListItem key={key} divider>
+        <div key={key}>
+          <ListItem divider>
             <Info title={key} value={value} />
           </ListItem>
         </div>
@@ -114,7 +111,7 @@ const Details = props => {
 const Summary = props => {
   const { results, summaryAttributes } = props
 
-  let summaryProperties = { Warning: 'No summary attributes were provided.' }
+  let summaryProperties = { '': 'No summary attributes were provided.' }
   if (summaryAttributes && summaryAttributes.length) {
     const result = results instanceof Array ? results[0] : results
     const properties = result.metacard.properties
@@ -146,31 +143,29 @@ const Summary = props => {
   )
 }
 
-const getAttributeMap = results => {
-  const attributeMap = {}
-
-  results.map((result, index) => {
-    const properties = result.metacard.properties
+const getAttributeSet = results => {
+  return results.reduce((acc, value) => {
+    const properties = value.metacard.properties
     const keys = Object.keys(properties)
-    keys.forEach(key => {
-      if (index > 0) {
-        attributeMap[key][index] = properties[key]
-      } else {
-        attributeMap[key] = [properties[key]]
-      }
-    })
-  })
-
-  return attributeMap
+    return new Set([...acc, ...keys])
+  }, new Set())
 }
 
 const MultiResultDetails = props => {
   const { results } = props
-  const attributeMap = getAttributeMap(results)
+
   return (
     <Paper>
+      <Typography
+        variant="h6"
+        component="h2"
+        fullWidth
+        style={{ textAlign: 'center' }}
+      >
+        {results.length} results selected
+      </Typography>
       <List>
-        <MultiResultPropertiesList properties={attributeMap} />
+        <MultiResultPropertiesList results={results} />
       </List>
     </Paper>
   )
@@ -243,9 +238,13 @@ export const Inspector = props => {
 
   const TabComponent = getTabComponent(results)
 
-  return (
-    <TabComponent results={results} summaryAttributes={summaryAttributes} />
-  )
+  if (results && results.length) {
+    return (
+      <TabComponent results={results} summaryAttributes={summaryAttributes} />
+    )
+  } else {
+    return <PropertiesList properties={{ '': 'No results were provided.' }} />
+  }
 }
 
 const query = gql`
@@ -256,10 +255,23 @@ const query = gql`
   }
 `
 
-export default () => {
-  const { loading, error, data = {} } = useQuery(query)
-  const summaryAttributes = data.systemProperties.summaryShow
-  const props = { error, summaryAttributes }
+const Loading = () => {
+  return (
+    <Paper>
+      <LinearProgress />
+    </Paper>
+  )
+}
 
-  return <Inspector {...props} />
+export default props => {
+  const { loading, error, data = {} } = useQuery(query)
+  if (loading) {
+    return <Loading />
+  }
+
+  const summaryAttributes = data.systemProperties.summaryShow
+
+  return (
+    <Inspector {...props} error={error} summaryAttributes={summaryAttributes} />
+  )
 }
