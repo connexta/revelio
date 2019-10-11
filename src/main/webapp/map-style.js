@@ -91,7 +91,7 @@ const GENERIC_DRAWING_STYLE = feature => [
     }),
     geometry: feature => {
       const geometry = feature.getGeometry()
-      let coordinates: [number, number][] = []
+      let coordinates = []
       if (geometry.getType() === 'Polygon') {
         coordinates = geometry.getCoordinates()[0]
       } else if (geometry.getType() === 'LineString') {

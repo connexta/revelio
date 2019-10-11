@@ -1,7 +1,7 @@
 import React from 'react'
 import * as ol from 'openlayers'
 import Box from '@material-ui/core/Box'
-import { menu, renderer, drawing, geometry } from 'geospatialdraw'
+import { menu, renderer, drawing } from 'geospatialdraw'
 
 const Root = props => (
   <Box
@@ -13,13 +13,7 @@ const Root = props => (
   />
 )
 const MapContainer = Box
-const MapDiv = props => (
-  <Box
-    width="100%"
-    minheight="500px"
-    {...props}
-  />
-)
+const MapDiv = props => <Box width="100%" minheight="500px" {...props} />
 const MenuContainer = Box
 const Menu = menu.MaterialDrawMenu
 
@@ -48,7 +42,7 @@ class WorldMap extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate(prevProps) {
     const { drawGeo, drawShape } = this.props
     if (prevProps.drawGeo !== drawGeo) {
       this.setState({ drawGeo })
