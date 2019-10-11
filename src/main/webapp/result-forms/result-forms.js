@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { memo, useState } from 'react'
 
 import { Set } from 'immutable'
 import { useUndoState } from '../react-hooks'
@@ -7,6 +7,8 @@ import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 
 import TransferList from './transfer-list'
+
+const MemoizedTransferList = memo(TransferList)
 
 const validate = (form = {}) => {
   const { title, description } = form
@@ -77,7 +79,7 @@ export const ResultForms = props => {
         onChange={e => setDescription(e.target.value)}
       />
 
-      <TransferList
+      <MemoizedTransferList
         state={state}
         setState={setState}
         label="Attributes"
