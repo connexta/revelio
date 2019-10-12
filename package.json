@@ -10,6 +10,7 @@
     "eslint-plugin-react-hooks": "^2.1.2",
     "mocha": "^5.2.0",
     "node-fetch": "^2.6.0",
+    "@types/react": "^16.9.5",
     "rpc-websockets": "4.0.0"
   },
   "dependencies": {
