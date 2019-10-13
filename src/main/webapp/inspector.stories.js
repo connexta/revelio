@@ -1,12 +1,10 @@
 import React from 'react'
 import { storiesOf } from '@connexta/ace/@storybook/react'
-import { action } from '@connexta/ace/@storybook/addon-actions'
 import { select, array } from '@connexta/ace/@storybook/addon-knobs'
 
 import result from './sample-result.json'
 import results from './sample-multi-result.json'
 import { Inspector } from './inspector'
-import { About } from './about'
 
 const stories = storiesOf('Inspector', module)
 

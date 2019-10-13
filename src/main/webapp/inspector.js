@@ -6,7 +6,6 @@ import gql from 'graphql-tag'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
 import Paper from '@material-ui/core/Card'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
@@ -233,9 +232,7 @@ const MultiResultTabs = props => {
 }
 
 export const Inspector = props => {
-  const [tab, setTab] = React.useState(0)
   const { results, summaryAttributes } = props
-
   const TabComponent = getTabComponent(results)
 
   if (results && results.length) {

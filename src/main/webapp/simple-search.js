@@ -58,14 +58,7 @@ const getPageWindow = (data, pageIndex, pageSize) => {
 
 const SimpleSearch = props => {
   const [query, setQuery] = useState(undefined)
-  const {
-    results = [],
-    isPending,
-    onSearch,
-    onClear,
-    onCancel,
-    selectedResults,
-  } = props
+  const { results = [], onSearch, onClear, onCancel, selectedResults } = props
   const [pageSize, setPageSize] = useState(10)
   const [pageIndex, setPageIndex] = useState(0)
   const page = getPageWindow(results, pageIndex, pageSize)
