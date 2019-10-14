@@ -1,0 +1,115 @@
+[
+  {
+    "matches": {},
+    "metacard": {
+      "cached": "2019-10-01T21:26:40.811+0000",
+      "properties": {
+        "resource-size": "410",
+        "created": "2019-09-30T22:17:43.710+0000",
+        "metacard-tags": ["resource", "VALID"],
+        "media.type": "application/xml",
+        "ext.extracted.text": "   -109.031934 37.029318 -103.053117 32.015908\n",
+        "metacard-type": "fallback.common",
+        "title": "lineThruNM.gml",
+        "source-id": "ddf.distribution",
+        "metacard.created": "2019-09-30T22:17:43.710+0000",
+        "effective": "2019-09-30T22:17:43.710+0000",
+        "point-of-contact": "system@localhost.local",
+        "datatype": ["Text"],
+        "metacard.modified": "2019-09-30T22:17:43.710+0000",
+        "modified": "2019-09-30T22:17:43.710+0000",
+        "id": "fb7be8af54a9433aa63834d433f00721"
+      }
+    },
+    "distance": null,
+    "relevance": 11.068877220153809,
+    "actions": [
+      {
+        "displayName": "GMD Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "description": "Provides a URL to the metacard that transforms the return value via the gmd:MD_Metadata transformer",
+        "id": "catalog.data.metacard.gmd:MD_Metadata"
+      },
+      {
+        "displayName": "Preview HTML",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "description": "Provides a URL to the metacard that transforms the return value via the html transformer",
+        "id": "catalog.data.metacard.html"
+      },
+      {
+        "displayName": "Metacard XML",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "description": "Provides a URL to the metacard",
+        "id": "catalog.data.metacard.view"
+      },
+      {
+        "displayName": "RTF",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "description": "Provides a URL to the metacard that transforms the return value via the rtf transformer",
+        "id": "catalog.data.metacard.rtf"
+      },
+      {
+        "displayName": "OGC GML",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "description": "Provides a URL to the metacard that transforms the return value via the xml transformer",
+        "id": "catalog.data.metacard.xml"
+      },
+      {
+        "displayName": "GeoJSON",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "description": "Provides a URL to the metacard that transforms the return value via the geojson transformer",
+        "id": "catalog.data.metacard.geojson"
+      },
+      {
+        "displayName": "Preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "description": "Provides a URL to the metacard that transforms the return value via the preview transformer",
+        "id": "catalog.data.metacard.preview"
+      },
+      {
+        "displayName": "CSV",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "description": "Provides a URL to the metacard that transforms the return value via the csv transformer",
+        "id": "catalog.data.metacard.csv"
+      },
+      {
+        "displayName": "Property JSON",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "description": "Provides a URL to the metacard that transforms the return value via the propertyjson transformer",
+        "id": "catalog.data.metacard.propertyjson"
+      },
+      {
+        "displayName": "Binary Resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "description": "Provides a URL to the metacard that transforms the return value via the resource transformer",
+        "id": "catalog.data.metacard.resource"
+      },
+      {
+        "displayName": "CSW Record XML",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "description": "Provides a URL to the metacard that transforms the return value via the csw:Record transformer",
+        "id": "catalog.data.metacard.csw:Record"
+      },
+      {
+        "displayName": "Preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "description": "Provides a text preview of the resource",
+        "id": "catalog.data.metacard.html.preview"
+      }
+    ],
+    "hasThumbnail": false,
+    "isResourceLocal": false
+  }
+]

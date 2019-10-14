@@ -4,8 +4,13 @@ import { BasicSearch } from './basic-search'
 import ResultTable from './results/results'
 import QueryStatus from './query-status'
 
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+
 import Typography from '@material-ui/core/Typography'
 import TablePagination from '@material-ui/core/TablePagination'
+
+import Inspector from './inspector'
 
 import {
   executeQuery,
@@ -16,15 +21,27 @@ import {
   isQueryPending,
 } from './intrigue-api/lib/cache'
 
+import { getSelected } from './store/results'
+
 import { connect } from 'react-redux'
 
 const queryId = '313a84858daa4ef5980d4b11a745d6d3'
 
 const mapStateToProps = state => {
+  const selected = getSelected(state)
   const results = getQueryResponse(queryId)(state)
   const status = getQueryStatus(queryId)(state)
   const isPending = isQueryPending(queryId)(state)
-  return { results, isPending, status, sources: ['ddf.distribution'] }
+  const selectedResults = results.filter(result => {
+    return selected.has(result.metacard.properties.id)
+  })
+  return {
+    results,
+    isPending,
+    status,
+    sources: ['ddf.distribution'],
+    selectedResults,
+  }
 }
 
 const mapDispatchToProps = {
@@ -41,11 +58,15 @@ const getPageWindow = (data, pageIndex, pageSize) => {
 
 const SimpleSearch = props => {
   const [query, setQuery] = useState(undefined)
-  const { results = [], onSearch, onClear, onCancel } = props
-
+  const { results = [], onSearch, onClear, onCancel, selectedResults } = props
   const [pageSize, setPageSize] = useState(10)
   const [pageIndex, setPageIndex] = useState(0)
   const page = getPageWindow(results, pageIndex, pageSize)
+
+  const [showInspector, setShowInspector] = useState(false)
+  const onInspect = () => {
+    setShowInspector(true)
+  }
 
   return (
     <div
@@ -100,6 +121,22 @@ const SimpleSearch = props => {
             flexDirection: 'column',
           }}
         >
+          <div style={{ marginBottom: 10, textAlign: 'right' }}>
+            <Button variant="outlined" onClick={onInspect}>
+              Open Inspector
+            </Button>
+          </div>
+
+          {showInspector ? (
+            <Dialog
+              open
+              onClose={() => {
+                setShowInspector(false)
+              }}
+            >
+              <Inspector results={selectedResults} />
+            </Dialog>
+          ) : null}
           <ResultTable
             results={page}
             attributes={['title', /*'thumbnail',*/ 'created']}
