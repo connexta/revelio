@@ -14,7 +14,6 @@ import FindInPageIcon from '@material-ui/icons/FindInPage'
 import HomeIcon from '@material-ui/icons/Home'
 import InfoSharpIcon from '@material-ui/icons/InfoSharp'
 import MenuIcon from '@material-ui/icons/Menu'
-import PublishIcon from '@material-ui/icons/Publish'
 import SearchIcon from '@material-ui/icons/Search'
 import ViewListIcon from '@material-ui/icons/ViewList'
 
@@ -70,7 +69,6 @@ const routes = [
   createRoute('/', 'Home', HomeIcon),
   createRoute('/workspaces', 'Workspaces', CollectionsBookmarkIcon),
   createRoute('/search', 'Search', SearchIcon, SimpleSearch),
-  createRoute('/upload', 'Upload', PublishIcon),
   createRoute('/sources', 'Sources', CloudIcon, SourcesRoute),
   createRoute('/search-forms', 'Search Forms', FindInPageIcon),
   createRoute('/result-forms', 'Result Forms', ViewListIcon, ResultForms),
