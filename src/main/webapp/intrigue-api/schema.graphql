@@ -1,12 +1,41 @@
-# Arbitrary JSON object
-scalar Json
+enum Direction {
+  # Smaller to Larger values
+  asc
+  # Smaller to Larger values
+  ascending
+  # Larger to Smaller values
+  desc
+  # Larger to Smaller values
+  descending
+}
+
+input QuerySortInput {
+  attribute: String
+  direction: Direction
+}
 
 type QuerySort {
   attribute: String
-  direction: String
+  direction: Direction
+}
+
+input QuerySettingsInput {
+  src: String
+  federation: String
+  phonetics: Boolean
+  sorts: [QuerySortInput]
+  spellcheck: Boolean
+
+  # Page size
+  count: Int
+
+  # Start of paging. First element is 1, not 0.
+  start: Int
+  type: String
 }
 
 type QuerySettings {
+  src: String
   federation: String
   phonetics: Boolean
   sorts: [QuerySort]
@@ -15,7 +44,6 @@ type QuerySettings {
 }
 
 input QueryRequest {
-  src: String
   filterTree: Json
 }
 
@@ -37,140 +65,12 @@ type MetacardAction {
 
 type QueryResponseResult {
   actions: [MetacardAction]
+  # All known metacard attributes with raw attributes names.
+  # This is intended for views that are interested in:
+  # 1. Using raw attribute names.
+  # 2. Attribute aliasing that require raw attribute names.
+  # 3. Getting all the possible attributes.
   metacard: Json
-}
-
-# Binary content embedded as a base64 String
-scalar Binary
-# WKT embedded as a String
-scalar Geometry
-# XML embedded as a String
-scalar XML
-# ISO 8601 Data Time embedded as a String
-scalar Date
-
-# Common and well known metacard attributes
-type MetacardAttributes {
-  associationsExternal: [String]
-  checksum: String
-  checksumAlgorithm: String
-  contactContributorAddress: [String]
-  contactContributorEmail: [String]
-  contactContributorName: [String]
-  contactContributorPhone: [String]
-  contactCreatorAddress: [String]
-  contactCreatorEmail: [String]
-  contactCreatorName: [String]
-  contactCreatorPhone: [String]
-  contactPointOfContactAddress: [String]
-  contactPointOfContactEmail: [String]
-  contactPointOfContactName: [String]
-  contactPointOfContactPhone: [String]
-  contactPublisherAddress: [String]
-  contactPublisherEmail: [String]
-  contactPublisherName: [String]
-  contactPublisherPhone: [String]
-  created: Date
-  datatype: [String]
-  datetimeEnd: [Date]
-  datetimeName: [String]
-  datetimeStart: [Date]
-  description: String
-  effective: Date
-  expiration: Date
-  extFeatureClass: String
-  extFeatureCode: String
-  extGazetteerSortValue: Int
-  extImportLocation: String
-  extPopulation: Int
-  failedValidatorsErrors: [String]
-  failedValidatorsWarnings: [String]
-  id: ID
-  language: [String]
-  location: Geometry
-  locationAltitudeMeters: [Float]
-  locationCountryCode: [String]
-  locationCrsCode: [String]
-  locationCrsName: [String]
-  mediaBitRate: Float
-  mediaBitsPerSample: Int
-  mediaCompression: String
-  mediaDuration: Float
-  mediaEncoding: [String]
-  mediaFormat: String
-  mediaFormatVersion: String
-  mediaFrameCenter: Geometry
-  mediaFrameRate: Float
-  mediaHeightPixels: Int
-  mediaNumberOfBands: Int
-  mediaScanningMode: String
-  mediaType: String
-  mediaWidthPixels: Int
-  metacardTags: [String]
-  metacardAssociationsDerived: [String]
-  metacardAssociationsRelated: [String]
-  metacardCreated: Date
-  metacardModified: Date
-  metacardOwner: String
-  metadata: XML
-  modified: Date
-  pointOfContact: String
-  resourceDownloadUrl: String
-  resourceSize: String
-  resourceUri: String
-  resourceDerivedDownloadUrl: [String]
-  resourceDerivedUri: [String]
-  securityAccessAdministrators: [String]
-  securityAccessGroups: [String]
-  securityAccessGroupsRead: [String]
-  securityAccessIndividuals: [String]
-  securityAccessIndividualsRead: [String]
-  sourceId: String
-  thumbnail: Binary
-  title: String
-  topicCategory: [String]
-  topicKeyword: [String]
-  topicVocabulary: [String]
-  validationErrors: [String]
-  validationWarnings: [String]
-  uiAttributeGroup: [String]
-  metadataContentType: String
-  metadataContentTypeVersion: String
-  metadataTargetNamespace: String
-  extExtractedText: String
-  extMp4AudioSampleRate: Int
-  cql: String
-  detailLevel: String
-  enterprise: Boolean
-  extNoteResultComment: [String]
-  facets: [String]
-  federation: String
-  filtertree: String
-  listBookmarks: [String]
-  listCql: String
-  listIcon: String
-  lists: [XML]
-  metacardDeletedDeletedBy: String
-  metacardDeletedId: String
-  metacardDeletedVersion: String
-  metacardSharing: [XML]
-  phonetics: Boolean
-  polling: Int
-  queries: [String]
-  schedules: [XML]
-  sorts: [String]
-  sources: [String]
-  spellcheck: Boolean
-  type: String
-  uiTemplateFilter: XML
-  metacardVersionAction: String
-  metacardVersionEditedBy: String
-  metacardVersionId: String
-  metacardVersionResourceUri: String
-  metacardVersionTags: [String]
-  metacardVersionType: String
-  metacardVersionTypeBinary: Binary
-  metacardVersionVersionedOn: Date
 }
 
 type QueryResponse {
@@ -363,13 +263,39 @@ type MetacardType {
   type: String
 }
 
+type FacetResult {
+  count: Int
+  value: String
+}
+
 type Query {
   user: User
   sources: [Source]
   systemProperties: SystemProperties
   metacardTypes: [MetacardType]
-  metacards(q: QueryRequest): QueryResponse
-  metacardsByTag(tag: String): QueryResponse
+
+  # #### Query the Catalog Framework for Metcards.
+  #
+  # Below is an example filterTree to query for all resource Metacards:
+  #
+  # ```javascript
+  # {
+  #   "type": "=",
+  #   "property": "anyText",
+  #   "value": "*"
+  # }
+  # ```
+  #
+  # If no metacard tag is specified in the filterTree, **only resource metacards** will be returned.
+  metacards(filterTree: Json!, settings: QuerySettingsInput): QueryResponse
+
+  metacardsByTag(tag: String!, settings: QuerySettingsInput): QueryResponse
+  metacardById(id: ID!, settings: QuerySettingsInput): QueryResponse
+
+  # Get known values for a given attribute.
+  #
+  # NOTE: attributes need to be **whitelisted by an Admin** before they can be faceted
+  facet(attribute: String!): [FacetResult]
 }
 
 type MutationResponse {
@@ -378,7 +304,12 @@ type MutationResponse {
 }
 
 type Mutation {
-  createMetacard(attrs: Json): MetacardAttributes
-  saveMetacard(attrs: Json): MetacardAttributes
-  deleteMetacard(id: ID): ID
+  createMetacard(attrs: MetacardAttributesInput!): MetacardAttributes
+  saveMetacard(id: ID!, attrs: MetacardAttributesInput!): MetacardAttributes
+
+  # TBD: Should only be used when...
+  # createMetacardFromJson(attrs: Json!): MetacardAttributes
+  # saveMetacardFromJson(id: ID!, attrs: Json!): MetacardAttributes
+
+  deleteMetacard(id: ID!): ID
 }

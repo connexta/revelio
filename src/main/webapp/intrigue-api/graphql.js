@@ -2,15 +2,13 @@ import { ApolloClient } from 'apollo-client'
 import { SchemaLink } from 'apollo-link-schema'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { makeExecutableSchema } from 'graphql-tools'
-import { createTransport } from './lib/transport'
+import { createTransport } from './transport'
 
 import fetch from './fetch'
 
-/* eslint-disable import/no-unresolved */
-import typeDefs from 'raw-loader!./schema.graphql'
-/* eslint-enable */
+const ROOT = '/search/catalog/internal'
 
-const cache = new InMemoryCache()
+import genSchema, { toGraphqlName, fromGraphqlName } from './gen-schema'
 
 const getBuildInfo = () => {
   /* eslint-disable */
@@ -30,8 +28,8 @@ const getBuildInfo = () => {
 
 const systemProperties = async () => {
   const [configProperties, configUiProperties] = await Promise.all([
-    (await fetch('./internal/config')).json(),
-    (await fetch('./internal/platform/config/ui')).json(),
+    (await fetch(`${ROOT}/config`)).json(),
+    (await fetch(`${ROOT}/platform/config/ui`)).json(),
   ])
   return {
     ...configProperties,
@@ -40,67 +38,134 @@ const systemProperties = async () => {
   }
 }
 
-const { send } = createTransport()
+const { send } = createTransport({
+  pathname: ROOT,
+})
 
-const toCamelCase = str => {
-  return str
-    .replace(/(\.|-)/g, ' ')
-    .split(' ')
-    .map((word, index) => {
-      if (index == 0) {
-        return word.toLowerCase()
-      }
-      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-    })
-    .join('')
+const renameKeys = (f, map) => {
+  return Object.keys(map).reduce((attrs, attr) => {
+    const name = f(attr)
+    attrs[name] = map[attr]
+    return attrs
+  }, {})
 }
 
-const toCamelCaseAttrs = map => {
+const toGraphqlMap = map => {
   return Object.keys(map).reduce((attrs, attr) => {
-    const name = toCamelCase(attr)
+    const name = toGraphqlName(attr)
+    attrs[name] = map[attr]
+    return attrs
+  }, {})
+}
+
+const fromGraphqlMap = map => {
+  return Object.keys(map).reduce((attrs, attr) => {
+    const name = fromGraphqlName(attr)
     attrs[name] = map[attr]
     return attrs
   }, {})
 }
 
 const metacards = async (ctx, args) => {
-  const { src, ...query } = args.q
-
-  const req = send({ src, ...query })
+  const q = { ...args.settings, filterTree: args.filterTree }
+  const req = send(q)
   const json = await req.json()
 
   const attributes = json.results.map(result =>
-    toCamelCaseAttrs(result.metacard.properties)
+    toGraphqlMap(result.metacard.properties)
   )
 
   return { attributes, ...json }
 }
 
+const queryTemplates = {
+  accessAdministrators: 'security_access_administrators',
+  accessGroups: 'security_access_groups',
+  accessGroupsRead: 'security_access_groups_read',
+  accessIndividuals: 'security_access_individuals',
+  accessIndividualsRead: 'security_access_individuals_read',
+  created: 'created',
+  filterTemplate: 'filter_template',
+  modified: 'modified',
+  owner: 'metacard_owner',
+  querySettings: 'query_settings',
+  id: 'id',
+  title: 'title',
+}
+
+const fetchQueryTemplates = async () => {
+  const res = await fetch(`${ROOT}/forms/query`)
+  const json = await res.json()
+  const attributes = json
+    .map(attrs => renameKeys(k => queryTemplates[k], attrs))
+    .map(({ modified, created, ...rest }) => {
+      return {
+        ...rest,
+        created: new Date(created).toISOString(),
+        modified: new Date(modified).toISOString(),
+      }
+    })
+  const status = {
+    // count: Int
+    // elapsed: Int
+    // hits: Int
+    // id: ID
+    // successful: Boolean
+    count: attributes.length,
+    successful: true,
+    hits: attributes.length,
+  }
+  return { attributes, status }
+}
+
 const metacardsByTag = async (ctx, args) => {
+  if (args.tag === 'query-template') {
+    return fetchQueryTemplates()
+  }
+
   return metacards(ctx, {
-    q: {
-      src: 'ddf.distribution',
-      filterTree: {
-        type: '=',
-        property: 'metacard-tags',
-        value: args.tag,
-      },
+    filterTree: {
+      type: '=',
+      property: 'metacard-tags',
+      value: args.tag,
     },
+    settings: args.settings,
+  })
+}
+
+const metacardById = async (ctx, args) => {
+  return metacards(ctx, {
+    filterTree: {
+      type: 'AND',
+      filters: [
+        {
+          type: '=',
+          property: 'id',
+          value: args.id,
+        },
+        {
+          type: 'LIKE',
+          property: 'metacard-tags',
+          value: '%',
+        },
+      ],
+    },
+    settings: args.settings,
   })
 }
 
 const user = async () => {
-  const res = await fetch('./internal/user')
+  const res = await fetch(`${ROOT}/user`)
   return res.json()
 }
 
 const sources = async () => {
-  const res = await fetch('./internal/catalog/sources')
+  const res = await fetch(`${ROOT}/catalog/sources`)
   return res.json()
 }
 
 const metacardTypes = async () => {
-  const res = await fetch('./internal/metacardtype')
+  const res = await fetch(`${ROOT}/metacardtype`)
   const json = await res.json()
 
   const types = Object.keys(json).reduce((types, group) => {
@@ -110,13 +175,38 @@ const metacardTypes = async () => {
   return Object.keys(types).map(k => types[k])
 }
 
+const facet = async (parent, args) => {
+  const { attribute } = args
+
+  const filterTree = {
+    type: '=',
+    property: 'anyText',
+    value: '',
+  }
+
+  const q = {
+    filterTree,
+    count: 0,
+    facets: [attribute],
+  }
+
+  const req = send(q)
+  const json = await req.json()
+
+  const facet = json.facets[attribute]
+
+  return facet
+}
+
 const Query = {
   user,
   sources,
   metacards,
   metacardsByTag,
+  metacardById,
   metacardTypes,
   systemProperties,
+  facet,
 }
 
 const createMetacard = async (parent, args) => {
@@ -125,10 +215,10 @@ const createMetacard = async (parent, args) => {
   const body = {
     geometry: null,
     type: 'Feature',
-    properties: attrs,
+    properties: fromGraphqlMap(attrs),
   }
 
-  const res = await fetch('./internal/catalog/', {
+  const res = await fetch(`${ROOT}/catalog/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -137,25 +227,25 @@ const createMetacard = async (parent, args) => {
   })
 
   const id = res.headers.get('id')
-  const metacardCreated = new Date().toISOString()
-  const metacardModified = metacardCreated
+  const created = new Date().toISOString()
+  const modified = created
 
-  return {
-    ...toCamelCaseAttrs(attrs),
+  return toGraphqlMap({
+    ...attrs,
     id,
-    metacardCreated,
-    metacardModified,
-    metacardOwner: 'You',
-  }
+    'metacard.created': created,
+    'metacard.modified': modified,
+    'metacard.owner': 'You',
+  })
 }
 
 const saveMetacard = async (parent, args) => {
-  const { id, ...attrs } = args.attrs
+  const { id, attrs } = args
 
   const attributes = Object.keys(attrs).map(attribute => {
     const value = attrs[attribute]
     return {
-      attribute,
+      attribute: fromGraphqlName(attribute),
       values: Array.isArray(value) ? value : [value],
     }
   })
@@ -167,7 +257,7 @@ const saveMetacard = async (parent, args) => {
     },
   ]
 
-  const res = await fetch('./internal/metacards', {
+  const res = await fetch(`${ROOT}/metacards`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -176,19 +266,19 @@ const saveMetacard = async (parent, args) => {
   })
 
   if (res.ok) {
-    const metacardModified = new Date().toISOString()
-    return {
+    const modified = new Date().toISOString()
+    return toGraphqlMap({
       id,
-      metacardModified,
-      ...toCamelCaseAttrs(attrs),
-    }
+      'metacard.modified': modified,
+      ...attrs,
+    })
   }
 }
 
 const deleteMetacard = async (parent, args) => {
   const { id } = args
 
-  const res = await fetch(`./internal/catalog/${id}`, {
+  const res = await fetch(`${ROOT}/catalog/${id}`, {
     method: 'DELETE',
   })
 
@@ -209,11 +299,13 @@ const resolvers = {
 }
 
 const executableSchema = makeExecutableSchema({
-  typeDefs,
+  typeDefs: genSchema(),
   resolvers,
 })
 
 export const createClient = () => {
+  const cache = new InMemoryCache()
+
   return new ApolloClient({
     link: new SchemaLink({ schema: executableSchema }),
     cache,

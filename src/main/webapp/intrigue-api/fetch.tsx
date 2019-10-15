@@ -22,25 +22,6 @@ type Options = {
 }
 
 const fetch = window.fetch
-// @ts-ignore
-window.__global__fetch = fetch
-
-// patch global fetch to warn about usage during development
-if (process.env.NODE_ENV !== 'production') {
-  window.fetch = (...args: any[]) => {
-    const error = new Error(
-      [
-        `Using 'window.fetch'.`,
-        'Are you sure you want to do this?',
-        `Most code should use 'react-component/utils/fetch' which provides defaults compatible with the backend.`,
-        `To get rid of this message, use 'window.__global__fetch' instead.`,
-      ].join(' ')
-    )
-    console.warn(error)
-    // @ts-ignore
-    return fetch(...args)
-  }
-}
 
 const cacheBust = (urlString: string) => {
   const { query, ...rest } = url.parse(urlString)
