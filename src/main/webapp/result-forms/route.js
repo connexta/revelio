@@ -277,8 +277,8 @@ const fragment = gql`
     id
     title
     description
-    modified: metacardModified
-    attributes: uiAttributeGroup
+    modified: metacard_modified
+    attributes: ui_attribute_group
   }
 `
 
@@ -287,7 +287,7 @@ const searchForms = gql`
     metacardsByTag(tag: "attribute-group") {
       attributes {
         ...ResultFormAttributes
-        owner: metacardOwner
+        owner: metacard_owner
       }
     }
   }
@@ -299,7 +299,7 @@ const useCreate = () => {
     mutation CreateSearchForms($attrs: Json) {
       createMetacard(attrs: $attrs) {
         ...ResultFormAttributes
-        owner: metacardOwner
+        owner: metacard_owner
       }
     }
     ${fragment}
@@ -329,8 +329,8 @@ const useCreate = () => {
 
 const useSave = () => {
   const mutation = gql`
-    mutation SaveSearchForms($attrs: Json) {
-      saveMetacard(attrs: $attrs) {
+    mutation SaveSearchForms($id: String!, $attrs: Json) {
+      saveMetacard(id: $id, attrs: $attrs) {
         ...ResultFormAttributes
       }
     }
@@ -448,6 +448,7 @@ export default () => {
     const { attributes, ...rest } = form
     save({
       variables: {
+        id: form.id,
         attrs: {
           'ui.attribute-group': attributes,
           ...rest,
