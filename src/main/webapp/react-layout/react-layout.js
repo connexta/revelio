@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState, useEffect } from 'react'
+import React, { Fragment, useRef, useState, useEffect, useContext } from 'react'
 import ReactDOM from 'react-dom'
 
 import GoldenLayout from 'golden-layout'
@@ -6,55 +6,122 @@ import GoldenLayout from 'golden-layout'
 import 'golden-layout/src/css/goldenlayout-base.css'
 import 'golden-layout/src/css/goldenlayout-light-theme.css'
 
-const Layout = props => {
-  const container = useRef(null)
-  const [regions, setRegions] = useState([])
-  const { config, components, onChange } = props
+const Context = React.createContext()
+
+const useLayout = () => {
+  const value = useContext(Context)
+
+  const [layout, setLayout] = value
+
+  return { layout, setLayout }
+}
+
+export const Provider = ({ children }) => {
+  const value = useState(null)
+
+  return <Context.Provider value={value}>{children}</Context.Provider>
+}
+
+export const AddConfig = ({ children, config }) => {
+  const { layout } = useLayout()
+
+  const onClick = () => {
+    if (layout === null) {
+      return
+    }
+
+    if (layout.root.contentItems.length > 0) {
+      layout.root.contentItems[0].addChild(config)
+    } else {
+      layout.root.addChild(config)
+    }
+  }
+
+  return <div onClick={onClick}>{children}</div>
+}
+
+export const DragSource = ({ children, config }) => {
+  const source = useRef(null)
+
+  const { layout } = useLayout()
 
   useEffect(
     () => {
-      if (container.current === null) {
+      if (source === null) {
         return
       }
-      const layout = new GoldenLayout(config, container.current)
 
-      layout.on('initialised', () => {
-        layout.unbind('initialised')
-        setTimeout(() => {
-          layout.on('stateChanged', () => {
-            onChange(layout.toConfig())
-          })
-        }, 0)
-      })
+      if (layout === null) {
+        return
+      }
 
-      // cleanup local state when items removed from golden layout
-      layout.on('itemDestroyed', component => {
-        if (!component.container) {
-          return
-        }
-        const el = component.container.getElement().get(0)
-        setRegions(regions => {
-          return regions.filter(region => {
-            return region.el !== el
-          })
-        })
-      })
-
-      Object.keys(components).forEach(key => {
-        layout.registerComponent(key, container => {
-          const el = container.getElement().get(0)
-          setRegions(regions => {
-            return regions.concat({ el, key })
-          })
-        })
-      })
-
-      layout.init()
-
-      return () => layout.destroy()
+      layout.createDragSource(source.current, config)
     },
-    [config, components, container, onChange, setRegions]
+    [source, layout]
   )
+
+  return <div ref={source}>{children}</div>
+}
+
+export const Layout = props => {
+  const container = useRef(null)
+  const [regions, setRegions] = useState([])
+  const { setLayout } = useLayout()
+  const { config, components, onChange } = props
+
+  useEffect(() => {
+    if (container.current === null) {
+      return
+    }
+
+    const layout = new GoldenLayout(config, container.current)
+
+    setLayout(layout)
+
+    const onResize = () => {
+      layout.updateSize()
+    }
+
+    window.addEventListener('resize', onResize)
+
+    layout.on('initialised', () => {
+      layout.unbind('initialised')
+      setTimeout(() => {
+        layout.on('stateChanged', () => {
+          onChange(layout.toConfig())
+        })
+      }, 0)
+    })
+
+    // cleanup local state when items removed from golden layout
+    layout.on('itemDestroyed', component => {
+      if (!component.container) {
+        return
+      }
+      const el = component.container.getElement().get(0)
+      setRegions(regions => {
+        return regions.filter(region => {
+          return region.el !== el
+        })
+      })
+    })
+
+    Object.keys(components).forEach(key => {
+      layout.registerComponent(key, container => {
+        const el = container.getElement().get(0)
+        setRegions(regions => {
+          return regions.concat({ el, key })
+        })
+      })
+    })
+
+    layout.init()
+
+    return () => {
+      layout.destroy()
+      window.removeEventListener('resize', onResize)
+    }
+  }, [])
 
   return (
     <Fragment>
@@ -67,5 +134,3 @@ const Layout = props => {
     </Fragment>
   )
 }
-
-export default Layout
