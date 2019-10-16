@@ -153,7 +153,7 @@ const Actions = props => {
   const actionsMap = createActionsMap(result.actions)
   return (
     <Paper>
-      <List>
+      <List style={{ marginLeft: '10px' }}>
         <ActionLinks title="Export as:" actions={actionsMap.exportActions} />
         <Divider />
         <ActionLinks title="Map:" actions={actionsMap.mapActions} />
