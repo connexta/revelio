@@ -2,6 +2,8 @@ import * as React from 'react'
 import { Box } from '@material-ui/core'
 import Fab from '@material-ui/core/Fab'
 import { Remove } from '@material-ui/icons'
+import { MetacardType } from '../filter-input/metacard-types'
+import { Map } from 'immutable'
 
 export const withRemoveButton = (Component: any) => {
   return (props: any) => {
@@ -45,8 +47,8 @@ const Divider = () => (
 )
 
 export const defaultFilter = {
-  attribute: 'anyText',
-  comparator: 'Contains',
+  property: 'anyText',
+  type: 'Contains',
   value: '',
 }
 
@@ -59,4 +61,19 @@ export const filterHeaderButtonStyle = {
 
 export const filterComponentStyle = {
   marginBottom: 5,
+}
+
+export const getDefaultValue = (type: MetacardType | undefined) => {
+  switch (type) {
+    case 'LOCATION':
+      return Map({ type: 'line' })
+    case 'DATE':
+      return { type: 'BEFORE' }
+    case 'BOOLEAN':
+      return false
+    case 'STRING':
+      return ''
+    default:
+      return ''
+  }
 }

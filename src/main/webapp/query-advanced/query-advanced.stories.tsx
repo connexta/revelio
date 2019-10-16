@@ -7,8 +7,8 @@ import { withKnobs, number } from '@storybook/addon-knobs'
 const stories = storiesOf('Query Advanced', module)
 
 const baseFilter = {
-  attribute: 'anyText',
-  comparator: 'Contains',
+  property: 'anyText',
+  type: 'ILIKE',
   value: '',
 }
 

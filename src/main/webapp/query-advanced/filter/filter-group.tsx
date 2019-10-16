@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { FilterType, Filter } from './filter'
+import { QueryFilter, Filter } from './filter'
 import { Box, Button } from '@material-ui/core'
 import { Add } from '@material-ui/icons'
 import {
@@ -12,7 +12,7 @@ import Operator from './operator'
 
 type FilterGroupType = {
   type: string
-  filters: Array<FilterGroupType | FilterType>
+  filters: Array<FilterGroupType | QueryFilter>
 }
 
 export type FilterGroupProps = FilterGroupType & {
@@ -22,8 +22,9 @@ export type FilterGroupProps = FilterGroupType & {
 }
 
 const isFilterGroup = (
-  object: FilterType | FilterGroupType
-): object is FilterGroupType => (object as FilterGroupType).type !== undefined
+  object: QueryFilter | FilterGroupType
+): object is FilterGroupType =>
+  (object as FilterGroupType).filters !== undefined
 
 const getValue = (props: FilterGroupProps) => {
   const { type, filters } = props
@@ -84,7 +85,7 @@ const FilterList = (props: FilterGroupProps) => {
   return (
     <Box>
       {props.filters.map((filter, i) => {
-        const onChange = (value: FilterGroupType | FilterType) => {
+        const onChange = (value: FilterGroupType | QueryFilter) => {
           const filters = props.filters.slice()
           filters[i] = value
           props.onChange({ ...getValue(props), filters })
