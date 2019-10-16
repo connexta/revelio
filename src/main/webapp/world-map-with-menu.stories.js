@@ -2,16 +2,16 @@ import { action } from '@connexta/ace/@storybook/addon-actions'
 import { storiesOf } from '@connexta/ace/@storybook/react'
 import { withKnobs, select } from '@connexta/ace/@storybook/addon-knobs'
 import React, { useState } from 'react'
-import WorldMap from './worldMap'
+import WorldMapWithDrawMenu from './world-map-with-draw-menu'
 import { geometry } from 'geospatialdraw'
 import { DRAWING_STYLE, RENDERER_STYLE } from './map-style'
 
-const stories = storiesOf('WorldMap', module)
+const stories = storiesOf('WorldMapWithDrawMenu', module)
 stories.addDecorator(withKnobs)
 
 const PROJECTION = 'EPSG:4326'
 
-const searchGeoCatalog = {
+const geometryCatalog = {
   none: {
     shape: 'Polygon',
     geo: null,
@@ -63,23 +63,36 @@ const searchGeoCatalog = {
 }
 
 stories.add('search for geometry', () => {
-  const [isDrawing, setIsDrawing] = useState(true)
+  const [
+    { isDrawing = true, geos = [], viewport = null },
+    setDrawingState,
+  ] = useState(true)
   const searchGeoType = select(
     'starting geometry',
-    Object.keys(searchGeoCatalog),
+    Object.keys(geometryCatalog),
     'none'
   )
-  const searchGeo = searchGeoCatalog[searchGeoType]
+  const searchGeo = geometryCatalog[searchGeoType]
   return (
-    <WorldMap
+    <WorldMapWithDrawMenu
       projection={PROJECTION}
+      maxZoom={20}
+      minZoom={1.5}
+      zoom={2}
+      geos={geos}
+      viewport={viewport}
+      coordinateType="Lat Lon"
       isDrawing={isDrawing}
       mapStyle={RENDERER_STYLE}
       drawStyle={DRAWING_STYLE}
       drawShape={searchGeo.shape}
       drawGeo={searchGeo.geo}
-      onSearchGeo={geo => {
-        setIsDrawing(false)
+      onDrawnGeo={geo => {
+        setDrawingState({
+          isDrawing: false,
+          geos: [geo],
+          viewport: geo.bbox,
+        })
         action('Search For Geo')(geo)
       }}
     />
