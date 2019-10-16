@@ -12,17 +12,9 @@ import TablePagination from '@material-ui/core/TablePagination'
 
 import Inspector from './inspector'
 
-import { getSelected } from './store/results'
-
-import { connect } from 'react-redux'
-
 import gql from 'graphql-tag'
 import { useApolloClient } from '@apollo/react-hooks'
-
-const mapStateToProps = state => {
-  const selected = getSelected(state)
-  return { selected }
-}
+import { useSelectionInterface } from './react-hooks'
 
 const getPageWindow = (data, pageIndex, pageSize) => {
   const i = pageIndex * pageSize
@@ -284,8 +276,8 @@ const useExecutor = client => {
   }
 }
 
-const Container = props => {
-  const { selected } = props
+const Container = () => {
+  const [selected] = useSelectionInterface()
 
   const client = useApolloClient()
   const { state, onSearch, onCancel, onClear } = useExecutor(client)
@@ -307,4 +299,4 @@ const Container = props => {
   )
 }
 
-export default connect(mapStateToProps)(Container)
+export default Container

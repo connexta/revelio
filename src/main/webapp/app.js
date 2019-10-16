@@ -6,17 +6,20 @@ import { Provider } from 'react-redux'
 import createStore from './store'
 import { createClient } from './intrigue-api/graphql'
 import { ApolloProvider } from '@apollo/react-hooks'
+import { SelectionProvider } from './react-hooks/use-selection-interface'
 
 const store = createStore()
 
 const render = (Routes, client) => {
   ReactDOM.render(
     <AppContainer>
-      <Provider store={store}>
-        <ApolloProvider client={client}>
-          <Routes />
-        </ApolloProvider>
-      </Provider>
+      <SelectionProvider>
+        <Provider store={store}>
+          <ApolloProvider client={client}>
+            <Routes />
+          </ApolloProvider>
+        </Provider>
+      </SelectionProvider>
     </AppContainer>,
     document.getElementById('root')
   )
