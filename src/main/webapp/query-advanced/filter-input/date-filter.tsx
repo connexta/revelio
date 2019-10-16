@@ -1,16 +1,12 @@
 import * as React from 'react'
 import { useState } from 'react'
+//@ts-ignore
 import TimeRange from '../../time-range'
 import { QueryFilterProps } from '../filter/filter'
 import { AttributeMenu } from '../filter/filter-dropdowns'
-import metacardDefinitions, { MetacardType } from './metacard-types'
+import { metacardDefinitions, MetacardType } from '../filter/dummyDefinitions'
 import { getDefaultValue, filterComponentStyle } from '../filter/filter-utils'
 import { Map } from 'immutable'
-
-//Consider removing in future commit
-const isEmpty = (checkThis: any) => {
-  return Object.keys(checkThis).length === 0
-}
 
 const DateFilter = (props: QueryFilterProps) => {
   //Remove state in future commit

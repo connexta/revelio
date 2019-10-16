@@ -1,9 +1,7 @@
 import * as React from 'react'
 import { Box } from '@material-ui/core'
 import { withDivider, withRemoveButton } from './filter-utils'
-import metacardDefinitions, {
-  MetacardType,
-} from '../filter-input/metacard-types'
+import { metacardDefinitions, MetacardType } from './dummyDefinitions'
 import TextFilter from '../filter-input/text-filter'
 import LocationFilter from '../filter-input/location-filter'
 import DateFilter from '../filter-input/date-filter'
