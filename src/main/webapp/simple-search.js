@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback, useReducer } from 'react'
 
 import { BasicSearch } from './basic-search'
 import ResultTable from './results/results'
@@ -12,42 +12,16 @@ import TablePagination from '@material-ui/core/TablePagination'
 
 import Inspector from './inspector'
 
-import {
-  executeQuery,
-  clearQuery,
-  cancelQuery,
-  getQueryStatus,
-  getQueryResponse,
-  isQueryPending,
-} from './intrigue-api/lib/cache'
-
 import { getSelected } from './store/results'
 
 import { connect } from 'react-redux'
 
-const queryId = '313a84858daa4ef5980d4b11a745d6d3'
+import gql from 'graphql-tag'
+import { useApolloClient } from '@apollo/react-hooks'
 
 const mapStateToProps = state => {
   const selected = getSelected(state)
-  const results = getQueryResponse(queryId)(state)
-  const status = getQueryStatus(queryId)(state)
-  const isPending = isQueryPending(queryId)(state)
-  const selectedResults = results.filter(result => {
-    return selected.has(result.metacard.properties.id)
-  })
-  return {
-    results,
-    isPending,
-    status,
-    sources: ['ddf.distribution'],
-    selectedResults,
-  }
-}
-
-const mapDispatchToProps = {
-  onSearch: executeQuery,
-  onClear: clearQuery,
-  onCancel: cancelQuery,
+  return { selected }
 }
 
 const getPageWindow = (data, pageIndex, pageSize) => {
@@ -58,7 +32,15 @@ const getPageWindow = (data, pageIndex, pageSize) => {
 
 const SimpleSearch = props => {
   const [query, setQuery] = useState(undefined)
-  const { results = [], onSearch, onClear, onCancel, selectedResults } = props
+  const {
+    results,
+    status,
+    onSearch,
+    onCancel,
+    onClear,
+    selectedResults,
+  } = props
+
   const [pageSize, setPageSize] = useState(10)
   const [pageIndex, setPageIndex] = useState(0)
   const page = getPageWindow(results, pageIndex, pageSize)
@@ -96,19 +78,19 @@ const SimpleSearch = props => {
             onSearch={query => {
               setPageIndex(0)
               setQuery(query)
-              onClear(queryId)
+              onClear()
               onSearch(query)
             }}
           />
           <QueryStatus
-            sources={props.status}
+            sources={status}
             onRun={srcs => {
               setPageIndex(0)
               onSearch({ ...query, srcs })
             }}
             onCancel={srcs => {
               srcs.forEach(src => {
-                onCancel(queryId, src)
+                onCancel(src)
               })
             }}
           />
@@ -160,7 +142,169 @@ const SimpleSearch = props => {
   )
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SimpleSearch)
+const simpleSearch = gql`
+  query SimpleSearch($filterTree: Json, $settings: QuerySettingsInput) {
+    metacards(filterTree: $filterTree, settings: $settings) {
+      results {
+        metacard
+      }
+      status {
+        count
+        hits
+        elapsed
+      }
+    }
+  }
+`
+
+import { Map } from 'immutable'
+
+const status = (state, action) => {
+  switch (action.type) {
+    case 'clear':
+      return state.clear()
+    case 'start':
+      return state.merge(action.status)
+    case 'success':
+      return state.set(action.src, {
+        type: 'source.success',
+        info: action.status,
+      })
+    case 'cancel':
+      return state.set(action.src, {
+        type: 'source.canceled',
+      })
+    case 'error':
+      return state.set(action.src, {
+        type: 'source.error',
+        info: {
+          message: 'source error',
+        },
+      })
+    default:
+      return state
+  }
+}
+
+const results = (state, action) => {
+  switch (action.type) {
+    case 'clear':
+      return []
+    case 'success':
+      return action.results
+    default:
+      return state
+  }
+}
+
+const reducer = (state, action) => {
+  if (state.status.get(action.src, { type: '' }).type === 'source.canceled') {
+    return state
+  }
+
+  return {
+    status: status(state.status, action),
+    results: results(state.results, action),
+  }
+}
+
+const useExecutor = client => {
+  const [state, dispatch] = useReducer(reducer, {
+    results: [],
+    status: Map(),
+  })
+
+  const onError = useCallback(
+    src => {
+      dispatch({ type: 'error', src })
+    },
+    [dispatch]
+  )
+
+  const onClear = useCallback(
+    () => {
+      dispatch({ type: 'clear' })
+    },
+    [dispatch]
+  )
+
+  const onCancel = useCallback(
+    src => {
+      dispatch({ type: 'cancel', src })
+    },
+    [dispatch]
+  )
+
+  const onSuccess = useCallback(
+    (src, data) => {
+      dispatch({
+        type: 'success',
+        src,
+        status: data.metacards.status,
+        results: data.metacards.results,
+      })
+    },
+    [dispatch]
+  )
+
+  const onSearch = useCallback(
+    async query => {
+      const { filterTree, srcs, ...settings } = query
+
+      const status = srcs.reduce((status, src) => {
+        return status.set(src, { type: 'source.pending' })
+      }, Map())
+
+      dispatch({ type: 'start', status })
+
+      srcs.map(async src => {
+        try {
+          const { data } = await client.query({
+            query: simpleSearch,
+            variables: {
+              filterTree,
+              settings: { src, ...settings },
+            },
+            fetchPolicy: 'network-only',
+          })
+          onSuccess(src, data)
+        } catch (e) {
+          onError(src)
+        }
+      })
+    },
+    [client, onSuccess, onError]
+  )
+
+  return {
+    state,
+    onSearch,
+    onCancel,
+    onClear,
+  }
+}
+
+const Container = props => {
+  const { selected } = props
+
+  const client = useApolloClient()
+  const { state, onSearch, onCancel, onClear } = useExecutor(client)
+  const { results, status } = state
+
+  const selectedResults = results.filter(result => {
+    return selected.has(result.metacard.properties.id)
+  })
+
+  return (
+    <SimpleSearch
+      results={results}
+      status={status.toJSON()}
+      onSearch={onSearch}
+      onCancel={onCancel}
+      onClear={onClear}
+      selectedResults={selectedResults}
+    />
+  )
+}
+
+export default connect(mapStateToProps)(Container)
