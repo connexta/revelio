@@ -8433,7 +8433,7 @@ geojson-rbush@2.1.0:
 
 "geospatialdraw@https://github.com/connexta/geospatialdraw.git#revelio":
   version "0.4.0"
-  resolved "https://github.com/connexta/geospatialdraw.git#bac71a539000a052207a5073efea7b9fe84c50fc"
+  resolved "https://github.com/connexta/geospatialdraw.git#0ea18d84c6207819f72d8f1e29c9be24b665694e"
   dependencies:
     "@fortawesome/fontawesome-svg-core" "1.2.21"
     "@fortawesome/free-solid-svg-icons" "5.10.1"
