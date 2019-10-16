@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
-import { connect } from 'react-redux'
 import { Set } from 'immutable'
-import { getSelected, setSelected } from '../store/results'
-import { useKeyPressed } from '../react-hooks'
+import { useKeyPressed, useSelectionInterface } from '../react-hooks'
 
 import Paper from '@material-ui/core/Card'
 import Table from '@material-ui/core/Table'
@@ -186,16 +184,10 @@ const Results = props => {
   )
 }
 
-const mapStateToProps = state => ({
-  selection: getSelected(state),
-})
-
-const mapDispatchToProps = {
-  onSelect: setSelected,
+const Container = prop => {
+  const [selection, onSelect] = useSelectionInterface()
+  return <Results {...prop} selection={selection} onSelect={onSelect} />
 }
 
 export { Results }
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Results)
+export default Container
