@@ -1,7 +1,7 @@
 import React from 'react'
 import * as ol from 'openlayers'
 import Box from '@material-ui/core/Box'
-import { renderer } from 'geospatialdraw'
+import { renderer, geometry } from 'geospatialdraw'
 
 /*
 
@@ -18,6 +18,11 @@ props {
 }
 
 */
+
+export const geometryListToViewport = geometryList =>
+  geometryList.length > 0
+    ? geometry.combineExtents(geometryList.map(geometry => geometry.bbox))
+    : null
 
 class WorldMap extends React.Component {
   constructor(props) {
@@ -42,6 +47,7 @@ class WorldMap extends React.Component {
     const { geos, viewport, containerWidth, containerHeight } = this.props
     if (this.state.geoRenderer) {
       if (geos !== prevProps.geos) {
+        this.state.geoRenderer.clearGeos()
         this.state.geoRenderer.renderList(geos || [])
       }
       if (viewport && viewport !== prevProps.viewport) {
@@ -84,6 +90,7 @@ class WorldMap extends React.Component {
       this.props.style,
       this.props.maxZoom
     )
+    geoRenderer.clearGeos()
     geoRenderer.renderList(this.props.geos || [])
     if (this.props.viewport) {
       geoRenderer.panToExtent(this.props.viewport)
