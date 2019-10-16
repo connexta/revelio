@@ -122,7 +122,7 @@ const parseRelative = relative => {
   return {}
 }
 
-const getLocationFilter = (data = Map()) => {
+export const getLocationFilter = (data = Map()) => {
   const { type, location } = data.toJSON()
   if (!type || !location) {
     return null

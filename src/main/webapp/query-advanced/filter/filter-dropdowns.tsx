@@ -2,9 +2,9 @@ import * as React from 'react'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
 import { Button, Box, Popover, MenuItem } from '@material-ui/core'
 import { ArrowDropDown as DropDownIcon } from '@material-ui/icons'
+import metacardDefinitions from '../filter-input/metacard-types'
 
-const attributeList = ['anyText', 'checksum', 'title']
-const comparatorList = ['Contains', 'Matchcase', '=']
+const comparatorList = ['ILIKE', 'MATCHCASE', '=']
 
 type MenuProps = {
   selected: any
@@ -64,7 +64,9 @@ const Menu = (props: MenuProps) => {
 
 const withAttributeOptions = (Component: any) => {
   return (props: any) => {
-    return <Component {...props} options={attributeList} />
+    return (
+      <Component {...props} options={Array.from(metacardDefinitions.keys())} />
+    )
   }
 }
 
