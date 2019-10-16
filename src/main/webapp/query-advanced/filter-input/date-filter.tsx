@@ -13,7 +13,7 @@ const isEmpty = (checkThis: any) => {
 }
 
 const DateFilter = (props: QueryFilterProps) => {
-    //Remove state in future commit
+  //Remove state in future commit
   const [date, setDate] = useState(Map({ type: 'BEFORE' }))
 
   return (
