@@ -20,7 +20,7 @@ const query = {
   ],
 }
 
-const { createTransport } = require('./lib/transport')
+const { createTransport } = require('./transport')
 
 const transportTests = type => () => {
   it('should successfully createTransport', async () => {
@@ -49,36 +49,4 @@ describe('transport', () => {
   it('should not connect to unknown transports', () => {
     assert.throws(() => createTransport({ type: 'test' }), Error)
   })
-})
-
-const { combineReducers, createStore, applyMiddleware } = require('redux')
-const thunk = require('redux-thunk').default
-const {
-  reducer,
-  executeQuery,
-  getSourceStatus,
-  getMetacards,
-  initTransport,
-  closeTransport,
-} = require('./lib/cache')
-
-const createCache = () => createStore(reducer, applyMiddleware(thunk))
-
-const cacheTests = type => () => {
-  it('should init and query', async () => {
-    const store = createCache()
-
-    const actions = [initTransport(type), executeQuery(query), closeTransport()]
-
-    for (let i = 0; i < actions.length; i++) {
-      await store.dispatch(actions[i])
-    }
-
-    //console.log(store.getState())
-  })
-}
-
-describe('cache', () => {
-  describe('http', cacheTests('http'))
-  describe('ws', cacheTests('ws'))
 })

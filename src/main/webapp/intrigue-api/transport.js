@@ -119,7 +119,8 @@ const modes = {
 }
 
 exports.createTransport = (opts = {}) => {
-  const options = { ...defaultOptions, ...window.location, ...opts }
+  const options = { ...defaultOptions, ...opts }
+
   const { type = 'http', hostname } = options
 
   const auth = Buffer.from('admin:admin').toString('base64')

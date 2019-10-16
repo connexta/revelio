@@ -15,7 +15,6 @@ import TextField from '@material-ui/core/TextField'
 import RemoveIcon from '@material-ui/icons/Remove'
 import { Map } from 'immutable'
 import React from 'react'
-import { connect } from 'react-redux'
 import {
   APPLY_TO_KEY,
   DATATYPES_KEY,
@@ -24,7 +23,6 @@ import {
   TIME_RANGE_KEY,
   toFilterTree,
 } from './basic-search-helper'
-import { executeQuery } from './intrigue-api/lib/cache'
 import Location, { validate as validateLocation } from './location'
 import TimeRange, {
   createTimeRange,
@@ -139,10 +137,8 @@ const populateDefaultQuery = (filterTree, srcs = ['ddf.distribution']) => ({
       direction: 'descending',
     },
   ],
-  id: '313a84858daa4ef5980d4b11a745d6d3',
   spellcheck: false,
   phonetics: false,
-  batchId: '5a3f400c2e1e410e8d37494500173ca4',
 })
 
 const MatchTypes = ({ state = [], setState, errors = {} }) => {
@@ -440,9 +436,4 @@ const validate = (filterMap = Map()) => {
   return errors
 }
 
-const mapDispatchToProps = { onSearch: executeQuery }
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(BasicSearch)
+export default BasicSearch
