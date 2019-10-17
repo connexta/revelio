@@ -328,10 +328,27 @@ const deleteMetacard = async (parent, args) => {
   }
 }
 
+const updateUserPreferences = async (parent, args) => {
+  const { userPreferences } = args
+
+  const res = await fetch(`./internal/user/preferences`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userPreferences),
+  })
+
+  if (res.ok) {
+    return userPreferences
+  }
+}
+
 const Mutation = {
   createMetacard,
   saveMetacard,
   deleteMetacard,
+  updateUserPreferences,
 }
 
 const resolvers = {

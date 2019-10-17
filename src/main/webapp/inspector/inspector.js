@@ -1,17 +1,16 @@
-import React from 'react'
-
-import { useQuery, useApolloClient } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
-
+import { useQuery } from '@apollo/react-hooks'
+import Paper from '@material-ui/core/Card'
 import Divider from '@material-ui/core/Divider'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import Link from '@material-ui/core/Link'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
-import Link from '@material-ui/core/Link'
-import Paper from '@material-ui/core/Card'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 import Typography from '@material-ui/core/Typography'
+import gql from 'graphql-tag'
+import React from 'react'
+import { useApolloFallback } from '../react-hooks'
 
 const Info = ({ title, value }) => {
   const count = value instanceof Array ? value.length : 1
@@ -337,15 +336,6 @@ const Container = props => {
   return (
     <Inspector {...props} error={error} summaryAttributes={summaryAttributes} />
   )
-}
-
-const useApolloFallback = (container, component) => {
-  try {
-    useApolloClient()
-    return container
-  } catch (e) {
-    return component
-  }
 }
 
 export default props => {
