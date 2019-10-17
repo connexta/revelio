@@ -7,7 +7,7 @@ import { Map } from 'immutable'
 import { AttributeMenu } from '../filter/filter-dropdowns'
 import { metacardDefinitions, MetacardType } from '../filter/dummyDefinitions'
 import { getDefaultValue, filterComponentStyle } from '../filter/filter-utils'
-
+//@ts-ignore
 import { getLocationFilter } from '../../basic-search-helper'
 
 //Consider removing in future commit

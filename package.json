@@ -46,7 +46,7 @@
     "start": "ace start",
     "fmt": "ace format -w",
     "test:api": "mocha src/main/webapp/intrigue-api/test",
-    "test": "ace format && eslint src && tsc -p . --noEmit --skipLibCheck",
+    "test": "ace format && eslint src && tsc -p .",
     "storybook": "ace storybook",
     "build": "yarn storybook --static",
     "prestart": "ace disable-idp"
