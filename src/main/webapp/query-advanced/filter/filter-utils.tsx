@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Box } from '@material-ui/core'
 import Fab from '@material-ui/core/Fab'
 import { Remove } from '@material-ui/icons'
-import { MetacardType } from '../filter-input/metacard-types'
+import { MetacardType } from './dummyDefinitions'
 import { Map } from 'immutable'
 
 export const withRemoveButton = (Component: any) => {

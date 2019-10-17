@@ -2,13 +2,14 @@ import * as React from 'react'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
 import { Button, Box, Popover, MenuItem } from '@material-ui/core'
 import { ArrowDropDown as DropDownIcon } from '@material-ui/icons'
-import metacardDefinitions from '../filter-input/metacard-types'
+import { metacardDefinitions } from './dummyDefinitions'
 
 const comparatorList = ['ILIKE', 'MATCHCASE', '=']
 
 type MenuProps = {
   selected: any
   options: Array<any>
+  aliases: any
   onChange: (value: any) => void
   style?: React.CSSProperties
 }
@@ -31,7 +32,7 @@ const Menu = (props: MenuProps) => {
             }}
             component="span"
           >
-            {props.selected}
+            {props.aliases[props.selected] || props.selected}
           </Box>
           <DropDownIcon style={{ float: 'right' }} />
         </Box>
@@ -53,7 +54,7 @@ const Menu = (props: MenuProps) => {
               key={option}
               value={option}
             >
-              {option}
+              {props.aliases[option] || option}
             </MenuItem>
           )
         })}
@@ -62,17 +63,44 @@ const Menu = (props: MenuProps) => {
   )
 }
 
+const attributeAliases = {
+  'date-created': 'Date Created',
+  enterprise: 'Enterprise',
+}
+
 const withAttributeOptions = (Component: any) => {
   return (props: any) => {
     return (
-      <Component {...props} options={Array.from(metacardDefinitions.keys())} />
+      <Component
+        {...props}
+        options={Array.from(metacardDefinitions.keys())}
+        aliases={attributeAliases}
+      />
     )
   }
 }
 
+const cqlToComparator = {
+  ILIKE: 'CONTAINS',
+  LIKE: 'MATCHCASE',
+  '=': 'EQUALS',
+  'IS NULL': 'IS EMPTY',
+  '>': '>',
+  '<': '<',
+  '<=': '<=',
+  '>=': '>=',
+  BETWEEN: 'RANGE',
+}
+
 const withComparatorOptions = (Component: any) => {
   return (props: any) => {
-    return <Component {...props} options={comparatorList} />
+    return (
+      <Component
+        {...props}
+        options={comparatorList}
+        aliases={cqlToComparator}
+      />
+    )
   }
 }
 

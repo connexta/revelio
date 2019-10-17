@@ -3,7 +3,7 @@ import { QueryFilterProps } from '../filter/filter'
 import { Box, TextField } from '@material-ui/core'
 import { AttributeMenu, ComparatorMenu } from '../filter/filter-dropdowns'
 import { filterComponentStyle, getDefaultValue } from '../filter/filter-utils'
-import metacardDefinitions, { MetacardType } from './metacard-types'
+import { metacardDefinitions, MetacardType } from '../filter/dummyDefinitions'
 
 const TextFilter = (props: QueryFilterProps) => {
   return (
