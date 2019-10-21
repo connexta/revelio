@@ -3,9 +3,11 @@ import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
+import Divider from '@material-ui/core/Divider'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
+import Link from '@material-ui/core/Link'
 import Paper from '@material-ui/core/Card'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
@@ -107,6 +109,74 @@ const Details = props => {
   )
 }
 
+const createActionsMap = actions => {
+  const mapActions = actions.filter(
+    action => action.id.indexOf('catalog.data.metacard.map.') === 0
+  )
+  const exportActions = actions
+    .filter(action => action.title.indexOf('Export') === 0)
+    .filter(action => mapActions.indexOf(action) === -1)
+  const otherActions = actions.filter(
+    action =>
+      mapActions.indexOf(action) === -1 && exportActions.indexOf(action) === -1
+  )
+  return { exportActions, mapActions, otherActions }
+}
+
+const ActionLinks = props => {
+  const { title, actions } = props
+  if (actions.length === 0) {
+    return null
+  }
+
+  return (
+    <div style={{ width: '100%' }}>
+      <Typography variant="h6" component="h2">
+        {title}
+      </Typography>
+      {actions.map(action => {
+        return (
+          <ListItem key={action.id}>
+            <Typography color="textSecondary" gutterBottom>
+              <Link href={action.url}> {action.displayName} </Link>
+            </Typography>
+          </ListItem>
+        )
+      })}
+    </div>
+  )
+}
+
+const Actions = props => {
+  const { results } = props
+  const result = results instanceof Array ? results[0] : results
+  const actions = result.actions
+  if (actions && actions.length) {
+    const actionsMap = createActionsMap(result.actions)
+    return (
+      <Paper>
+        <List style={{ marginLeft: '10px' }}>
+          <ActionLinks title="Export as:" actions={actionsMap.exportActions} />
+          <Divider />
+          <ActionLinks title="Map:" actions={actionsMap.mapActions} />
+          <Divider />
+          <ActionLinks title="Various:" actions={actionsMap.otherActions} />
+        </List>
+      </Paper>
+    )
+  } else {
+    return (
+      <Paper>
+        <List style={{ marginLeft: '10px' }}>
+          <Typography variant="h6" component="h2">
+            No actions provided
+          </Typography>
+        </List>
+      </Paper>
+    )
+  }
+}
+
 const Summary = props => {
   const { results, summaryAttributes } = props
 
@@ -173,6 +243,7 @@ const MultiResultDetails = props => {
 const resultTabMap = {
   0: Summary,
   1: Details,
+  2: Actions,
 }
 
 const multiResultTabMap = {
@@ -203,6 +274,7 @@ const ResultTabs = props => {
       >
         <Tab label="Summary" />
         <Tab label="Details" />
+        <Tab label="Actions" />
       </Tabs>
       {Component ? <Component {...props} /> : null}
     </div>
@@ -272,3 +344,5 @@ export default props => {
     <Inspector {...props} error={error} summaryAttributes={summaryAttributes} />
   )
 }
+
+export { Actions, Details, MultiResultDetails, Summary }
