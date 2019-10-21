@@ -46,9 +46,9 @@
     "start": "ace start",
     "fmt": "ace format -w",
     "test:api": "mocha src/main/webapp/intrigue-api/test",
-    "test": "ace format && eslint src && tsc -p .",
+    "test": "ace format && eslint src",
     "storybook": "ace storybook",
-    "build": "yarn storybook --static",
+    "build": "ace bundle && yarn storybook --static",
     "prestart": "ace disable-idp"
   },
   "context-path": "/search/catalog"
