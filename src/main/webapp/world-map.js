@@ -1,5 +1,7 @@
 import React from 'react'
-import * as ol from 'openlayers'
+import { Map as OpenLayersMap, View } from 'ol'
+import Tile from 'ol/layer/Tile'
+import OSM from 'ol/source/OSM'
 import Box from '@material-ui/core/Box'
 import { renderer, geometry } from 'geospatialdraw'
 
@@ -15,6 +17,9 @@ props {
   minZoom
   zoom
   onMapLoaded
+  height
+  containerWidth ?
+  containerHeight ?
 }
 
 */
@@ -65,14 +70,14 @@ class WorldMap extends React.Component {
   }
 
   componentDidMount() {
-    const map = new ol.Map({
+    const map = new OpenLayersMap({
       layers: [
-        new ol.layer.Tile({
-          source: new ol.source.OSM(),
+        new Tile({
+          source: new OSM(),
         }),
       ],
       target: this.mapDivElement,
-      view: new ol.View({
+      view: new View({
         center: [0, 0],
         rotation: 0,
         zoom: this.props.zoom,
@@ -111,7 +116,7 @@ class WorldMap extends React.Component {
   render() {
     const { lat, lon } = this.state
     return (
-      <Box width="100%" height="100%" bgcolor="black" position="relative">
+      <Box width="100%" height={this.props.height} bgcolor="black" position="relative">
         <Box width="100%" height="100%" ref={this.setMapDiv} className="map" />
         <Box
           position="absolute"

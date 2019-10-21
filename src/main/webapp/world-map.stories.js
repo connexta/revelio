@@ -3,7 +3,7 @@ import { withKnobs, select } from '@connexta/ace/@storybook/addon-knobs'
 import React from 'react'
 import WorldMap from './world-map'
 import { geometry } from 'geospatialdraw'
-import * as ol from 'openlayers'
+import { Style, Fill, Circle, Stroke } from 'ol/style'
 
 const featureColor = feature =>
   feature.get('hidden') ? 'rgba(0, 0, 0, 0)' : feature.get('color')
@@ -14,20 +14,20 @@ const LINE_WIDTH = 1.8
 const POINT_SIZE = 4
 
 const MAP_STYLE = feature =>
-  new ol.style.Style({
-    stroke: new ol.style.Stroke({
+  new Style({
+    stroke: new Stroke({
       color: featureColor(feature),
       width: LINE_WIDTH,
     }),
-    fill: new ol.style.Fill({
+    fill: new Fill({
       color: 'rgba(0, 0, 0, 0)',
     }),
     ...(feature.get(BUFFER_SHAPE_PROPERTY) === CIRCLE_BUFFER_PROPERTY_VALUE
       ? {}
       : {
-          image: new ol.style.Circle({
+          image: new Circle({
             radius: POINT_SIZE,
-            fill: new ol.style.Fill({
+            fill: new Fill({
               color: featureColor(feature),
             }),
           }),
@@ -48,6 +48,7 @@ stories.add('bare map', () => {
       maxZoom={20}
       minZoom={1.5}
       zoom={2}
+      height="500px"
     />
   )
 })
@@ -313,6 +314,7 @@ stories.add('render geometries', () => {
       maxZoom={20}
       minZoom={1.5}
       zoom={2}
+      height="500px"
     />
   )
 })

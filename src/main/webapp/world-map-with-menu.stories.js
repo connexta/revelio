@@ -95,6 +95,7 @@ stories.add('search for geometry', () => {
         })
         action('Search For Geo')(geo)
       }}
+      height="500px"
     />
   )
 })

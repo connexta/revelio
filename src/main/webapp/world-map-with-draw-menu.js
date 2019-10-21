@@ -33,6 +33,7 @@ props {
   drawStyle
   mapStyle
   onDrawnGeo
+  height
   containerWidth ?
   containerHeight ?
 }
@@ -94,6 +95,7 @@ class WorldMapWithDrawMenu extends React.Component {
       maxZoom,
       minZoom,
       zoom,
+      height,
       containerWidth,
       containerHeight,
     } = this.props
@@ -124,6 +126,7 @@ class WorldMapWithDrawMenu extends React.Component {
           minZoom={minZoom}
           zoom={zoom}
           onMapLoaded={this.onMapLoaded}
+          height={height}
           containerWidth={containerWidth}
           containerHeight={containerHeight}
         />
