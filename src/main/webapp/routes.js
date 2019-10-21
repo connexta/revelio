@@ -117,7 +117,7 @@ const AppRouter = () => {
       </Drawer>
       {routes.map(route => {
         const { title, path, component: Component } = route
-        const Root = () => {
+        const render = () => {
           return (
             <React.Fragment>
               <NavBar title={title} onMenuOpen={handleDrawerOpen} />
@@ -125,7 +125,7 @@ const AppRouter = () => {
             </React.Fragment>
           )
         }
-        return <Route key={path} exact path={path} component={Root} />
+        return <Route key={path} exact path={path} render={render} />
       })}
     </Router>
   )
