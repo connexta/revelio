@@ -51,5 +51,8 @@
     "build": "ace bundle && yarn storybook --static",
     "prestart": "ace disable-idp"
   },
-  "context-path": "/search/catalog"
+  "context-path": "/search/catalog",
+  "resolutions": {
+    "react-hot-loader": "4.12.9"
+  }
 }
