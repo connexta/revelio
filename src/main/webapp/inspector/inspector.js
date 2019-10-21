@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
 import Divider from '@material-ui/core/Divider'
@@ -42,19 +42,11 @@ const MultiResultInfo = ({ title, values }) => {
         {title}
       </Typography>
       {values.map((itemValue, index, array) => {
-        if (index < array.length - 1) {
-          return (
-            <ListItem divider>
-              <Info title="" value={itemValue} />
-            </ListItem>
-          )
-        } else {
-          return (
-            <ListItem>
-              <Info title="" value={itemValue} />
-            </ListItem>
-          )
-        }
+        return (
+          <ListItem key={index} divider={index < array.length - 1}>
+            <Info title="" value={itemValue} />
+          </ListItem>
+        )
       })}
     </div>
   )
@@ -303,8 +295,10 @@ const MultiResultTabs = props => {
   )
 }
 
-export const Inspector = props => {
-  const { results, summaryAttributes } = props
+const defaultSummaryAttributes = ['created', 'modified', 'thumbnail']
+
+const Inspector = props => {
+  const { results, summaryAttributes = defaultSummaryAttributes } = props
   const TabComponent = getTabComponent(results)
 
   if (results && results.length) {
@@ -332,7 +326,7 @@ const Loading = () => {
   )
 }
 
-export default props => {
+const Container = props => {
   const { loading, error, data = {} } = useQuery(query)
   if (loading) {
     return <Loading />
@@ -345,4 +339,18 @@ export default props => {
   )
 }
 
-export { Actions, Details, MultiResultDetails, Summary }
+const useApolloFallback = (container, component) => {
+  try {
+    useApolloClient()
+    return container
+  } catch (e) {
+    return component
+  }
+}
+
+export default props => {
+  const Component = useApolloFallback(Container, Inspector)
+  return <Component {...props} />
+}
+
+export { Actions, Details, Inspector, MultiResultDetails, Summary }

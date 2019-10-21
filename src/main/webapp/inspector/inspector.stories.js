@@ -4,7 +4,7 @@ import { select, array } from '@connexta/ace/@storybook/addon-knobs'
 
 import result from '../sample-result.json'
 import results from '../sample-multi-result.json'
-import { Inspector } from './inspector'
+import Inspector from './inspector'
 
 const stories = storiesOf('Inspector', module)
 
