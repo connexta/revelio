@@ -150,18 +150,31 @@ const ActionLinks = props => {
 const Actions = props => {
   const { results } = props
   const result = results instanceof Array ? results[0] : results
-  const actionsMap = createActionsMap(result.actions)
-  return (
-    <Paper>
-      <List style={{ marginLeft: '10px' }}>
-        <ActionLinks title="Export as:" actions={actionsMap.exportActions} />
-        <Divider />
-        <ActionLinks title="Map:" actions={actionsMap.mapActions} />
-        <Divider />
-        <ActionLinks title="Various:" actions={actionsMap.otherActions} />
-      </List>
-    </Paper>
-  )
+  const actions = result.actions
+  if (actions && actions.length) {
+    const actionsMap = createActionsMap(result.actions)
+    return (
+      <Paper>
+        <List style={{ marginLeft: '10px' }}>
+          <ActionLinks title="Export as:" actions={actionsMap.exportActions} />
+          <Divider />
+          <ActionLinks title="Map:" actions={actionsMap.mapActions} />
+          <Divider />
+          <ActionLinks title="Various:" actions={actionsMap.otherActions} />
+        </List>
+      </Paper>
+    )
+  } else {
+    return (
+      <Paper>
+        <List style={{ marginLeft: '10px' }}>
+          <Typography variant="h6" component="h2">
+            No actions provided
+          </Typography>
+        </List>
+      </Paper>
+    )
+  }
 }
 
 const Summary = props => {
