@@ -422,7 +422,7 @@
   {
     "id": "queries",
     "multivalued": true,
-    "type": "STRING"
+    "type": "MetacardAttributes"
   },
   {
     "id": "ext.extracted.text",
@@ -507,7 +507,7 @@
   {
     "id": "filterTree",
     "multivalued": false,
-    "type": "STRING"
+    "type": "JSON"
   },
   {
     "id": "federation",

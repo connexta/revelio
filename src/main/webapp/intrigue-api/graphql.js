@@ -67,14 +67,54 @@ const fromGraphqlMap = map => {
   }, {})
 }
 
+const queries = ids => async parent => {
+  const filters = ids.map(id => {
+    return {
+      type: '=',
+      property: 'id',
+      value: id,
+    }
+  })
+
+  const filterTree = {
+    type: 'AND',
+    filters: [
+      {
+        type: 'OR',
+        filters,
+      },
+      {
+        type: 'LIKE',
+        property: 'metacard-tags',
+        value: '%',
+      },
+    ],
+  }
+
+  const res = await metacards(parent, { filterTree })
+
+  return res.attributes.map(attrs => {
+    const { filterTree } = attrs
+
+    return {
+      ...attrs,
+      filterTree: () => JSON.parse(filterTree),
+    }
+  })
+}
+
 const metacards = async (ctx, args) => {
   const q = { ...args.settings, filterTree: args.filterTree }
   const req = send(q)
   const json = await req.json()
 
-  const attributes = json.results.map(result =>
-    toGraphqlMap(result.metacard.properties)
-  )
+  const attributes = json.results.map(result => {
+    const properties = toGraphqlMap(result.metacard.properties)
+    return {
+      ...properties,
+      queries: queries(properties.queries),
+    }
+  })
 
   return { attributes, ...json }
 }

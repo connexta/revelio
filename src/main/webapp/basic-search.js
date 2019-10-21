@@ -22,6 +22,7 @@ import {
   TEXT_KEY,
   TIME_RANGE_KEY,
   toFilterTree,
+  fromFilterTree,
 } from './basic-search-helper'
 import Location, { validate as validateLocation } from './location'
 import TimeRange, {
@@ -275,11 +276,16 @@ const defaultFilters = {
   }),
 }
 
+const getFilterTree = props => {
+  if (props.query && props.query.filterTree) {
+    return fromFilterTree(props.query.filterTree)
+  }
+
+  return Map({ text: '*' })
+}
+
 export const BasicSearch = props => {
-  const [filterTree, setFilterTree] = React.useState(
-    Map({ text: '*' })
-    // fromFilterTree(exampleFilterTree)
-  )
+  const [filterTree, setFilterTree] = React.useState(getFilterTree(props))
 
   const [submitted, setSubmitted] = React.useState(false)
   const errors = validate(filterTree)
