@@ -1,7 +1,3 @@
-// read default dates
-// handle switching time ranges
-// validation
-
 import React, { useState } from 'react'
 
 import DateFnsUtils from '@date-io/date-fns'

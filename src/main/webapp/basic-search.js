@@ -21,6 +21,7 @@ import Typography from '@material-ui/core/Typography'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import Collapse from '@material-ui/core/Collapse'
+import SortOrder from './search-settings'
 
 import {
   APPLY_TO_KEY,
@@ -81,7 +82,15 @@ const filterMap = {
   timeRange: 'Time Range',
   datatypes: 'Match Types',
   sources: 'Sources',
+  sortOrder: 'Sort Order',
 }
+
+const defaultSorts = [
+  {
+    attribute: 'modified',
+    direction: 'descending',
+  },
+]
 
 const AddButton = ({ addFilter }) => {
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -96,7 +105,7 @@ const AddButton = ({ addFilter }) => {
   return (
     <React.Fragment>
       <Button onClick={handleClick} style={{ marginLeft: '20px' }}>
-        Add Filters
+        Add Options
       </Button>
 
       <Menu
@@ -134,17 +143,16 @@ const SearchButton = props => (
   </Button>
 )
 
-const populateDefaultQuery = (filterTree, srcs = ['ddf.distribution']) => ({
+const populateDefaultQuery = (
+  filterTree,
+  srcs = ['ddf.distribution'],
+  sorts = defaultSorts
+) => ({
   srcs,
   start: 1,
   count: 250,
   filterTree,
-  sorts: [
-    {
-      attribute: 'modified',
-      direction: 'descending',
-    },
-  ],
+  sorts,
   spellcheck: false,
   phonetics: false,
 })
@@ -198,6 +206,12 @@ const MatchSources = ({ state = ['ddf.distribution'], setState }) => {
       </Select>
     </FormControl>
   )
+}
+
+const BasicSortOrder = props => {
+  const { setState } = props
+
+  return <SortOrder setSortOrder={setState} />
 }
 
 const BasicTimeRange = ({ state = Map(), setState, errors }) => {
@@ -271,6 +285,7 @@ const filters = {
   timeRange: BasicTimeRange,
   datatypes: MatchTypes,
   sources: MatchSources,
+  sortOrder: BasicSortOrder,
 }
 
 const filterLabels = {
@@ -278,6 +293,7 @@ const filterLabels = {
   timeRange: 'Time Range',
   datatypes: 'Match Types',
   sources: 'Sources',
+  sortOrder: 'Sort Order',
 }
 
 const defaultFilters = {
@@ -425,7 +441,8 @@ export const BasicSearch = props => {
               props.onSearch(
                 populateDefaultQuery(
                   toFilterTree(filterTree),
-                  filterTree.get('sources')
+                  filterTree.get('sources'),
+                  filterTree.get('sortOrder')
                 )
               )
             }
