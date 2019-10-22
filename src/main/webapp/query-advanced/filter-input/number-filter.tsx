@@ -17,15 +17,17 @@ const NumberFilter = (props: QueryFilterProps) => {
   if (isInteger(metacardDefinitions.get(props.property))) {
     onChange = (event: any) => {
       const { property, type } = props
-      if (event.target.value.match(intRegex)) {
-        props.onChange({ property, type, value: event.target.value })
+      const value = event.target.value
+      if (value.match(intRegex)) {
+        props.onChange({ property, type, value })
       }
     }
   } else {
     onChange = (event: any) => {
       const { property, type } = props
-      if (event.target.value.match(floatRegex)) {
-        props.onChange({ property, type, value: event.target.value })
+      const value = event.target.value
+      if (value.match(floatRegex)) {
+        props.onChange({ property, type, value })
       }
     }
   }
