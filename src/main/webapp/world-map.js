@@ -17,12 +17,24 @@ props {
   minZoom
   zoom
   onMapLoaded
-  height
-  containerWidth ?
-  containerHeight ?
+  width ?
+  height ?
 }
 
 */
+
+function throttled(delay, fn) {
+  let lastCall = 0
+  return (...args) => {
+    window.requestAnimationFrame(() => {
+      const now = new Date().getTime()
+      if (now - lastCall >= delay) {
+        lastCall = now
+        fn(...args)
+      }
+    })
+  }
+}
 
 export const geometryListToViewport = geometryList =>
   geometryList.length > 0
@@ -37,6 +49,8 @@ class WorldMap extends React.Component {
       geoRenderer: null,
       lat: 0,
       lon: 0,
+      containerWidth: 0,
+      containerHeight: 0,
     }
     this.mapDivElement = null
     this.setMapDiv = element => {
@@ -46,10 +60,15 @@ class WorldMap extends React.Component {
       const [lon, lat] = e.coordinate
       this.setState({ lat, lon })
     }
+    this.mapResize = throttled(200, () => {
+      if (this.state.geoRenderer) {
+        this.state.geoRenderer.resizeMap()
+      }
+    })
   }
 
   componentDidUpdate(prevProps) {
-    const { geos, viewport, containerWidth, containerHeight } = this.props
+    const { geos, viewport } = this.props
     if (this.state.geoRenderer) {
       if (geos !== prevProps.geos) {
         this.state.geoRenderer.clearGeos()
@@ -58,13 +77,16 @@ class WorldMap extends React.Component {
       if (viewport && viewport !== prevProps.viewport) {
         this.state.geoRenderer.panToExtent(viewport)
       }
+    }
+    if (this.mapDivElement) {
+      const containerWidth = this.mapDivElement.parentElement.offsetWidth
+      const containerHeight = this.mapDivElement.parentElement.offsetHeight
       if (
-        containerWidth &&
-        containerHeight &&
-        (containerWidth !== prevProps.containerWidth ||
-          containerHeight !== prevProps.containerHeight)
+        containerWidth !== this.state.containerWidth ||
+        containerHeight !== this.state.containerHeight
       ) {
-        this.state.geoRenderer.resizeMap()
+        this.setState({ containerWidth, containerHeight })
+        this.mapResize()
       }
     }
   }
@@ -116,8 +138,18 @@ class WorldMap extends React.Component {
   render() {
     const { lat, lon } = this.state
     return (
-      <Box width="100%" height={this.props.height} bgcolor="black" position="relative">
-        <Box width="100%" height="100%" ref={this.setMapDiv} className="map" />
+      <Box
+        width={this.props.width || '100%'}
+        height={this.props.height || '100%'}
+        bgcolor="black"
+        position="relative"
+      >
+        <Box
+          width="100%"
+          height="100%"
+          ref={this.setMapDiv}
+          className="map resize-listener"
+        />
         <Box
           position="absolute"
           left="0"

@@ -7,6 +7,7 @@ const LA = {
   created: 'September 4, 1781',
   modified: 'April 29, 1992',
   checksum: '1',
+  location: 'POINT(-118.2437 34.0522)',
 }
 
 const genResults = (n = 100) => {

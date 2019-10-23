@@ -2,7 +2,7 @@ import { storiesOf } from '@connexta/ace/@storybook/react'
 import { withKnobs, select } from '@connexta/ace/@storybook/addon-knobs'
 import React from 'react'
 import WorldMap from './world-map'
-import { geometry } from 'geospatialdraw'
+import { geometry, coordinates } from 'geospatialdraw'
 import { Style, Fill, Circle, Stroke } from 'ol/style'
 
 const featureColor = feature =>
@@ -310,7 +310,7 @@ stories.add('render geometries', () => {
       style={MAP_STYLE}
       geos={geos}
       viewport={viewport}
-      coordinateType="LAT LON"
+      coordinateType={coordinates.LAT_LON}
       maxZoom={20}
       minZoom={1.5}
       zoom={2}

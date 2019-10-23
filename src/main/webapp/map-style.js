@@ -2,8 +2,8 @@ import { Style, Fill, Circle, Stroke } from 'ol/style'
 import MultiPoint from 'ol/geom/MultiPoint'
 import { geometry } from 'geospatialdraw'
 
-const featureColor = (feature, alpha = 1) =>
-  feature.get('hidden') ? 'rgba(0, 0, 0, 0)' : `rgba(200, 150, 0, ${alpha})`
+const featureColor = feature =>
+  feature.get('hidden') ? 'rgba(0, 0, 0, 0)' : feature.get('color')
 
 const {
   CIRCLE_BUFFER_PROPERTY_VALUE,
@@ -59,7 +59,7 @@ const CIRCLE_BUFFER_PROPERTY_VALUE_DRAWING_STYLE = feature =>
       width: LINE_WIDTH * SCALE_FACTOR,
     }),
     fill: new Fill({
-      color: featureColor(feature, 0.05),
+      color: 'rgba(255, 255, 255, 0.25)',
     }),
   })
 
@@ -70,7 +70,7 @@ const GENERIC_DRAWING_STYLE = feature => [
       width: LINE_WIDTH * SCALE_FACTOR,
     }),
     fill: new Fill({
-      color: featureColor(feature, 0.05),
+      color: 'rgba(255, 255, 255, 0.25)',
     }),
     ...(feature.getGeometry().getType() === 'Point' && feature.get('buffer') > 0
       ? {}
