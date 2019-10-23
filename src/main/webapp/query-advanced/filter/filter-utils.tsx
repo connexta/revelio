@@ -60,7 +60,7 @@ export const filterHeaderButtonStyle = {
 }
 
 export const filterComponentStyle = {
-  marginBottom: 5,
+  margin: 5,
 }
 
 export const getDefaultValue = (type: MetacardType | undefined) => {
@@ -73,6 +73,13 @@ export const getDefaultValue = (type: MetacardType | undefined) => {
       return false
     case 'STRING':
       return ''
+    case 'INTEGER':
+    case 'SHORT':
+    case 'LONG':
+      return 0
+    case 'FLOAT':
+    case 'DOUBLE':
+      return 0.0
     default:
       return ''
   }
