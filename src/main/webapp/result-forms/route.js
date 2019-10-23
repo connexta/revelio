@@ -296,7 +296,7 @@ const searchForms = gql`
 
 const useCreate = () => {
   const mutation = gql`
-    mutation CreateSearchForms($attrs: Json) {
+    mutation CreateSearchForms($attrs: MetacardAttributesInput!) {
       createMetacard(attrs: $attrs) {
         ...ResultFormAttributes
         owner: metacard_owner
@@ -329,7 +329,7 @@ const useCreate = () => {
 
 const useSave = () => {
   const mutation = gql`
-    mutation SaveSearchForms($id: String!, $attrs: Json) {
+    mutation SaveSearchForms($id: ID!, $attrs: MetacardAttributesInput!) {
       saveMetacard(id: $id, attrs: $attrs) {
         ...ResultFormAttributes
       }
@@ -341,7 +341,7 @@ const useSave = () => {
 
 const useDelete = () => {
   const mutation = gql`
-    mutation DeleteSearchForms($id: ID) {
+    mutation DeleteSearchForms($id: ID!) {
       deleteMetacard(id: $id)
     }
   `
@@ -435,9 +435,9 @@ export default () => {
     create({
       variables: {
         attrs: {
-          'ui.attribute-group': attributes,
-          'metacard-type': 'attribute-group',
-          'metacard-tags': ['VALID', 'attribute-group'],
+          ui_attribute_group: attributes,
+          metacard_type: 'attribute-group',
+          metacard_tags: ['VALID', 'attribute-group'],
           ...rest,
         },
       },
@@ -450,7 +450,7 @@ export default () => {
       variables: {
         id: form.id,
         attrs: {
-          'ui.attribute-group': attributes,
+          ui_attribute_group: attributes,
           ...rest,
         },
       },

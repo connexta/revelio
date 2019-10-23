@@ -1,3 +1,25 @@
+const { genSchema } = require('./src/main/webapp/intrigue-api/gen-schema')
+
+const graphqlRules = () => {
+  const schemaString = genSchema()
+
+  return {
+    'graphql/template-strings': [
+      'error',
+      {
+        env: 'apollo',
+        schemaString,
+      },
+    ],
+    'graphql/named-operations': [
+      'error',
+      {
+        schemaString,
+      },
+    ],
+  }
+}
+
 module.exports = {
   env: {
     browser: true,
@@ -22,11 +44,7 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  plugins: [
-    'react',
-    'react-hooks',
-    'import',
-  ],
+  plugins: ['react', 'react-hooks', 'import', 'graphql'],
   settings: {
     react: {
       version: 'detect',
@@ -42,11 +60,12 @@ module.exports = {
       'error',
       {
         allowEmptyCatch: true,
-      }
+      },
     ],
     'react/prop-types': 'off',
     'react/display-name': 'off',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
-  }
+    ...graphqlRules(),
+  },
 }

@@ -135,7 +135,7 @@ const SimpleSearch = props => {
 }
 
 const simpleSearch = gql`
-  query SimpleSearch($filterTree: Json, $settings: QuerySettingsInput) {
+  query SimpleSearch($filterTree: Json!, $settings: QuerySettingsInput) {
     metacards(filterTree: $filterTree, settings: $settings) {
       results {
         metacard

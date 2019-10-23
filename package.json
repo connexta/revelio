@@ -7,11 +7,13 @@
     "@connexta/ace": "https://github.com/connexta/ace.git#53fd31d89bd5562d8ae187d078db7d7adea3a778",
     "@types/react": "^16.9.5",
     "@typescript-eslint/parser": "^2.3.3",
+    "eslint-plugin-graphql": "^3.1.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-react-hooks": "^2.1.2",
     "mocha": "^5.2.0",
     "node-fetch": "^2.6.0",
     "rpc-websockets": "4.0.0",
+    "tempfile": "^3.0.0",
     "typescript": "^3.6.4"
   },
   "dependencies": {

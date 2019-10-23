@@ -8,7 +8,7 @@ import fetch from './fetch'
 
 const ROOT = '/search/catalog/internal'
 
-import genSchema, { toGraphqlName, fromGraphqlName } from './gen-schema'
+import { genSchema, toGraphqlName, fromGraphqlName } from './gen-schema'
 
 const getBuildInfo = () => {
   /* eslint-disable */
