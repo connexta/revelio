@@ -1,17 +1,32 @@
-import attributes from './attributes.json'
+const json = require('./attributes.json')
 
-/* eslint-disable import/no-unresolved */
-import typeDefs from 'raw-loader!./schema.graphql'
-/* eslint-enable */
+const getTypeDefs = () => {
+  if (typeof window === 'undefined') {
+    // prevent webpack from resolving fs/path which is only required for node
+    const r = eval('require')
+    const fs = r('fs')
+    const path = r('path')
+    const schema = path.join(__dirname, 'schema.graphql')
+    return fs.readFileSync(schema)
+  } else {
+    return require('raw-loader!./schema.graphql')
+  }
+}
 
-export const toGraphqlName = name => name.replace(/-|\./g, '_')
+const toGraphqlName = name => name.replace(/-|\./g, '_')
+
+const attributes = json.concat({
+  id: 'metacard-type',
+  multivalued: false,
+  type: 'STRING',
+})
 
 const idMap = attributes.map(a => a.id).reduce((map, id) => {
   map[toGraphqlName(id)] = id
   return map
 }, {})
 
-export const fromGraphqlName = name => idMap[name] || name
+const fromGraphqlName = name => idMap[name] || name
 
 // DDF types -> GraphQL types
 const typeMap = {
@@ -40,7 +55,7 @@ const attrs = attributes
   })
   .join('\n')
 
-const gen = () => {
+const genSchema = () => {
   return `
   scalar Json
   # Binary content embedded as a base64 String
@@ -61,8 +76,12 @@ const gen = () => {
   ${attrs}
   }
 
-  ${typeDefs}
+  ${getTypeDefs()}
   `
 }
 
-export default gen
+module.exports = {
+  toGraphqlName,
+  fromGraphqlName,
+  genSchema,
+}

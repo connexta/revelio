@@ -311,7 +311,7 @@ const Inspector = props => {
 }
 
 const query = gql`
-  query {
+  query InspectorSummaryShow {
     systemProperties {
       summaryShow
     }

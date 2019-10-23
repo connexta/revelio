@@ -57,6 +57,7 @@ export const DragSource = ({ children, config }) => {
 
       layout.createDragSource(source.current, config)
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [source, layout]
   )
 
@@ -121,6 +122,7 @@ export const Layout = props => {
       layout.destroy()
       window.removeEventListener('resize', onResize)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
