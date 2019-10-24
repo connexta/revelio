@@ -4,11 +4,15 @@ import React from 'react'
 import WorldMap from './world-map'
 import { geometry, coordinates } from 'geospatialdraw'
 import { Style, Fill, Circle, Stroke } from 'ol/style'
+const { BUFFER_CLASSNAME, HIDDEN_CLASSNAME, POINT_RADIUS } = geometry
+
+const featureHasClass = (feature, className) =>
+  (feature.get('class') || []).includes(className)
 
 const featureColor = feature =>
-  feature.get('hidden') ? 'rgba(0, 0, 0, 0)' : feature.get('color')
-
-const { CIRCLE_BUFFER_PROPERTY_VALUE, BUFFER_SHAPE_PROPERTY } = geometry
+  featureHasClass(feature, HIDDEN_CLASSNAME)
+    ? 'rgba(0, 0, 0, 0)'
+    : feature.get('color') || 'blue'
 
 const LINE_WIDTH = 1.8
 const POINT_SIZE = 4
@@ -22,7 +26,8 @@ const MAP_STYLE = feature =>
     fill: new Fill({
       color: 'rgba(0, 0, 0, 0)',
     }),
-    ...(feature.get(BUFFER_SHAPE_PROPERTY) === CIRCLE_BUFFER_PROPERTY_VALUE
+    ...(featureHasClass(feature, BUFFER_CLASSNAME) &&
+    feature.get('shape') === POINT_RADIUS
       ? {}
       : {
           image: new Circle({

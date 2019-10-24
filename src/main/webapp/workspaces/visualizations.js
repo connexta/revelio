@@ -151,22 +151,19 @@ const Visualizations = props => {
           result.metacard.properties.location
             ? wkt
                 .readFeatures(result.metacard.properties.location)
-                .map(feature => {
-                  const json = geoJSON.writeFeatureObject(feature)
-                  const shape = shapeDetector.shapeFromFeature(feature)
-                  const geo = geometry.makeGeometry(
+                .map(feature =>
+                  geometry.makeGeometry(
                     result.metacard.properties.id,
-                    json,
-                    '#ff0000',
-                    shape,
+                    geoJSON.writeFeatureObject(feature),
+                    '',
+                    shapeDetector.shapeFromFeature(feature),
                     0,
-                    geometry.METERS
+                    geometry.METERS,
+                    {
+                      selected: selected.has(result.metacard.properties.id),
+                    }
                   )
-                  geo.properties.selected = selected.has(
-                    result.metacard.properties.id
-                  )
-                  return geo
-                })
+                )
             : []
       )
       .reduce((list, value) => list.concat(value), [])

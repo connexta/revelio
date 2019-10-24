@@ -73,9 +73,6 @@ stories.add('draw geometry', () => {
     'none'
   )
   const searchGeo = geometryCatalog[searchGeoType]
-  if (searchGeo.geo) {
-    searchGeo.geo.properties.color = 'rgba(200, 150, 0, 1)'
-  }
   return (
     <WorldMapWithDrawMenu
       projection={PROJECTION}
