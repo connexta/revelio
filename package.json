@@ -47,8 +47,10 @@
   "scripts": {
     "start": "ace start",
     "fmt": "ace format -w",
+    "start:test": "ace start --env=test",
     "test:api": "mocha src/main/webapp/intrigue-api/test",
-    "test": "ace format && eslint src",
+    "pretest": "ace bundle --env=test",
+    "test": "ace format && eslint src && ace test",
     "storybook": "ace storybook",
     "build": "ace bundle && yarn storybook --static",
     "prestart": "ace disable-idp"
