@@ -44,8 +44,9 @@ const unitsMap = Map(fromJS(relativeUnits))
 const datatypeProperties = ['metadata-content-type', 'datatype']
 
 const parseGeoFilter = (filter = {}) => {
+  const value = filter.value.value ? filter.value.value : filter.value
   const geojson = Map(filter.geojson)
-  if (filter.value.includes('POINT')) {
+  if (value.includes('POINT')) {
     return {
       type: 'pointRadius',
       location: Map({
@@ -57,9 +58,20 @@ const parseGeoFilter = (filter = {}) => {
     }
   }
 
-  if (filter.value.includes('POLYGON')) {
+  if (value.includes('POLYGON')) {
     return {
       type: 'polygon',
+      location: Map({
+        coordinates: geojson.getIn(['geometry', 'coordinates', 0]),
+        bufferWidth: geojson.getIn(['properties', 'buffer', 'width']),
+        unit: geojson.getIn(['properties', 'buffer', 'unit']),
+      }),
+    }
+  }
+
+  if (value.includes('LINESTRING')) {
+    return {
+      type: 'line',
       location: Map({
         coordinates: geojson.getIn(['geometry', 'coordinates']),
         bufferWidth: geojson.getIn(['properties', 'buffer', 'width']),
@@ -70,42 +82,46 @@ const parseGeoFilter = (filter = {}) => {
 }
 
 export const fromFilterTree = filterTree => {
-  return filterTree.filters.reduce((accumulator, filter) => {
-    const { property, value, filters } = filter
+  return filterTree.filters
+    ? filterTree.filters.reduce((accumulator, filter) => {
+        const { property, value, filters } = filter
 
-    if (property === 'anyText') {
-      return accumulator.set(TEXT_KEY, value)
-    }
-
-    if (property === 'anyGeo') {
-      return accumulator.set(LOCATION_KEY, Map(parseGeoFilter(filter)))
-    }
-
-    if (filters && filters[0]) {
-      if (timeProperties.includes(filters[0].property)) {
-        if (filters[0].type === '=') {
-          const { last, unit } = parseRelative(filters[0].value)
-          filters[0].last = last
-          filters[0].unit = unit
+        if (property === 'anyText') {
+          return accumulator.set(TEXT_KEY, value)
         }
 
-        return accumulator.set(
-          TIME_RANGE_KEY,
-          Map({
-            value: filters[0],
-            applyTo: filters.map(({ property }) => property),
-          })
-        )
-      }
+        if (property === 'anyGeo') {
+          return accumulator.set(LOCATION_KEY, Map(parseGeoFilter(filter)))
+        }
 
-      if (datatypeProperties.includes(filters[0].property)) {
-        const applyTo = Array.from(new Set(filters.map(({ value }) => value)))
-        return accumulator.set(DATATYPES_KEY, applyTo)
-      }
-    }
+        if (filters && filters[0]) {
+          if (timeProperties.includes(filters[0].property)) {
+            if (filters[0].type === '=') {
+              const { last, unit } = parseRelative(filters[0].value)
+              filters[0].last = last
+              filters[0].unit = unit
+            }
 
-    return accumulator
-  }, Map())
+            return accumulator.set(
+              TIME_RANGE_KEY,
+              Map({
+                value: filters[0],
+                applyTo: filters.map(({ property }) => property),
+              })
+            )
+          }
+
+          if (datatypeProperties.includes(filters[0].property)) {
+            const applyTo = Array.from(
+              new Set(filters.map(({ value }) => value))
+            )
+            return accumulator.set(DATATYPES_KEY, applyTo)
+          }
+        }
+
+        return accumulator
+      }, Map())
+    : Map({ [TEXT_KEY]: filterTree.value })
 }
 
 const parseRelative = relative => {
