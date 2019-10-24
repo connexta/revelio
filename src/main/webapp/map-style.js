@@ -1,4 +1,4 @@
-import { Style, Fill, Circle, Stroke, Image, Icon } from 'ol/style'
+import { Style, Fill, Circle, Stroke, Icon } from 'ol/style'
 import { transparentize } from 'polished'
 import MultiPoint from 'ol/geom/MultiPoint'
 import { geometry } from 'geospatialdraw'
@@ -22,37 +22,38 @@ const featureColor = (feature, opacity = 1, defaultColor = DRAW_COLOR) => {
   } else if (feature.get('selected')) {
     return transparentize(1 - opacity, SELECTED_COLOR)
   } else {
-    return transparentize(
-      1 - opacity,
-      feature.get('color') || defaultColor
-    )
+    return transparentize(1 - opacity, feature.get('color') || defaultColor)
   }
 }
 
 const RENDERER_STYLE = feature =>
   feature.getGeometry() && feature.getGeometry().getType() === 'Point'
     ? new Style({
-      stroke: new Stroke({
-        color: featureColor(feature),
-        width: LINE_WIDTH,
-      }),
-      fill: new Fill({
-        color: 'rgba(0, 0, 0, 0)',
-      }),
-      image: new Icon({
-        fill: new Fill({
-          color: featureColor(feature),
-        }),
         stroke: new Stroke({
           color: featureColor(feature),
+          width: LINE_WIDTH,
         }),
-        opacity: 1,
-        src: 'data:image/svg+xml,' + escape(getIconText({
-          color: featureColor(feature, 1, ICON_COLOR)
-        })),
-        scale: 1.5,
-      }),
-    })
+        fill: new Fill({
+          color: 'rgba(0, 0, 0, 0)',
+        }),
+        image: new Icon({
+          fill: new Fill({
+            color: featureColor(feature),
+          }),
+          stroke: new Stroke({
+            color: featureColor(feature),
+          }),
+          opacity: 1,
+          src:
+            'data:image/svg+xml,' +
+            escape(
+              getIconText({
+                color: featureColor(feature, 1, ICON_COLOR),
+              })
+            ),
+          scale: 1.5,
+        }),
+      })
     : new Style({
         stroke: new Stroke({
           color: featureColor(feature),
@@ -133,10 +134,12 @@ const GENERIC_DRAWING_STYLE = feature => [
     geometry: feature => {
       const geometry = feature.getGeometry()
       let coordinates = []
-      if (geometry.getType() === 'Polygon') {
-        coordinates = geometry.getCoordinates()[0]
-      } else if (geometry.getType() === 'LineString') {
-        coordinates = geometry.getCoordinates()
+      if (geometry) {
+        if (geometry.getType() === 'Polygon') {
+          coordinates = geometry.getCoordinates()[0]
+        } else if (geometry.getType() === 'LineString') {
+          coordinates = geometry.getCoordinates()
+        }
       }
       return new MultiPoint(coordinates)
     },

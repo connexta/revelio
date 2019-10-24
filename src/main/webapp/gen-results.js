@@ -49,7 +49,7 @@ const genResults = (n = 100) =>
     metacard: {
       properties: {
         ...CITIES[Math.min(i, CITIES.length - 1)],
-        id: (i+1).toString(),
+        id: (i + 1).toString(),
       },
     },
   }))
