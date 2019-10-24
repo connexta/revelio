@@ -39,21 +39,23 @@ const typeMap = {
   GEOMETRY: 'Geometry',
   XML: 'XML',
   DATE: 'Date',
+  JSON: 'Json',
 }
 
-const attrs = attributes
-  .map(attr => {
-    const { id, multivalued, type } = attr
-    const name = toGraphqlName(id)
-    let graphQLType = typeMap[type]
+const attrs = input =>
+  attributes
+    .map(attr => {
+      const { id, multivalued, type } = attr
+      const name = toGraphqlName(id)
+      let graphQLType = typeMap[type] || type + (input ? 'Input' : '')
 
-    if (multivalued) {
-      graphQLType = `[${graphQLType}]`
-    }
+      if (multivalued) {
+        graphQLType = `[${graphQLType}]`
+      }
 
-    return `  # metacard attribute: **\`${id}\`**\n  ${name}: ${graphQLType}`
-  })
-  .join('\n')
+      return `  # metacard attribute: **\`${id}\`**\n  ${name}: ${graphQLType}`
+    })
+    .join('\n')
 
 const genSchema = () => {
   return `
@@ -69,11 +71,11 @@ const genSchema = () => {
 
   # Common and well known metacard attributes intended for progrmatic usage
   type MetacardAttributes {
-  ${attrs}
+  ${attrs()}
   }
 
   input MetacardAttributesInput {
-  ${attrs}
+  ${attrs(true)}
   }
 
   ${getTypeDefs()}

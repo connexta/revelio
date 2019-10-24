@@ -27,6 +27,7 @@ import AboutRoute from './about'
 import SourcesRoute from './sources'
 import SimpleSearch from './simple-search'
 import ResultForms from './result-forms'
+import WorkspacesIndex, { Workspace } from './workspaces/workspaces'
 
 const Link = props => {
   return (
@@ -67,7 +68,12 @@ const createRoute = (path, title, Icon = AccessibleForwardIcon, component) => {
 
 const routes = [
   createRoute('/', 'Home', HomeIcon),
-  createRoute('/workspaces', 'Workspaces', CollectionsBookmarkIcon),
+  createRoute(
+    '/workspaces',
+    'Workspaces',
+    CollectionsBookmarkIcon,
+    WorkspacesIndex
+  ),
   createRoute('/search', 'Search', SearchIcon, SimpleSearch),
   createRoute('/sources', 'Sources', CloudIcon, SourcesRoute),
   createRoute('/search-forms', 'Search Forms', FindInPageIcon),
@@ -96,6 +102,10 @@ const NavBar = props => {
   )
 }
 
+const otherRoutes = [
+  { title: 'Workspace', path: '/workspaces/:id', component: Workspace },
+]
+
 const AppRouter = () => {
   const [open, setOpen] = React.useState(false)
 
@@ -115,7 +125,7 @@ const AppRouter = () => {
           return <Link onClick={handleDrawerClose} key={path} />
         })}
       </Drawer>
-      {routes.map(route => {
+      {routes.concat(otherRoutes).map(route => {
         const { title, path, component: Component } = route
         const render = () => {
           return (
