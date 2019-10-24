@@ -39,17 +39,14 @@ const createHttpTransport = opts => {
   const url = `${protocol}//${hostname}:${port}${pathname}/cql`
 
   const send = query => {
-    const controller = new AbortController()
-
     const response = fetch(url, {
       headers: opts.headers,
       method: 'POST',
-      signal: controller.signal,
       body: processQuery(query),
       ...opts.httpOpts,
     })
 
-    const abort = () => controller.abort()
+    const abort = () => {}
 
     const json = async () => {
       const res = await response

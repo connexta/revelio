@@ -28,6 +28,7 @@
     "apollo-client": "^2.6.4",
     "apollo-link-http": "^1.5.16",
     "apollo-link-schema": "^1.2.4",
+    "apollo-server": "^2.9.7",
     "date-fns": "^2.0.0-beta.5",
     "geospatialdraw": "https://github.com/connexta/geospatialdraw.git#revelio",
     "golden-layout": "^1.5.9",

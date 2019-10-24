@@ -1,14 +1,14 @@
-import { ApolloClient } from 'apollo-client'
-import { SchemaLink } from 'apollo-link-schema'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import { makeExecutableSchema } from 'graphql-tools'
-import { createTransport } from './transport'
+const { ApolloClient } = require('apollo-client')
+const { SchemaLink } = require('apollo-link-schema')
+const { InMemoryCache } = require('apollo-cache-inmemory')
+const { makeExecutableSchema } = require('graphql-tools')
+const { createTransport } = require('./transport')
 
-import fetch from './fetch'
+const fetch = require('./fetch')
 
 const ROOT = '/search/catalog/internal'
 
-import { genSchema, toGraphqlName, fromGraphqlName } from './gen-schema'
+const { genSchema, toGraphqlName, fromGraphqlName } = require('./gen-schema')
 
 const getBuildInfo = () => {
   /* eslint-disable */
@@ -39,7 +39,10 @@ const systemProperties = async () => {
 }
 
 const { send } = createTransport({
-  ...window.location,
+  host: 'localhost',
+  port: 8993,
+  protocol: 'https:',
+  ...(typeof window !== 'undefined' ? window.location : {}),
   pathname: ROOT,
 })
 
@@ -361,11 +364,16 @@ const executableSchema = makeExecutableSchema({
   resolvers,
 })
 
-export const createClient = () => {
+const createClient = () => {
   const cache = new InMemoryCache()
 
   return new ApolloClient({
     link: new SchemaLink({ schema: executableSchema }),
     cache,
   })
+}
+
+module.exports = {
+  createClient,
+  resolvers,
 }
