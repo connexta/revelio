@@ -1,4 +1,4 @@
-const { Map, fromJS } = require('immutable')
+const { Map, Set, fromJS } = require('immutable')
 import { locationTypes } from './location'
 export const APPLY_TO_KEY = 'applyTo'
 export const DATATYPES_KEY = 'datatypes'
@@ -112,9 +112,7 @@ export const fromFilterTree = filterTree => {
           }
 
           if (datatypeProperties.includes(filters[0].property)) {
-            const applyTo = Array.from(
-              new Set(filters.map(({ value }) => value))
-            )
+            const applyTo = Set(filters.map(({ value }) => value)).toJSON()
             return accumulator.set(DATATYPES_KEY, applyTo)
           }
         }

@@ -21,7 +21,23 @@ import { Map } from 'immutable'
 const relativeUnits = ['minutes', 'hours', 'days', 'months', 'years']
 
 const isValidDate = date => {
-  return date !== undefined && date !== null && !isNaN(date.valueOf())
+  if (date === undefined) {
+    return false
+  }
+
+  if (date === null) {
+    return false
+  }
+
+  if (typeof date === 'string') {
+    return isValidDate(new Date(date))
+  }
+
+  if (date instanceof Date) {
+    return !isNaN(date.valueOf())
+  }
+
+  return false
 }
 
 export const createTimeRange = timeRange => {
@@ -238,8 +254,12 @@ const DatePicker = props => {
         label={label}
         value={state}
         onChange={(date, value) => {
+          if (isValidDate(date)) {
+            onChange(date.toISOString())
+          } else {
+            onChange('')
+          }
           setState(value)
-          onChange(date)
         }}
         KeyboardButtonProps={{
           'aria-label': 'change date',
