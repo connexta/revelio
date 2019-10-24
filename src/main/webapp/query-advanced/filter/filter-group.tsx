@@ -10,7 +10,7 @@ import {
 } from './filter-utils'
 import Operator from './operator'
 
-type FilterGroupType = {
+export type FilterGroupType = {
   type: string
   filters: Array<FilterGroupType | QueryFilter>
 }
@@ -21,7 +21,7 @@ export type FilterGroupProps = FilterGroupType & {
   onRemove?: () => void
 }
 
-const isFilterGroup = (
+export const isFilterGroup = (
   object: QueryFilter | FilterGroupType
 ): object is FilterGroupType =>
   (object as FilterGroupType).filters !== undefined
@@ -31,7 +31,7 @@ const getValue = (props: FilterGroupProps) => {
   return { type, filters }
 }
 
-export const FilterGroup = withRemoveButton(
+const FilterGroup = withRemoveButton(
   withDivider((props: FilterGroupProps) => {
     return (
       <Box>
@@ -124,3 +124,5 @@ const FilterList = (props: FilterGroupProps) => {
     </Box>
   )
 }
+
+export default FilterGroup

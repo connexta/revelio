@@ -1,7 +1,6 @@
 import { storiesOf } from '@connexta/ace/@storybook/react'
 import QueryAdvanced from './query-advanced'
 import * as React from 'react'
-import { useState } from 'react'
 import { action } from '@storybook/addon-actions'
 import { withKnobs, number } from '@storybook/addon-knobs'
 const stories = storiesOf('Query Advanced', module)
@@ -17,17 +16,49 @@ const baseFilterGroup = {
   filters: [baseFilter],
 }
 
+const nearFilter = {
+  type: '=',
+  value: true,
+  property: {
+    type: 'FILTER_FUNCTION',
+    filterFunctionName: 'proximity',
+    params: ['anyText', '2', 'hello there'],
+  },
+}
+
+const rangeFilter = {
+  type: 'BETWEEN',
+  property: 'an integer',
+  value: '',
+  lowerBoundary: 1,
+  upperBoundary: 5,
+}
+
+const deserializedFilters = {
+  type: 'OR',
+  filters: [nearFilter, rangeFilter],
+}
+
 stories.addDecorator(withKnobs)
 stories.add('basic', () => {
-  const [state, setState] = useState(baseFilterGroup)
-
   return (
     <QueryAdvanced
       limitDepth={number('Nesting Depth', 1)}
-      {...state}
-      onChange={(value: any) => {
-        action('onChange')(value)
-        setState(value)
+      {...baseFilterGroup}
+      onSearch={(value: any) => {
+        action('onSearch')(value)
+      }}
+    />
+  )
+})
+
+stories.add('with deserialized filters', () => {
+  return (
+    <QueryAdvanced
+      limitDepth={number('Nesting Depth', 1)}
+      {...deserializedFilters}
+      onSearch={(value: any) => {
+        action('onSearch')(value)
       }}
     />
   )

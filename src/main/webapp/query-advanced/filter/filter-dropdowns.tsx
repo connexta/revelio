@@ -6,7 +6,7 @@ import { metacardDefinitions } from './dummyDefinitions'
 import { Map } from 'immutable'
 
 type MenuProps = {
-  selected: any
+  selected: string
   options: Array<string>
   aliases?: Map<string, string>
   onChange: (value: string) => void
@@ -36,8 +36,8 @@ const Menu = (props: MenuProps) => {
             component="span"
           >
             {props.aliases
-              ? props.aliases.get(props.selected) || String(props.selected)
-              : String(props.selected)}
+              ? props.aliases.get(props.selected) || props.selected
+              : props.selected}
           </Box>
           <DropDownIcon style={{ float: 'right' }} />
         </Box>
@@ -59,9 +59,7 @@ const Menu = (props: MenuProps) => {
               key={option}
               value={option}
             >
-              {props.aliases
-                ? props.aliases.get(option) || String(option)
-                : String(option)}
+              {props.aliases ? props.aliases.get(option) || option : option}
             </MenuItem>
           )
         })}

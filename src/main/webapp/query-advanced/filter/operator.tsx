@@ -3,6 +3,7 @@ import useAnchorEl from '../../react-hooks/use-anchor-el'
 import { Button, Popover, MenuItem } from '@material-ui/core'
 import { ArrowDropDown } from '@material-ui/icons'
 import { filterHeaderButtonStyle } from './filter-utils'
+
 const operators = ['AND', 'OR', 'NOT AND', 'NOT OR']
 
 const withOperators = (Component: any) => {
