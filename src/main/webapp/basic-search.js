@@ -1,7 +1,11 @@
+import React, { useState } from 'react'
+
 import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
 import Checkbox from '@material-ui/core/Checkbox'
 import Divider from '@material-ui/core/Divider'
-import Fab from '@material-ui/core/Fab'
+import CloseIcon from '@material-ui/icons/Close'
+import { red } from '@material-ui/core/colors'
 import FormControl from '@material-ui/core/FormControl'
 import FormHelperText from '@material-ui/core/FormHelperText'
 import Input from '@material-ui/core/Input'
@@ -12,9 +16,12 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Paper from '@material-ui/core/Paper'
 import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
-import RemoveIcon from '@material-ui/icons/Remove'
 import { Map } from 'immutable'
-import React from 'react'
+import Typography from '@material-ui/core/Typography'
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
+import Collapse from '@material-ui/core/Collapse'
+
 import {
   APPLY_TO_KEY,
   DATATYPES_KEY,
@@ -266,6 +273,13 @@ const filters = {
   sources: MatchSources,
 }
 
+const filterLabels = {
+  [LOCATION_KEY]: 'Location',
+  timeRange: 'Time Range',
+  datatypes: 'Match Types',
+  sources: 'Sources',
+}
+
 const defaultFilters = {
   timeRange: Map({
     value: createTimeRange({ type: 'BEFORE' }),
@@ -284,6 +298,49 @@ const getFilterTree = props => {
   return Map({ text: '*' })
 }
 
+const FilterCard = props => {
+  const [state, setState] = useState(true)
+  const { children, label, onRemove } = props
+
+  const spacing = 16
+  const Arrow = state ? KeyboardArrowUpIcon : KeyboardArrowDownIcon
+
+  return (
+    <Paper style={{ width: '100%', marginTop: 20 }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <Typography style={{ padding: 12 }} color="textSecondary">
+          {label}
+        </Typography>
+        <div style={{ display: 'flex' }}>
+          <IconButton onClick={() => setState(!state)}>
+            <Arrow />
+          </IconButton>
+          <IconButton style={{ color: red[500] }} onClick={onRemove}>
+            <CloseIcon />
+          </IconButton>
+        </div>
+      </div>
+      <Collapse in={state}>
+        <Divider />
+        <div
+          style={{
+            padding: spacing,
+            boxSizing: 'border-box',
+          }}
+        >
+          {children}
+        </div>
+      </Collapse>
+    </Paper>
+  )
+}
+
 export const BasicSearch = props => {
   const [filterTree, setFilterTree] = React.useState(getFilterTree(props))
 
@@ -292,20 +349,20 @@ export const BasicSearch = props => {
 
   const text = filterTree.get('text')
 
-  const spacing = 20
   return (
-    <Paper
+    <div
       style={{
         overflow: 'auto',
+        padding: 2,
         maxWidth: 600,
         maxHeight: '100%',
       }}
     >
-      <div
+      <Paper
         style={{
           display: 'flex',
           alignItems: 'center',
-          padding: spacing,
+          padding: 16,
           boxSizing: 'border-box',
         }}
       >
@@ -324,65 +381,58 @@ export const BasicSearch = props => {
             )
           }}
         />
-      </div>
+      </Paper>
 
       {filterTree
         .remove('text')
         .map((state, filter) => {
           const Component = filters[filter]
+          const label = filterLabels[filter]
 
           return (
-            <div key={filter} style={{ width: '100%' }}>
-              <Divider style={{ marginBottom: 15, marginTop: 10 }} />
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: spacing,
-                  boxSizing: 'border-box',
+            <FilterCard
+              key={filter}
+              label={label}
+              onRemove={() => {
+                setFilterTree(filterTree.remove(filter))
+              }}
+            >
+              <Component
+                state={state}
+                setState={state => {
+                  setFilterTree(filterTree.set(filter, state))
                 }}
-              >
-                <div style={{ marginRight: spacing }}>
-                  <Fab
-                    size="small"
-                    color="secondary"
-                    onClick={() => {
-                      setFilterTree(filterTree.remove(filter))
-                    }}
-                  >
-                    <RemoveIcon />
-                  </Fab>
-                </div>
-                <Component
-                  state={state}
-                  setState={state => {
-                    setFilterTree(filterTree.set(filter, state))
-                  }}
-                  errors={submitted ? errors : {}}
-                />
-              </div>
-            </div>
+                errors={submitted ? errors : {}}
+              />
+            </FilterCard>
           )
         })
         .valueSeq()}
 
-      <SearchButton
-        fullWidth
-        style={{ marginTop: spacing }}
-        onSearch={() => {
-          setSubmitted(true)
+      <Divider />
 
-          if (isEmpty(errors)) {
-            props.onSearch(
-              populateDefaultQuery(
-                toFilterTree(filterTree),
-                filterTree.get('sources')
-              )
-            )
-          }
+      <div
+        style={{
+          marginTop: 20,
         }}
-      />
-    </Paper>
+      >
+        <SearchButton
+          fullWidth
+          onSearch={() => {
+            setSubmitted(true)
+
+            if (isEmpty(errors)) {
+              props.onSearch(
+                populateDefaultQuery(
+                  toFilterTree(filterTree),
+                  filterTree.get('sources')
+                )
+              )
+            }
+          }}
+        />
+      </div>
+    </div>
   )
 }
 
