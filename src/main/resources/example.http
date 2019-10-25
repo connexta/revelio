@@ -1,0 +1,69 @@
+POST https://localhost:8993/direct HTTP/1.1
+Authorization: Basic admin admin
+
+{
+    "id": "0",
+    "jsonrpc": "2.0",
+    "method": "list-methods",
+    "params": {}
+}
+
+###
+
+POST https://localhost:8993/direct HTTP/1.1
+Authorization: Basic admin admin
+
+{
+    "id": "0",
+    "jsonrpc": "2.0",
+    "method": "ddf.catalog/getSourceIds",
+    "params": {}
+}
+
+###
+
+POST https://localhost:8993/direct HTTP/1.1
+Authorization: Basic admin admin
+
+{
+    "id": "0",
+    "jsonrpc": "2.0",
+    "method": "ddf.catalog/getSourceInfo",
+    "params": {
+      "ids": ["ddf.distribution"]
+    }
+}
+
+###
+
+POST https://localhost:8993/direct HTTP/1.1
+Authorization: Basic admin admin
+
+{
+  "id": "0",
+  "jsonrpc": "2.0",
+  "method": "ddf.catalog/create",
+  "params": {
+    "metacards": [
+      {
+        "attributes": {
+          "title": "hello, world"
+        }
+      }
+    ]
+  }
+}
+
+###
+
+POST https://localhost:8993/direct HTTP/1.1
+Authorization: Basic admin admin
+
+{
+  "id": "0",
+  "jsonrpc": "2.0",
+  "method": "ddf.catalog/delete",
+  "params": {
+    "ids": ["52d419f4448042c2a495bc20c707a3d0"]
+  }
+}
