@@ -604,9 +604,6 @@ function write(filter) {
       }
     case temporalClass:
       const toStringDate = date => {
-        if (typeof date.toISOString === 'function') {
-          return date.toISOString()
-        }
         return date.toString()
       }
 
