@@ -1,7 +1,9 @@
 import React from 'react'
-import * as ol from 'openlayers'
+import { Map as OpenLayersMap, View } from 'ol'
+import Tile from 'ol/layer/Tile'
+import OSM from 'ol/source/OSM'
 import Box from '@material-ui/core/Box'
-import { renderer } from 'geospatialdraw'
+import { renderer, geometry } from 'geospatialdraw'
 
 /*
 
@@ -15,9 +17,29 @@ props {
   minZoom
   zoom
   onMapLoaded
+  width ?
+  height ?
 }
 
 */
+
+function throttled(delay, fn) {
+  let lastCall = 0
+  return (...args) => {
+    window.requestAnimationFrame(() => {
+      const now = new Date().getTime()
+      if (now - lastCall >= delay) {
+        lastCall = now
+        fn(...args)
+      }
+    })
+  }
+}
+
+export const geometryListToViewport = geometryList =>
+  geometryList.length > 0
+    ? geometry.combineExtents(geometryList.map(geometry => geometry.bbox))
+    : null
 
 class WorldMap extends React.Component {
   constructor(props) {
@@ -27,6 +49,8 @@ class WorldMap extends React.Component {
       geoRenderer: null,
       lat: 0,
       lon: 0,
+      containerWidth: 0,
+      containerHeight: 0,
     }
     this.mapDivElement = null
     this.setMapDiv = element => {
@@ -36,37 +60,46 @@ class WorldMap extends React.Component {
       const [lon, lat] = e.coordinate
       this.setState({ lat, lon })
     }
+    this.mapResize = throttled(200, () => {
+      if (this.state.geoRenderer) {
+        this.state.geoRenderer.resizeMap()
+      }
+    })
   }
 
   componentDidUpdate(prevProps) {
-    const { geos, viewport, containerWidth, containerHeight } = this.props
+    const { geos, viewport } = this.props
     if (this.state.geoRenderer) {
       if (geos !== prevProps.geos) {
+        this.state.geoRenderer.clearGeos()
         this.state.geoRenderer.renderList(geos || [])
       }
       if (viewport && viewport !== prevProps.viewport) {
         this.state.geoRenderer.panToExtent(viewport)
       }
+    }
+    if (this.mapDivElement) {
+      const containerWidth = this.mapDivElement.parentElement.offsetWidth
+      const containerHeight = this.mapDivElement.parentElement.offsetHeight
       if (
-        containerWidth &&
-        containerHeight &&
-        (containerWidth !== prevProps.containerWidth ||
-          containerHeight !== prevProps.containerHeight)
+        containerWidth !== this.state.containerWidth ||
+        containerHeight !== this.state.containerHeight
       ) {
-        this.state.geoRenderer.resizeMap()
+        this.setState({ containerWidth, containerHeight })
+        this.mapResize()
       }
     }
   }
 
   componentDidMount() {
-    const map = new ol.Map({
+    const map = new OpenLayersMap({
       layers: [
-        new ol.layer.Tile({
-          source: new ol.source.OSM(),
+        new Tile({
+          source: new OSM(),
         }),
       ],
       target: this.mapDivElement,
-      view: new ol.View({
+      view: new View({
         center: [0, 0],
         rotation: 0,
         zoom: this.props.zoom,
@@ -84,6 +117,7 @@ class WorldMap extends React.Component {
       this.props.style,
       this.props.maxZoom
     )
+    geoRenderer.clearGeos()
     geoRenderer.renderList(this.props.geos || [])
     if (this.props.viewport) {
       geoRenderer.panToExtent(this.props.viewport)
@@ -104,8 +138,18 @@ class WorldMap extends React.Component {
   render() {
     const { lat, lon } = this.state
     return (
-      <Box width="100%" height="100%" bgcolor="black" position="relative">
-        <Box width="100%" height="100%" ref={this.setMapDiv} className="map" />
+      <Box
+        width={this.props.width || '100%'}
+        height={this.props.height || '100%'}
+        bgcolor="black"
+        position="relative"
+      >
+        <Box
+          width="100%"
+          height="100%"
+          ref={this.setMapDiv}
+          className="map resize-listener"
+        />
         <Box
           position="absolute"
           left="0"

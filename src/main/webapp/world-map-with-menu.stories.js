@@ -3,21 +3,21 @@ import { storiesOf } from '@connexta/ace/@storybook/react'
 import { withKnobs, select } from '@connexta/ace/@storybook/addon-knobs'
 import React, { useState } from 'react'
 import WorldMapWithDrawMenu from './world-map-with-draw-menu'
-import { geometry } from 'geospatialdraw'
+import { geometry, shapes, coordinates } from 'geospatialdraw'
 import { DRAWING_STYLE, RENDERER_STYLE } from './map-style'
 
-const stories = storiesOf('WorldMapWithDrawMenu', module)
+const stories = storiesOf('WorldMap', module)
 stories.addDecorator(withKnobs)
 
 const PROJECTION = 'EPSG:4326'
 
 const geometryCatalog = {
   none: {
-    shape: 'Polygon',
+    shape: shapes.POLYGON,
     geo: null,
   },
   Line: {
-    shape: 'Line',
+    shape: shapes.LINE,
     geo: geometry.makeLineGeo(
       '',
       [[50, 50], [56, 20], [36, 30]],
@@ -26,7 +26,7 @@ const geometryCatalog = {
     ),
   },
   Polygon: {
-    shape: 'Polygon',
+    shape: shapes.POLYGON,
     geo: geometry.makePolygonGeo(
       '',
       [[50, 50], [56, 20], [36, 30]],
@@ -35,15 +35,15 @@ const geometryCatalog = {
     ),
   },
   'Bounding Box': {
-    shape: 'Bounding Box',
+    shape: shapes.BOUNDING_BOX,
     geo: geometry.makeBBoxGeo('', [20, 30, 50, 50]),
   },
   Circle: {
-    shape: 'Point Radius',
+    shape: shapes.POINT_RADIUS,
     geo: geometry.makePointRadiusGeo('', 50, 50, 600, geometry.MILES),
   },
   'Buffered Line': {
-    shape: 'Line',
+    shape: shapes.LINE,
     geo: geometry.makeLineGeo(
       '',
       [[50, 50], [56, 20], [36, 30]],
@@ -52,7 +52,7 @@ const geometryCatalog = {
     ),
   },
   'Buffered Polygon': {
-    shape: 'Polygon',
+    shape: shapes.POLYGON,
     geo: geometry.makePolygonGeo(
       '',
       [[50, 50], [56, 20], [36, 30]],
@@ -62,7 +62,7 @@ const geometryCatalog = {
   },
 }
 
-stories.add('search for geometry', () => {
+stories.add('draw geometry', () => {
   const [
     { isDrawing = true, geos = [], viewport = null },
     setDrawingState,
@@ -81,7 +81,7 @@ stories.add('search for geometry', () => {
       zoom={2}
       geos={geos}
       viewport={viewport}
-      coordinateType="Lat Lon"
+      coordinateType={coordinates.LAT_LON}
       isDrawing={isDrawing}
       mapStyle={RENDERER_STYLE}
       drawStyle={DRAWING_STYLE}
@@ -95,6 +95,7 @@ stories.add('search for geometry', () => {
         })
         action('Search For Geo')(geo)
       }}
+      height="500px"
     />
   )
 })

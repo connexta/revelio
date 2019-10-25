@@ -33,6 +33,8 @@ props {
   drawStyle
   mapStyle
   onDrawnGeo
+  defaultGeoProperties ?
+  height
   containerWidth ?
   containerHeight ?
 }
@@ -94,8 +96,10 @@ class WorldMapWithDrawMenu extends React.Component {
       maxZoom,
       minZoom,
       zoom,
+      height,
       containerWidth,
       containerHeight,
+      defaultGeoProperties,
     } = this.props
     return (
       <Root>
@@ -111,6 +115,7 @@ class WorldMapWithDrawMenu extends React.Component {
               onSetShape={this.setDrawShape}
               onUpdate={this.setDrawGeo}
               disabledShapes={['Point']}
+              defaultGeoProperties={defaultGeoProperties}
             />
           </MenuContainer>
         )}
@@ -124,6 +129,7 @@ class WorldMapWithDrawMenu extends React.Component {
           minZoom={minZoom}
           zoom={zoom}
           onMapLoaded={this.onMapLoaded}
+          height={height}
           containerWidth={containerWidth}
           containerHeight={containerHeight}
         />

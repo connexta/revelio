@@ -2,32 +2,37 @@ import { storiesOf } from '@connexta/ace/@storybook/react'
 import { withKnobs, select } from '@connexta/ace/@storybook/addon-knobs'
 import React from 'react'
 import WorldMap from './world-map'
-import { geometry } from 'geospatialdraw'
-import * as ol from 'openlayers'
+import { geometry, coordinates } from 'geospatialdraw'
+import { Style, Fill, Circle, Stroke } from 'ol/style'
+const { BUFFER_CLASSNAME, HIDDEN_CLASSNAME, POINT_RADIUS } = geometry
+
+const featureHasClass = (feature, className) =>
+  (feature.get('class') || []).includes(className)
 
 const featureColor = feature =>
-  feature.get('hidden') ? 'rgba(0, 0, 0, 0)' : feature.get('color')
-
-const { CIRCLE_BUFFER_PROPERTY_VALUE, BUFFER_SHAPE_PROPERTY } = geometry
+  featureHasClass(feature, HIDDEN_CLASSNAME)
+    ? 'rgba(0, 0, 0, 0)'
+    : feature.get('color') || 'blue'
 
 const LINE_WIDTH = 1.8
 const POINT_SIZE = 4
 
 const MAP_STYLE = feature =>
-  new ol.style.Style({
-    stroke: new ol.style.Stroke({
+  new Style({
+    stroke: new Stroke({
       color: featureColor(feature),
       width: LINE_WIDTH,
     }),
-    fill: new ol.style.Fill({
+    fill: new Fill({
       color: 'rgba(0, 0, 0, 0)',
     }),
-    ...(feature.get(BUFFER_SHAPE_PROPERTY) === CIRCLE_BUFFER_PROPERTY_VALUE
+    ...(featureHasClass(feature, BUFFER_CLASSNAME) &&
+    feature.get('shape') === POINT_RADIUS
       ? {}
       : {
-          image: new ol.style.Circle({
+          image: new Circle({
             radius: POINT_SIZE,
-            fill: new ol.style.Fill({
+            fill: new Fill({
               color: featureColor(feature),
             }),
           }),
@@ -48,6 +53,7 @@ stories.add('bare map', () => {
       maxZoom={20}
       minZoom={1.5}
       zoom={2}
+      height="500px"
     />
   )
 })
@@ -309,10 +315,11 @@ stories.add('render geometries', () => {
       style={MAP_STYLE}
       geos={geos}
       viewport={viewport}
-      coordinateType="LAT LON"
+      coordinateType={coordinates.LAT_LON}
       maxZoom={20}
       minZoom={1.5}
       zoom={2}
+      height="500px"
     />
   )
 })

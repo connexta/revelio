@@ -10,7 +10,12 @@ import { Layout, Provider, AddConfig, DragSource } from '../react-layout'
 
 import Inspector from '../inspector/inspector'
 import ResultTable from '../results/results'
+
 import WorldMap from '../world-map'
+import { RENDERER_STYLE } from '../map-style'
+import WKT from 'ol/format/WKT'
+import GeoJSON from 'ol/format/GeoJSON'
+import { geometry, coordinates, shapes } from 'geospatialdraw'
 
 const AddVisualization = () => {
   const [anchorEl, setAnchorEl] = useState(null)
@@ -134,16 +139,51 @@ const Visualizations = props => {
     )
   }
 
+  const wkt = new WKT({ splitCollection: true })
+  const geoJSON = new GeoJSON()
+  const shapeDetector = new shapes.ShapeDetector()
   const MapVis = () => {
     const PROJECTION = 'EPSG:4326'
-
+    const [selected] = useSelectionInterface()
+    const geos = results
+      .map(
+        result =>
+          result.metacard.properties.location
+            ? wkt
+                .readFeatures(result.metacard.properties.location)
+                .map(feature =>
+                  geometry.makeGeometry(
+                    result.metacard.properties.id,
+                    geoJSON.writeFeatureObject(feature),
+                    '',
+                    shapeDetector.shapeFromFeature(feature),
+                    0,
+                    geometry.METERS,
+                    {
+                      selected: selected.has(result.metacard.properties.id),
+                    }
+                  )
+                )
+            : []
+      )
+      .reduce((list, value) => list.concat(value), [])
+    const selectedExtents = geos
+      .filter(g => g.properties.selected)
+      .map(g => g.bbox)
+    const viewport =
+      selectedExtents.length > 0
+        ? geometry.combineExtents(selectedExtents)
+        : null
     return (
       <WorldMap
         projection={PROJECTION}
-        coordinateType="LAT LON"
+        style={RENDERER_STYLE}
+        coordinateType={coordinates.LAT_LON}
         maxZoom={20}
         minZoom={1.5}
         zoom={2}
+        geos={geos}
+        viewport={viewport}
       />
     )
   }

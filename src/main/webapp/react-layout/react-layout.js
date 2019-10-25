@@ -69,6 +69,9 @@ export const Layout = props => {
   const [regions, setRegions] = useState([])
   const { setLayout } = useLayout()
   const { config, components, onChange } = props
+  /* eslint-disable no-unused-vars */
+  const [dimensions, setDimensions] = useState(null)
+  /* eslint-enable no-unused-vars */
 
   useEffect(() => {
     if (container.current === null) {
@@ -92,6 +95,18 @@ export const Layout = props => {
           onChange(layout.toConfig())
         })
       }, 0)
+    })
+    const updateContainerSize = () => {
+      if (container.current) {
+        const width = container.current.offsetWidth
+        const height = container.current.offsetHeight
+        setDimensions({ width, height })
+      }
+    }
+    layout.on('componentCreated', component => {
+      if (component.container) {
+        component.container.on('resize', updateContainerSize)
+      }
     })
 
     // cleanup local state when items removed from golden layout
