@@ -1,13 +1,12 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { QueryFilterProps } from '../filter/filter'
-//@ts-ignore
-import Location, { validate as validateLocation } from '../../location'
 import { Map } from 'immutable'
-//@ts-ignore
-import { getLocationFilter } from '../../basic-search-helper'
 import { Box } from '@material-ui/core'
 import { filterComponentStyle } from '../filter/filter-utils'
+const getLocationFilter = require('../../basic-search-helper').getLocationFilter
+const validateLocation = require('../../location').validate
+const Location = require('../../location').default
 
 //Consider removing in future commit
 const isEmpty = (checkThis: any) => {

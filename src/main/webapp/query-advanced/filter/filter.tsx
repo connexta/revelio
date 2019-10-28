@@ -6,7 +6,7 @@ import {
   getDefaultValue,
   filterComponentStyle,
 } from './filter-utils'
-import { metacardDefinitions, MetacardType } from './dummyDefinitions'
+import { metacardDefinitions } from './dummyDefinitions'
 import TextFilter, {
   comparatorOptions as textComparators,
   comparatorAliases as textAliases,
@@ -19,12 +19,13 @@ import BooleanFilter, {
   comparatorOptions as booleanComparators,
   comparatorAliases as booleanAliases,
 } from '../filter-input/boolean-filter'
-import { AttributeMenu, ComparatorMenu } from './filter-dropdowns'
+import ComparatorDropdown from './comparator-dropdown'
 import NumberFilter, {
   comparatorOptions as numberComparators,
   comparatorAliases as numberAliases,
 } from '../filter-input/number-filter'
 import { FROM, TO } from './value-transformations'
+import AttributeDropdown from './attribute-dropdown'
 
 //In this format to make querying easy
 export type QueryFilter = {
@@ -85,17 +86,19 @@ export const Filter = withRemoveButton(
           flexDirection: 'column',
           minWidth: '325px',
           maxWidth: '400px',
+          overflow: 'visible',
         }}
       >
-        <AttributeMenu
-          onChange={(newProperty: MetacardType) => {
+        <AttributeDropdown
+          value={props.property}
+          onChange={(newProperty: string) => {
             const { property, type, value } = props
             const prevType = metacardDefinitions.get(property) || 'STRING'
             const newType = metacardDefinitions.get(newProperty) || 'STRING'
             if (prevType !== newType) {
-              const newOptions = Comparators[newType].options
+              const newComparators = Comparators[newType].options
               props.onChange({
-                type: newOptions[0],
+                type: newComparators[0],
                 property: newProperty,
                 value: getDefaultValue(newType),
               })
@@ -103,10 +106,9 @@ export const Filter = withRemoveButton(
               props.onChange({ type, value, property: newProperty })
             }
           }}
-          selected={props.property}
         />
         {type !== 'LOCATION' && type !== 'DATE' ? (
-          <ComparatorMenu
+          <ComparatorDropdown
             onChange={(newType: string) => {
               let { property, value } = props
               if (newType !== props.type) {
