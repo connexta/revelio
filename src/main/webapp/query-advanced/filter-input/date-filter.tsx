@@ -1,9 +1,8 @@
 import * as React from 'react'
 import { useState } from 'react'
-//@ts-ignore
-import TimeRange from '../../time-range'
 import { QueryFilterProps } from '../filter/filter'
 import { Map } from 'immutable'
+const TimeRange = require('../../time-range').default
 
 export const comparatorOptions = ['BEFORE', 'AFTER', '=', 'DURING', 'IS EMPTY']
 

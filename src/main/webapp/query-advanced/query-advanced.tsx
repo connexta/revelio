@@ -17,9 +17,7 @@ const QueryAdvanced = (props: any) => {
   return (
     <Paper
       style={{
-        overflow: 'auto',
         maxWidth: 500,
-        maxHeight: '100%',
         padding: 20,
       }}
     >

@@ -6,6 +6,7 @@
   "devDependencies": {
     "@connexta/ace": "https://github.com/connexta/ace.git#53fd31d89bd5562d8ae187d078db7d7adea3a778",
     "@types/react": "^16.9.5",
+    "@types/react-select": "3.0.2",
     "@typescript-eslint/parser": "^2.3.3",
     "eslint-plugin-graphql": "^3.1.0",
     "eslint-plugin-import": "^2.18.2",
@@ -41,6 +42,7 @@
     "react-redux": "^7.1.0",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
+    "react-select": "3.0.4",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "styled-components": "4.3.2"

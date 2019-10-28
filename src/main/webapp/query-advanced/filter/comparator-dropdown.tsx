@@ -2,10 +2,9 @@ import * as React from 'react'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
 import { Button, Box, Popover, MenuItem } from '@material-ui/core'
 import { ArrowDropDown as DropDownIcon } from '@material-ui/icons'
-import { metacardDefinitions } from './dummyDefinitions'
 import { Map } from 'immutable'
 
-type MenuProps = {
+type Props = {
   selected: string
   options: Array<string>
   aliases?: Map<string, string>
@@ -13,7 +12,7 @@ type MenuProps = {
   style?: React.CSSProperties
 }
 
-const Menu = (props: MenuProps) => {
+const ComparatorMenu = (props: Props) => {
   const [anchorEl, open, close] = useAnchorEl()
   return (
     <React.Fragment>
@@ -68,22 +67,4 @@ const Menu = (props: MenuProps) => {
   )
 }
 
-const attributeAliases = Map({
-  'date-created': 'Date Created',
-  enterprise: 'Enterprise',
-})
-
-const withAttributeOptions = (Component: any) => {
-  return (props: any) => {
-    return (
-      <Component
-        {...props}
-        options={Array.from(metacardDefinitions.keys())}
-        aliases={attributeAliases}
-      />
-    )
-  }
-}
-
-export const AttributeMenu = withAttributeOptions(Menu)
-export const ComparatorMenu = Menu
+export default ComparatorMenu
