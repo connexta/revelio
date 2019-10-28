@@ -3,7 +3,7 @@ import { transparentize } from 'polished'
 import MultiPoint from 'ol/geom/MultiPoint'
 import { geometry } from 'geospatialdraw'
 const { BUFFER_CLASSNAME, HIDDEN_CLASSNAME, POINT_RADIUS, POLYGON } = geometry
-import { getIconText } from './icons/map-pin'
+import { getIconText } from '../icons/map-pin'
 
 const LINE_WIDTH = 1.8
 const POINT_SIZE = 4

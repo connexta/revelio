@@ -49,7 +49,7 @@ stories.add('bare map', () => {
     <WorldMap
       projection={PROJECTION}
       style={MAP_STYLE}
-      coordinateType="LAT LON"
+      coordinateType={coordinates.LAT_LON}
       maxZoom={20}
       minZoom={1.5}
       zoom={2}

@@ -4,6 +4,7 @@ import Tile from 'ol/layer/Tile'
 import OSM from 'ol/source/OSM'
 import Box from '@material-ui/core/Box'
 import { renderer, geometry, coordinates } from 'geospatialdraw'
+import { useCursorPosition } from './effects'
 
 export const geometryListToViewport = geometryList =>
   geometryList.length > 0
@@ -23,69 +24,62 @@ const WorldMap = ({
   projection,
   style,
   geos,
-  viewport,
-  coordinateType,
+  viewport = null,
   maxZoom,
   minZoom,
   zoom,
+  coordinateType = coordinates.LAT_LON,
   onMapLoaded = () => {},
-  onCursorMove = () => {},
   width = '100%',
   height = '100%',
 }) => {
   const mapDiv = useRef(null)
+  const mapLoaded = useRef(false)
+  const previousViewport = useRef(null)
   const [mapControls, createMapControls] = useState(null)
-  const [cursor, setCursorPosition] = useState({ lat: 0, lon: 0 })
   const [container, setContainer] = useState({ width: 0, height: 0 })
+  const { cursor, setMap } = useCursorPosition()
   useEffect(
     () => {
-      const pointerMove = e => {
-        const [lon, lat] = e.coordinate
-        setCursorPosition({ lat, lon })
-        onCursorMove(lat, lon)
-      }
-      if (mapDiv.current) {
-        if (!mapControls) {
-          const map = new OpenLayersMap({
-            layers: [
-              new Tile({
-                source: new OSM(),
-              }),
-            ],
-            target: mapDiv.current,
-            view: new View({
-              center: [0, 0],
-              rotation: 0,
-              zoom,
-              minZoom,
-              maxZoom,
-              projection,
+      if (mapDiv.current && !mapControls) {
+        const map = new OpenLayersMap({
+          layers: [
+            new Tile({
+              source: new OSM(),
             }),
-          })
-          mapDiv.current
-            .querySelectorAll(
-              '.ol-overlaycontainer-stopevent, .ol-overlaycontainer'
-            )
-            .forEach(el => (el.style.display = 'none'))
-          map.on('pointermove', pointerMove)
-          const geoRenderer = new renderer.Renderer(map, style, maxZoom)
+          ],
+          target: mapDiv.current,
+          view: new View({
+            center: [0, 0],
+            rotation: 0,
+            zoom,
+            minZoom,
+            maxZoom,
+            projection,
+          }),
+        })
+        mapDiv.current
+          .querySelectorAll(
+            '.ol-overlaycontainer-stopevent, .ol-overlaycontainer'
+          )
+          .forEach(el => (el.style.display = 'none'))
+        const geoRenderer = new renderer.Renderer(map, style, maxZoom)
+        map.once('rendercomplete', () => {
           createMapControls({ map, geoRenderer })
-          onMapLoaded(map)
-        }
-      } else if (mapControls) {
-        mapControls.map.un('pointermove', pointerMove)
+        })
       }
     },
-    [
-      mapControls,
-      onCursorMove,
-      zoom,
-      minZoom,
-      maxZoom,
-      projection,
-      onMapLoaded,
-      style,
-    ]
+    [mapDiv, mapControls, zoom, minZoom, maxZoom, projection, style]
+  )
+  useEffect(
+    () => {
+      if (mapControls && !mapLoaded.current) {
+        mapLoaded.current = true
+        setMap(mapControls.map)
+        onMapLoaded(mapControls.map)
+      }
+    },
+    [mapControls, setMap, onMapLoaded, mapLoaded]
   )
   useEffect(
     () => {
@@ -99,11 +93,17 @@ const WorldMap = ({
   useEffect(
     () => {
       if (mapControls && viewport) {
-        mapControls.geoRenderer.panToExtent(viewport)
+        if (
+          JSON.stringify(viewport) !== JSON.stringify(previousViewport.current)
+        ) {
+          mapControls.geoRenderer.panToExtent(viewport)
+        }
+        previousViewport.current = viewport.slice(0)
       }
     },
-    [mapControls, viewport]
+    [mapControls, previousViewport, viewport]
   )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (mapDiv.current) {
       const width = mapDiv.current.parentElement.offsetWidth
@@ -114,7 +114,9 @@ const WorldMap = ({
   useLayoutEffect(
     () => {
       if (mapControls) {
-        mapControls.geoRenderer.resizeMap()
+        window.requestAnimationFrame(() => {
+          mapControls.geoRenderer.resizeMap()
+        })
       }
     },
     [mapControls, container.width, container.height]
