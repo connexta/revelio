@@ -1,5 +1,6 @@
 import { isFilterGroup } from './filter/filter-group'
 import { metacardDefinitions } from './filter/dummyDefinitions'
+import { getDefaultValue } from './filter/filter-utils'
 
 //TODO test deserialize and serialize methods
 export const deserialize = (filter: any) => {
@@ -28,6 +29,9 @@ export const deserialize = (filter: any) => {
         lower: filter.lowerBoundary,
         upper: filter.upperBoundary,
       }
+    }
+    if (filter.type === 'IS NULL') {
+      filter.value = getDefaultValue(metacardDefinitions.get(filter.property))
     }
     return { ...filter }
   }
@@ -65,7 +69,7 @@ export const serialize = (filter: any) => {
         filter.value.distance,
         filter.value.value,
       ])
-    case 'IS EMPTY':
+    case 'IS NULL':
       return generateIsEmptyFilter(filter.property)
   }
 

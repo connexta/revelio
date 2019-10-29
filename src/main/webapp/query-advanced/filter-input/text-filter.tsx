@@ -3,8 +3,12 @@ import { QueryFilterProps } from '../filter/filter'
 import { TextField, Box } from '@material-ui/core'
 import { Map } from 'immutable'
 
-export const comparatorOptions = ['ILIKE', 'LIKE', '=', 'NEAR', 'IS EMPTY']
-export const comparatorAliases = Map({ ILIKE: 'CONTAINS', LIKE: 'MATCHCASE' })
+export const comparatorOptions = ['ILIKE', 'LIKE', '=', 'NEAR', 'IS NULL']
+export const comparatorAliases = Map({
+  ILIKE: 'CONTAINS',
+  LIKE: 'MATCHCASE',
+  'IS NULL': 'IS EMPTY',
+})
 
 const intRegex = /^(-?\d*$)|^$/
 

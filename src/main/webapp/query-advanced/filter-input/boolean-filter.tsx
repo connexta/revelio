@@ -3,8 +3,8 @@ import { QueryFilterProps } from '../filter/filter'
 import { Box, Switch, Button } from '@material-ui/core'
 import { Map } from 'immutable'
 
-export const comparatorOptions = ['=', 'IS EMPTY']
-export const comparatorAliases = Map({ '=': 'IS' })
+export const comparatorOptions = ['=', 'IS NULL']
+export const comparatorAliases = Map({ '=': 'IS', 'IS NULL': 'IS EMPTY' })
 
 const BooleanFilter = (props: QueryFilterProps) => {
   return (
@@ -17,6 +17,7 @@ const BooleanFilter = (props: QueryFilterProps) => {
             property: props.property,
           })
         }}
+        style={{ width: 'fit-content' }}
       >
         <Button variant="outlined">
           <Switch checked={props.value !== false} />
