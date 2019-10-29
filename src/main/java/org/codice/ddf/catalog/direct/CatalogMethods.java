@@ -59,6 +59,13 @@ import org.opengis.filter.Filter;
 import org.opengis.filter.sort.SortBy;
 import org.opengis.filter.sort.SortOrder;
 
+/**
+ * A class that represents the set of methods that are callable on the
+ * <code>CatalogFramework</code> as a map where the key is the 
+ * Json Rpc <code>method</code> string (eg, <code>ddf.catalog/create</code>). 
+ * the value of the map is a Method that can be called to dispatch the corresponding 
+ * action to the <code>CatalogFramework</code>
+ */
 public class CatalogMethods implements MethodSet {
 
   private static final String ISO_8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
@@ -71,10 +78,11 @@ public class CatalogMethods implements MethodSet {
 
   {
     Builder<String, DocMethod> builder = ImmutableMap.builder();
-    builder.put("ddf.catalog/create", new DocMethod(this::create, ""));
-    builder.put("ddf.catalog/query", new DocMethod(this::query, ""));
-    builder.put("ddf.catalog/update", new DocMethod(this::update, ""));
-    builder.put("ddf.catalog/delete", new DocMethod(this::delete, ""));
+    builder.put("ddf.catalog/create", new DocMethod(this::create, "Takes the specified parameters (metacards) and calls CatalogFramework::create.`params` takes: `metacards(Required, value: List(Object(`metacardType`:string, `attributes`:Object(Required, `id`: String))) "));
+    builder.put("ddf.catalog/query", new DocMethod(this::query, "Takes the specified parameters and calls CatalogFramework::query. `params` takes: `cql` (TemporarilyRequired, value: String of cql), `sourceIds` (Optional, value: List of strings, Default: ['ddf.distribution']), `isEnterprise` (Optional, value: boolean, default: false), `properties` (Not yet supported), `startIndex` (Optional, value: integer, default: 1), `pageSize` (Optional, value: integer, default: 250), `sortPolicy` (Optional, value: Object(`propertyName`:String, `sortOrder`: String(ASC or DESC))"));
+
+    builder.put("ddf.catalog/update", new DocMethod(this::update, "Takes the specified parameters and calls CatalogFramework::query. `params` takes: `metacards(Required, value: List(Object(`metacardType`:string, `attributes`:Object(Required, `id`: String)))"));
+    builder.put("ddf.catalog/delete", new DocMethod(this::delete, "Takes the specified parameters and calls CatalogFramework::query. `params` takes: `ids` (Required, value: List(String))"));
     builder.put("ddf.catalog/getSourceIds", new DocMethod(this::getSourceIds, ""));
     builder.put("ddf.catalog/getSourceInfo", new DocMethod(this::getSourceInfo, ""));
     METHODS = builder.build();
@@ -306,7 +314,12 @@ public class CatalogMethods implements MethodSet {
 
     List<String> sourceIds = new ArrayList<>();
     if (params.containsKey("sourceIds")) {
-      // TODO (RCZ) - Handle errors
+      if (!(params.get("sourceIds") instanceof List)) {
+        return new Error(
+            JsonRpc.INVALID_PARAMS,
+            "sourceIds was not a List",
+            ImmutableMap.of("path", ImmutableList.of("params", "sourceIds")));
+      }
       sourceIds = (List<String>) params.get("sourceIds");
     }
 
@@ -435,7 +448,7 @@ public class CatalogMethods implements MethodSet {
     }
     Map<String, Object> attributes = (Map) metacard.get(ATTRIBUTES);
 
-    Object rawType = metacard.get("metacard_type");
+    Object rawType = metacard.get("metacardType");
     String desiredMetacardType = rawType instanceof String ? String.valueOf(rawType) : null;
     MetacardType metacardType =
         metacardTypes.stream()
@@ -525,7 +538,7 @@ public class CatalogMethods implements MethodSet {
               null, String.format("Could not convert value for '%s'. \n%s", name, e.toString()));
         }
       default:
-        return null;
+        return of(new AttributeImpl(name, String.valueOf(value)), null);
     }
   }
 
