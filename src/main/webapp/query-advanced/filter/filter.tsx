@@ -73,10 +73,11 @@ export const Filter = withRemoveButton(
     const type = metacardDefinitions.get(props.property) || 'STRING'
     const Component = Inputs[type] || TextFilter
     const comparators = Comparators[type]
+
     const comparatorOptions =
       props.property !== 'anyText' && props.property !== 'anyGeo'
         ? comparators.options
-        : comparators.options.filter((option: string) => option !== 'IS EMPTY')
+        : comparators.options.filter((option: string) => option !== 'IS NULL')
 
     const comparatorAliases = comparators.aliases
     return (
@@ -126,7 +127,7 @@ export const Filter = withRemoveButton(
           />
         ) : null}
 
-        {props.type !== 'IS EMPTY' && (
+        {props.type !== 'IS NULL' && (
           <Box style={filterComponentStyle}>
             <Component {...props} />
           </Box>

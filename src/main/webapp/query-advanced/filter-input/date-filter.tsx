@@ -4,7 +4,7 @@ import { QueryFilterProps } from '../filter/filter'
 import { Map } from 'immutable'
 const TimeRange = require('../../time-range').default
 
-export const comparatorOptions = ['BEFORE', 'AFTER', '=', 'DURING', 'IS EMPTY']
+export const comparatorOptions = ['BEFORE', 'AFTER', '=', 'DURING', 'IS NULL']
 
 //@ts-ignore will eventually use props
 const DateFilter = (props: QueryFilterProps) => {

@@ -6,9 +6,9 @@ import { withKnobs, number } from '@storybook/addon-knobs'
 const stories = storiesOf('Query Advanced', module)
 
 const baseFilter = {
-  property: 'anyText',
-  type: 'ILIKE',
-  value: '',
+  property: 'an integer',
+  type: '>',
+  value: 12,
 }
 
 const baseFilterGroup = {

@@ -11,9 +11,12 @@ export const comparatorOptions = [
   '>=',
   '<=',
   'BETWEEN',
-  'IS EMPTY',
+  'IS NULL',
 ]
-export const comparatorAliases = Map({ BETWEEN: 'RANGE' })
+export const comparatorAliases = Map({
+  BETWEEN: 'RANGE',
+  'IS NULL': 'IS EMPTY',
+})
 
 const intRegex = /^(-?\d*$)|^$/
 const floatRegex = /^-?\d*(\.\d*)?$|^$/
