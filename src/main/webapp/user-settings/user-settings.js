@@ -24,6 +24,7 @@ import HiddenResultsSettings from './hidden-results-settings'
 import NotificationSettings from './notification-settings'
 import SearchSettings from './search-setttings'
 import TimeSettings from './time-settings'
+import ThemeSettings from './theme-settings'
 
 const generateSetting = (title, Icon = AccessibleForwardIcon, component) => {
   return {
@@ -38,7 +39,7 @@ const generateSetting = (title, Icon = AccessibleForwardIcon, component) => {
 }
 
 const settings = [
-  generateSetting('Theme', BrushIcon),
+  generateSetting('Theme', BrushIcon, ThemeSettings),
   generateSetting('Notifications', NotificationsIcon, NotificationSettings),
   generateSetting('Map', PublicIcon),
   generateSetting('Search Options', SearchIcon, SearchSettings),
@@ -215,6 +216,7 @@ const query = gql`
         resultDisplay
         resultPreview
         theme {
+          theme
           customBackgroundAccentContent
         }
         timeZone

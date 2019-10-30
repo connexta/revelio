@@ -21,6 +21,13 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
+import Divider from '@material-ui/core/Divider'
+
+import { useTheme } from '@material-ui/core/styles'
+import { ThemeProvider } from './theme'
+
+import gql from 'graphql-tag'
+import { useQuery } from '@apollo/react-hooks'
 
 import {
   HashRouter as Router,
@@ -88,9 +95,10 @@ const routes = [
 ]
 
 const NavBar = props => {
+  const { palette } = useTheme()
   const { title = 'That MF Electric Boogaloo', onMenuOpen } = props
   return (
-    <AppBar style={{ position: 'static' }}>
+    <AppBar style={{ position: 'static', background: palette.navbar }}>
       <Toolbar>
         <IconButton
           edge="start"
@@ -114,8 +122,41 @@ const otherRoutes = [
   { title: 'Workspace', path: '/workspaces/:id', component: Workspace },
 ]
 
+const query = gql`
+  query NavigationBar {
+    systemProperties {
+      branding
+      product
+    }
+  }
+`
+
+const NavMenuBranding = () => {
+  const { loading, error, data } = useQuery(query)
+
+  if (loading || error) {
+    return null
+  }
+
+  const { branding, product } = data.systemProperties
+
+  return (
+    <List>
+      <ListItem>
+        <ListItemText
+          primaryTypographyProps={{ style: { fontSize: '2rem' } }}
+          secondaryTypographyProps={{ style: { fontSize: '1.3rem' } }}
+          primary={branding}
+          secondary={product}
+        />
+      </ListItem>
+    </List>
+  )
+}
+
 const AppRouter = () => {
   const [open, setOpen] = React.useState(false)
+  const { palette } = useTheme()
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -126,33 +167,48 @@ const AppRouter = () => {
   }
 
   return (
-    <Router>
-      <Drawer anchor="left" open={open} onClose={handleDrawerClose}>
-        <List style={{ width: 300 }}>
-          {routes.map(route => {
-            const { path, link: Link } = route
+    <div
+      style={{
+        background: palette.background.default,
+        minHeight: '100vh',
+      }}
+    >
+      <Router>
+        <Drawer anchor="left" open={open} onClose={handleDrawerClose}>
+          <NavMenuBranding />
+          <Divider />
+          <List style={{ width: 300 }}>
+            {routes.map(route => {
+              const { path, link: Link } = route
+              return (
+                <ListItem key={path}>
+                  <Link onClick={handleDrawerClose} />
+                </ListItem>
+              )
+            })}
+          </List>
+        </Drawer>
+        {routes.concat(otherRoutes).map(route => {
+          const { title, path, component: Component } = route
+          const render = () => {
             return (
-              <ListItem key={path}>
-                <Link onClick={handleDrawerClose} />
-              </ListItem>
+              <React.Fragment>
+                <NavBar title={title} onMenuOpen={handleDrawerOpen} />
+                <Component />
+              </React.Fragment>
             )
-          })}
-        </List>
-      </Drawer>
-      {routes.concat(otherRoutes).map(route => {
-        const { title, path, component: Component } = route
-        const render = () => {
-          return (
-            <React.Fragment>
-              <NavBar title={title} onMenuOpen={handleDrawerOpen} />
-              <Component />
-            </React.Fragment>
-          )
-        }
-        return <Route key={path} exact path={path} render={render} />
-      })}
-    </Router>
+          }
+          return <Route key={path} exact path={path} render={render} />
+        })}
+      </Router>
+    </div>
   )
 }
 
-export default AppRouter
+export default () => {
+  return (
+    <ThemeProvider>
+      <AppRouter />
+    </ThemeProvider>
+  )
+}
