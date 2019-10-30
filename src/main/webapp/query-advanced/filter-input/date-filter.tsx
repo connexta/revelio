@@ -1,17 +1,65 @@
 import * as React from 'react'
-import { useState } from 'react'
 import { QueryFilterProps } from '../filter/filter'
-import { Map } from 'immutable'
-const TimeRange = require('../../time-range').default
+const { default: TimeRange, createTimeRange } = require('../../time-range')
+const { uglyMap, parseRelative } = require('../../basic-search-helper')
 
 export const comparatorOptions = ['BEFORE', 'AFTER', '=', 'DURING', 'IS NULL']
 
-//@ts-ignore will eventually use props
-const DateFilter = (props: QueryFilterProps) => {
-  //Remove state in future commit
-  const [date, setDate] = useState(Map({ type: 'BEFORE' }))
+const fromFilter = (filter: any) => {
+  if (filter.type === '=') {
+    const { last, unit } = parseRelative(filter.value)
+    return createTimeRange({
+      last,
+      unit,
+      type: filter.type,
+    })
+  }
 
-  return <TimeRange timeRange={date} setTimeRange={setDate} />
+  if (filter.type === 'DURING') {
+    const dates = filter.value.split('/')
+    return createTimeRange({
+      type: filter.type,
+      from: new Date(dates[0]),
+      to: new Date(dates[1]),
+    })
+  }
+  const { value, type } = filter
+
+  return createTimeRange({ value, type })
+}
+
+const DateFilter = (props: QueryFilterProps) => {
+  const toFilter = (timeRange: any) => {
+    if (timeRange.type === '=') {
+      const { last, unit } = timeRange
+      return {
+        property: props.property,
+        value: uglyMap[unit](last),
+        type: timeRange.type,
+      }
+    }
+    if (timeRange.type === 'DURING') {
+      const { from, to } = timeRange
+      return {
+        property: props.property,
+        value: `${new Date(from).toISOString()}/${new Date(to).toISOString()}`,
+        type: timeRange.type,
+      }
+    }
+    return {
+      property: props.property,
+      value: timeRange.value,
+      type: timeRange.type,
+    }
+  }
+  return (
+    <TimeRange
+      timeRange={fromFilter(props)}
+      setTimeRange={(value: any) => {
+        props.onChange(toFilter(value))
+      }}
+    />
+  )
 }
 
 export default DateFilter

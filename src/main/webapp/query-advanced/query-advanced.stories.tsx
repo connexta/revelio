@@ -6,9 +6,9 @@ import { withKnobs, number } from '@storybook/addon-knobs'
 const stories = storiesOf('Query Advanced', module)
 
 const baseFilter = {
-  property: 'an integer',
-  type: '>',
-  value: 12,
+  property: 'date-created',
+  type: 'DURING',
+  value: '2019-10-13T17:36:00.000Z/2019-10-30T17:36:00.000Z',
 }
 
 const baseFilterGroup = {

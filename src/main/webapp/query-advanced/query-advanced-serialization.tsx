@@ -2,7 +2,6 @@ import { isFilterGroup } from './filter/filter-group'
 import { metacardDefinitions } from './filter/dummyDefinitions'
 import { getDefaultValue } from './filter/filter-utils'
 
-//TODO test deserialize and serialize methods
 export const deserialize = (filter: any) => {
   if (isFilterGroup(filter)) {
     const filters: any = filter.filters.map(deserialize)

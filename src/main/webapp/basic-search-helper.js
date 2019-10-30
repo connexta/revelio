@@ -18,7 +18,7 @@ const timeProperties = [
   'modified',
 ]
 
-const uglyMap = {
+export const uglyMap = {
   minutes: howMany => `RELATIVE(PT${howMany}M)`,
   hours: howMany => `RELATIVE(PT${howMany}H)`,
   days: howMany => `RELATIVE(P${howMany}D)`,
@@ -122,7 +122,7 @@ export const fromFilterTree = filterTree => {
     : Map({ [TEXT_KEY]: filterTree.value })
 }
 
-const parseRelative = relative => {
+export const parseRelative = relative => {
   const matches = relative.match(/RELATIVE\((\D*)(\d*)(\D*)\)/)
   if (matches && matches.length > 3) {
     /* eslint-disable no-unused-vars */

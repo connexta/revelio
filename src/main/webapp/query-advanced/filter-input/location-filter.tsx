@@ -25,7 +25,10 @@ const LocationFilter = (props: QueryFilterProps) => {
           onChange={(value: any) => {
             setLocation(value)
             if (isEmpty(validateLocation(value))) {
-              props.onChange(getLocationFilter(value))
+              const filter = getLocationFilter(value)
+              if (filter) {
+                props.onChange(getLocationFilter(value))
+              }
             }
           }}
         />
