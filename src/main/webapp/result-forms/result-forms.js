@@ -63,6 +63,7 @@ export const ResultForms = props => {
         required
         fullWidth
         label="Title"
+        variant="outlined"
         style={{ marginBottom: 20 }}
         value={title}
         error={submitted && errors.title !== undefined}
@@ -73,6 +74,7 @@ export const ResultForms = props => {
         fullWidth
         rows={2}
         multiline
+        variant="outlined"
         label="Description"
         style={{ marginBottom: 30 }}
         value={description}
