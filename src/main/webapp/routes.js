@@ -17,6 +17,11 @@ import MenuIcon from '@material-ui/icons/Menu'
 import SearchIcon from '@material-ui/icons/Search'
 import ViewListIcon from '@material-ui/icons/ViewList'
 
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+
 import {
   HashRouter as Router,
   Link as ReactLink,
@@ -32,17 +37,15 @@ import UserSettings from './user-settings'
 
 const Link = props => {
   return (
-    <Typography>
-      <Button
-        fullWidth
-        onClick={props.onClick}
-        to={props.to}
-        component={ReactLink}
-        style={{ justifyContent: 'flex-start' }}
-      >
-        {props.children}
-      </Button>
-    </Typography>
+    <Button
+      fullWidth
+      onClick={props.onClick}
+      to={props.to}
+      component={ReactLink}
+      style={{ justifyContent: 'flex-start' }}
+    >
+      {props.children}
+    </Button>
   )
 }
 
@@ -54,8 +57,10 @@ const createRoute = (path, title, Icon = AccessibleForwardIcon, component) => {
       const { onClick } = props
       return (
         <Link to={path} onClick={onClick}>
-          <Icon style={{ marginRight: 10 }} />
-          {title}
+          <ListItemIcon>
+            <Icon style={{ marginRight: 10 }} />
+          </ListItemIcon>
+          <ListItemText primary={title} />
         </Link>
       )
     },
@@ -123,10 +128,16 @@ const AppRouter = () => {
   return (
     <Router>
       <Drawer anchor="left" open={open} onClose={handleDrawerClose}>
-        {routes.map(route => {
-          const { path, link: Link } = route
-          return <Link onClick={handleDrawerClose} key={path} />
-        })}
+        <List style={{ width: 300 }}>
+          {routes.map(route => {
+            const { path, link: Link } = route
+            return (
+              <ListItem key={path}>
+                <Link onClick={handleDrawerClose} />
+              </ListItem>
+            )
+          })}
+        </List>
       </Drawer>
       {routes.concat(otherRoutes).map(route => {
         const { title, path, component: Component } = route
