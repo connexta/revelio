@@ -28,6 +28,7 @@ import SourcesRoute from './sources'
 import SimpleSearch from './simple-search'
 import ResultForms from './result-forms'
 import WorkspacesIndex, { Workspace } from './workspaces/workspaces'
+import UserSettings from './user-settings'
 
 const Link = props => {
   return (
@@ -94,9 +95,11 @@ const NavBar = props => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" noWrap>
+        <Typography variant="h6" noWrap style={{ flexGrow: 1 }}>
           {title}
         </Typography>
+
+        <UserSettings />
       </Toolbar>
     </AppBar>
   )

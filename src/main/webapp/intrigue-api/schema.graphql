@@ -197,6 +197,11 @@ type DateTimeFormatPreference {
   timefmt: String
 }
 
+type BlacklistResult {
+  id: String
+  title: String
+}
+
 type ThemePreferences {
   customBackgroundAccentContent: String
   customBackgroundContent: String
@@ -214,7 +219,7 @@ type ThemePreferences {
 }
 
 type UserPreferences {
-  alertExpiration: Int
+  alertExpiration: Float
   alertPersistence: Boolean
   alerts: [String]
   animation: Boolean
@@ -222,20 +227,20 @@ type UserPreferences {
   columnOrder: [String]
   coordinateFormat: String
   dateTimeFormat: DateTimeFormatPreference
-  fontSize: Int
+  fontSize: Float
   goldenLayout: Json
   homeDisplay: String
   homeFilter: String
   homeSort: String
   hoverPreview: Boolean
-  id: String
+  id: ID
   inspectorDetailsHidden: [String]
   inspectorDetailsOrder: [String]
   inspectorSummaryOrder: [String]
   inspectorSummaryShown: [String]
   mapLayers: [ImageryProvider]
   querySettings: QuerySettings
-  resultBlacklist: [String]
+  resultBlacklist: [BlacklistResult]
   resultCount: Int
   resultDisplay: String
   resultPreview: [String]
@@ -312,4 +317,5 @@ type Mutation {
   # saveMetacardFromJson(id: ID!, attrs: Json!): MetacardAttributes
 
   deleteMetacard(id: ID!): ID
+  updateUserPreferences(userPreferences: Json): Json
 }

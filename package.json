@@ -36,6 +36,7 @@
     "graphql-tools": "^4.0.5",
     "immutable": "^4.0.0-rc.12",
     "moment": "^2.24.0",
+    "moment-timezone": "^0.5.16",
     "polished": "^3.4.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
@@ -45,7 +46,7 @@
     "react-select": "3.0.4",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
-    "styled-components": "4.3.2"
+    "styled-components": "^4.3.2"
   },
   "scripts": {
     "start": "ace start",
