@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Box from '@material-ui/core/Box'
 import { menu, drawing } from 'geospatialdraw'
 import WorldMap from './world-map'
@@ -18,124 +18,82 @@ const Root = props => (
 const MenuContainer = props => <Box bgcolor="rgb(52, 172, 247)" {...props} />
 const Menu = menu.MaterialDrawMenu
 
-/*
-props {
-  projection
-  maxZoom
-  minZoom
-  zoom
-  geos
-  viewport
-  coordinateType
-  drawGeo
-  drawShape
-  isDrawing
-  drawStyle
-  mapStyle
-  onDrawnGeo
-  defaultGeoProperties ?
-  height
-  containerWidth ?
-  containerHeight ?
+const usePropOveriddenState = propValue => {
+  const [stateValue, setStateValue] = useState(propValue)
+  const oldValue = useRef(propValue)
+  useEffect(
+    () => {
+      if (oldValue.current !== propValue &&
+        stateValue !== propValue) {
+        oldValue.current = propValue
+        setStateValue(propValue)
+      }
+    },
+    [stateValue, propValue]
+  )
+  return [stateValue, setStateValue]
 }
-*/
 
-class WorldMapWithDrawMenu extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      drawToolbox: null,
-      drawGeo: this.props.drawGeo,
-      drawShape: this.props.drawShape,
-    }
-    this.setDrawShape = drawShape => {
-      this.setState({ drawShape, drawGeo: null })
-    }
-    this.setDrawGeo = drawGeo => {
-      this.setState({ drawGeo })
-    }
-    this.onDrawOk = () => {
-      this.props.onDrawnGeo(this.state.drawGeo)
-    }
-    this.onDrawCancel = () => {
-      this.props.onDrawnGeo(this.props.drawGeo)
-    }
-    this.onMapLoaded = map => {
-      const drawToolbox = new drawing.openlayers.DrawingToolbox({
-        map,
-        drawingStyle: this.props.drawStyle,
-      })
-      this.setState({ drawToolbox })
-    }
+const WorldMapWithDrawMenu = ({
+  drawGeo,
+  drawShape,
+  onDrawnGeo,
+  defaultGeoProperties,
+  isDrawing,
+  drawStyle,
+  onMapLoaded = () => {},
+  ...rest
+}) => {
+  const [activeDrawGeo, setActiveDrawGeo] = usePropOveriddenState(drawGeo)
+  const [activeDrawShape, setActiveDrawShape] = usePropOveriddenState(drawShape)
+  const [drawToolbox, setToolbox] = useState(null)
+  const [map, setMap] = useState(null)
+  const setGeo = geo => {
+    setActiveDrawGeo(geo)
+    console.log(geo, activeDrawGeo)
   }
-
-  componentDidMount() {
-    const { drawGeo, drawShape } = this.props
-    this.setState({ drawGeo, drawShape })
+  useEffect(
+    () => {
+      if (map && !drawToolbox) {
+        console.log('new toolbox')
+        setToolbox(
+          new drawing.openlayers.DrawingToolbox({
+            map,
+            drawingStyle: drawStyle,
+          })
+        )
+        onMapLoaded(map)
+      }
+    },
+    [map, onMapLoaded, drawToolbox, drawStyle]
+  )
+  const onDrawOk = () => {
+    onDrawnGeo(activeDrawGeo)
   }
-
-  componentDidUpdate(prevProps) {
-    const { drawGeo, drawShape } = this.props
-    if (prevProps.drawGeo !== drawGeo) {
-      this.setState({ drawGeo })
-    }
-    if (prevProps.drawShape !== drawShape) {
-      this.setState({ drawShape })
-    }
+  const onDrawCancel = () => {
+    onDrawnGeo(drawGeo)
   }
-
-  render() {
-    const { drawToolbox, drawGeo, drawShape } = this.state
-    const {
-      isDrawing,
-      projection,
-      mapStyle,
-      geos,
-      viewport,
-      coordinateType,
-      maxZoom,
-      minZoom,
-      zoom,
-      height,
-      containerWidth,
-      containerHeight,
-      defaultGeoProperties,
-    } = this.props
-    return (
-      <Root>
-        {drawToolbox === null ? null : (
-          <MenuContainer>
-            <Menu
-              shape={drawShape}
-              toolbox={drawToolbox}
-              isActive={isDrawing}
-              geometry={drawGeo}
-              onCancel={this.onDrawCancel}
-              onOk={this.onDrawOk}
-              onSetShape={this.setDrawShape}
-              onUpdate={this.setDrawGeo}
-              disabledShapes={['Point']}
-              defaultGeoProperties={defaultGeoProperties}
-            />
-          </MenuContainer>
-        )}
-        <WorldMap
-          projection={projection}
-          style={mapStyle}
-          geos={geos}
-          viewport={viewport}
-          coordinateType={coordinateType}
-          maxZoom={maxZoom}
-          minZoom={minZoom}
-          zoom={zoom}
-          onMapLoaded={this.onMapLoaded}
-          height={height}
-          containerWidth={containerWidth}
-          containerHeight={containerHeight}
-        />
-      </Root>
-    )
-  }
+  return (
+    <Root>
+      {drawToolbox === null ? null : (
+        <MenuContainer>
+          <Menu
+            shape={activeDrawShape}
+            toolbox={drawToolbox}
+            isActive={isDrawing}
+            geometry={activeDrawGeo}
+            onCancel={onDrawCancel}
+            onOk={onDrawOk}
+            onSetShape={setActiveDrawShape}
+            onUpdate={setGeo}
+            disabledShapes={['Point']}
+            defaultGeoProperties={defaultGeoProperties}
+          />
+        </MenuContainer>
+      )}
+      <WorldMap onMapLoaded={setMap} {...rest} />
+    </Root>
+  )
 }
 
 export default WorldMapWithDrawMenu
