@@ -78,67 +78,73 @@ export const Workspace = () => {
   const { title, queries } = attributes
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div
+      style={{
+        display: 'flex',
+        height: 'calc(100vh - 64px)',
+        overflow: 'hidden',
+      }}
+    >
       <div
         style={{
           boxSizing: 'border-box',
           width: 400,
+          height: '100%',
+          overflow: 'auto',
         }}
       >
         <Typography variant="h4" component="h1" style={{ padding: 20 }}>
           {title}
         </Typography>
         <Divider />
-        <div>
-          {query === null ? (
-            <QuerySelector
-              queries={queries}
-              onSelect={query => {
-                onClear()
-                setQuery(query)
-              }}
-            />
-          ) : null}
-          {query !== null ? (
-            <div style={{ padding: 20 }}>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <TextField
-                  style={{ marginBottom: 20 }}
-                  label="Query Title"
-                  value={query.title || ''}
-                  fullWidth
-                />
-                <IconButton onClick={() => setQuery(null)}>
-                  <CloseIcon />
-                </IconButton>
-              </div>
-              <div style={{ overflow: 'hidden', padding: 2 }}>
-                <BasicSearch
-                  query={query}
-                  onSearch={query => {
-                    //setPageIndex(0)
-                    setQuery(query)
-                    onClear()
-                    onSearch(query)
-                  }}
-                />
-              </div>
-
-              <QueryStatus
-                sources={status}
-                onRun={srcs => {
+        {query === null ? (
+          <QuerySelector
+            queries={queries}
+            onSelect={query => {
+              onClear()
+              setQuery(query)
+            }}
+          />
+        ) : null}
+        {query !== null ? (
+          <div style={{ padding: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <TextField
+                style={{ marginBottom: 20 }}
+                label="Query Title"
+                value={query.title || ''}
+                fullWidth
+              />
+              <IconButton onClick={() => setQuery(null)}>
+                <CloseIcon />
+              </IconButton>
+            </div>
+            <div style={{ overflow: 'hidden', padding: 2 }}>
+              <BasicSearch
+                query={query}
+                onSearch={query => {
                   //setPageIndex(0)
-                  onSearch({ ...query, srcs })
-                }}
-                onCancel={srcs => {
-                  srcs.forEach(src => {
-                    onCancel(src)
-                  })
+                  setQuery(query)
+                  onClear()
+                  onSearch(query)
                 }}
               />
             </div>
-          ) : null}
-        </div>
+
+            <QueryStatus
+              sources={status}
+              onRun={srcs => {
+                //setPageIndex(0)
+                onSearch({ ...query, srcs })
+              }}
+              onCancel={srcs => {
+                srcs.forEach(src => {
+                  onCancel(src)
+                })
+              }}
+            />
+          </div>
+        ) : null}
       </div>
       <div style={{ flex: '1' }}>
         <MemoizedVisualizations results={results} />
