@@ -49,6 +49,18 @@ const getDirectionLabel = type => {
   }
 }
 
+const sampleAttributeDescriptors = [
+  { id: 'metadata', type: 'XML', __typename: 'MetacardType' },
+  { id: 'thumbnail', type: 'BINARY', __typename: 'MetacardType' },
+  { id: 'phonetics', type: 'BOOLEAN', __typename: 'MetacardType' },
+  { id: 'created', type: 'DATE', __typename: 'MetacardType' },
+  { id: 'media.bit-rate', type: 'DOUBLE', __typename: 'MetacardType' },
+  { id: 'media.width-pixels', type: 'INTEGER', __typename: 'MetacardType' },
+  { id: 'ext.population', type: 'LONG', __typename: 'MetacardType' },
+  { id: 'location', type: 'GEOMETRY', __typename: 'MetacardType' },
+  { id: 'topic.vocabulary', type: 'STRING', __typename: 'MetacardType' },
+]
+
 const AttributeSortOrder = props => {
   const { attributeDescriptors, onChange } = props
   const [attribute, setAttribute] = useState(attributeDescriptors[0])
@@ -132,7 +144,10 @@ const DirectionSelect = props => {
 }
 
 const SortOrder = props => {
-  const { attributeDescriptors, setSortOrder } = props
+  const {
+    attributeDescriptors = sampleAttributeDescriptors,
+    setSortOrder,
+  } = props
   const onChange = sort => {
     setSortOrder([sort])
   }
