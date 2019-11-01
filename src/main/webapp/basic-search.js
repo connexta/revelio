@@ -22,6 +22,9 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import Collapse from '@material-ui/core/Collapse'
 import SortOrder from './search-settings'
+import { useQuery } from '@apollo/react-hooks'
+import { useApolloClient } from '@apollo/react-hooks'
+import { sources as sourcesQuery } from './sources'
 
 import {
   APPLY_TO_KEY,
@@ -92,6 +95,8 @@ const defaultSorts = [
   },
 ]
 
+const defaultSources = ['ddf.distribution']
+
 const AddButton = ({ addFilter }) => {
   const [anchorEl, setAnchorEl] = React.useState(null)
   function handleClick(event) {
@@ -145,7 +150,7 @@ const SearchButton = props => (
 
 const populateDefaultQuery = (
   filterTree,
-  srcs = ['ddf.distribution'],
+  srcs = defaultSources,
   sorts = defaultSorts
 ) => ({
   srcs,
@@ -183,8 +188,8 @@ const MatchTypes = ({ state = [], setState, errors = {} }) => {
   )
 }
 
-const MatchSources = ({ state = ['ddf.distribution'], setState }) => {
-  const sources = ['ddf.distribution', 'csw', 'opensearch']
+const BasicSources = ({ state = ['ddf.distribution'], setState }) => {
+  const sources = getSources()
 
   return (
     <FormControl fullWidth>
@@ -206,6 +211,25 @@ const MatchSources = ({ state = ['ddf.distribution'], setState }) => {
       </Select>
     </FormControl>
   )
+}
+
+const getSources = () => {
+  try {
+    useApolloClient()
+    const { loading, data = {} } = useQuery(sourcesQuery)
+
+    if (loading) {
+      return defaultSources
+    }
+
+    const sources = data.sources
+      .filter(source => source.available)
+      .map(source => source.id)
+
+    return sources
+  } catch (e) {
+    return defaultSources
+  }
 }
 
 const BasicSortOrder = props => {
@@ -284,7 +308,7 @@ const filters = {
   [LOCATION_KEY]: BasicLocation,
   timeRange: BasicTimeRange,
   datatypes: MatchTypes,
-  sources: MatchSources,
+  sources: BasicSources,
   sortOrder: BasicSortOrder,
 }
 

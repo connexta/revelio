@@ -79,7 +79,7 @@ const useSourcePollInterval = init => {
   return data.systemProperties.sourcePollInterval
 }
 
-const sources = gql`
+export const sources = gql`
   query SourcesPages {
     sources {
       available
