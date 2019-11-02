@@ -22,9 +22,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import Collapse from '@material-ui/core/Collapse'
 import SortOrder from './search-settings'
-import { useQuery } from '@apollo/react-hooks'
-import { useApolloClient } from '@apollo/react-hooks'
-import { sources as sourcesQuery } from './sources'
+import { SourcesSelect } from './sources'
 
 import {
   APPLY_TO_KEY,
@@ -189,47 +187,7 @@ const MatchTypes = ({ state = [], setState, errors = {} }) => {
 }
 
 const BasicSources = ({ state = ['ddf.distribution'], setState }) => {
-  const sources = getSources()
-
-  return (
-    <FormControl fullWidth>
-      <InputLabel>Sources</InputLabel>
-      <Select
-        multiple
-        value={state}
-        onChange={e => setState(e.target.value)}
-        renderValue={selected => {
-          return selected.join(', ')
-        }}
-      >
-        {sources.map(source => (
-          <MenuItem key={source} value={source}>
-            <Checkbox checked={state.indexOf(source) > -1} />
-            <ListItemText primary={source} />
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  )
-}
-
-const getSources = () => {
-  try {
-    useApolloClient()
-    const { loading, data = {} } = useQuery(sourcesQuery)
-
-    if (loading) {
-      return defaultSources
-    }
-
-    const sources = data.sources
-      .filter(source => source.available)
-      .map(source => source.id)
-
-    return sources
-  } catch (e) {
-    return defaultSources
-  }
+  return <SourcesSelect value={state} onChange={setState} />
 }
 
 const BasicSortOrder = props => {
