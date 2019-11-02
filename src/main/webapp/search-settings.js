@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { useQuery, useApolloClient } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/react-hooks'
+import { useApolloFallback } from './react-hooks'
 import gql from 'graphql-tag'
 
 import LinearProgress from '@material-ui/core/LinearProgress'
@@ -201,15 +202,6 @@ const Container = props => {
   const attributeDescriptors = data.metacardTypes
 
   return <SortOrder {...props} attributeDescriptors={attributeDescriptors} />
-}
-
-const useApolloFallback = (container, component) => {
-  try {
-    useApolloClient()
-    return container
-  } catch (e) {
-    return component
-  }
 }
 
 export default props => {
