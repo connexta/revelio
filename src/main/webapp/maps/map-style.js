@@ -29,15 +29,15 @@ const featureColor = (feature, opacity = 1, defaultColor = DRAW_COLOR) => {
   }
 }
 
-const textStyleCache = new Map()
+const textStyleCache = {}
 
 const textStyle = feature => {
   const count = feature.get('features') ? feature.get('features').length : 0
   const text = count > 1 ? count.toString() : ''
   const fillColor = featureColor(feature, 1, ICON_COLOR)
-  const colorMap = textStyleCache.get(text) || new Map()
+  const colorMap = textStyleCache[text] || {}
   const style =
-    colorMap.get(fillColor) ||
+    colorMap[fillColor] ||
     new Text({
       text,
       font: 'bold 16px/1 verdana',
@@ -52,19 +52,19 @@ const textStyle = feature => {
         color: fillColor,
       }),
     })
-  colorMap.set(fillColor, style)
-  textStyleCache.set(text, colorMap)
+  colorMap[fillColor] = style
+  textStyleCache[text] = colorMap
   return style
 }
 
-const iconStyleCache = new Map()
+const iconStyleCache = {}
 
 const iconStyle = feature => {
   const color = featureColor(feature)
   const iconColor = featureColor(feature, 1, ICON_COLOR)
-  const iconColorMap = iconStyleCache.get(color) || new Map()
+  const iconColorMap = iconStyleCache[color] || {}
   const style =
-    iconColorMap.get(iconColor) ||
+    iconColorMap[iconColor] ||
     new Icon({
       fill: new Fill({
         color,
@@ -83,8 +83,8 @@ const iconStyle = feature => {
         ),
       scale: 2,
     })
-  iconColorMap.set(iconColor, style)
-  iconStyleCache.set(color, iconColorMap)
+  iconColorMap[iconColor] = style
+  iconStyleCache[color] = iconColorMap
   return style
 }
 

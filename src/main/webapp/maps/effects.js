@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import * as _ from 'lodash'
+import throttle from 'lodash.throttle'
 
 const UPDATE_DELAY = 33
 
@@ -7,7 +7,7 @@ const useCursorPosition = () => {
   const initialized = useRef()
   const [cursor, setCursorPosition] = useState({ lat: 0, lon: 0 })
   const [map, setMap] = useState(null)
-  const updateCursor = _.throttle(setCursorPosition, UPDATE_DELAY, {
+  const updateCursor = throttle(setCursorPosition, UPDATE_DELAY, {
     trailing: false,
   })
   useEffect(

@@ -20,7 +20,6 @@ const ClusterMap = ({
   const [sourceVector, setSourceVector] = useState(null)
   const geoFormat = new GeoJSON()
   const nonPointGeos = geos.filter(g => g.properties.shape !== shapes.POINT)
-  useEffect(() => {}, [])
   useEffect(
     () => {
       if (map && !sourceVector) {
