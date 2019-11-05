@@ -6,7 +6,7 @@ import WorldMapWithDrawMenu from './world-map-with-draw-menu'
 import { geometry, shapes, coordinates } from 'geospatialdraw'
 import { DRAWING_STYLE, RENDERER_STYLE } from './map-style'
 
-const stories = storiesOf('WorldMap', module)
+const stories = storiesOf('Maps', module)
 stories.addDecorator(withKnobs)
 
 const PROJECTION = 'EPSG:4326'
@@ -67,12 +67,12 @@ stories.add('draw geometry', () => {
     { isDrawing = true, geos = [], viewport = null },
     setDrawingState,
   ] = useState(true)
-  const searchGeoType = select(
+  const drawGeoType = select(
     'starting geometry',
     Object.keys(geometryCatalog),
     'none'
   )
-  const searchGeo = geometryCatalog[searchGeoType]
+  const drawGeo = geometryCatalog[drawGeoType]
   return (
     <WorldMapWithDrawMenu
       projection={PROJECTION}
@@ -85,14 +85,17 @@ stories.add('draw geometry', () => {
       isDrawing={isDrawing}
       mapStyle={RENDERER_STYLE}
       drawStyle={DRAWING_STYLE}
-      drawShape={searchGeo.shape}
-      drawGeo={searchGeo.geo}
+      drawShape={drawGeo.shape}
+      drawGeo={drawGeo.geo}
       onDrawnGeo={geo => {
+        const geos = geo ? [geo] : []
+        const viewport = geo ? geo.bbox : null
         setDrawingState({
           isDrawing: false,
-          geos: [geo],
-          viewport: geo.bbox,
+          geos,
+          viewport,
         })
+        window.geo = JSON.stringify(geo)
         action('Search For Geo')(geo)
       }}
       height="500px"

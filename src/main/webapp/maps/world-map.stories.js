@@ -41,7 +41,7 @@ const MAP_STYLE = feature =>
 
 const PROJECTION = 'EPSG:4326'
 
-const stories = storiesOf('WorldMap', module)
+const stories = storiesOf('Maps', module)
 stories.addDecorator(withKnobs)
 
 stories.add('bare map', () => {
@@ -305,7 +305,7 @@ stories.add('render geometries', () => {
   ]
   const shapeIndex = select(
     'Pan To',
-    ['none', '1', '2', '3', '4', '5', '6', '7'],
+    ['none', ...geos.map((_x, i) => (i + 1).toString())],
     'none'
   )
   const viewport = shapeIndex === 'none' ? null : geos[shapeIndex - 1].bbox

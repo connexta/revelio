@@ -23,8 +23,7 @@ const usePropOveriddenState = propValue => {
   const oldValue = useRef(propValue)
   useEffect(
     () => {
-      if (oldValue.current !== propValue &&
-        stateValue !== propValue) {
+      if (oldValue.current !== propValue && stateValue !== propValue) {
         oldValue.current = propValue
         setStateValue(propValue)
       }
@@ -48,14 +47,13 @@ const WorldMapWithDrawMenu = ({
   const [activeDrawShape, setActiveDrawShape] = usePropOveriddenState(drawShape)
   const [drawToolbox, setToolbox] = useState(null)
   const [map, setMap] = useState(null)
-  const setGeo = geo => {
-    setActiveDrawGeo(geo)
-    console.log(geo, activeDrawGeo)
+  const setShape = shape => {
+    setActiveDrawGeo(null)
+    setActiveDrawShape(shape)
   }
   useEffect(
     () => {
       if (map && !drawToolbox) {
-        console.log('new toolbox')
         setToolbox(
           new drawing.openlayers.DrawingToolbox({
             map,
@@ -84,8 +82,8 @@ const WorldMapWithDrawMenu = ({
             geometry={activeDrawGeo}
             onCancel={onDrawCancel}
             onOk={onDrawOk}
-            onSetShape={setActiveDrawShape}
-            onUpdate={setGeo}
+            onSetShape={setShape}
+            onUpdate={setActiveDrawGeo}
             disabledShapes={['Point']}
             defaultGeoProperties={defaultGeoProperties}
           />

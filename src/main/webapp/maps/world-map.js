@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  memo,
+} from 'react'
 import { Map as OpenLayersMap, View } from 'ol'
 import Tile from 'ol/layer/Tile'
 import OSM from 'ol/source/OSM'
@@ -23,7 +29,7 @@ const Coordinates = ({ lat, lon, coordinateType }) =>
 const WorldMap = ({
   projection,
   style,
-  geos,
+  geos = [],
   viewport = null,
   maxZoom,
   minZoom,
@@ -85,7 +91,7 @@ const WorldMap = ({
     () => {
       if (mapControls) {
         mapControls.geoRenderer.clearGeos()
-        mapControls.geoRenderer.renderList(geos || [])
+        mapControls.geoRenderer.renderList(geos)
       }
     },
     [mapControls, geos]
@@ -138,4 +144,4 @@ const WorldMap = ({
   )
 }
 
-export default WorldMap
+export default memo(WorldMap)
