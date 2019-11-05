@@ -3,6 +3,7 @@ const { SchemaLink } = require('apollo-link-schema')
 const { InMemoryCache } = require('apollo-cache-inmemory')
 const { makeExecutableSchema } = require('graphql-tools')
 const { createTransport } = require('./transport')
+const { createHttpLink } = require('apollo-link-http')
 
 const fetch = require('./fetch')
 
@@ -364,11 +365,16 @@ const executableSchema = makeExecutableSchema({
   resolvers,
 })
 
+const isServer = process.env.isServer || false
+const serverLocation =
+  process.env.serverLocation || 'http://localhost:4000/graphql'
+
 const createClient = () => {
   const cache = new InMemoryCache()
-
   return new ApolloClient({
-    link: new SchemaLink({ schema: executableSchema }),
+    link: isServer
+      ? createHttpLink({ uri: serverLocation })
+      : new SchemaLink({ schema: executableSchema }),
     cache,
   })
 }
