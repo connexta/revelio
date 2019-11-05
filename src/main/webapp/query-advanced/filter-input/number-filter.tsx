@@ -24,9 +24,20 @@ const floatRegex = /^-?\d*(\.\d*)?$|^$/
 const isInteger = (type: any) =>
   type === 'INTEGER' || type === 'SHORT' || type === 'LONG'
 
+const validateNumber = (num: string) => {
+  const errors: any = {}
+  if (num === '') {
+    errors.value = 'A value must be entered'
+  }
+  return errors
+}
+
 const FloatInput = (props: any) => {
+  const errors = validateNumber(props.value)
   return (
     <TextField
+      error={errors.value !== undefined}
+      helperText={errors.value}
       onChange={event => {
         const value = event.target.value
         if (value.match(floatRegex)) {
@@ -41,8 +52,11 @@ const FloatInput = (props: any) => {
 }
 
 const IntegerInput = (props: any) => {
+  const errors = validateNumber(props.value)
   return (
     <TextField
+      error={errors.value !== undefined}
+      helperText={errors.value}
       onChange={event => {
         const value = event.target.value
         if (value.match(intRegex)) {
@@ -63,7 +77,6 @@ const NumberInput = (props: any) => {
   }
 }
 
-//TODO Convert value to number on way out of query-advanced - currently being passed as string
 const NumberFilter = (props: QueryFilterProps) => {
   const isInt = isInteger(metacardDefinitions.get(props.property))
   if (props.type !== 'BETWEEN') {

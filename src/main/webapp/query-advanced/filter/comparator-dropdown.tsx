@@ -23,15 +23,11 @@ const ComparatorMenu = (props: Props) => {
       >
         <Box>
           <Box
-            style={{
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              justifyContent: 'left',
-              float: 'left',
-              maxWidth: 'calc(100% - 24px)',
-              textTransform: 'none',
-            }}
+            whiteSpace="nowrap"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            justifyContent="left"
+            maxWidth="calc(100% - 24px)"
             component="span"
           >
             {props.aliases
