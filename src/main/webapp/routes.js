@@ -43,6 +43,7 @@ import SimpleSearch from './simple-search'
 import ResultForms from './result-forms'
 import WorkspacesIndex, { Workspace } from './workspaces/workspaces'
 import UserSettings from './user-settings'
+import User from './user'
 
 const Link = props => {
   return (
@@ -109,6 +110,7 @@ const NavBar = props => {
         </Typography>
 
         <UserSettings />
+        <User />
       </Toolbar>
     </AppBar>
   )

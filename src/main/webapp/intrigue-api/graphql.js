@@ -381,7 +381,7 @@ const deleteMetacard = async (parent, args) => {
 const updateUserPreferences = async (parent, args) => {
   const { userPreferences } = args
 
-  const user = await fetch(`${ROOT}/internal/user`)
+  const user = await fetch(`${ROOT}/user`)
   const json = await user.json()
   let previousPreferences = {}
   if (user.ok) {
@@ -393,7 +393,7 @@ const updateUserPreferences = async (parent, args) => {
     fromJS(removeTypename(userPreferences))
   ).toJS()
 
-  const res = await fetch(`./internal/user/preferences`, {
+  const res = await fetch(`${ROOT}/user/preferences`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
