@@ -21,6 +21,8 @@ import Typography from '@material-ui/core/Typography'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import Collapse from '@material-ui/core/Collapse'
+import SortOrder from './search-settings'
+import { SourcesSelect } from './sources'
 
 import {
   APPLY_TO_KEY,
@@ -81,7 +83,17 @@ const filterMap = {
   timeRange: 'Time Range',
   datatypes: 'Match Types',
   sources: 'Sources',
+  sortOrder: 'Sort Order',
 }
+
+const defaultSorts = [
+  {
+    attribute: 'modified',
+    direction: 'descending',
+  },
+]
+
+const defaultSources = ['ddf.distribution']
 
 const AddButton = ({ addFilter }) => {
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -96,7 +108,7 @@ const AddButton = ({ addFilter }) => {
   return (
     <React.Fragment>
       <Button onClick={handleClick} style={{ marginLeft: '20px' }}>
-        Add Filters
+        Add Options
       </Button>
 
       <Menu
@@ -134,17 +146,16 @@ const SearchButton = props => (
   </Button>
 )
 
-const populateDefaultQuery = (filterTree, srcs = ['ddf.distribution']) => ({
+const populateDefaultQuery = (
+  filterTree,
+  srcs = defaultSources,
+  sorts = defaultSorts
+) => ({
   srcs,
   start: 1,
   count: 250,
   filterTree,
-  sorts: [
-    {
-      attribute: 'modified',
-      direction: 'descending',
-    },
-  ],
+  sorts,
   spellcheck: false,
   phonetics: false,
 })
@@ -175,29 +186,14 @@ const MatchTypes = ({ state = [], setState, errors = {} }) => {
   )
 }
 
-const MatchSources = ({ state = ['ddf.distribution'], setState }) => {
-  const sources = ['ddf.distribution', 'csw', 'opensearch']
+const BasicSources = ({ state = ['ddf.distribution'], setState }) => {
+  return <SourcesSelect value={state} onChange={setState} />
+}
 
-  return (
-    <FormControl fullWidth>
-      <InputLabel>Sources</InputLabel>
-      <Select
-        multiple
-        value={state}
-        onChange={e => setState(e.target.value)}
-        renderValue={selected => {
-          return selected.join(', ')
-        }}
-      >
-        {sources.map(source => (
-          <MenuItem key={source} value={source}>
-            <Checkbox checked={state.indexOf(source) > -1} />
-            <ListItemText primary={source} />
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  )
+const BasicSortOrder = props => {
+  const { setState } = props
+
+  return <SortOrder setSortOrder={setState} />
 }
 
 const BasicTimeRange = ({ state = Map(), setState, errors }) => {
@@ -270,7 +266,8 @@ const filters = {
   [LOCATION_KEY]: BasicLocation,
   timeRange: BasicTimeRange,
   datatypes: MatchTypes,
-  sources: MatchSources,
+  sources: BasicSources,
+  sortOrder: BasicSortOrder,
 }
 
 const filterLabels = {
@@ -278,6 +275,7 @@ const filterLabels = {
   timeRange: 'Time Range',
   datatypes: 'Match Types',
   sources: 'Sources',
+  sortOrder: 'Sort Order',
 }
 
 const defaultFilters = {
@@ -425,7 +423,8 @@ export const BasicSearch = props => {
               props.onSearch(
                 populateDefaultQuery(
                   toFilterTree(filterTree),
-                  filterTree.get('sources')
+                  filterTree.get('sources'),
+                  filterTree.get('sortOrder')
                 )
               )
             }

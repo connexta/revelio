@@ -5,14 +5,20 @@ import gql from 'graphql-tag'
 
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
+import Checkbox from '@material-ui/core/Checkbox'
 import Divider from '@material-ui/core/Divider'
+import FormControl from '@material-ui/core/FormControl'
+import InputLabel from '@material-ui/core/InputLabel'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
+import MenuItem from '@material-ui/core/MenuItem'
 import Typography from '@material-ui/core/Typography'
 import OnlineIcon from '@material-ui/icons/CloudDoneOutlined'
 import OfflineIcon from '@material-ui/icons/OfflineBoltOutlined'
+import Select from '@material-ui/core/Select'
+import { useApolloFallback } from './react-hooks'
 
 const sourcesMessage = offlineCount => {
   if (offlineCount === 0) {
@@ -25,6 +31,15 @@ const sourcesMessage = offlineCount => {
 
   return `${offlineCount} sources are currently down`
 }
+
+export const sources = gql`
+  query SourcesPages {
+    sources {
+      available
+      id
+    }
+  }
+`
 
 export const Sources = props => {
   const { sources } = props
@@ -61,6 +76,57 @@ export const Sources = props => {
   )
 }
 
+const SourcesSelectComponent = props => {
+  const { sources = [], value = [], onChange } = props
+
+  return (
+    <FormControl fullWidth>
+      <InputLabel>Sources</InputLabel>
+      <Select
+        multiple
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        renderValue={selected => {
+          return selected.join(', ')
+        }}
+      >
+        {sources.map(source => (
+          <MenuItem key={source} value={source}>
+            <Checkbox checked={value.indexOf(source) > -1} />
+            <ListItemText primary={source} />
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  )
+}
+
+const SourcesSelectContainer = props => {
+  const { loading, data = {} } = useQuery(sources)
+
+  return (
+    <SourcesSelectComponent
+      {...props}
+      sources={
+        loading
+          ? []
+          : data.sources
+              .filter(source => source.available)
+              .map(source => source.id)
+      }
+    />
+  )
+}
+
+const SourcesSelect = props => {
+  const Component = useApolloFallback(
+    SourcesSelectContainer,
+    SourcesSelectComponent
+  )
+
+  return <Component {...props} />
+}
+
 const pollInterval = gql`
   query SourcePollInterval {
     systemProperties {
@@ -79,14 +145,7 @@ const useSourcePollInterval = init => {
   return data.systemProperties.sourcePollInterval
 }
 
-const sources = gql`
-  query SourcesPages {
-    sources {
-      available
-      id
-    }
-  }
-`
+export { SourcesSelect }
 
 export default () => {
   const pollInterval = useSourcePollInterval(60000)
