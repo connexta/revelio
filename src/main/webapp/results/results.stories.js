@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Results } from './results'
-import { storiesOf } from '@connexta/ace/@storybook/react'
+import { storiesOf } from '../@storybook/react'
 import Skeleton from '@material-ui/lab/Skeleton'
 import { boolean } from '@connexta/ace/@storybook/addon-knobs'
 import tn from './story-thumb'

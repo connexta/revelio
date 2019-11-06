@@ -1,4 +1,4 @@
-import { storiesOf } from '@connexta/ace/@storybook/react'
+const { storiesOf } = require('../@storybook/react')
 import QueryAdvanced from './query-advanced'
 import * as React from 'react'
 import { action } from '@storybook/addon-actions'

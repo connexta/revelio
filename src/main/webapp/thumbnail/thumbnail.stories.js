@@ -1,6 +1,6 @@
 import React from 'react'
 import Thumbnail from './thumbnail'
-import { storiesOf } from '@connexta/ace/@storybook/react'
+import { storiesOf } from '../@storybook/react'
 import { withKnobs, select } from '@connexta/ace/@storybook/addon-knobs'
 
 const stories = storiesOf('Thumbnail', module)
