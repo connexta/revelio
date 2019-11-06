@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { storiesOf } from '@connexta/ace/@storybook/react'
+import { storiesOf } from '../@storybook/react'
 
 import Visualizations from './visualizations'
 import { SelectionProvider } from '../react-hooks/use-selection-interface'

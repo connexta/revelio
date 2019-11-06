@@ -1,6 +1,6 @@
 import { action } from '@connexta/ace/@storybook/addon-actions'
 import { boolean } from '@connexta/ace/@storybook/addon-knobs'
-import { storiesOf } from '@connexta/ace/@storybook/react'
+import { storiesOf } from '../@storybook/react'
 import { Map } from 'immutable'
 import React from 'react'
 import HiddenResultsSettings from './hidden-results-settings'

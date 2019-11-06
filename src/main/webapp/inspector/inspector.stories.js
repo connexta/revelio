@@ -1,5 +1,5 @@
 import React from 'react'
-import { storiesOf } from '@connexta/ace/@storybook/react'
+import { storiesOf } from '../@storybook/react'
 import { select, array } from '@connexta/ace/@storybook/addon-knobs'
 
 import result from '../sample-result.json'

@@ -1,5 +1,5 @@
 import { action } from '@connexta/ace/@storybook/addon-actions'
-import { storiesOf } from '@connexta/ace/@storybook/react'
+import { storiesOf } from './@storybook/react'
 import { Map } from 'immutable'
 import React from 'react'
 import Line, { validate as validateLine } from './line'

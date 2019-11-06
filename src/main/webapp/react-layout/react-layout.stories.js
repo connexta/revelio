@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { storiesOf } from '@connexta/ace/@storybook/react'
+import { storiesOf } from '..//@storybook/react'
 import { action } from '@connexta/ace/@storybook/addon-actions'
 
 import { Provider, Layout } from './react-layout'
