@@ -20,6 +20,7 @@ import gql from 'graphql-tag'
 import { fromJS, Map } from 'immutable'
 import React from 'react'
 import { useApolloFallback } from '../react-hooks'
+import { mergeDeep } from '../utils'
 import HiddenResultsSettings from './hidden-results-settings'
 import NotificationSettings from './notification-settings'
 import SearchSettings from './search-setttings'
@@ -254,8 +255,15 @@ const Container = () => {
       value={Map(data.user.preferences)}
       systemProperties={data.systemProperties}
       onSave={userPreferences => {
-        if (!fromJS(data.user.preferences).equals(fromJS(userPreferences))) {
-          updateUserPreferences({ variables: { userPreferences } })
+        const newPreferences = mergeDeep(
+          fromJS(data.user.preferences),
+          fromJS(userPreferences)
+        )
+
+        if (!fromJS(data.user.preferences).equals(newPreferences)) {
+          updateUserPreferences({
+            variables: { userPreferences: newPreferences.toJS() },
+          })
         }
       }}
     />

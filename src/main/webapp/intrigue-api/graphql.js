@@ -1,14 +1,25 @@
-const { ApolloClient } = require('apollo-client')
-const { SchemaLink } = require('apollo-link-schema')
-const { InMemoryCache } = require('apollo-cache-inmemory')
-const { makeExecutableSchema } = require('graphql-tools')
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import { ApolloClient } from 'apollo-client'
+import { SchemaLink } from 'apollo-link-schema'
+import { makeExecutableSchema } from 'graphql-tools'
+import { fromJS } from 'immutable'
+import { mergeDeep } from '../utils'
+const fetch = require('./fetch')
+const ROOT = '/search/catalog/internal'
+const { genSchema, toGraphqlName, fromGraphqlName } = require('./gen-schema')
 const { BatchHttpLink } = require('apollo-link-batch-http')
 
-const fetch = require('./fetch')
+const removeProperty = propertyName => data =>
+  data
+    .filter((_, key) => key !== propertyName)
+    .map(
+      property =>
+        typeof property !== 'object' || property === null
+          ? property
+          : removeProperty(propertyName)(property)
+    )
 
-const ROOT = '/search/catalog/internal'
-
-const { genSchema, toGraphqlName, fromGraphqlName } = require('./gen-schema')
+const removeTypename = data => removeProperty('__typename')(fromJS(data)).toJS()
 
 const getBuildInfo = () => {
   /* eslint-disable */
@@ -370,12 +381,24 @@ const deleteMetacard = async (parent, args) => {
 const updateUserPreferences = async (parent, args) => {
   const { userPreferences } = args
 
-  const res = await fetch(`${ROOT}/user/preferences`, {
+  const user = await fetch(`${ROOT}/internal/user`)
+  const json = await user.json()
+  let previousPreferences = {}
+  if (user.ok) {
+    previousPreferences = json.preferences
+  }
+
+  const body = mergeDeep(
+    fromJS(previousPreferences),
+    fromJS(removeTypename(userPreferences))
+  ).toJS()
+
+  const res = await fetch(`./internal/user/preferences`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(userPreferences),
+    body: JSON.stringify(body),
   })
 
   if (res.ok) {
