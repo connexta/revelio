@@ -40,8 +40,6 @@ const WorldMap = ({
   height = '100%',
 }) => {
   const mapDiv = useRef(null)
-  const mapLoaded = useRef(false)
-  const previousViewport = useRef(null)
   const [mapControls, createMapControls] = useState(null)
   const [container, setContainer] = useState({ width: 0, height: 0 })
   const { cursor, setMap } = useCursorPosition()
@@ -79,13 +77,12 @@ const WorldMap = ({
   )
   useEffect(
     () => {
-      if (mapControls && !mapLoaded.current) {
-        mapLoaded.current = true
+      if (mapControls) {
         setMap(mapControls.map)
         onMapLoaded(mapControls.map)
       }
     },
-    [mapControls, setMap, onMapLoaded, mapLoaded]
+    [mapControls, setMap, onMapLoaded]
   )
   useEffect(
     () => {
@@ -99,15 +96,10 @@ const WorldMap = ({
   useEffect(
     () => {
       if (mapControls && viewport) {
-        if (
-          JSON.stringify(viewport) !== JSON.stringify(previousViewport.current)
-        ) {
-          mapControls.geoRenderer.panToExtent(viewport)
-        }
-        previousViewport.current = viewport.slice(0)
+        mapControls.geoRenderer.panToExtent(viewport)
       }
     },
-    [mapControls, previousViewport, viewport]
+    [mapControls, viewport]
   )
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
