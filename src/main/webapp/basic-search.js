@@ -191,9 +191,9 @@ const BasicSources = ({ state = ['ddf.distribution'], setState }) => {
 }
 
 const BasicSortOrder = props => {
-  const { setState } = props
+  const { state, setState } = props
 
-  return <SortOrder setSortOrder={setState} />
+  return <SortOrder value={state} onChange={setState} />
 }
 
 const BasicTimeRange = ({ state = Map(), setState, errors }) => {
