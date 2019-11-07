@@ -1,5 +1,6 @@
 import React, { Fragment, useRef, useState, useEffect, useContext } from 'react'
 import ReactDOM from 'react-dom'
+import { makeStyles } from '@material-ui/core/styles'
 
 import GoldenLayout from 'golden-layout'
 
@@ -64,6 +65,76 @@ export const DragSource = ({ children, config }) => {
   return <div ref={source}>{children}</div>
 }
 
+const useStyles = makeStyles(theme => {
+  const { typography, palette } = theme
+
+  const background = palette.background.default
+  const text = palette.text.secondary
+  const primary = palette.primary.main
+  const { fontFamily } = typography
+
+  const root = height => {
+    return {
+      '& .lm_content': {
+        background,
+        border: `1px solid ${palette.divider}`,
+      },
+      '& .lm_splitter:hover': {
+        background: palette.divider,
+      },
+      '& .lm_goldenlayout': {
+        background,
+      },
+      '& .lm_header': {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+
+        '& .lm_controls': {
+          position: 'static',
+          marginRight: height / 2,
+        },
+
+        '& .lm_tabs': {
+          height: '100%',
+          position: 'static',
+
+          '& .lm_title': {
+            fontFamily,
+            color: text,
+            marginRight: height / 2,
+            fontSize: height / 3,
+          },
+
+          '& .lm_tab': {
+            height: 'calc(100% - 2px)',
+            background,
+            padding: '0 20px',
+            margin: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            boxShadow: 'none',
+          },
+
+          '& .lm_tab.lm_active ': {
+            borderBottom: `2px solid ${primary}`,
+            '& .lm_title': {
+              color: primary,
+            },
+          },
+
+          '& .lm_close_tab': {
+            position: 'static !important',
+          },
+        },
+      },
+    }
+  }
+
+  return { root }
+})
+
 export const Layout = props => {
   const container = useRef(null)
   const [regions, setRegions] = useState([])
@@ -72,13 +143,37 @@ export const Layout = props => {
   /* eslint-disable no-unused-vars */
   const [dimensions, setDimensions] = useState(null)
   /* eslint-enable no-unused-vars */
+  const height = 48
+  const { root } = useStyles(height)
 
   useEffect(() => {
     if (container.current === null) {
       return
     }
 
-    const layout = new GoldenLayout(config, container.current)
+    const layout = new GoldenLayout(
+      {
+        settings: {
+          showPopoutIcon: false,
+          responsiveMode: 'none',
+        },
+        dimensions: {
+          headerHeight: height,
+          dragProxyWidth: 300,
+          dragProxyHeight: 200,
+        },
+        labels: {
+          close: 'close',
+          maximise: 'maximize',
+          minimise: 'minimize',
+          popout: 'open in new window',
+          popin: 'pop in',
+          tabDropdown: 'additional tabs',
+        },
+        ...config,
+      },
+      container.current
+    )
 
     setLayout(layout)
 
@@ -142,7 +237,11 @@ export const Layout = props => {
 
   return (
     <Fragment>
-      <div style={{ height: '100%', width: '100%' }} ref={container} />
+      <div
+        className={root}
+        style={{ height: '100%', width: '100%' }}
+        ref={container}
+      />
       {regions.map(region => {
         const { key, el } = region
         const Component = components[key]
