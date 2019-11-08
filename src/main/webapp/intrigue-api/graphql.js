@@ -1,20 +1,20 @@
-import { ApolloClient } from 'apollo-client'
-import { SchemaLink } from 'apollo-link-schema'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import { makeExecutableSchema } from 'graphql-tools'
-import { createTransport } from './transport'
+const { ApolloClient } = require('apollo-client')
+const { SchemaLink } = require('apollo-link-schema')
+const { InMemoryCache } = require('apollo-cache-inmemory')
+const { makeExecutableSchema } = require('graphql-tools')
+const { BatchHttpLink } = require('apollo-link-batch-http')
 
-import fetch from './fetch'
+const fetch = require('./fetch')
 
 const ROOT = '/search/catalog/internal'
 
-import { genSchema, toGraphqlName, fromGraphqlName } from './gen-schema'
+const { genSchema, toGraphqlName, fromGraphqlName } = require('./gen-schema')
 
 const getBuildInfo = () => {
   /* eslint-disable */
-  const commitHash = __COMMIT_HASH__
-  const isDirty = __IS_DIRTY__
-  const commitDate = __COMMIT_DATE__
+  const commitHash = process.env.__COMMIT_HASH__ || ''
+  const isDirty = process.env.__IS_DIRTY__ || ''
+  const commitDate = process.env.__COMMIT_DATE__ || ''
   /* eslint-enable */
 
   return {
@@ -38,10 +38,51 @@ const systemProperties = async () => {
   }
 }
 
-const { send } = createTransport({
-  ...window.location,
-  pathname: ROOT,
-})
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
+
+const { write } = require('./cql')
+
+const getCql = ({ filterTree, cql }) => {
+  if (filterTree !== undefined) {
+    return '(' + write(filterTree) + ')'
+  }
+  return cql
+}
+
+const processQuery = ({ filterTree, cql, ...query }) => {
+  const cqlString = getCql({ filterTree, cql })
+  return JSON.stringify({ cql: cqlString, ...query })
+}
+
+const handleError = (code, data) => {
+  let e = null
+
+  try {
+    const json = typeof data === 'string' ? JSON.parse(data) : data
+    const message = json.message || 'Unknown error'
+    const error = Error(`${code}: ${message}`)
+    error.data = json
+    e = error
+  } catch (_) {
+    e = Error(data)
+  }
+
+  e.code = code
+  throw e
+}
+
+const send = async query => {
+  const res = await fetch(`${ROOT}/cql`, {
+    method: 'POST',
+    body: processQuery(query),
+  })
+
+  if (!res.ok) {
+    handleError(res.status, await res.text())
+  }
+
+  return res.json()
+}
 
 const renameKeys = (f, map) => {
   return Object.keys(map).reduce((attrs, attr) => {
@@ -105,8 +146,7 @@ const queries = ids => async parent => {
 
 const metacards = async (ctx, args) => {
   const q = { ...args.settings, filterTree: args.filterTree }
-  const req = send(q)
-  const json = await req.json()
+  const json = await send(q)
 
   const attributes = json.results.map(result => {
     const properties = toGraphqlMap(result.metacard.properties)
@@ -231,8 +271,7 @@ const facet = async (parent, args) => {
     facets: [attribute],
   }
 
-  const req = send(q)
-  const json = await req.json()
+  const json = await send(q)
 
   const facet = json.facets[attribute]
 
@@ -331,7 +370,7 @@ const deleteMetacard = async (parent, args) => {
 const updateUserPreferences = async (parent, args) => {
   const { userPreferences } = args
 
-  const res = await fetch(`./internal/user/preferences`, {
+  const res = await fetch(`${ROOT}/user/preferences`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -361,11 +400,21 @@ const executableSchema = makeExecutableSchema({
   resolvers,
 })
 
-export const createClient = () => {
-  const cache = new InMemoryCache()
+const isServer = process.env.GRAPHQL_SERVER || false
+const serverLocation =
+  process.env.SERVER_LOCATION || 'http://localhost:4000/graphql'
 
+const createClient = () => {
+  const cache = new InMemoryCache()
   return new ApolloClient({
-    link: new SchemaLink({ schema: executableSchema }),
+    link: isServer
+      ? new BatchHttpLink({ uri: serverLocation })
+      : new SchemaLink({ schema: executableSchema }),
     cache,
   })
+}
+
+module.exports = {
+  createClient,
+  resolvers,
 }

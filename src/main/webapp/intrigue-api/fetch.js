@@ -15,29 +15,34 @@
 
 const url = require('url')
 const qs = require('querystring')
+const fetch = require('isomorphic-fetch')
 
-type Options = {
-  headers?: object
-  [key: string]: unknown
-}
-
-const fetch = window.fetch
-
-const cacheBust = (urlString: string) => {
+const cacheBust = urlString => {
   const { query, ...rest } = url.parse(urlString)
   return url.format({
     ...rest,
+    hostname: 'localhost',
+    port: '8993',
+    protocol: 'https:',
+    ...(typeof window !== 'undefined' ? window.location : {}),
+    pathname: rest.pathname,
     search: '?' + qs.stringify({ ...qs.parse(query), _: Date.now() }),
   })
 }
 
-export default function(url: string, { headers, ...opts }: Options = {}) {
+module.exports = (url, { headers, ...opts } = {}) => {
+  const auth = Buffer.from('admin:admin').toString('base64')
+
   return fetch(cacheBust(url), {
     credentials: 'same-origin',
     cache: 'no-cache',
     ...opts,
     headers: {
+      'User-Agent': 'ace',
       'X-Requested-With': 'XMLHttpRequest',
+      Authorization: `Basic ${auth}`,
+      'Content-Type': 'application/json',
+      Referer: `https://localhost:8993`,
       ...headers,
     },
   })
