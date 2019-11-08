@@ -301,7 +301,7 @@ export const validate = (timeRange = {}) => {
       if (from && to) {
         if (from >= to) {
           errors.to = `'To' date must be after 'From' date`
-          errors.from = `'From' date must be befor 'To' date`
+          errors.from = `'From' date must be before 'To' date`
         }
       }
       break
@@ -309,7 +309,7 @@ export const validate = (timeRange = {}) => {
 
     case '=': {
       const { last, unit } = timeRange
-      if (isNaN(last) || last < 1) {
+      if (isNaN(last) || last <= 0) {
         errors.last = 'Value must be > 0'
       }
 

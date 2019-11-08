@@ -123,7 +123,7 @@ export const fromFilterTree = filterTree => {
 }
 
 export const parseRelative = relative => {
-  const matches = relative.match(/RELATIVE\((\D*)(\d*)(\D*)\)/)
+  const matches = relative.match(/RELATIVE\((PT?)(\d*)(\D*)\)/)
   if (matches && matches.length > 3) {
     /* eslint-disable no-unused-vars */
     const [full, timeOrDay, last, unitKey] = matches
