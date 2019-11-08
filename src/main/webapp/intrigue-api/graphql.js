@@ -26,7 +26,7 @@ const getBuildInfo = () => {
   }
 }
 
-const systemProperties = async (_source, _args, context) => {
+const systemProperties = async () => {
   const [configProperties, configUiProperties] = await Promise.all([
     (await fetch(`${ROOT}/config`)).json(),
     (await fetch(`${ROOT}/platform/config/ui`)).json(),
@@ -235,7 +235,7 @@ const metacardById = async (ctx, args) => {
   })
 }
 
-const user = async (_source, _args, context) => {
+const user = async () => {
   const res = await fetch(`${ROOT}/user`)
   return res.json()
 }

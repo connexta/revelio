@@ -13,7 +13,6 @@
     "eslint-plugin-react-hooks": "^2.1.2",
     "mocha": "^5.2.0",
     "node-fetch": "^2.6.0",
-    "rpc-websockets": "4.0.0",
     "tempfile": "^3.0.0",
     "typescript": "^3.6.4"
   },
