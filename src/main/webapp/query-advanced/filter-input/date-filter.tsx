@@ -1,6 +1,10 @@
 import * as React from 'react'
 import { QueryFilterProps } from '../filter/filter'
-const { default: TimeRange, createTimeRange } = require('../../time-range')
+const {
+  default: TimeRange,
+  createTimeRange,
+  validate,
+} = require('../../time-range')
 const { uglyMap, parseRelative } = require('../../basic-search-helper')
 
 export const comparatorOptions = ['BEFORE', 'AFTER', '=', 'DURING', 'IS NULL']
@@ -52,9 +56,11 @@ const DateFilter = (props: QueryFilterProps) => {
       type: timeRange.type,
     }
   }
+  const value = fromFilter(props)
   return (
     <TimeRange
-      timeRange={fromFilter(props)}
+      errors={validate(value)}
+      timeRange={value}
       setTimeRange={(value: any) => {
         props.onChange(toFilter(value))
       }}

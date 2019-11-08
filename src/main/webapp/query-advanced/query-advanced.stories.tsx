@@ -44,7 +44,7 @@ stories.add('basic', () => {
   return (
     <QueryAdvanced
       limitDepth={number('Nesting Depth', 1)}
-      {...baseFilterGroup}
+      filterTree={baseFilterGroup}
       onSearch={(value: any) => {
         action('onSearch')(value)
       }}
@@ -56,7 +56,7 @@ stories.add('with deserialized filters', () => {
   return (
     <QueryAdvanced
       limitDepth={number('Nesting Depth', 1)}
-      {...deserializedFilters}
+      filterTree={deserializedFilters}
       onSearch={(value: any) => {
         action('onSearch')(value)
       }}

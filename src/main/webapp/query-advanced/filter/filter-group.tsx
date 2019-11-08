@@ -44,7 +44,7 @@ const FilterGroup = withRemoveButton(
 
 const Header = (props: FilterGroupProps) => {
   return (
-    <Box style={{ display: 'flex' }}>
+    <Box display="flex">
       <Operator
         onChange={(value: string) => {
           props.onChange({ ...getValue(props), type: value })
@@ -61,7 +61,7 @@ const Header = (props: FilterGroupProps) => {
         variant="outlined"
       >
         <Add fontSize="small" style={{ marginRight: 5 }} />
-        <Box style={{ margin: 'auto' }}>Add Field</Box>
+        <Box m="auto">Add Field</Box>
       </Button>
       {(props.limitDepth === undefined || props.limitDepth !== 0) && (
         <Button
@@ -74,7 +74,7 @@ const Header = (props: FilterGroupProps) => {
           variant="outlined"
         >
           <Add fontSize="small" style={{ marginRight: 5 }} />
-          <Box style={{ margin: 'auto' }}>Add Group</Box>
+          <Box m="auto">Add Group</Box>
         </Button>
       )}
     </Box>
