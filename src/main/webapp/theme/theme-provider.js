@@ -2,6 +2,7 @@ import React from 'react'
 
 import { dark, light } from './theme'
 import { MuiThemeProvider } from '@material-ui/core/styles'
+import { getIn } from 'immutable'
 
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
@@ -19,17 +20,11 @@ const query = gql`
 `
 
 const useTheme = () => {
-  const { loading, error, data } = useQuery(query)
+  const { data } = useQuery(query)
 
-  if (loading || error) {
-    return light
-  }
+  const theme = getIn(data, ['user', 'preferences', 'theme', 'theme'], 'light')
 
-  if (data.user.preferences.theme.theme === 'dark') {
-    return dark
-  }
-
-  return light
+  return theme === 'dark' ? dark : light
 }
 
 export default ({ children }) => {
