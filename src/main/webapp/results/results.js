@@ -13,6 +13,7 @@ import More from '@material-ui/icons/UnfoldMore'
 import Less from '@material-ui/icons/UnfoldLess'
 import DefaultThumbnail from '../thumbnail/thumbnail'
 import Button from '@material-ui/core/Button'
+import Checkbox from '@material-ui/core/Checkbox'
 
 const cellStyles = {
   minWidth: 150,
@@ -97,10 +98,36 @@ const getCellContent = (attribute, result, Thumbnail) => {
 const getId = result => result.metacard.properties.id
 
 const Result = props => {
-  const { attributes, selected, onClick, Thumbnail, result } = props
+  const {
+    attributes,
+    selected,
+    onClick,
+    onSelect,
+    onRemove,
+    Thumbnail,
+    result,
+  } = props
   const id = getId(result)
   return (
-    <TableRow onClick={onClick} key={id} selected={selected}>
+    <TableRow
+      onClick={onClick}
+      key={id}
+      selected={selected}
+      style={{ cursor: 'pointer' }}
+    >
+      <TableCell>
+        <Checkbox
+          checked={selected}
+          onClick={e => {
+            e.stopPropagation()
+            if (e.target.checked) {
+              onSelect()
+            } else {
+              onRemove()
+            }
+          }}
+        />
+      </TableCell>
       {attributes.map(attribute => (
         <TableCell key={attribute}>
           {getCellContent(attribute.toLowerCase(), result, Thumbnail)}
@@ -141,11 +168,27 @@ const Results = props => {
   const [lastSelected, setLastSelected] = useState(null)
   const allowTextSelect = !useKeyPressed('Shift')
 
+  const all = Set(results.map(getId))
+
+  const allSelected = all.subtract(selection).isEmpty()
+
   return (
     <Paper style={{ overflow: 'auto', maxHeight: '100%' }}>
       <Table>
         <TableHead>
           <TableRow>
+            <TableCell>
+              <Checkbox
+                checked={allSelected}
+                onChange={e => {
+                  if (e.target.checked) {
+                    onSelect(all)
+                  } else {
+                    onSelect(Set())
+                  }
+                }}
+              />
+            </TableCell>
             {attributes.map(attribute => (
               <TableCell key={attribute}>
                 <Typography>{attribute}</Typography>
@@ -163,6 +206,12 @@ const Results = props => {
                 Thumbnail={Thumbnail}
                 attributes={attributes}
                 selected={selection.has(id)}
+                onRemove={() => {
+                  onSelect(selection.remove(id))
+                }}
+                onSelect={() => {
+                  onSelect(selection.add(id))
+                }}
                 onClick={e => {
                   e.stopPropagation()
                   const selected = computeSelected(
