@@ -169,6 +169,7 @@ const AppRouter = () => {
   return (
     <div
       style={{
+        color: palette.text.primary,
         background: palette.background.default,
         minHeight: '100vh',
       }}
