@@ -1,6 +1,4 @@
-import React, { Fragment } from 'react'
-
-import { getIn } from 'immutable'
+import React from 'react'
 
 import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
@@ -29,13 +27,10 @@ import { useTheme } from '@material-ui/core/styles'
 import { ThemeProvider } from './theme'
 
 import gql from 'graphql-tag'
-import { useQuery } from '@apollo/react-hooks'
 
-import {
-  HashRouter as Router,
-  Link as ReactLink,
-  Route,
-} from 'react-router-dom'
+import { useQuery } from '@apollo/react-hooks'
+import { SelectionProvider } from './react-hooks/use-selection-interface'
+import { Link as ReactLink, Route } from 'react-router-dom'
 
 import AboutRoute from './about'
 import SourcesRoute from './sources'
@@ -83,7 +78,13 @@ const createRoute = (path, title, Icon = AccessibleForwardIcon, component) => {
 }
 
 const routes = [
-  createRoute('/', 'Workspaces', CollectionsBookmarkIcon, WorkspacesIndex),
+  createRoute('/', 'Home', HomeIcon),
+  createRoute(
+    '/workspaces',
+    'Workspaces',
+    CollectionsBookmarkIcon,
+    WorkspacesIndex
+  ),
   createRoute('/search', 'Search', SearchIcon, SimpleSearch),
   createRoute('/sources', 'Sources', CloudIcon, SourcesRoute),
   createRoute('/search-forms', 'Search Forms', FindInPageIcon),
@@ -129,50 +130,24 @@ const query = gql`
   }
 `
 
-const NavMenu = props => {
-  const { data } = useQuery(query)
+const NavMenuBranding = () => {
+  const { loading, error, data } = useQuery(query)
 
-  const branding = getIn(data, ['systemProperties', 'branding'], '')
-  const product = getIn(data, ['systemProperties', 'product'], '')
+  if (loading || error) {
+    return null
+  }
 
-  const { routes, onClose } = props
+  const { branding, product } = data.systemProperties
 
   return (
-    <List style={{ width: 300 }}>
-      {branding !== '' ? (
-        <Fragment>
-          <ListItem>
-            <ListItemText
-              primaryTypographyProps={{ style: { fontSize: '2rem' } }}
-              secondaryTypographyProps={{ style: { fontSize: '1.3rem' } }}
-              primary={branding}
-              secondary={product}
-            />
-          </ListItem>
-          <Divider />
-        </Fragment>
-      ) : null}
-      {routes.map(route => {
-        const { path, link: Link } = route
-        return (
-          <ListItem key={path}>
-            <Link onClick={onClose} />
-          </ListItem>
-        )
-      })}
-      <Divider />
+    <List>
       <ListItem>
-        <Button
-          fullWidth
-          href="/"
-          component="a"
-          style={{ justifyContent: 'flex-start' }}
-        >
-          <ListItemIcon>
-            <HomeIcon style={{ marginRight: 10 }} />
-          </ListItemIcon>
-          <ListItemText primary={`${branding || ''} Home`} />
-        </Button>
+        <ListItemText
+          primaryTypographyProps={{ style: { fontSize: '2rem' } }}
+          secondaryTypographyProps={{ style: { fontSize: '1.3rem' } }}
+          primary={branding}
+          secondary={product}
+        />
       </ListItem>
     </List>
   )
@@ -191,30 +166,42 @@ const AppRouter = () => {
   }
 
   return (
-    <div
-      style={{
-        color: palette.text.primary,
-        background: palette.background.default,
-        minHeight: '100vh',
-      }}
-    >
-      <Router>
-        <Drawer anchor="left" open={open} onClose={handleDrawerClose}>
-          <NavMenu routes={routes} onClose={handleDrawerClose} />
-        </Drawer>
-        {routes.concat(otherRoutes).map(route => {
-          const { title, path, component: Component } = route
-          const render = () => {
-            return (
-              <React.Fragment>
-                <NavBar title={title} onMenuOpen={handleDrawerOpen} />
-                <Component />
-              </React.Fragment>
-            )
-          }
-          return <Route key={path} exact path={path} render={render} />
-        })}
-      </Router>
+    <div>
+      <SelectionProvider>
+        <div
+          style={{
+            background: palette.background.default,
+            minHeight: '100vh',
+          }}
+        >
+          <Drawer anchor="left" open={open} onClose={handleDrawerClose}>
+            <NavMenuBranding />
+            <Divider />
+            <List style={{ width: 300 }}>
+              {routes.map(route => {
+                const { path, link: Link } = route
+                return (
+                  <ListItem key={path}>
+                    <Link onClick={handleDrawerClose} />
+                  </ListItem>
+                )
+              })}
+            </List>
+          </Drawer>
+          {routes.concat(otherRoutes).map(route => {
+            const { title, path, component: Component } = route
+            const render = () => {
+              return (
+                <React.Fragment>
+                  <NavBar title={title} onMenuOpen={handleDrawerOpen} />
+                  <Component />
+                </React.Fragment>
+              )
+            }
+            return <Route key={path} exact path={path} render={render} />
+          })}
+        </div>
+      </SelectionProvider>
     </div>
   )
 }

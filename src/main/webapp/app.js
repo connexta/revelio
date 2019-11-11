@@ -2,26 +2,39 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { AppContainer } from '@connexta/ace/react-hot-loader'
 import Routes from './routes'
+import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import createStore from './store'
 import { createClient } from './intrigue-api/graphql'
 import { ApolloProvider } from '@apollo/react-hooks'
-import { SelectionProvider } from './react-hooks/use-selection-interface'
 
 const store = createStore()
 
 const render = (Routes, client) => {
-  ReactDOM.render(
+  if (typeof window !== 'undefined') {
+    ReactDOM.render(
+      application(Routes, client),
+      document.getElementById('root')
+    )
+  } else {
+    ReactDOM.hydrate(
+      application(Routes, client),
+      document.getElementById('root')
+    )
+  }
+}
+
+const application = (Routes, client) => {
+  return (
     <AppContainer>
-      <SelectionProvider>
-        <Provider store={store}>
-          <ApolloProvider client={client}>
+      <Provider store={store}>
+        <ApolloProvider client={client}>
+          <BrowserRouter basename="/search/catalog">
             <Routes />
-          </ApolloProvider>
-        </Provider>
-      </SelectionProvider>
-    </AppContainer>,
-    document.getElementById('root')
+          </BrowserRouter>
+        </ApolloProvider>
+      </Provider>
+    </AppContainer>
   )
 }
 
