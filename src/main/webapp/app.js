@@ -11,20 +11,19 @@ import { ApolloProvider } from '@apollo/react-hooks'
 const store = createStore()
 
 const render = (Routes, client) => {
-  if (typeof window !== 'undefined') {
-    ReactDOM.render(
-      application(Routes, client),
-      document.getElementById('root')
-    )
-  } else {
-    ReactDOM.hydrate(
-      application(Routes, client),
-      document.getElementById('root')
-    )
-  }
+  ReactDOM.hydrate(
+    <Application Routes={Routes} client={client} />,
+    document.getElementById('root')
+  )
 }
 
-const application = (Routes, client) => {
+const Application = ({ Routes, client }) => {
+  React.useEffect(() => {
+    const ssrStyles = document.querySelector('#css-server-side')
+    if (ssrStyles) {
+      ssrStyles.parentNode.removeChild(ssrStyles)
+    }
+  }, [])
   return (
     <AppContainer>
       <Provider store={store}>

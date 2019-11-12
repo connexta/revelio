@@ -60,7 +60,6 @@ const executeSSR = (req, res) => {
               __html: `window.__APOLLO_STATE__ = ${JSON.stringify(state)}`,
             }}
           />
-          {/* TODO: Update clientside to remove + inject CSS */}
           <style id="css-server-side">${css}</style>
         </head>
         <body style={{ margin: 0 }}>
