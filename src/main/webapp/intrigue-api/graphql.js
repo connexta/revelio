@@ -12,10 +12,11 @@ const { BatchHttpLink } = require('apollo-link-batch-http')
 const removeProperty = propertyName => data =>
   data
     .filter((_, key) => key !== propertyName)
-    .map(property =>
-      typeof property !== 'object' || property === null
-        ? property
-        : removeProperty(propertyName)(property)
+    .map(
+      property =>
+        typeof property !== 'object' || property === null
+          ? property
+          : removeProperty(propertyName)(property)
     )
 
 const removeTypename = data => removeProperty('__typename')(fromJS(data)).toJS()
