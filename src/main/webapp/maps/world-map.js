@@ -106,7 +106,9 @@ const WorldMap = ({
     if (mapDiv.current) {
       const width = mapDiv.current.parentElement.offsetWidth
       const height = mapDiv.current.parentElement.offsetHeight
-      setContainer({ width, height })
+      if (width !== container.width || height !== container.height) {
+        setContainer({ width, height })
+      }
     }
   })
   useLayoutEffect(
