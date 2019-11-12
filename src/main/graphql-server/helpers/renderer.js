@@ -1,4 +1,3 @@
-require('@babel/polyfill')
 import React from 'react'
 import Routes from '../../webapp/routes'
 import { renderToString, renderToStaticMarkup } from 'react-dom/server'
@@ -11,7 +10,6 @@ import { ApolloProvider } from '@apollo/react-hooks'
 const ROOT_PATH = '/search/catalog'
 const whitelistedSSRRoutes = [
   '/',
-  ROOT_PATH,
   `${ROOT_PATH}/`,
   `${ROOT_PATH}/search/`,
   `${ROOT_PATH}/search`,

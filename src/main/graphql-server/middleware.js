@@ -14,6 +14,5 @@ const server = new ApolloServer({
 
 app.use(renderer)
 server.applyMiddleware({ app })
-app.use(express.static('public'))
 
 export default app

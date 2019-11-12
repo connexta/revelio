@@ -19,7 +19,7 @@ import QueryStatus from '../query-status'
 import { BasicSearch } from '../basic-search'
 import QuerySelector from './query-selector'
 
-let MemoizedVisualizations = null
+let MemoizedVisualizations = () => null
 let Visualizations = null
 if (typeof window !== 'undefined') {
   Visualizations = require('./visualizations').default
@@ -151,9 +151,7 @@ export const Workspace = () => {
         ) : null}
       </div>
       <div style={{ flex: '1' }}>
-        {MemoizedVisualizations != null && (
-          <MemoizedVisualizations results={results} />
-        )}
+        <MemoizedVisualizations results={results} />
       </div>
     </div>
   )
