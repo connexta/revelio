@@ -20,7 +20,7 @@ import gql from 'graphql-tag'
 import { fromJS, Map } from 'immutable'
 import React from 'react'
 import { useApolloFallback } from '../react-hooks'
-import { mergeDeep } from '../utils'
+import { mergeDeepOverwriteLists } from '../utils'
 import HiddenResultsSettings from './hidden-results-settings'
 import NotificationSettings from './notification-settings'
 import SearchSettings from './search-setttings'
@@ -186,43 +186,19 @@ const query = gql`
       preferences {
         alertExpiration
         alertPersistence
-        alerts
-        animation
-        columnHide
-        columnOrder
-        coordinateFormat
         dateTimeFormat {
           datetimefmt
           timefmt
-        }
-        fontSize
-        goldenLayout
-        homeDisplay
-        homeFilter
-        homeSort
-        hoverPreview
-        id
-        inspectorDetailsHidden
-        inspectorDetailsOrder
-        inspectorSummaryOrder
-        inspectorSummaryShown
-        querySettings {
-          type
         }
         resultBlacklist {
           id
           title
         }
         resultCount
-        resultDisplay
-        resultPreview
         theme {
           theme
-          customBackgroundAccentContent
         }
         timeZone
-        uploads
-        visualization
       }
     }
     systemProperties {
@@ -255,7 +231,7 @@ const Container = () => {
       value={Map(data.user.preferences)}
       systemProperties={data.systemProperties}
       onSave={userPreferences => {
-        const newPreferences = mergeDeep(
+        const newPreferences = mergeDeepOverwriteLists(
           fromJS(data.user.preferences),
           fromJS(userPreferences)
         )

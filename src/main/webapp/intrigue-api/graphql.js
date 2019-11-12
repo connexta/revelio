@@ -3,7 +3,7 @@ import { ApolloClient } from 'apollo-client'
 import { SchemaLink } from 'apollo-link-schema'
 import { makeExecutableSchema } from 'graphql-tools'
 import { fromJS } from 'immutable'
-import { mergeDeep } from '../utils'
+import { mergeDeepOverwriteLists } from '../utils'
 const fetch = require('./fetch')
 const ROOT = '/search/catalog/internal'
 const { genSchema, toGraphqlName, fromGraphqlName } = require('./gen-schema')
@@ -388,7 +388,7 @@ const updateUserPreferences = async (parent, args) => {
     previousPreferences = json.preferences
   }
 
-  const body = mergeDeep(
+  const body = mergeDeepOverwriteLists(
     fromJS(previousPreferences),
     fromJS(removeTypename(userPreferences))
   ).toJS()
