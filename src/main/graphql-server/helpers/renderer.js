@@ -1,5 +1,5 @@
 import React from 'react'
-import Routes from '../../webapp/routes'
+import Routes, { hasPath } from '../../webapp/routes'
 import { renderToString, renderToStaticMarkup } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom'
 import { getDataFromTree } from '@apollo/react-ssr'
@@ -8,40 +8,31 @@ import { createClient } from '../../webapp/intrigue-api/graphql'
 import { ApolloProvider } from '@apollo/react-hooks'
 
 const ROOT_PATH = '/search/catalog'
-const whitelistedSSRRoutes = [
-  '/',
-  `${ROOT_PATH}/`,
-  `${ROOT_PATH}/search/`,
-  `${ROOT_PATH}/search`,
-  `${ROOT_PATH}/workspaces/`,
-  `${ROOT_PATH}/workspaces`,
-  `${ROOT_PATH}/sources/`,
-  `${ROOT_PATH}/sources`,
-  `${ROOT_PATH}/search-forms/`,
-  `${ROOT_PATH}/search-forms`,
-  `${ROOT_PATH}/result-forms/`,
-  `${ROOT_PATH}/result-forms`,
-  `${ROOT_PATH}/about`,
-  `${ROOT_PATH}/about/`,
-]
 
 module.exports = (req, res, next) => {
-  if (whitelistedSSRRoutes.includes(req.originalUrl)) {
-    executeSSR(req, res, next)
-  } else {
-    next()
+  const path = req.originalUrl.replace(ROOT_PATH, '')
+  try {
+    if (hasPath(path)) {
+      executeSSR(req, res, next)
+    } else {
+      next()
+    }
+  } catch (e) {
+    res.status(500)
+    res.end(e.message)
+    console.log(e)
   }
 }
 
 const executeSSR = (req, res) => {
   const sheets = new ServerStyleSheets()
-  const client = createClient(true)
+  const client = createClient({ ssrMode: true })
 
   const App = sheets.collect(
     <ApolloProvider client={client}>
       <StaticRouter
         location={req.originalUrl}
-        basename="/search/catalog"
+        basename={ROOT_PATH}
         context={{}}
       >
         <Routes />
@@ -62,7 +53,7 @@ const executeSSR = (req, res) => {
         </head>
         <body style={{ margin: 0 }}>
           <div id="root" dangerouslySetInnerHTML={{ __html: content }} />
-          <script src={req.clientBundle} />
+          <script src={ROOT_PATH + '/' + req.clientBundle} />
         </body>
       </html>
     )
@@ -70,7 +61,6 @@ const executeSSR = (req, res) => {
 
   return getDataFromTree(App).then(() => {
     setTimeout(() => {
-      // Don't need both render markup and render string (remove)
       const content = renderToString(App)
       const styling = sheets.toString()
       const initialState = client.extract()
@@ -78,6 +68,6 @@ const executeSSR = (req, res) => {
       const response = `<!DOCTYPE html>\n${renderToStaticMarkup(html)}`
       res.send(response)
       res.end()
-    }, 150)
+    }, 300)
   })
 }

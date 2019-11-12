@@ -11,7 +11,8 @@ import { ApolloProvider } from '@apollo/react-hooks'
 const store = createStore()
 
 const render = (Routes, client) => {
-  ReactDOM.hydrate(
+  // TODO: Update render to be hydrate to improve performance
+  ReactDOM.render(
     <Application Routes={Routes} client={client} />,
     document.getElementById('root')
   )

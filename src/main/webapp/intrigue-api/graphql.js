@@ -423,23 +423,27 @@ const executableSchema = makeExecutableSchema({
   resolvers,
 })
 
-const isServer = process.env.GRAPHQL_SERVER || true
 const serverLocation =
   process.env.SERVER_LOCATION || 'http://localhost:8080/graphql'
 
-const createClient = () => {
+const defaultOptions = {
+  ssrMode: false,
+}
+
+const createClient = (options = defaultOptions) => {
   const cache = new InMemoryCache()
+  const { ssrMode } = options
 
   if (typeof window !== 'undefined') {
     cache.restore(window.__APOLLO_STATE__)
   }
 
   return new ApolloClient({
-    link: isServer
-      ? new BatchHttpLink({ uri: serverLocation })
-      : new SchemaLink({ schema: executableSchema }),
+    link: ssrMode
+      ? new SchemaLink({ schema: executableSchema })
+      : new BatchHttpLink({ uri: serverLocation }),
     cache,
-    ssrMode: isServer,
+    ssrMode,
   })
 }
 
