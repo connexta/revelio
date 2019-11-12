@@ -3,3 +3,6 @@ target
 .idea
 yarn-error.log
 *.iml
+*.project
+*.settings
+*.classpath
