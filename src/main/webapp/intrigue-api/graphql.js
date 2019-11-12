@@ -4,10 +4,30 @@ import { SchemaLink } from 'apollo-link-schema'
 import { makeExecutableSchema } from 'graphql-tools'
 import { fromJS } from 'immutable'
 import { mergeDeepOverwriteLists } from '../utils'
+const { InMemoryCache } = require('apollo-cache-inmemory')
+const { BatchHttpLink } = require('apollo-link-batch-http')
+const { genSchema, toGraphqlName, fromGraphqlName } = require('./gen-schema')
+
+const createRpcClient = require('./rpc')
+
 const fetch = require('./fetch')
 const ROOT = '/search/catalog/internal'
-const { genSchema, toGraphqlName, fromGraphqlName } = require('./gen-schema')
-const { BatchHttpLink } = require('apollo-link-batch-http')
+
+const request = createRpcClient()
+
+const methods = {
+  create: 'ddf.catalog/create',
+  query: 'ddf.catalog/query',
+  update: 'ddf.catalog/update',
+  delete: 'ddf.catalog/delete',
+  getSourceIds: 'ddf.catalog/getSourceIds',
+  getSourceInfo: 'ddf.catalog/getSourceInfo',
+}
+
+const catalog = Object.keys(methods).reduce((catalog, method) => {
+  catalog[method] = params => request(methods[method], params)
+  return catalog
+}, {})
 
 const removeProperty = propertyName => data =>
   data
@@ -62,7 +82,7 @@ const getCql = ({ filterTree, cql }) => {
 
 const processQuery = ({ filterTree, cql, ...query }) => {
   const cqlString = getCql({ filterTree, cql })
-  return JSON.stringify({ cql: cqlString, ...query })
+  return { cql: cqlString, ...query }
 }
 
 const handleError = (code, data) => {
@@ -83,16 +103,9 @@ const handleError = (code, data) => {
 }
 
 const send = async query => {
-  const res = await fetch(`${ROOT}/cql`, {
-    method: 'POST',
-    body: processQuery(query),
-  })
+  const res = await catalog.query(processQuery(query))
 
-  if (!res.ok) {
-    handleError(res.status, await res.text())
-  }
-
-  return res.json()
+  return res.queried_metacards
 }
 
 const renameKeys = (f, map) => {
@@ -159,8 +172,8 @@ const metacards = async (ctx, args) => {
   const q = { ...args.settings, filterTree: args.filterTree }
   const json = await send(q)
 
-  const attributes = json.results.map(result => {
-    const properties = toGraphqlMap(result.metacard.properties)
+  const attributes = json.queried_metacards.map(metacard => {
+    const properties = toGraphqlMap(metacard.attributes)
     return {
       ...properties,
       queries: queries(properties.queries),
@@ -252,8 +265,28 @@ const user = async () => {
 }
 
 const sources = async () => {
-  const res = await fetch(`${ROOT}/catalog/sources`)
-  return res.json()
+  const sourceIds = await catalog.getSourceIds({})
+  const res = await catalog.getSourceInfo({ ids: sourceIds })
+
+  //needed until we change the schema to match the json rpc stuff
+  const rpcToSchema = {
+    sourceId: 'id',
+    isAvailable: 'available',
+    catalogedTypes: 'contentTypes',
+    actions: 'sourceActions',
+    version: 'version',
+  }
+  const response = []
+  res.sourceInfo.forEach(source => {
+    let sourceObj = {}
+    Object.keys(source).forEach(key => {
+      if (key in rpcToSchema) {
+        sourceObj[rpcToSchema[key]] = source[key]
+      }
+    })
+    response.push(sourceObj)
+  })
+  return response
 }
 
 const metacardTypes = async () => {
