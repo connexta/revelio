@@ -20,7 +20,6 @@ module.exports = (req, res, next) => {
   } catch (e) {
     res.status(500)
     res.end(e.message)
-    console.log(e)
   }
 }
 
