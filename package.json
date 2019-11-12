@@ -4,7 +4,7 @@
   "main": "src/main/webapp/app.js",
   "license": "MIT",
   "devDependencies": {
-    "@connexta/ace": "https://github.com/connexta/ace.git#ba2b30f37e289a5cb9c55f2b3b47055cf0441dca",
+    "@connexta/ace": "https://github.com/schachte/ace.git#17dbae9966c4f02592f0433cc6c2dd0c1017baaa",
     "@types/react": "^16.9.5",
     "@types/react-select": "3.0.2",
     "@typescript-eslint/parser": "^2.3.3",
