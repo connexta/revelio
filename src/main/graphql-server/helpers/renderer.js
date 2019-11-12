@@ -35,7 +35,7 @@ module.exports = (req, res, next) => {
   }
 }
 
-const executeSSR = (req, res, next) => {
+const executeSSR = (req, res) => {
   const sheets = new ServerStyleSheets()
   const client = createClient(true)
 
