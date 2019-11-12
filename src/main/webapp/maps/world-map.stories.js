@@ -1,4 +1,4 @@
-import { storiesOf } from './@storybook/react'
+import { storiesOf } from '../@storybook/react'
 import { withKnobs, select } from '@connexta/ace/@storybook/addon-knobs'
 import React from 'react'
 import WorldMap from './world-map'
@@ -41,7 +41,7 @@ const MAP_STYLE = feature =>
 
 const PROJECTION = 'EPSG:4326'
 
-const stories = storiesOf('WorldMap', module)
+const stories = storiesOf('Maps', module)
 stories.addDecorator(withKnobs)
 
 stories.add('bare map', () => {
@@ -49,7 +49,7 @@ stories.add('bare map', () => {
     <WorldMap
       projection={PROJECTION}
       style={MAP_STYLE}
-      coordinateType="LAT LON"
+      coordinateType={coordinates.LAT_LON}
       maxZoom={20}
       minZoom={1.5}
       zoom={2}
@@ -305,7 +305,7 @@ stories.add('render geometries', () => {
   ]
   const shapeIndex = select(
     'Pan To',
-    ['none', '1', '2', '3', '4', '5', '6', '7'],
+    ['none', ...geos.map((_x, i) => (i + 1).toString())],
     'none'
   )
   const viewport = shapeIndex === 'none' ? null : geos[shapeIndex - 1].bbox

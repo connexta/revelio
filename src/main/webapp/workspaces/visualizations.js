@@ -11,11 +11,11 @@ import { Layout, Provider, AddConfig, DragSource } from '../react-layout'
 import Inspector from '../inspector/inspector'
 import ResultTable from '../results/results'
 
-import WorldMap from '../world-map'
-import { RENDERER_STYLE } from '../map-style'
+import { ClusterMap, RENDERER_STYLE } from '../maps'
 import WKT from 'ol/format/WKT'
 import GeoJSON from 'ol/format/GeoJSON'
 import { geometry, coordinates, shapes } from 'geospatialdraw'
+import { Set } from 'immutable'
 
 const AddVisualization = () => {
   const [anchorEl, setAnchorEl] = useState(null)
@@ -144,7 +144,7 @@ const Visualizations = props => {
   const shapeDetector = new shapes.ShapeDetector()
   const MapVis = () => {
     const PROJECTION = 'EPSG:4326'
-    const [selected] = useSelectionInterface()
+    const [selection, onSelect] = useSelectionInterface()
     const geos = results
       .map(
         result =>
@@ -160,7 +160,7 @@ const Visualizations = props => {
                     0,
                     geometry.METERS,
                     {
-                      selected: selected.has(result.metacard.properties.id),
+                      selected: selection.has(result.metacard.properties.id),
                     }
                   )
                 )
@@ -175,7 +175,7 @@ const Visualizations = props => {
         ? geometry.combineExtents(selectedExtents)
         : null
     return (
-      <WorldMap
+      <ClusterMap
         projection={PROJECTION}
         style={RENDERER_STYLE}
         coordinateType={coordinates.LAT_LON}
@@ -184,6 +184,9 @@ const Visualizations = props => {
         zoom={2}
         geos={geos}
         viewport={viewport}
+        selectGeos={ids => {
+          onSelect(Set(ids))
+        }}
       />
     )
   }

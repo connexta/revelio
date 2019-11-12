@@ -37,6 +37,7 @@
     "graphql-tag": "^2.10.1",
     "graphql-tools": "^4.0.5",
     "immutable": "^4.0.0-rc.12",
+    "lodash.throttle": "^4.1.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.16",
     "polished": "^3.4.1",
