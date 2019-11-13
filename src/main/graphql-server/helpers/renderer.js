@@ -9,31 +9,32 @@ import { ApolloProvider } from '@apollo/react-hooks'
 
 const ROOT_PATH = '/search/catalog'
 
-module.exports = (req, res, next) => {
+module.exports = async (req, res, next) => {
   const path = req.originalUrl.replace(ROOT_PATH, '')
   try {
     if (hasPath(path)) {
-      executeSSR(req, res, next)
+      const { originalUrl, clientBundle } = req
+      const html = await executeSSR(originalUrl, clientBundle)
+      res.end(html)
     } else {
       next()
     }
   } catch (e) {
+    process.stderr.write(e.message)
     res.status(500)
     res.end(e.message)
   }
 }
 
-const executeSSR = (req, res) => {
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+const executeSSR = async (originalUrl, clientBundle) => {
   const sheets = new ServerStyleSheets()
   const client = createClient({ ssrMode: true })
 
   const App = sheets.collect(
     <ApolloProvider client={client}>
-      <StaticRouter
-        location={req.originalUrl}
-        basename={ROOT_PATH}
-        context={{}}
-      >
+      <StaticRouter location={originalUrl} basename={ROOT_PATH} context={{}}>
         <Routes />
       </StaticRouter>
     </ApolloProvider>
@@ -52,21 +53,18 @@ const executeSSR = (req, res) => {
         </head>
         <body style={{ margin: 0 }}>
           <div id="root" dangerouslySetInnerHTML={{ __html: content }} />
-          <script src={ROOT_PATH + '/' + req.clientBundle} />
+          <script src={ROOT_PATH + '/' + clientBundle} />
         </body>
       </html>
     )
   }
 
-  return getDataFromTree(App).then(() => {
-    setTimeout(() => {
-      const content = renderToString(App)
-      const styling = sheets.toString()
-      const initialState = client.extract()
-      const html = <Html content={content} state={initialState} css={styling} />
-      const response = `<!DOCTYPE html>\n${renderToStaticMarkup(html)}`
-      res.send(response)
-      res.end()
-    }, 300)
-  })
+  await getDataFromTree(App)
+  await sleep(300)
+
+  const content = renderToString(App)
+  const styling = sheets.toString()
+  const initialState = client.extract()
+  const html = <Html content={content} state={initialState} css={styling} />
+  return `<!DOCTYPE html>\n${renderToStaticMarkup(html)}`
 }
