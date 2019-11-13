@@ -59,12 +59,16 @@ const executeSSR = async (originalUrl, clientBundle) => {
     )
   }
 
-  await getDataFromTree(App)
-  await sleep(300)
-
-  const content = renderToString(App)
-  const styling = sheets.toString()
-  const initialState = client.extract()
-  const html = <Html content={content} state={initialState} css={styling} />
-  return `<!DOCTYPE html>\n${renderToStaticMarkup(html)}`
+  try {
+    await getDataFromTree(App)
+    await sleep(300)
+    const content = renderToString(App)
+    const styling = sheets.toString()
+    const initialState = client.extract()
+    const html = <Html content={content} state={initialState} css={styling} />
+    return `<!DOCTYPE html>\n${renderToStaticMarkup(html)}`
+  } catch (e) {
+    const html = <Html content="" state={{}} />
+    return `<!DOCTYPE html>\n${renderToStaticMarkup(html)}`
+  }
 }
