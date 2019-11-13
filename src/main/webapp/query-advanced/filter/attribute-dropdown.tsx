@@ -1,8 +1,8 @@
 import * as React from 'react'
 import Select from 'react-select'
-import { metacardDefinitions } from '../filter/dummyDefinitions'
 import { Map } from 'immutable'
 import { Box } from '@material-ui/core'
+import { useFilterContext } from '../filter-context'
 
 const attributeAliases = Map({
   'date-created': 'Date Created',
@@ -15,7 +15,8 @@ const createOption = (option: string) => ({
 })
 
 const AttributeDropdown = (props: any) => {
-  const options = Array.from(metacardDefinitions.keys()).map(createOption)
+  const context = useFilterContext()
+  const options = context.includedAttributes.map(createOption)
   const value = options.find(option => option.value === props.value)
   return (
     <Box style={{ margin: 5 }}>
@@ -25,6 +26,7 @@ const AttributeDropdown = (props: any) => {
         onChange={(option: any) => {
           props.onChange(option.value)
         }}
+        isDisabled={!context.editing}
       />
     </Box>
   )
