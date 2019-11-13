@@ -68,7 +68,7 @@ export const getDefaultValue = (type: MetacardType | undefined) => {
     case 'LOCATION':
       return Map({ type: 'line' })
     case 'DATE':
-      return new Date()
+      return ''
     case 'BOOLEAN':
       return false
     case 'STRING':
@@ -76,10 +76,10 @@ export const getDefaultValue = (type: MetacardType | undefined) => {
     case 'INTEGER':
     case 'SHORT':
     case 'LONG':
-      return 0
+      return '0'
     case 'FLOAT':
     case 'DOUBLE':
-      return 0.0
+      return '0.0'
     default:
       return ''
   }

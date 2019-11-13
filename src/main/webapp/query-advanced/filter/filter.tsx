@@ -14,6 +14,7 @@ import TextFilter, {
 import LocationFilter from '../filter-input/location-filter'
 import DateFilter, {
   comparatorOptions as dateComparators,
+  comparatorAliases as dateAliases,
 } from '../filter-input/date-filter'
 import BooleanFilter, {
   comparatorOptions as booleanComparators,
@@ -24,7 +25,7 @@ import NumberFilter, {
   comparatorOptions as numberComparators,
   comparatorAliases as numberAliases,
 } from '../filter-input/number-filter'
-import { FROM, TO } from './value-transformations'
+import { transformValue } from './value-transformations'
 import AttributeDropdown from './attribute-dropdown'
 
 //In this format to make querying easy
@@ -55,7 +56,7 @@ const Inputs = {
 
 const Comparators = {
   BOOLEAN: { options: booleanComparators, aliases: booleanAliases },
-  DATE: { options: dateComparators, aliases: undefined },
+  DATE: { options: dateComparators, aliases: dateAliases },
   LOCATION: { options: textComparators, aliases: textAliases },
   //Strings
   STRING: { options: textComparators, aliases: textAliases },
@@ -108,18 +109,19 @@ export const Filter = withRemoveButton(
             }
           }}
         />
-        {type !== 'LOCATION' && type !== 'DATE' ? (
+        {type !== 'LOCATION' ? (
           <ComparatorDropdown
-            onChange={(newType: string) => {
-              let { property, value } = props
-              if (newType !== props.type) {
-                if (FROM[props.type] !== undefined) {
-                  value = FROM[props.type](value)
-                } else if (TO[newType] !== undefined) {
-                  value = TO[newType](value)
-                }
-              }
-              props.onChange({ property, value, type: newType })
+            onChange={(newOperator: string) => {
+              let { property, value, type: oldOperator } = props
+
+              const newValue = transformValue({
+                propertyType: metacardDefinitions.get(property) || 'STRING',
+                currentValue: value,
+                oldOperator,
+                newOperator,
+              })
+
+              props.onChange({ property, value: newValue, type: newOperator })
             }}
             selected={props.type}
             options={comparatorOptions}
