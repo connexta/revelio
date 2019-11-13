@@ -17,10 +17,14 @@ import { useQuery } from '@apollo/react-hooks'
 
 import QueryStatus from '../query-status'
 import { BasicSearch } from '../basic-search'
-import Visualizations from './visualizations'
 import QuerySelector from './query-selector'
 
-const MemoizedVisualizations = memo(Visualizations)
+let MemoizedVisualizations = () => null
+let Visualizations = null
+if (typeof window !== 'undefined') {
+  Visualizations = require('./visualizations').default
+  MemoizedVisualizations = memo(Visualizations)
+}
 
 const Loading = () => {
   return (

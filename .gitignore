@@ -6,3 +6,4 @@ yarn-error.log
 *.project
 *.settings
 *.classpath
+.DS_Store

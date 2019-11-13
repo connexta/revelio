@@ -31,11 +31,8 @@ import { ThemeProvider } from './theme'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 
-import {
-  HashRouter as Router,
-  Link as ReactLink,
-  Route,
-} from 'react-router-dom'
+import { SelectionProvider } from './react-hooks/use-selection-interface'
+import { Link as ReactLink, Route, matchPath } from 'react-router-dom'
 
 import AboutRoute from './about'
 import SourcesRoute from './sources'
@@ -91,6 +88,21 @@ const routes = [
   createRoute('/about', 'About', InfoSharpIcon, AboutRoute),
 ]
 
+const otherRoutes = [
+  { title: 'Workspace', path: '/workspaces/:id', component: Workspace },
+]
+
+export const hasPath = path => {
+  return routes.concat(otherRoutes).some(route => {
+    const match = matchPath(path, {
+      path: route.path,
+      exact: true,
+      strict: false,
+    })
+    return match
+  })
+}
+
 const NavBar = props => {
   const { palette } = useTheme()
   const { title = 'That MF Electric Boogaloo', onMenuOpen } = props
@@ -115,10 +127,6 @@ const NavBar = props => {
     </AppBar>
   )
 }
-
-const otherRoutes = [
-  { title: 'Workspace', path: '/workspaces/:id', component: Workspace },
-]
 
 const query = gql`
   query NavigationBar {
@@ -191,14 +199,14 @@ const AppRouter = () => {
   }
 
   return (
-    <div
-      style={{
-        color: palette.text.primary,
-        background: palette.background.default,
-        minHeight: '100vh',
-      }}
-    >
-      <Router>
+    <SelectionProvider>
+      <div
+        style={{
+          color: palette.text.primary,
+          background: palette.background.default,
+          minHeight: '100vh',
+        }}
+      >
         <Drawer anchor="left" open={open} onClose={handleDrawerClose}>
           <NavMenu routes={routes} onClose={handleDrawerClose} />
         </Drawer>
@@ -214,8 +222,8 @@ const AppRouter = () => {
           }
           return <Route key={path} exact path={path} render={render} />
         })}
-      </Router>
-    </div>
+      </div>
+    </SelectionProvider>
   )
 }
 
