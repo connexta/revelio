@@ -18,4 +18,3 @@ export const metacardDefinitions: Map<string, MetacardType> = new Map([
   ['an integer', 'INTEGER'],
   ['a float', 'FLOAT'],
 ])
-
