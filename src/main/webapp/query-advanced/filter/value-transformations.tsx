@@ -1,17 +1,86 @@
-const toNearFilter = (value: string) => ({ value, distance: 2 })
+import { MetacardType } from './dummyDefinitions'
 
-const fromNearFilter = (value: any) => value.value
+/*
+ * Defines transformations for when the user changes comparators so part
+ * of the previous value is preserved
+ */
 
-const toBetweenFilter = (value: string) => ({ lower: value, upper: value })
+const toNearValue = (value: string) => ({ value, distance: 2 })
 
-const fromBetweenFilter = (value: any) => value.lower
+const fromNearValue = (value: any) => value.value
 
-export const FROM: any = {
-  NEAR: fromNearFilter,
-  BETWEEN: fromBetweenFilter,
+const toBetweenValue = (value: string) => ({ lower: value, upper: value })
+
+const fromBetweenValue = (value: any) => value.lower
+
+const toDuringValue = (value: any) => {
+  if (value == null) return ''
+  const date = new Date(value)
+  if (!isNaN(date.valueOf())) {
+    return `${date.toISOString()}/${date.toISOString()}`
+  }
+  return ''
 }
 
-export const TO: any = {
-  NEAR: toNearFilter,
-  BETWEEN: toBetweenFilter,
+const fromDuringValue = (value: string) => {
+  const dates = value.split('/')
+  const from = new Date(dates[0])
+  if (!isNaN(from.valueOf())) {
+    return from.toISOString()
+  }
+
+  return ''
+}
+
+const default_relative_value = 'RELATIVE(PT1M)'
+
+const fromRelativeValue = () => ''
+
+const toRelativeValue = () => default_relative_value
+
+type ValueTransformationInput = {
+  propertyType: MetacardType
+  currentValue: any
+  oldOperator: string
+  newOperator: string
+}
+
+export const transformValue = ({
+  propertyType,
+  currentValue,
+  oldOperator,
+  newOperator,
+}: ValueTransformationInput) => {
+  if (oldOperator === newOperator) return currentValue
+  let value = currentValue
+  switch (oldOperator) {
+    case 'NEAR':
+      value = fromNearValue(value)
+      break
+    case 'BETWEEN':
+      value = fromBetweenValue(value)
+      break
+    case 'DURING':
+      value = fromDuringValue(value)
+      break
+    case '=':
+      if (propertyType === 'DATE') value = fromRelativeValue()
+      break
+  }
+
+  switch (newOperator) {
+    case 'NEAR':
+      value = toNearValue(value)
+      break
+    case 'BETWEEN':
+      value = toBetweenValue(value)
+      break
+    case 'DURING':
+      value = toDuringValue(value)
+      break
+    case '=':
+      if (propertyType === 'DATE') value = toRelativeValue()
+      break
+  }
+  return value
 }

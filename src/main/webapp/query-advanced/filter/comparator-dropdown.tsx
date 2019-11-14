@@ -3,6 +3,7 @@ import useAnchorEl from '../../react-hooks/use-anchor-el'
 import { Button, Box, Popover, MenuItem } from '@material-ui/core'
 import { ArrowDropDown as DropDownIcon } from '@material-ui/icons'
 import { Map } from 'immutable'
+import { useFilterContext } from '../filter-context'
 
 type Props = {
   selected: string
@@ -14,12 +15,14 @@ type Props = {
 
 const ComparatorMenu = (props: Props) => {
   const [anchorEl, open, close] = useAnchorEl()
+  const context = useFilterContext()
   return (
     <React.Fragment>
       <Button
         style={{ width: 'fit-content', margin: 5 }}
         variant="outlined"
         onClick={open as any}
+        disabled={!context.editing}
       >
         <Box>
           <Box

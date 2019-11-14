@@ -12,7 +12,8 @@
  * <http://www.gnu.org/licenses/lgpl.html>.
  *
  **/
-
+// @ts-ignore
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 const url = require('url')
 const qs = require('querystring')
 const fetch = require('isomorphic-fetch')
