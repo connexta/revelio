@@ -60,10 +60,9 @@ import org.opengis.filter.sort.SortBy;
 import org.opengis.filter.sort.SortOrder;
 
 /**
- * A class that represents the set of methods that are callable on the
- * <code>CatalogFramework</code> as a map where the key is the 
- * Json Rpc <code>method</code> string (eg, <code>ddf.catalog/create</code>). 
- * the value of the map is a Method that can be called to dispatch the corresponding 
+ * A class that represents the set of methods that are callable on the <code>CatalogFramework</code>
+ * as a map where the key is the Json Rpc <code>method</code> string (eg, <code>ddf.catalog/create
+ * </code>). the value of the map is a Method that can be called to dispatch the corresponding
  * action to the <code>CatalogFramework</code>
  */
 public class CatalogMethods implements MethodSet {
@@ -78,11 +77,27 @@ public class CatalogMethods implements MethodSet {
 
   {
     Builder<String, DocMethod> builder = ImmutableMap.builder();
-    builder.put("ddf.catalog/create", new DocMethod(this::create, "Takes the specified parameters (metacards) and calls CatalogFramework::create.`params` takes: `metacards(Required, value: List(Object(`metacardType`:string, `attributes`:Object(Required, `id`: String))) "));
-    builder.put("ddf.catalog/query", new DocMethod(this::query, "Takes the specified parameters and calls CatalogFramework::query. `params` takes: `cql` (TemporarilyRequired, value: String of cql), `sourceIds` (Optional, value: List of strings, Default: ['ddf.distribution']), `isEnterprise` (Optional, value: boolean, default: false), `properties` (Not yet supported), `startIndex` (Optional, value: integer, default: 1), `pageSize` (Optional, value: integer, default: 250), `sortPolicy` (Optional, value: Object(`propertyName`:String, `sortOrder`: String(ASC or DESC))"));
+    builder.put(
+        "ddf.catalog/create",
+        new DocMethod(
+            this::create,
+            "Takes the specified parameters (metacards) and calls CatalogFramework::create.`params` takes: `metacards(Required, value: List(Object(`metacardType`:string, `attributes`:Object(Required, `id`: String))) "));
+    builder.put(
+        "ddf.catalog/query",
+        new DocMethod(
+            this::query,
+            "Takes the specified parameters and calls CatalogFramework::query. `params` takes: `cql` (TemporarilyRequired, value: String of cql), `sourceIds` (Optional, value: List of strings, Default: ['ddf.distribution']), `isEnterprise` (Optional, value: boolean, default: false), `properties` (Not yet supported), `startIndex` (Optional, value: integer, default: 1), `pageSize` (Optional, value: integer, default: 250), `sortPolicy` (Optional, value: Object(`propertyName`:String, `sortOrder`: String(ASC or DESC))"));
 
-    builder.put("ddf.catalog/update", new DocMethod(this::update, "Takes the specified parameters and calls CatalogFramework::query. `params` takes: `metacards(Required, value: List(Object(`metacardType`:string, `attributes`:Object(Required, `id`: String)))"));
-    builder.put("ddf.catalog/delete", new DocMethod(this::delete, "Takes the specified parameters and calls CatalogFramework::query. `params` takes: `ids` (Required, value: List(String))"));
+    builder.put(
+        "ddf.catalog/update",
+        new DocMethod(
+            this::update,
+            "Takes the specified parameters and calls CatalogFramework::query. `params` takes: `metacards(Required, value: List(Object(`metacardType`:string, `attributes`:Object(Required, `id`: String)))"));
+    builder.put(
+        "ddf.catalog/delete",
+        new DocMethod(
+            this::delete,
+            "Takes the specified parameters and calls CatalogFramework::query. `params` takes: `ids` (Required, value: List(String))"));
     builder.put("ddf.catalog/getSourceIds", new DocMethod(this::getSourceIds, ""));
     builder.put("ddf.catalog/getSourceInfo", new DocMethod(this::getSourceInfo, ""));
     METHODS = builder.build();
@@ -154,7 +169,9 @@ public class CatalogMethods implements MethodSet {
 
     return ImmutableMap.of(
         "deleted_metacards",
-        deleteResponse.getDeletedMetacards().stream()
+        deleteResponse
+            .getDeletedMetacards()
+            .stream()
             .map(this::metacard2map)
             .map(m -> ImmutableMap.of(ATTRIBUTES, m))
             .collect(Collectors.toList()));
@@ -186,7 +203,8 @@ public class CatalogMethods implements MethodSet {
     }
 
     String[] ids =
-        updateList.stream()
+        updateList
+            .stream()
             .map(Metacard::getId)
             .collect(Collectors.toList())
             .toArray(new String[0]);
@@ -199,7 +217,9 @@ public class CatalogMethods implements MethodSet {
 
     return ImmutableMap.of(
         "updated_metacards",
-        updateResponse.getUpdatedMetacards().stream()
+        updateResponse
+            .getUpdatedMetacards()
+            .stream()
             .map(Update::getNewMetacard)
             .map(this::metacard2map)
             .map(v -> ImmutableMap.of(ATTRIBUTES, v))
@@ -345,21 +365,24 @@ public class CatalogMethods implements MethodSet {
           INTERNAL_ERROR, "An error occured while running your query - " + e.getMessage());
     }
     return new ImmutableMap.Builder<String, Object>()
-            .put(
-        "results",
-        queryResponse.getResults().stream()
-            .map(Result::getMetacard)
-            .map(this::metacard2map)
-            .map(m -> ImmutableMap.of("metacard", ImmutableMap.of("properties", m)))
-            .collect(Collectors.toList()))
-            .put("status", getQueryInfo(queryResponse))
-            .build();
+        .put(
+            "results",
+            queryResponse
+                .getResults()
+                .stream()
+                .map(Result::getMetacard)
+                .map(this::metacard2map)
+                .map(m -> ImmutableMap.of("metacard", ImmutableMap.of("properties", m)))
+                .collect(Collectors.toList()))
+        .put("status", getQueryInfo(queryResponse))
+        .build();
   }
 
   private Map<String, Integer> getQueryInfo(QueryResponse queryResponse) {
     return new ImmutableMap.Builder<String, Integer>()
-            .put("hits", Math.toIntExact(queryResponse.getHits()))
-            .put("count", queryResponse.getResults().size()).build();
+        .put("hits", Math.toIntExact(queryResponse.getHits()))
+        .put("count", queryResponse.getResults().size())
+        .build();
   }
 
   //  private Filter recur(Map tree) throws FilterTreeParseException {
@@ -428,7 +451,9 @@ public class CatalogMethods implements MethodSet {
 
     return ImmutableMap.of(
         "created_metacards",
-        createResponse.getCreatedMetacards().stream()
+        createResponse
+            .getCreatedMetacards()
+            .stream()
             .map(this::metacard2map)
             .map(v -> ImmutableMap.of(ATTRIBUTES, v))
             .collect(Collectors.toList()));
@@ -459,7 +484,8 @@ public class CatalogMethods implements MethodSet {
     Object rawType = metacard.get("metacardType");
     String desiredMetacardType = rawType instanceof String ? String.valueOf(rawType) : null;
     MetacardType metacardType =
-        metacardTypes.stream()
+        metacardTypes
+            .stream()
             .filter(mt -> mt.getName().equals(desiredMetacardType))
             .findFirst()
             .orElse(MetacardImpl.BASIC_METACARD);
