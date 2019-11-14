@@ -4,7 +4,6 @@ import { SchemaLink } from 'apollo-link-schema'
 import { makeExecutableSchema } from 'graphql-tools'
 import { fromJS } from 'immutable'
 import { mergeDeepOverwriteLists } from '../utils'
-const { InMemoryCache } = require('apollo-cache-inmemory')
 const { BatchHttpLink } = require('apollo-link-batch-http')
 const { genSchema, toGraphqlName, fromGraphqlName } = require('./gen-schema')
 
@@ -103,9 +102,7 @@ const handleError = (code, data) => {
 }
 
 const send = async query => {
-  const res = await catalog.query(processQuery(query))
-
-  return res.queried_metacards
+  return await catalog.query(processQuery(query))
 }
 
 const renameKeys = (f, map) => {
@@ -172,14 +169,14 @@ const metacards = async (ctx, args) => {
   const q = { ...args.settings, filterTree: args.filterTree }
   const json = await send(q)
 
-  const attributes = json.queried_metacards.map(metacard => {
-    const properties = toGraphqlMap(metacard.attributes)
+  const attributes = json.results.map(result => {
+    const properties = toGraphqlMap(result.metacard.properties)
     return {
       ...properties,
       queries: queries(properties.queries),
     }
   })
-
+  json.status['elapsed'] = json.request_duration_millis
   return { attributes, ...json }
 }
 
@@ -276,17 +273,14 @@ const sources = async () => {
     actions: 'sourceActions',
     version: 'version',
   }
-  const response = []
   res.sourceInfo.forEach(source => {
-    let sourceObj = {}
     Object.keys(source).forEach(key => {
       if (key in rpcToSchema) {
-        sourceObj[rpcToSchema[key]] = source[key]
+        delete Object.assign(source, { [rpcToSchema[key]]: source[key] })[key]
       }
     })
-    response.push(sourceObj)
   })
-  return response
+  return res.sourceInfo
 }
 
 const metacardTypes = async () => {
@@ -336,19 +330,12 @@ const Query = {
 const createMetacard = async (parent, args) => {
   const { attrs } = args
 
-  const body = {
+  const metacard = {
     geometry: null,
     type: 'Feature',
     properties: fromGraphqlMap(attrs),
   }
-
-  const res = await fetch(`${ROOT}/catalog/`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
+  const res = await catalog.create({ metacards: metacard })
 
   const id = res.headers.get('id')
   const created = new Date().toISOString()
@@ -401,11 +388,7 @@ const saveMetacard = async (parent, args) => {
 
 const deleteMetacard = async (parent, args) => {
   const { id } = args
-
-  const res = await fetch(`${ROOT}/catalog/${id}`, {
-    method: 'DELETE',
-  })
-
+  const res = catalog.delete({ ids: id })
   if (res.ok) {
     return id
   }

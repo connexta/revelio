@@ -344,14 +344,22 @@ public class CatalogMethods implements MethodSet {
       return new Error(
           INTERNAL_ERROR, "An error occured while running your query - " + e.getMessage());
     }
-
-    return ImmutableMap.of(
-        "queried_metacards",
+    return new ImmutableMap.Builder<String, Object>()
+            .put(
+        "results",
         queryResponse.getResults().stream()
             .map(Result::getMetacard)
             .map(this::metacard2map)
-            .map(m -> ImmutableMap.of(ATTRIBUTES, m))
-            .collect(Collectors.toList()));
+            .map(m -> ImmutableMap.of("metacard", ImmutableMap.of("properties", m)))
+            .collect(Collectors.toList()))
+            .put("status", getQueryInfo(queryResponse))
+            .build();
+  }
+
+  private Map<String, Integer> getQueryInfo(QueryResponse queryResponse) {
+    return new ImmutableMap.Builder<String, Integer>()
+            .put("hits", Math.toIntExact(queryResponse.getHits()))
+            .put("count", queryResponse.getResults().size()).build();
   }
 
   //  private Filter recur(Map tree) throws FilterTreeParseException {

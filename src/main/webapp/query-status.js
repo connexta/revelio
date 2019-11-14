@@ -28,7 +28,9 @@ const formatStatus = (status = 'Unknown', info = {}) => {
   }
 
   if (status === 'source.success') {
-    const { hits, count, elapsed } = info
+    const hits = info.hits || ''
+    const count = info.count || ''
+    const elapsed = info.elapsed || ''
     return (
       <Typography variant="subtitle2" color="textSecondary">
         Available: {count}, Possible: {hits}, Time: {elapsed}
