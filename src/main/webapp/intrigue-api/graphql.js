@@ -84,23 +84,6 @@ const processQuery = ({ filterTree, cql, ...query }) => {
   return { cql: cqlString, ...query }
 }
 
-const handleError = (code, data) => {
-  let e = null
-
-  try {
-    const json = typeof data === 'string' ? JSON.parse(data) : data
-    const message = json.message || 'Unknown error'
-    const error = Error(`${code}: ${message}`)
-    error.data = json
-    e = error
-  } catch (_) {
-    e = Error(data)
-  }
-
-  e.code = code
-  throw e
-}
-
 const send = async query => {
   return await catalog.query(processQuery(query))
 }
