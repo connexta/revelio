@@ -3,7 +3,8 @@ import { useState } from 'react'
 import { Paper, Button, Divider, Box, TextField } from '@material-ui/core'
 import FilterGroup from './filter/filter-group'
 import { deserialize, serialize } from './query-advanced-serialization'
-
+import { FilterContext } from './filter-context'
+import { metacardDefinitions } from './filter/dummyDefinitions'
 type QuerySettings = {
   title?: string
 }
@@ -11,6 +12,7 @@ type QuerySettings = {
 type QueryAdvancedProps = QuerySettings & {
   filterTree?: any
   limitDepth?: number
+  editing?: boolean
   onSearch: (value: any) => void
 }
 
@@ -50,11 +52,18 @@ const QueryAdvanced = (props: QueryAdvancedProps) => {
         />
         <Divider />
       </Box>
-      <FilterGroup
-        {...filterTree}
-        limitDepth={props.limitDepth}
-        onChange={setFilterTree}
-      />
+      <FilterContext.Provider
+        value={{
+          includedAttributes: Array.from(metacardDefinitions.keys()),
+          editing: props.editing !== false,
+        }}
+      >
+        <FilterGroup
+          {...filterTree}
+          limitDepth={props.limitDepth}
+          onChange={setFilterTree}
+        />
+      </FilterContext.Provider>
       <Button
         style={{ marginTop: 5 }}
         fullWidth

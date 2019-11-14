@@ -48,7 +48,7 @@ const Divider = () => (
 
 export const defaultFilter = {
   property: 'anyText',
-  type: 'Contains',
+  type: 'ILIKE',
   value: '',
 }
 

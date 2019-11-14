@@ -63,3 +63,21 @@ stories.add('with deserialized filters', () => {
     />
   )
 })
+
+const searchFormFilter = {
+  type: 'AND',
+  filters: [deserializedFilters, baseFilter],
+}
+
+stories.add('as search form', () => {
+  return (
+    <QueryAdvanced
+      filterTree={searchFormFilter}
+      limitDepth={number('Nesting Depth', 1)}
+      onSearch={(value: any) => {
+        action('onSearch')(value)
+      }}
+      editing={false}
+    />
+  )
+})
