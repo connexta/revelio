@@ -8,6 +8,7 @@
     "@types/react": "^16.9.5",
     "@types/react-select": "3.0.2",
     "@typescript-eslint/parser": "^2.3.3",
+    "cross-env": "^6.0.3",
     "eslint-plugin-graphql": "^3.1.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-react-hooks": "^2.1.2",
@@ -53,7 +54,7 @@
     "styled-components": "^4.3.2"
   },
   "scripts": {
-    "start": "ace start --middleware src/main/graphql-server/middleware.js",
+    "start": "cross-env NODE_OPTIONS='--inspect' ace start --middleware src/main/graphql-server/middleware.js",
     "fmt": "ace format -w",
     "start:test": "ace start --env=test",
     "test:api": "mocha src/main/webapp/intrigue-api/test",
