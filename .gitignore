@@ -6,4 +6,5 @@ yarn-error.log
 *.project
 *.settings
 *.classpath
+*.vscode
 .DS_Store

@@ -58,7 +58,7 @@ const User = props => {
         onClick={handleDrawerOpen}
       >
         <PersonIcon />
-        <Typography variant="h6">Admin</Typography>
+        <Typography variant="h6">{username}</Typography>
       </Button>
 
       <UserDrawer open={open} onClose={handleDrawerClose}>
@@ -73,7 +73,7 @@ const User = props => {
 }
 
 const query = gql`
-  query UserPreferences {
+  query User {
     user {
       email
       isGuest
