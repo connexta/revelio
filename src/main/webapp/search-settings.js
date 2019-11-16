@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { useApolloFallback } from './react-hooks'
 import gql from 'graphql-tag'
 
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 import Fab from '@material-ui/core/Fab'
@@ -11,10 +12,10 @@ import ListItem from '@material-ui/core/ListItem'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import MenuItem from '@material-ui/core/MenuItem'
 import Paper from '@material-ui/core/Paper'
-import ReactSelect from 'react-select'
 import Remove from '@material-ui/icons/Remove'
 import Select from '@material-ui/core/Select'
 import Typography from '@material-ui/core/Typography'
+import TextField from '@material-ui/core/TextField'
 
 import { fromJS } from 'immutable'
 
@@ -149,27 +150,31 @@ const MultipleSorts = props => {
   )
 }
 
-const createOption = option => {
-  return {
-    value: option,
-    label: option.id,
-  }
-}
-
 const AttributeSelect = props => {
   const { attributeDescriptors, value, onChange } = props
-  const options = attributeDescriptors.map(createOption)
-  const defaultValue = value ? createOption(value) : options[0]
 
   const handleChange = selectedOption => {
-    onChange(selectedOption.value)
+    onChange(selectedOption)
   }
 
   return (
-    <ReactSelect
-      defaultValue={defaultValue}
-      options={options}
-      onChange={handleChange}
+    <Autocomplete
+      options={attributeDescriptors}
+      defaultValue={value}
+      autoSelect
+      disableClearable
+      onChange={(event, value) => {
+        handleChange(value)
+      }}
+      renderInput={params => (
+        <TextField
+          {...params}
+          label="Sort Attribute"
+          margin="normal"
+          fullWidth
+        />
+      )}
+      getOptionLabel={option => option.id}
     />
   )
 }
