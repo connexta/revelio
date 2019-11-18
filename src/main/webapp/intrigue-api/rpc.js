@@ -1,31 +1,11 @@
-const fetch = require('isomorphic-fetch')
+const fetch = require('./fetch')
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 
-const defaultOptions = {
-  protocol: 'https:',
-  hostname: 'localhost',
-  port: 8993,
-  pathname: '/direct',
-}
-
-const createClient = (opts = defaultOptions) => {
+const createClient = () => {
   let id = 0
+  const url = '/direct'
 
-  const { protocol, hostname, port, pathname } = opts
-
-  const auth = Buffer.from('admin:admin').toString('base64')
-
-  const headers = {
-    'User-Agent': 'jsonrpc',
-    'X-Requested-With': 'XMLHttpRequest',
-    Authorization: `Basic ${auth}`,
-    'Content-Type': 'application/json',
-    Referer: `https://${hostname}:8993`,
-  }
-
-  const url = `${protocol}//${hostname}:${port}${pathname}`
-
-  const request = async (method, params = {}) => {
+  const request = async (method, params) => {
     id++
 
     const req = {
@@ -37,7 +17,6 @@ const createClient = (opts = defaultOptions) => {
 
     const res = await fetch(url, {
       method: 'POST',
-      headers,
       body: JSON.stringify(req),
     })
 

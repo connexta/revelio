@@ -4,10 +4,29 @@ import { SchemaLink } from 'apollo-link-schema'
 import { makeExecutableSchema } from 'graphql-tools'
 import { fromJS } from 'immutable'
 import { mergeDeepOverwriteLists } from '../utils'
+const { BatchHttpLink } = require('apollo-link-batch-http')
+const { genSchema, toGraphqlName, fromGraphqlName } = require('./gen-schema')
+
+const createRpcClient = require('./rpc')
+
 const fetch = require('./fetch')
 const ROOT = '/search/catalog/internal'
-const { genSchema, toGraphqlName, fromGraphqlName } = require('./gen-schema')
-const { BatchHttpLink } = require('apollo-link-batch-http')
+
+const request = createRpcClient()
+
+const methods = {
+  create: 'ddf.catalog/create',
+  query: 'ddf.catalog/query',
+  update: 'ddf.catalog/update',
+  delete: 'ddf.catalog/delete',
+  getSourceIds: 'ddf.catalog/getSourceIds',
+  getSourceInfo: 'ddf.catalog/getSourceInfo',
+}
+
+const catalog = Object.keys(methods).reduce((catalog, method) => {
+  catalog[method] = params => request(methods[method], params)
+  return catalog
+}, {})
 
 const removeProperty = propertyName => data =>
   data
@@ -62,37 +81,11 @@ const getCql = ({ filterTree, cql }) => {
 
 const processQuery = ({ filterTree, cql, ...query }) => {
   const cqlString = getCql({ filterTree, cql })
-  return JSON.stringify({ cql: cqlString, ...query })
-}
-
-const handleError = (code, data) => {
-  let e = null
-
-  try {
-    const json = typeof data === 'string' ? JSON.parse(data) : data
-    const message = json.message || 'Unknown error'
-    const error = Error(`${code}: ${message}`)
-    error.data = json
-    e = error
-  } catch (_) {
-    e = Error(data)
-  }
-
-  e.code = code
-  throw e
+  return { cql: cqlString, ...query }
 }
 
 const send = async query => {
-  const res = await fetch(`${ROOT}/cql`, {
-    method: 'POST',
-    body: processQuery(query),
-  })
-
-  if (!res.ok) {
-    handleError(res.status, await res.text())
-  }
-
-  return res.json()
+  return await catalog.query(processQuery(query))
 }
 
 const renameKeys = (f, map) => {
@@ -166,7 +159,7 @@ const metacards = async (ctx, args) => {
       queries: queries(properties.queries),
     }
   })
-
+  json.status['elapsed'] = json.request_duration_millis
   return { attributes, ...json }
 }
 
@@ -252,8 +245,25 @@ const user = async () => {
 }
 
 const sources = async () => {
-  const res = await fetch(`${ROOT}/catalog/sources`)
-  return res.json()
+  const sourceIds = await catalog.getSourceIds({})
+  const res = await catalog.getSourceInfo({ ids: sourceIds })
+
+  //needed until we change the schema to match the json rpc stuff
+  const rpcToSchema = {
+    sourceId: 'id',
+    isAvailable: 'available',
+    catalogedTypes: 'contentTypes',
+    actions: 'sourceActions',
+    version: 'version',
+  }
+  res.sourceInfo.forEach(source => {
+    Object.keys(source).forEach(key => {
+      if (key in rpcToSchema) {
+        delete Object.assign(source, { [rpcToSchema[key]]: source[key] })[key]
+      }
+    })
+  })
+  return res.sourceInfo
 }
 
 const metacardTypes = async () => {
@@ -303,21 +313,22 @@ const Query = {
 const createMetacard = async (parent, args) => {
   const { attrs } = args
 
-  const body = {
-    geometry: null,
+  const metacard = {
+    geometry: '',
     type: 'Feature',
-    properties: fromGraphqlMap(attrs),
+    ...fromGraphqlMap(attrs),
+  }
+  const metacardsToCreate = {
+    metacards: [
+      {
+        attributes: metacard,
+      },
+    ],
   }
 
-  const res = await fetch(`${ROOT}/catalog/`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
+  const res = await catalog.create(metacardsToCreate)
 
-  const id = res.headers.get('id')
+  const id = res.created_metacards[0].attributes['id']
   const created = new Date().toISOString()
   const modified = created
 
@@ -329,7 +340,6 @@ const createMetacard = async (parent, args) => {
     'metacard.owner': 'You',
   })
 }
-
 const saveMetacard = async (parent, args) => {
   const { id, attrs } = args
 
@@ -368,11 +378,7 @@ const saveMetacard = async (parent, args) => {
 
 const deleteMetacard = async (parent, args) => {
   const { id } = args
-
-  const res = await fetch(`${ROOT}/catalog/${id}`, {
-    method: 'DELETE',
-  })
-
+  const res = await catalog.delete({ ids: [id] })
   if (res.ok) {
     return id
   }

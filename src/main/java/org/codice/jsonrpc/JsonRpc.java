@@ -103,7 +103,9 @@ public class JsonRpc implements Method {
   }
 
   private Object listMethods(Map<String, Object> params) {
-    return methods.entrySet().stream()
+    return methods
+        .entrySet()
+        .stream()
         .map(e -> ImmutableMap.of("method", e.getKey(), "docstring", e.getValue().docstring))
         .collect(Collectors.toList());
   }

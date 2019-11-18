@@ -33,7 +33,6 @@ const cacheBust = urlString => {
 
 module.exports = (url, { headers, ...opts } = {}) => {
   const auth = Buffer.from('admin:admin').toString('base64')
-
   return fetch(cacheBust(url), {
     credentials: 'same-origin',
     cache: 'no-cache',
