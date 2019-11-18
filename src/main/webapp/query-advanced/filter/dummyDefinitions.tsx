@@ -10,11 +10,32 @@ export type MetacardType =
   | 'FLOAT'
   | 'DOUBLE'
 
-export const metacardDefinitions: Map<string, MetacardType> = new Map([
-  ['anyText', 'STRING'],
-  ['date-created', 'DATE'],
-  ['anyGeo', 'LOCATION'],
-  ['enterprise', 'BOOLEAN'],
-  ['an integer', 'INTEGER'],
-  ['a float', 'FLOAT'],
-])
+export const sampleMetacardTypes = {
+  metadata: {
+    type: 'XML',
+  },
+  thumbnail: {
+    type: 'BINARY',
+  },
+  phonetics: {
+    type: 'BOOLEAN',
+  },
+  created: {
+    type: 'DATE',
+  },
+  'media.bit.rate': {
+    type: 'DOUBLE',
+  },
+  'media.width-pixels': {
+    type: 'INTEGER',
+  },
+  'ext.population': {
+    type: 'LONG',
+  },
+  location: {
+    type: 'GEOMETRY',
+  },
+  'topic.vocabulary': {
+    type: 'STRING',
+  },
+}

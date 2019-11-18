@@ -4,9 +4,11 @@ import * as React from 'react'
 import { action } from '@storybook/addon-actions'
 import { withKnobs, number } from '@storybook/addon-knobs'
 const stories = storiesOf('Query Advanced', module)
+import { useState } from 'react'
+import FilterGroup from './filter/filter-group'
 
 const baseFilter = {
-  property: 'date-created',
+  property: 'created',
   type: 'DURING',
   value: '2019-10-13T17:36:00.000Z/2019-10-30T17:36:00.000Z',
 }
@@ -22,13 +24,13 @@ const nearFilter = {
   property: {
     type: 'FILTER_FUNCTION',
     filterFunctionName: 'proximity',
-    params: ['anyText', '2', 'hello there'],
+    params: ['topic.vocabulary', '2', 'hello there'],
   },
 }
 
 const rangeFilter = {
   type: 'BETWEEN',
-  property: 'an integer',
+  property: 'ext.population',
   value: '',
   lowerBoundary: 1,
   upperBoundary: 5,
@@ -41,25 +43,24 @@ const deserializedFilters = {
 
 stories.addDecorator(withKnobs)
 stories.add('basic', () => {
+  const [filterTree, setFilterTree] = useState(baseFilterGroup)
+
   return (
-    <QueryAdvanced
+    <FilterGroup
       limitDepth={number('Nesting Depth', 1)}
-      filterTree={baseFilterGroup}
-      onSearch={(value: any) => {
-        action('onSearch')(value)
-      }}
+      {...filterTree}
+      onChange={setFilterTree}
     />
   )
 })
 
 stories.add('with deserialized filters', () => {
+  const [filterTree, setFilterTree] = useState(deserializedFilters)
   return (
-    <QueryAdvanced
+    <FilterGroup
       limitDepth={number('Nesting Depth', 1)}
-      filterTree={deserializedFilters}
-      onSearch={(value: any) => {
-        action('onSearch')(value)
-      }}
+      {...filterTree}
+      onChange={setFilterTree}
     />
   )
 })

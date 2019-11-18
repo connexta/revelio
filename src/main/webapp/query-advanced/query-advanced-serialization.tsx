@@ -1,8 +1,8 @@
 import { isFilterGroup } from './filter/filter-group'
-import { metacardDefinitions } from './filter/dummyDefinitions'
 import { getDefaultValue } from './filter/filter-utils'
+import { getIn } from 'immutable'
 
-export const deserialize = (filter: any) => {
+export const deserialize = (filter: any, metacardTypes: any) => {
   if (isFilterGroup(filter)) {
     const filters: any = filter.filters.map(deserialize)
     return { ...filter, filters }
@@ -30,7 +30,9 @@ export const deserialize = (filter: any) => {
       }
     }
     if (filter.type === 'IS NULL') {
-      filter.value = getDefaultValue(metacardDefinitions.get(filter.property))
+      filter.value = getDefaultValue(
+        getIn(metacardTypes, [filter.property, 'type'], 'STRING')
+      )
     }
     return { ...filter }
   }
@@ -56,7 +58,7 @@ const generateIsEmptyFilter = (property: string) => {
   }
 }
 
-export const serialize = (filter: any) => {
+export const serialize = (filter: any, metacardTypes: any) => {
   if (isFilterGroup(filter)) {
     const filters: any = filter.filters.map(serialize)
     return { ...filter, filters }
@@ -72,7 +74,7 @@ export const serialize = (filter: any) => {
       return generateIsEmptyFilter(filter.property)
   }
 
-  switch (metacardDefinitions.get(filter.property)) {
+  switch (getIn(metacardTypes, [filter.property, 'type'], undefined)) {
     case 'FLOAT':
     case 'DOUBLE':
       if (filter.type === 'BETWEEN') {

@@ -66,6 +66,9 @@ export const transformValue = ({
     case '=':
       if (propertyType === 'DATE') value = fromRelativeValue()
       break
+    case 'IS NULL':
+      value = propertyType === 'BOOLEAN' ? false : ''
+      break
   }
 
   switch (newOperator) {

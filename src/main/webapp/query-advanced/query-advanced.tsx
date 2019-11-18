@@ -1,10 +1,21 @@
 import * as React from 'react'
 import { useState } from 'react'
-import { Paper, Button, Divider, Box, TextField } from '@material-ui/core'
+import {
+  Paper,
+  Button,
+  Divider,
+  Box,
+  TextField,
+  LinearProgress,
+  Typography,
+} from '@material-ui/core'
 import FilterGroup from './filter/filter-group'
 import { deserialize, serialize } from './query-advanced-serialization'
 import { FilterContext } from './filter-context'
-import { metacardDefinitions } from './filter/dummyDefinitions'
+import useMetacardDefinitions from '../react-hooks/use-metacard-definitions'
+import { sampleMetacardTypes } from './filter/dummyDefinitions'
+
+const useApolloFallback = require('../react-hooks/use-apollo-fallback').default
 type QuerySettings = {
   title?: string
 }
@@ -14,11 +25,7 @@ type QueryAdvancedProps = QuerySettings & {
   limitDepth?: number
   editing?: boolean
   onSearch: (value: any) => void
-}
-
-const getFilterTree = (filterTree: any) => {
-  const { filters, type } = filterTree
-  return { filters, type }
+  metacardTypes?: any
 }
 
 const getSettings = (props: QueryAdvancedProps) => {
@@ -28,12 +35,26 @@ const getSettings = (props: QueryAdvancedProps) => {
   return settings
 }
 
-const QueryAdvanced = (props: QueryAdvancedProps) => {
-  const [filterTree, setFilterTree] = useState(
-    deserialize(getFilterTree(props.filterTree))
+const Loading = () => {
+  return (
+    <Paper>
+      <LinearProgress />
+    </Paper>
   )
-  const [settings, setSettings] = useState(getSettings(props))
+}
+const Error = (props: any) => {
+  return (
+    <Paper>
+      <Typography>
+        {props.message ? props.message : 'Something went wrong'}
+      </Typography>
+    </Paper>
+  )
+}
 
+const QueryAdvanced = (props: QueryAdvancedProps) => {
+  const [settings, setSettings] = useState(getSettings(props))
+  const { metacardTypes = sampleMetacardTypes } = props
   return (
     <Paper
       style={{
@@ -54,14 +75,19 @@ const QueryAdvanced = (props: QueryAdvancedProps) => {
       </Box>
       <FilterContext.Provider
         value={{
-          includedAttributes: Array.from(metacardDefinitions.keys()),
+          metacardTypes,
           editing: props.editing !== false,
         }}
       >
         <FilterGroup
-          {...filterTree}
+          {...deserialize(props.filterTree, metacardTypes)}
           limitDepth={props.limitDepth}
-          onChange={setFilterTree}
+          onChange={(value: any) => {
+            props.onSearch({
+              ...settings,
+              filterTree: serialize(value, metacardTypes),
+            })
+          }}
         />
       </FilterContext.Provider>
       <Button
@@ -70,7 +96,10 @@ const QueryAdvanced = (props: QueryAdvancedProps) => {
         variant="contained"
         color="primary"
         onClick={() =>
-          props.onSearch({ ...settings, filterTree: serialize(filterTree) })
+          props.onSearch({
+            ...settings,
+            filterTree: serialize(props.filterTree, metacardTypes),
+          })
         }
       >
         Search
@@ -78,5 +107,19 @@ const QueryAdvanced = (props: QueryAdvancedProps) => {
     </Paper>
   )
 }
+const Container = (props: any) => {
+  const { loading, error, metacardTypes } = useMetacardDefinitions()
+  if (loading) {
+    return <Loading />
+  }
+  if (error) {
+    return <Error message={error} />
+  }
 
-export default QueryAdvanced
+  return <QueryAdvanced {...props} metacardTypes={metacardTypes} />
+}
+
+export default (props: QueryAdvancedProps) => {
+  const Component = useApolloFallback(Container, QueryAdvanced)
+  return <Component {...props} />
+}
