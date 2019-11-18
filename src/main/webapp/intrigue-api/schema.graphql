@@ -277,7 +277,7 @@ type Query {
   user: User
   sources: [Source]
   systemProperties: SystemProperties
-  metacardTypes: [MetacardType]
+  metacardTypes: Json
 
   # #### Query the Catalog Framework for Metcards.
   #

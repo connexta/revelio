@@ -16,7 +16,7 @@ import Remove from '@material-ui/icons/Remove'
 import Select from '@material-ui/core/Select'
 import Typography from '@material-ui/core/Typography'
 
-import { fromJS } from 'immutable'
+import { fromJS, getIn } from 'immutable'
 
 const getDirectionLabel = type => {
   let ascending = ''
@@ -58,26 +58,60 @@ const getDirectionLabel = type => {
   }
 }
 
-const sampleAttributeDescriptors = [
-  { id: 'metadata', type: 'XML', __typename: 'MetacardType' },
-  { id: 'thumbnail', type: 'BINARY', __typename: 'MetacardType' },
-  { id: 'phonetics', type: 'BOOLEAN', __typename: 'MetacardType' },
-  { id: 'created', type: 'DATE', __typename: 'MetacardType' },
-  { id: 'media.bit-rate', type: 'DOUBLE', __typename: 'MetacardType' },
-  { id: 'media.width-pixels', type: 'INTEGER', __typename: 'MetacardType' },
-  { id: 'ext.population', type: 'LONG', __typename: 'MetacardType' },
-  { id: 'location', type: 'GEOMETRY', __typename: 'MetacardType' },
-  { id: 'topic.vocabulary', type: 'STRING', __typename: 'MetacardType' },
-]
+const sampleAttributeDescriptors = {
+  metadata: {
+    type: 'XML',
+    multivalued: true,
+    isInjected: false,
+  },
+  thumbnail: {
+    type: 'BINARY',
+    multivalued: true,
+    isInjected: false,
+  },
+  phonetics: {
+    type: 'BOOLEAN',
+    multivalued: false,
+    isInjected: false,
+  },
+  created: {
+    type: 'DATE',
+    multivalued: false,
+    isInjected: false,
+  },
+  'media.bit.rate': {
+    type: 'DOUBLE',
+    multivalued: true,
+    isInjected: false,
+  },
+  'media.width-pixels': {
+    type: 'INTEGER',
+    multivalued: true,
+    isInjected: false,
+  },
+  'ext.population': {
+    type: 'LONG',
+    multivalued: false,
+    isInjected: false,
+  },
+  location: {
+    type: 'GEOMETRY',
+    multivalued: true,
+    isInjected: false,
+  },
+  'topic.vocabulary': {
+    type: 'STRING',
+    multivalued: true,
+    isInjected: false,
+  },
+}
 
 const AttributeSortOrder = props => {
   const { attributeDescriptors, availableDescriptors, onChange } = props
 
   const value = fromJS(props.value || {})
 
-  const attribute = attributeDescriptors.find(
-    attr => attr.id === value.get('attribute')
-  )
+  const attribute = getIn(attributeDescriptors, [value.get('attribute')])
 
   return (
     <div
@@ -90,10 +124,10 @@ const AttributeSortOrder = props => {
       }}
     >
       <AttributeSelect
-        value={attribute}
+        value={value.get('attribute')}
         attributeDescriptors={availableDescriptors}
         onChange={attribute => {
-          onChange(value.set('attribute', attribute.id))
+          onChange(value.set('attribute', attribute))
         }}
       />
 
@@ -152,7 +186,7 @@ const MultipleSorts = props => {
 const createOption = option => {
   return {
     value: option,
-    label: option.id,
+    label: option,
   }
 }
 
@@ -197,12 +231,12 @@ const DirectionSelect = props => {
 }
 
 const sortById = (a, b) => {
-  return a.id > b.id ? 1 : -1
+  return a > b ? 1 : -1
 }
 
 const getAvailableAttributes = (descriptors, used) => {
-  return descriptors
-    .filter(descriptor => !used.includes(descriptor.id))
+  return Object.keys(descriptors)
+    .filter(descriptor => !used.includes(descriptor))
     .sort(sortById)
 }
 
@@ -210,9 +244,9 @@ const getUsedAttributes = sorts => {
   return sorts.map(sort => sort.get('attribute'))
 }
 
-const getNextAvailableSort = descriptors => {
+const getNextAvailableSort = attributes => {
   const direction = 'ascending'
-  const attribute = descriptors[0].id
+  const attribute = attributes[0]
 
   return { attribute, direction }
 }
@@ -226,13 +260,13 @@ const SortOrder = props => {
     props.onChange(value.toJS())
   }
   const unavailableAttributes = getUsedAttributes(value)
-  const availableDescriptors = getAvailableAttributes(
+  const availableAttributes = getAvailableAttributes(
     attributeDescriptors,
     unavailableAttributes
   )
 
   const pushNextSort = () => {
-    const nextSort = getNextAvailableSort(availableDescriptors)
+    const nextSort = getNextAvailableSort(availableAttributes)
     return value.push(fromJS(nextSort))
   }
 
@@ -247,17 +281,17 @@ const SortOrder = props => {
     <div>
       <AttributeSortOrder
         attributeDescriptors={attributeDescriptors}
-        availableDescriptors={availableDescriptors}
+        availableDescriptors={availableAttributes}
         onChange={sort => {
           const next = value.shift().unshift(sort)
           onChange(next)
         }}
-        value={value.get(0) || getNextAvailableSort(availableDescriptors)}
+        value={value.get(0) || getNextAvailableSort(availableAttributes)}
       />
 
       <MultipleSorts
         attributeDescriptors={attributeDescriptors}
-        availableDescriptors={availableDescriptors}
+        availableDescriptors={availableAttributes}
         onChange={list => {
           const next = value.slice(0, 1).concat(list)
           onChange(next)
@@ -268,7 +302,7 @@ const SortOrder = props => {
       <Button
         variant="outlined"
         color="primary"
-        disabled={availableDescriptors.length === 0}
+        disabled={availableAttributes.length === 0}
         onClick={() => {
           onChange(pushNextSort())
         }}
@@ -298,10 +332,7 @@ const Error = props => {
 
 const query = gql`
   query MetacardTypes {
-    metacardTypes {
-      id
-      type
-    }
+    metacardTypes
   }
 `
 

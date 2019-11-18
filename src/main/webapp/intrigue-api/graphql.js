@@ -264,7 +264,7 @@ const metacardTypes = async () => {
     return Object.assign(types, json[group])
   }, {})
 
-  return Object.keys(types).map(k => types[k])
+  return types
 }
 
 const facet = async (parent, args) => {
