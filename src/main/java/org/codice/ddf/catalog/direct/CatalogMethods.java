@@ -422,7 +422,7 @@ public class CatalogMethods implements MethodSet {
 
   private Object create(Map<String, Object> params) {
     if (!(params.get("metacards") instanceof List)) {
-      return new Error(INVALID_PARAMS, "params were not a map");
+      return new Error(INVALID_PARAMS, "params were not a list");
     }
     List<Map> metacards = (List<Map>) params.get("metacards");
 

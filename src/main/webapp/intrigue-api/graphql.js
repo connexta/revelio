@@ -314,13 +314,21 @@ const createMetacard = async (parent, args) => {
   const { attrs } = args
 
   const metacard = {
-    geometry: null,
+    geometry: '',
     type: 'Feature',
     properties: fromGraphqlMap(attrs),
   }
-  const res = await catalog.create({ metacards: metacard })
+  const metacardsToCreate = {
+    metacards: [
+      {
+        attributes: metacard,
+      },
+    ],
+  }
 
-  const id = res.headers.get('id')
+  const res = await catalog.create(metacardsToCreate)
+
+  const id = res.created_metacards[0].attributes['id']
   const created = new Date().toISOString()
   const modified = created
 
@@ -332,7 +340,6 @@ const createMetacard = async (parent, args) => {
     'metacard.owner': 'You',
   })
 }
-
 const saveMetacard = async (parent, args) => {
   const { id, attrs } = args
 
