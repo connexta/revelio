@@ -316,7 +316,7 @@ const createMetacard = async (parent, args) => {
   const metacard = {
     geometry: '',
     type: 'Feature',
-    properties: fromGraphqlMap(attrs),
+    ...fromGraphqlMap(attrs),
   }
   const metacardsToCreate = {
     metacards: [
