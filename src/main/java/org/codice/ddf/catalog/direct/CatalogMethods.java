@@ -481,7 +481,7 @@ public class CatalogMethods implements MethodSet {
     }
     Map<String, Object> attributes = (Map) metacard.get(ATTRIBUTES);
 
-    Object rawType = metacard.get("metacardType");
+    Object rawType = metacard.get("metacard-type");
     String desiredMetacardType = rawType instanceof String ? String.valueOf(rawType) : null;
     MetacardType metacardType =
         metacardTypes
@@ -533,7 +533,9 @@ public class CatalogMethods implements MethodSet {
       case GEOMETRY:
       case STRING:
       case XML:
-        return of(new AttributeImpl(name, value.toString()), null);
+        return value instanceof List
+            ? of(new AttributeImpl(name, ((List) value)), null)
+            : of(new AttributeImpl(name, value.toString()), null);
       case BOOLEAN:
         return of(new AttributeImpl(name, Boolean.parseBoolean(value.toString())), null);
       case SHORT:
