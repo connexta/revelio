@@ -1,7 +1,8 @@
 import * as React from 'react'
-import Select from 'react-select'
+import Select from '@material-ui/lab/Autocomplete'
 import { Map } from 'immutable'
 import { Box } from '@material-ui/core'
+import TextField from '@material-ui/core/TextField'
 import { useFilterContext } from '../filter-context'
 
 const attributeAliases = Map({
@@ -9,24 +10,23 @@ const attributeAliases = Map({
   enterprise: 'Enterprise',
 })
 
-const createOption = (option: string) => ({
-  value: option,
-  label: attributeAliases.get(option) || option,
-})
-
 const AttributeDropdown = (props: any) => {
   const context = useFilterContext()
-  const options = context.includedAttributes.map(createOption)
-  const value = options.find(option => option.value === props.value)
   return (
     <Box style={{ margin: 5 }}>
       <Select
-        options={options}
-        value={value}
-        onChange={(option: any) => {
-          props.onChange(option.value)
+        autoSelect
+        disableClearable
+        options={context.includedAttributes}
+        value={props.value}
+        onChange={(_, value: any) => {
+          props.onChange(value)
         }}
-        isDisabled={!context.editing}
+        renderInput={params => <TextField {...params} fullWidth />}
+        disabled={!context.editing}
+        getOptionLabel={option => {
+          return attributeAliases.get(option) || option
+        }}
       />
     </Box>
   )
