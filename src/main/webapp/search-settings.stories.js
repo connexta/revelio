@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { action } from '@connexta/ace/@storybook/addon-actions'
 import { storiesOf } from './@storybook/react'
 
-import { SortOrder } from './search-settings'
+import SortOrder from './search-settings'
 
 const stories = storiesOf('Search Settings', module)
 

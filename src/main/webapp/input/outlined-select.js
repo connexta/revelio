@@ -15,6 +15,7 @@ const OutlinedSelect = (props = {}) => {
     <React.Fragment>
       <InputLabel ref={inputLabel}>{label}</InputLabel>
       <Select
+        {...props}
         input={<OutlinedInput labelWidth={labelWidth} />}
         value={value}
         onChange={onChange}

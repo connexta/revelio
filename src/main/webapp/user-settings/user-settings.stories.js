@@ -5,9 +5,10 @@ import { Map } from 'immutable'
 import React from 'react'
 import HiddenResultsSettings from './hidden-results-settings'
 import NotificationSettings from './notification-settings'
-import SearchSettings from './search-setttings'
+import SearchSettings from './search-settings'
 import TimeSettings from './time-settings'
 import Settings from './user-settings'
+import SourceSelect from './source-select'
 
 const stories = storiesOf('User Settings', module)
 stories.addDecorator(Story => <Story />)
@@ -85,6 +86,35 @@ const HiddenResults = () => {
   )
 }
 
+const SourceSelectComponent = () => {
+  const [state, setState] = React.useState([])
+  return (
+    <SourceSelect
+      value={state}
+      onChange={newState => {
+        setState(newState)
+        action('onChange')(newState)
+      }}
+      sources={[
+        {
+          available: false,
+          id: 'Source1',
+          local: false,
+        },
+        {
+          available: true,
+          id: 'ddf.distribution',
+          local: true,
+        },
+        {
+          available: true,
+          id: 'Source2',
+          local: false,
+        },
+      ]}
+    />
+  )
+}
 const generateStory = (label, component) => ({ label, component })
 const generatedStories = [
   generateStory('Notification Settings', () => Setting(NotificationSettings)),
@@ -92,6 +122,7 @@ const generatedStories = [
   generateStory('Time Settings', () => Setting(TimeSettings)),
   generateStory('Hidden Results Settings', HiddenResults),
   generateStory('User Settings', UserSettings),
+  generateStory('Source Select', SourceSelectComponent),
 ]
 
 generatedStories.forEach(setting => {

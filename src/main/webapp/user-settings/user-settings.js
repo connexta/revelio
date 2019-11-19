@@ -23,7 +23,7 @@ import { useApolloFallback } from '../react-hooks'
 import { mergeDeepOverwriteLists } from '../utils'
 import HiddenResultsSettings from './hidden-results-settings'
 import NotificationSettings from './notification-settings'
-import SearchSettings from './search-setttings'
+import SearchSettings from './search-settings'
 import TimeSettings from './time-settings'
 import ThemeSettings from './theme-settings'
 
@@ -164,7 +164,9 @@ const UserSettings = props => {
           {Component && (
             <Component
               value={preferences}
-              onChange={newPreferences => setPreferences(newPreferences)}
+              onChange={newPreferences => {
+                setPreferences(newPreferences)
+              }}
               systemProperties={props.systemProperties}
             />
           )}
@@ -199,6 +201,15 @@ const query = gql`
           theme
         }
         timeZone
+        querySettings {
+          src
+          federation
+          sorts {
+            attribute
+            direction
+          }
+          detail_level
+        }
       }
     }
     systemProperties {
@@ -225,12 +236,12 @@ const Container = () => {
       })
     },
   })
-
   return loading || error ? null : (
     <UserSettings
       value={Map(data.user.preferences)}
       systemProperties={data.systemProperties}
       onSave={userPreferences => {
+        //preserve __typename fields
         const newPreferences = mergeDeepOverwriteLists(
           fromJS(data.user.preferences),
           fromJS(userPreferences)
