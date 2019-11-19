@@ -365,10 +365,8 @@ const saveMetacard = async (parent, args) => {
 
 const deleteMetacard = async (parent, args) => {
   const { id } = args
-  const res = await catalog.delete({ ids: [id] })
-  if (res.ok) {
-    return id
-  }
+  await catalog.delete({ ids: [id] })
+  return id
 }
 
 const updateUserPreferences = async (parent, args) => {
