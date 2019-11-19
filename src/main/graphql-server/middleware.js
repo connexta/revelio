@@ -1,7 +1,7 @@
 const { genSchema } = require('../webapp/intrigue-api/gen-schema')
-const { ApolloServer, gql } = require('apollo-server-express')
+const { ApolloServer } = require('apollo-server-express')
 const express = require('express')
-const typeDefs = gql(genSchema())
+const typeDefs = genSchema()
 const renderer = require('./helpers/renderer')
 
 const { resolvers } = require('../webapp/intrigue-api/graphql')
