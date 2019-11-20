@@ -328,5 +328,3 @@ export default props => {
   const Component = useApolloFallback(Container, SortOrder)
   return <Component {...props} />
 }
-
-export { SortOrder }

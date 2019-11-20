@@ -35,11 +35,12 @@ input QuerySettingsInput {
 }
 
 type QuerySettings {
-  src: String
+  src: [String]
   federation: String
   phonetics: Boolean
   sorts: [QuerySort]
   spellcheck: Boolean
+  detail_level: String
   type: String
 }
 
@@ -186,6 +187,8 @@ type SystemProperties {
 
 type Source {
   available: Boolean
+  # #### Determines if this source is the local catalog.
+  local: Boolean
   contentTypes: [String]
   id: ID
   sourceActions: [String]

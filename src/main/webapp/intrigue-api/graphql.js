@@ -2,7 +2,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloClient } from 'apollo-client'
 import { SchemaLink } from 'apollo-link-schema'
 import { makeExecutableSchema } from 'graphql-tools'
-import { fromJS } from 'immutable'
+import { fromJS, set, setIn } from 'immutable'
 import { mergeDeepOverwriteLists } from '../utils'
 const { BatchHttpLink } = require('apollo-link-batch-http')
 const { genSchema, toGraphqlName, fromGraphqlName } = require('./gen-schema')
@@ -28,17 +28,23 @@ const catalog = Object.keys(methods).reduce((catalog, method) => {
   return catalog
 }, {})
 
-const removeProperty = propertyName => data =>
-  data
-    .filter((_, key) => key !== propertyName)
+const filterDeepHelper = filterFunction => object =>
+  object
+    .filter(filterFunction)
     .map(
-      property =>
-        typeof property !== 'object' || property === null
-          ? property
-          : removeProperty(propertyName)(property)
+      object =>
+        typeof object !== 'object' || object === null
+          ? object
+          : filterDeepHelper(filterFunction)(object)
     )
 
-const removeTypename = data => removeProperty('__typename')(fromJS(data)).toJS()
+const filterDeep = filterFunction => object =>
+  filterDeepHelper(filterFunction)(fromJS(object)).toJS()
+
+const removeTypenameFields = object =>
+  filterDeep((_, key) => key !== '__typename')(object)
+
+const removeNullValues = object => filterDeep(value => value !== null)(object)
 
 const getBuildInfo = () => {
   /* eslint-disable */
@@ -92,6 +98,38 @@ const renameKeys = (f, map) => {
   return Object.keys(map).reduce((attrs, attr) => {
     const name = f(attr)
     attrs[name] = map[attr]
+    return attrs
+  }, {})
+}
+
+const toGraphqlDeep = data => {
+  if (Object(data) !== data) {
+    return data
+  }
+
+  if (Array.isArray(data)) {
+    return data.map(attr => toGraphqlDeep(attr))
+  }
+
+  return Object.keys(data).reduce((attrs, attr) => {
+    const name = toGraphqlName(attr)
+    attrs[name] = toGraphqlDeep(data[attr])
+    return attrs
+  }, {})
+}
+
+const fromGraphqlDeep = data => {
+  if (Object(data) !== data) {
+    return data
+  }
+
+  if (Array.isArray(data)) {
+    return data.map(attr => fromGraphqlDeep(attr))
+  }
+
+  return Object.keys(data).reduce((attrs, attr) => {
+    const name = fromGraphqlName(attr)
+    attrs[name] = fromGraphqlDeep(data[attr])
     return attrs
   }, {})
 }
@@ -241,12 +279,20 @@ const metacardById = async (ctx, args) => {
 
 const user = async () => {
   const res = await fetch(`${ROOT}/user`)
+  const json = await res.json()
+  return setIn(json, ['preferences'], () => toGraphqlDeep(json.preferences))
+}
+
+const getLocalCatalogId = async () => {
+  const res = await fetch(`${ROOT}/localcatalogid`)
   return res.json()
 }
+const localCatalogId = getLocalCatalogId()
 
 const sources = async () => {
   const sourceIds = await catalog.getSourceIds({})
   const res = await catalog.getSourceInfo({ ids: sourceIds })
+  const local = await localCatalogId
 
   //needed until we change the schema to match the json rpc stuff
   const rpcToSchema = {
@@ -263,7 +309,10 @@ const sources = async () => {
       }
     })
   })
-  return res.sourceInfo
+
+  return res.sourceInfo.map(source =>
+    set(source, 'local', source.id === local['local-catalog-id'])
+  )
 }
 
 const metacardTypes = async () => {
@@ -381,7 +430,7 @@ const updateUserPreferences = async (parent, args) => {
 
   const body = mergeDeepOverwriteLists(
     fromJS(previousPreferences),
-    fromJS(removeTypename(userPreferences))
+    fromJS(fromGraphqlDeep(removeTypenameFields(userPreferences)))
   ).toJS()
 
   const res = await fetch(`${ROOT}/user/preferences`, {
@@ -389,7 +438,7 @@ const updateUserPreferences = async (parent, args) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify(removeNullValues(body)),
   })
 
   if (res.ok) {

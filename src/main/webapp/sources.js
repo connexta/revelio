@@ -37,6 +37,7 @@ export const sources = gql`
     sources {
       available
       id
+      local
     }
   }
 `
