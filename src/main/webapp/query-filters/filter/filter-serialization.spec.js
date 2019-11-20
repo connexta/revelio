@@ -1,6 +1,6 @@
 const assert = require('assert')
-import { serialize, deserialize } from './query-advanced-serialization'
-import { sampleMetacardTypes } from './filter/dummyDefinitions'
+import { serialize, deserialize } from './filter-serialization'
+import { sampleMetacardTypes } from './dummyDefinitions'
 // Data stored by server
 const serverIsNull = {
   property: 'topic.vocabulary',
@@ -32,11 +32,6 @@ const serverNear = {
   },
 }
 
-const serverNestedFilter = {
-  type: 'OR',
-  filters: [serverIsNull, serverNear],
-}
-
 // Data stored by Query Advanced
 const queryIsNull = {
   property: 'topic.vocabulary',
@@ -62,11 +57,6 @@ const queryNear = {
   value: { value: 'a string', distance: '2' },
 }
 
-const queryNestedFilter = {
-  type: 'OR',
-  filters: [queryIsNull, queryNear],
-}
-
 describe('serialization', () => {
   it('converts IS EMPTY', () => {
     assert.deepEqual(serialize(queryIsNull, sampleMetacardTypes), serverIsNull)
@@ -83,12 +73,6 @@ describe('serialization', () => {
   it('converts NEAR ', () => {
     assert.deepEqual(serialize(queryNear, sampleMetacardTypes), serverNear)
   })
-  it('converts a nested filter', () => {
-    assert.deepEqual(
-      serialize(queryNestedFilter, sampleMetacardTypes),
-      serverNestedFilter
-    )
-  })
 })
 
 describe('deserialization', () => {
@@ -100,11 +84,5 @@ describe('deserialization', () => {
   })
   it('converts NEAR', () => {
     assert.deepEqual(deserialize(serverNear, sampleMetacardTypes), queryNear)
-  })
-  it('converts a nested filter', () => {
-    assert.deepEqual(
-      deserialize(serverNestedFilter, sampleMetacardTypes),
-      queryNestedFilter
-    )
   })
 })

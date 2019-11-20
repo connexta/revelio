@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { QueryFilterProps } from '../filter/filter'
+import { QueryFilterProps } from '../filter/individual-filter'
 import { TextField, Box } from '@material-ui/core'
 import { Map, getIn } from 'immutable'
 import { useFilterContext } from '../filter-context'

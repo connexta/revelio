@@ -7,7 +7,6 @@ const query = gql`
     metacardTypes {
       id
       type
-      multivalued
     }
   }
 `
@@ -18,27 +17,23 @@ const query = gql`
  *   created: {
  *     type: 'DATE',
  *     id: 'created',
- *     multivalued: true,
  *   }
  *   location: {
  *     type: 'GEOMETRY',
  *     id: 'location',
- *     multivalued: true,
  *   }
  * }
  */
 
 export default () => {
   const { data, ...rest } = useQuery(query)
-  if (getIn(data, ['metacardTypes'], undefined) === undefined) {
-    return { ...rest, metacardTypes: {} }
-  }
-  const metacardTypes = getIn(data, ['metacardTypes'], {}).reduce(
+  const metacardTypes = getIn(data, ['metacardTypes'], []).reduce(
     (types: any, type: any) => {
       types[type.id] = type
       return types
     },
     {}
   )
+
   return { metacardTypes, ...rest }
 }

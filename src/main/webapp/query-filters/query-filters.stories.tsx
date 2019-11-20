@@ -1,11 +1,11 @@
 const { storiesOf } = require('../@storybook/react')
-import QueryAdvanced from './query-advanced'
 import * as React from 'react'
 import { action } from '@storybook/addon-actions'
 import { withKnobs, number } from '@storybook/addon-knobs'
-const stories = storiesOf('Query Advanced', module)
 import { useState } from 'react'
-import FilterGroup from './filter/filter-group'
+import Filter from './filter'
+
+const stories = storiesOf('Query Filters', module)
 
 const baseFilter = {
   property: 'created',
@@ -43,24 +43,30 @@ const deserializedFilters = {
 
 stories.addDecorator(withKnobs)
 stories.add('basic', () => {
-  const [filterTree, setFilterTree] = useState(baseFilterGroup)
+  const [filter, setFilter]: any = useState(baseFilterGroup)
 
   return (
-    <FilterGroup
+    <Filter
       limitDepth={number('Nesting Depth', 1)}
-      {...filterTree}
-      onChange={setFilterTree}
+      {...filter}
+      onChange={(value: any) => {
+        setFilter(value)
+        action('onChange')(value)
+      }}
     />
   )
 })
 
 stories.add('with deserialized filters', () => {
-  const [filterTree, setFilterTree] = useState(deserializedFilters)
+  const [filter, setFilter]: any = useState(deserializedFilters)
   return (
-    <FilterGroup
+    <Filter
       limitDepth={number('Nesting Depth', 1)}
-      {...filterTree}
-      onChange={setFilterTree}
+      {...filter}
+      onChange={(value: any) => {
+        setFilter(value)
+        action('onChange')(value)
+      }}
     />
   )
 })
@@ -71,14 +77,29 @@ const searchFormFilter = {
 }
 
 stories.add('as search form', () => {
+  const [filter, setFilter]: any = useState(searchFormFilter)
   return (
-    <QueryAdvanced
-      filterTree={searchFormFilter}
+    <Filter
+      {...filter}
       limitDepth={number('Nesting Depth', 1)}
-      onSearch={(value: any) => {
-        action('onSearch')(value)
+      onChange={(value: any) => {
+        setFilter(value)
+        action('onChange')(value)
       }}
       editing={false}
+    />
+  )
+})
+
+stories.add('single filter', () => {
+  const [filter, setFilter]: any = useState(nearFilter)
+  return (
+    <Filter
+      {...filter}
+      onChange={(value: any) => {
+        setFilter(value)
+        action('onChange')(value)
+      }}
     />
   )
 })

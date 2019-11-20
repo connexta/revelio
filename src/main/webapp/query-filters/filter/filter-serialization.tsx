@@ -1,43 +1,36 @@
-import { isFilterGroup } from './filter/filter-group'
-import { getDefaultValue } from './filter/filter-utils'
+import { getDefaultValue } from './filter-utils'
 import { getIn } from 'immutable'
 
 export const deserialize = (filter: any, metacardTypes: any) => {
-  if (isFilterGroup(filter)) {
-    const filters: any = filter.filters.map(deserialize)
-    return { ...filter, filters }
-  } else {
-    if (typeof filter.property === 'object') {
-      // if the filter is something like NEAR (which maps to a CQL filter function such as 'proximity'),
-      // there is an enclosing filter that creates the necessary '= TRUE' predicate, and the 'property'
-      // attribute is what actually contains that proximity() call.
-      const { filterFunctionName, params } = filter.property
-      if (filterFunctionName !== 'proximity') {
-        throw new Error(
-          'Unsupported filter function in filter view: ' + filterFunctionName
-        )
-      }
-      const [property, distance, value] = params
-      filter.property = property
-      filter.type = 'NEAR'
-      filter.value = { distance, value }
-    }
-
-    if (filter.type === 'BETWEEN') {
-      filter.value = {
-        lower: filter.lowerBoundary,
-        upper: filter.upperBoundary,
-      }
-    }
-    if (filter.type === 'IS NULL') {
-      filter.value = getDefaultValue(
-        getIn(metacardTypes, [filter.property, 'type'], 'STRING')
+  if (typeof filter.property === 'object') {
+    // if the filter is something like NEAR (which maps to a CQL filter function such as 'proximity'),
+    // there is an enclosing filter that creates the necessary '= TRUE' predicate, and the 'property'
+    // attribute is what actually contains that proximity() call.
+    const { filterFunctionName, params } = filter.property
+    if (filterFunctionName !== 'proximity') {
+      throw new Error(
+        'Unsupported filter function in filter view: ' + filterFunctionName
       )
     }
-    return { ...filter }
+    const [property, distance, value] = params
+    filter.property = property
+    filter.type = 'NEAR'
+    filter.value = { distance, value }
   }
-}
 
+  if (filter.type === 'BETWEEN') {
+    filter.value = {
+      lower: filter.lowerBoundary,
+      upper: filter.upperBoundary,
+    }
+  }
+  if (filter.type === 'IS NULL') {
+    filter.value = getDefaultValue(
+      getIn(metacardTypes, [filter.property, 'type'], 'STRING')
+    )
+  }
+  return { ...filter }
+}
 const generateFilterFunction = (filterFunctionName: string, params: any) => {
   return {
     type: '=',
@@ -59,10 +52,6 @@ const generateIsEmptyFilter = (property: string) => {
 }
 
 export const serialize = (filter: any, metacardTypes: any) => {
-  if (isFilterGroup(filter)) {
-    const filters: any = filter.filters.map(serialize)
-    return { ...filter, filters }
-  }
   switch (filter.type) {
     case 'NEAR':
       return generateFilterFunction('proximity', [

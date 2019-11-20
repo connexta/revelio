@@ -3,6 +3,7 @@ export type MetacardType =
   | 'XML'
   | 'DATE'
   | 'LOCATION'
+  | 'GEOMETRY'
   | 'BOOLEAN'
   | 'INTEGER'
   | 'SHORT'
