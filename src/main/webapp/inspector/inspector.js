@@ -129,7 +129,7 @@ const ActionLinks = props => {
         return (
           <ListItem key={action.id}>
             <Typography color="textSecondary" gutterBottom>
-              <Link href={action.url}> {action.displayName} </Link>
+              <Link href={action.url}> {action.id} </Link>
             </Typography>
           </ListItem>
         )

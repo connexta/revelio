@@ -1,30 +1,40 @@
 <!--
-/**
- * Copyright (c) Codice Foundation
- *
- * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
- * version 3 of the License, or any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
- * <http://www.gnu.org/licenses/lgpl.html>.
- *
- **/
+    /**
+    * Copyright (c) Codice Foundation
+    *
+    * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
+    * version 3 of the License, or any later version.
+    *
+    * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
+    * <http://www.gnu.org/licenses/lgpl.html>.
+    *
+    **/
 -->
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
-  xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0">
+	   xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0">
 
   <reference id="catalogFramework" interface="ddf.catalog.CatalogFramework"/>
   <reference id="attributeRegistry" interface="ddf.catalog.data.AttributeRegistry"/>
   <reference-list id="metacardTypes" interface="ddf.catalog.data.MetacardType"/>
   <reference id="filterBuilder" interface="ddf.catalog.filter.FilterBuilder"/>
+  <reference-list id="metacardActionProviders" interface="ddf.action.ActionProvider"
+		  filter="(id=catalog.data.metacard.*)"/>
+  <reference-list id="metacardMultiActionProviders" interface="ddf.action.MultiActionProvider"
+		  filter="(id=catalog.data.metacard.*)"/>
+  <bean id="metacardActionRegistry" class="ddf.action.impl.ActionRegistryImpl">
+    <argument ref="metacardActionProviders"/>
+    <argument ref="metacardMultiActionProviders" />
+  </bean>
+
 
   <bean id="catalogMethods"
-    class="org.codice.ddf.catalog.direct.CatalogMethods">
+	class="org.codice.ddf.catalog.direct.CatalogMethods">
     <argument ref="catalogFramework"/>
     <argument ref="attributeRegistry"/>
     <argument ref="metacardTypes"/>
     <argument ref="filterBuilder"/>
+    <argument ref="metacardActionRegistry"/>
 
     <!--    <cm:managed-properties persistent-id="org.codice.ddf.resourcemanagement.usage"-->
     <!--      update-strategy="container-managed"/>-->
@@ -36,7 +46,7 @@
   </bean>
 
   <bean id="jsonRpcHttpServlet"
-    class="org.codice.jsonrpc.JsonRpcHttpServlet">
+	class="org.codice.jsonrpc.JsonRpcHttpServlet">
     <argument ref="jsonRpc"/>
   </bean>
 
