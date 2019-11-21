@@ -11,6 +11,7 @@ import ddf.catalog.CatalogFramework;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.AttributeRegistry;
+import ddf.catalog.data.AttributeType.AttributeFormat;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.MetacardType;
 import ddf.catalog.data.Result;
@@ -36,6 +37,7 @@ import ddf.catalog.source.IngestException;
 import ddf.catalog.source.SourceUnavailableException;
 import ddf.catalog.source.UnsupportedQueryException;
 import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,6 +47,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -168,12 +171,11 @@ public class CatalogMethods implements MethodSet {
     }
 
     return ImmutableMap.of(
-        "deleted_metacards",
+        "deletedMetacards",
         deleteResponse
             .getDeletedMetacards()
             .stream()
             .map(this::metacard2map)
-            .map(m -> ImmutableMap.of(ATTRIBUTES, m))
             .collect(Collectors.toList()));
   }
 
@@ -216,13 +218,12 @@ public class CatalogMethods implements MethodSet {
     }
 
     return ImmutableMap.of(
-        "updated_metacards",
+        "updatedMetacards",
         updateResponse
             .getUpdatedMetacards()
             .stream()
             .map(Update::getNewMetacard)
             .map(this::metacard2map)
-            .map(v -> ImmutableMap.of(ATTRIBUTES, v))
             .collect(Collectors.toList()));
   }
 
@@ -372,14 +373,7 @@ public class CatalogMethods implements MethodSet {
                 .stream()
                 .map(Result::getMetacard)
                 .map(this::metacard2map)
-                .map(m -> ImmutableMap.of("metacard", ImmutableMap.of("properties", m)))
                 .collect(Collectors.toList()))
-        .put("status", getQueryInfo(queryResponse))
-        .build();
-  }
-
-  private Map<String, Integer> getQueryInfo(QueryResponse queryResponse) {
-    return new ImmutableMap.Builder<String, Integer>()
         .put("hits", Math.toIntExact(queryResponse.getHits()))
         .put("count", queryResponse.getResults().size())
         .build();
@@ -450,28 +444,70 @@ public class CatalogMethods implements MethodSet {
     }
 
     return ImmutableMap.of(
-        "created_metacards",
+        "createdMetacards",
         createResponse
             .getCreatedMetacards()
             .stream()
             .map(this::metacard2map)
-            .map(v -> ImmutableMap.of(ATTRIBUTES, v))
             .collect(Collectors.toList()));
   }
 
-  private Map<String, Object> metacard2map(Metacard metacard) {
+  private Map<String, Object> metacardAttributes2map(Metacard metacard) {
     Builder<String, Object> builder = ImmutableMap.builder();
     for (AttributeDescriptor ad : metacard.getMetacardType().getAttributeDescriptors()) {
       Attribute attribute = metacard.getAttribute(ad.getName());
       if (attribute == null) {
         continue;
       }
+
+      Function<Object, Object> preprocessor = Function.identity();
+      if (AttributeFormat.BINARY.equals(ad.getType().getAttributeFormat())) {
+        preprocessor =
+            preprocessor.andThen(
+                input ->
+                    new String(
+                        Base64.getEncoder().encode((byte[]) input), Charset.defaultCharset()));
+      }
+
       if (ad.isMultiValued()) {
-        builder.put(attribute.getName(), attribute.getValues());
+        builder.put(
+            attribute.getName(),
+            attribute.getValues().stream().map(preprocessor).collect(Collectors.toList()));
       } else {
-        builder.put(attribute.getName(), attribute.getValue());
+        builder.put(attribute.getName(), preprocessor.apply(attribute.getValue()));
       }
     }
+    return builder.build();
+  }
+
+  private Map<String, Object> metacardType2map(MetacardType metacardType) {
+    Builder<String, Object> builder = ImmutableMap.builder();
+    for (AttributeDescriptor ad : metacardType.getAttributeDescriptors()) {
+
+      Builder<String, Object> descriptorBuilder = ImmutableMap.builder();
+      descriptorBuilder.put("name", ad.getName());
+      descriptorBuilder.put("type", ad.getType().getAttributeFormat());
+      descriptorBuilder.put("indexed", ad.isIndexed());
+      descriptorBuilder.put("multivalued", ad.isMultiValued());
+      descriptorBuilder.put("stored", ad.isStored());
+      descriptorBuilder.put("tokenized", ad.isTokenized());
+      builder.put(ad.getName(), descriptorBuilder.build());
+    }
+    return ImmutableMap.of(
+        "attributeDescriptors",
+        builder.build(),
+        "name",
+        metacardType.getName(),
+        "hashCode",
+        metacardType.hashCode());
+  }
+
+  private Map<String, Object> metacard2map(Metacard metacard) {
+    Builder<String, Object> builder = ImmutableMap.builder();
+
+    builder.put(ATTRIBUTES, metacardAttributes2map(metacard));
+    builder.put("metacardType", metacardType2map(metacard.getMetacardType()));
+
     return builder.build();
   }
 
@@ -481,7 +517,7 @@ public class CatalogMethods implements MethodSet {
     }
     Map<String, Object> attributes = (Map) metacard.get(ATTRIBUTES);
 
-    Object rawType = metacard.get("metacard-type");
+    Object rawType = metacard.get("metacardType");
     String desiredMetacardType = rawType instanceof String ? String.valueOf(rawType) : null;
     MetacardType metacardType =
         metacardTypes
