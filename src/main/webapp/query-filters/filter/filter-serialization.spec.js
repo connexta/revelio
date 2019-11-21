@@ -1,21 +1,21 @@
 const assert = require('assert')
-import { serialize, deserialize } from './query-advanced-serialization'
-
+import { serialize, deserialize } from './filter-serialization'
+import { sampleMetacardTypes } from './dummyDefinitions'
 // Data stored by server
 const serverIsNull = {
-  property: 'an attribute',
+  property: 'topic.vocabulary',
   type: 'IS NULL',
   value: null,
 }
 
 const serverIsGreater = {
-  property: 'an integer',
+  property: 'ext.population',
   type: '>',
   value: 12,
 }
 
 const serverRange = {
-  property: 'a float',
+  property: 'media.bit.rate',
   type: 'BETWEEN',
   lowerBoundary: 0.5,
   upperBoundary: 5.5,
@@ -28,71 +28,61 @@ const serverNear = {
   property: {
     type: 'FILTER_FUNCTION',
     filterFunctionName: 'proximity',
-    params: ['anyText', '2', 'a string'],
+    params: ['topic.vocabulary', '2', 'a string'],
   },
-}
-
-const serverNestedFilter = {
-  type: 'OR',
-  filters: [serverIsNull, serverNear],
 }
 
 // Data stored by Query Advanced
 const queryIsNull = {
-  property: 'an attribute',
+  property: 'topic.vocabulary',
   type: 'IS NULL',
   value: '',
 }
 
 const queryIsGreater = {
-  property: 'an integer',
+  property: 'ext.population',
   type: '>',
   value: '12',
 }
 
 const queryRange = {
-  property: 'a float',
+  property: 'media.bit.rate',
   type: 'BETWEEN',
   value: { lower: '0.5', upper: '5.5' },
 }
 
 const queryNear = {
-  property: 'anyText',
+  property: 'topic.vocabulary',
   type: 'NEAR',
   value: { value: 'a string', distance: '2' },
 }
 
-const queryNestedFilter = {
-  type: 'OR',
-  filters: [queryIsNull, queryNear],
-}
-
 describe('serialization', () => {
   it('converts IS EMPTY', () => {
-    assert.deepEqual(serialize(queryIsNull), serverIsNull)
+    assert.deepEqual(serialize(queryIsNull, sampleMetacardTypes), serverIsNull)
   })
   it('converts > to integer', () => {
-    assert.deepEqual(serialize(queryIsGreater), serverIsGreater)
+    assert.deepEqual(
+      serialize(queryIsGreater, sampleMetacardTypes),
+      serverIsGreater
+    )
   })
   it('converts range to floats', () => {
-    assert.deepEqual(serialize(queryRange), serverRange)
+    assert.deepEqual(serialize(queryRange, sampleMetacardTypes), serverRange)
   })
   it('converts NEAR ', () => {
-    assert.deepEqual(serialize(queryNear), serverNear)
-  })
-  it('converts a nested filter', () => {
-    assert.deepEqual(serialize(queryNestedFilter), serverNestedFilter)
+    assert.deepEqual(serialize(queryNear, sampleMetacardTypes), serverNear)
   })
 })
 
 describe('deserialization', () => {
   it('converts IS EMPTY', () => {
-    assert.deepEqual(deserialize(serverIsNull), queryIsNull)
+    assert.deepEqual(
+      deserialize(serverIsNull, sampleMetacardTypes),
+      queryIsNull
+    )
   })
   it('converts NEAR', () => {
-    assert.deepEqual(deserialize(serverNear), queryNear)
-  })
-  it('converts a nested filter', () => {
-    assert.deepEqual(deserialize(serverNestedFilter), queryNestedFilter)
+    assert.deepEqual(deserialize(serverNear, sampleMetacardTypes), queryNear)
   })
 })

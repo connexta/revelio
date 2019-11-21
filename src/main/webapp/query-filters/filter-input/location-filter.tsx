@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useState } from 'react'
-import { QueryFilterProps } from '../filter/filter'
+import { QueryFilterProps } from '../filter/individual-filter'
 import { Map } from 'immutable'
 import { Box } from '@material-ui/core'
 import { filterComponentStyle } from '../filter/filter-utils'

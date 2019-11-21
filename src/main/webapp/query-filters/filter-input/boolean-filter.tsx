@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { QueryFilterProps } from '../filter/filter'
+import { QueryFilterProps } from '../filter/individual-filter'
 import { Box, Switch, Button } from '@material-ui/core'
 import { Map } from 'immutable'
 

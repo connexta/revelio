@@ -315,6 +315,45 @@ const sources = async () => {
   )
 }
 
+const metacardStartingTypes = [
+  {
+    id: 'anyText',
+    type: 'STRING',
+    multivalued: false,
+    isInjected: false,
+  },
+  {
+    id: 'anyGeo',
+    type: 'LOCATION',
+    multivalued: false,
+    isInjected: false,
+  },
+  {
+    id: ' metacard-type',
+    type: 'STRING',
+    multivalued: false,
+    isInjected: false,
+  },
+  {
+    id: 'source-id',
+    type: 'STRING',
+    multivalued: false,
+    isInjected: false,
+  },
+  {
+    id: 'cached',
+    type: 'STRING',
+    multivalued: false,
+    isInjected: false,
+  },
+  {
+    id: 'metacard-tags',
+    type: 'STRING',
+    multivalued: true,
+    isInjected: false,
+  },
+]
+
 const metacardTypes = async () => {
   const res = await fetch(`${ROOT}/metacardtype`)
   const json = await res.json()
@@ -323,7 +362,7 @@ const metacardTypes = async () => {
     return Object.assign(types, json[group])
   }, {})
 
-  return Object.keys(types).map(k => types[k])
+  return metacardStartingTypes.concat(Object.keys(types).map(k => types[k]))
 }
 
 const facet = async (parent, args) => {

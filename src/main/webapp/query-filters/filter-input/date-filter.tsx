@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { QueryFilterProps } from '../filter/filter'
+import { QueryFilterProps } from '../filter/individual-filter'
 const {
   TimeRangeAfter,
   TimeRangeBefore,

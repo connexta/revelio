@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { QueryFilterProps } from '../filter/filter'
+import { QueryFilterProps } from '../filter/individual-filter'
 import { TextField, Box } from '@material-ui/core'
-import { metacardDefinitions } from '../filter/dummyDefinitions'
-import { Map } from 'immutable'
+import { Map, getIn } from 'immutable'
+import { useFilterContext } from '../filter-context'
 
 export const comparatorOptions = [
   '>',
@@ -78,7 +78,10 @@ const NumberInput = (props: any) => {
 }
 
 const NumberFilter = (props: QueryFilterProps) => {
-  const isInt = isInteger(metacardDefinitions.get(props.property))
+  const context = useFilterContext()
+  const isInt = isInteger(
+    getIn(context.metacardTypes, [props.property, 'type'], 'INTEGER')
+  )
   if (props.type !== 'BETWEEN') {
     return (
       <NumberInput
