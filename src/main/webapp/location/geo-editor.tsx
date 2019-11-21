@@ -1,7 +1,7 @@
 import { geometry, coordinates as coordinateEditor } from 'geospatialdraw'
 
 type Props = {
-  geo: geometry.GeometryJSON
+  value: geometry.GeometryJSON
   onChange: (geo: geometry.GeometryJSON) => void
   coordinateUnit: coordinateEditor.CoordinateUnit
 }

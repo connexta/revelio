@@ -1,6 +1,7 @@
 import * as React from 'react'
 import Box from '@material-ui/core/Box'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
+import InputAdornment from '@material-ui/core/InputAdornment'
 import Props from './props'
 import { coordinates as coordinateEditor } from 'geospatialdraw'
 import NumberInput from '../number'
@@ -53,8 +54,11 @@ const DMSValue: React.SFC<DMSValueProps> = ({
             second,
           })
         }}
+        InputProps={{
+          endAdornment: <InputAdornment position="end">&deg;</InputAdornment>,
+          style: { textAlign: 'end' }
+        }}
       />
-      &deg;
       <NumberInput
         maxValue={display.degree >= maxDegrees ? 0 : 59}
         minValue={0}
@@ -69,8 +73,11 @@ const DMSValue: React.SFC<DMSValueProps> = ({
             minute: n,
           })
         }
+        InputProps={{
+          endAdornment: <InputAdornment position="end">&apos;</InputAdornment>,
+          style: { textAlign: 'end' },
+        }}
       />
-      &apos;
       <NumberInput
         maxValue={display.degree >= maxDegrees ? 0 : 59}
         minValue={0}
@@ -85,8 +92,11 @@ const DMSValue: React.SFC<DMSValueProps> = ({
             second: n,
           })
         }
+        InputProps={{
+          endAdornment: <InputAdornment position="end">&quot;</InputAdornment>,
+          style: { textAlign: 'end' },
+        }}
       />
-      &quot;
       <ToggleButtonGroup
         onChange={(_e, sign) => {
           onChange(coordinateEditor.dmsSetSign(value, sign))
@@ -137,8 +147,8 @@ type DivProps = {
   children: React.ReactNode
 }
 
-const Row: React.SFC<DivProps> = (props: DivProps) => (
-  <Box flex="flex" flexDirection="row" padding={1} {...props} />
+const Root: React.SFC<DivProps> = (props: DivProps) => (
+  <Box flex="flex" flexDirection="column" padding={1} {...props} />
 )
 
 const PointDMS: React.SFC<Props> = ({ value, onChange }) => {
@@ -155,7 +165,7 @@ const PointDMS: React.SFC<Props> = ({ value, onChange }) => {
     [coordinates]
   )
   return (
-    <Row>
+    <Root>
       <DMSLatitude
         isValid={isValid}
         value={dmsLat}
@@ -170,7 +180,7 @@ const PointDMS: React.SFC<Props> = ({ value, onChange }) => {
           setDMS({ lat: dmsLat, lon: dms })
         }}
       />
-    </Row>
+    </Root>
   )
 }
 

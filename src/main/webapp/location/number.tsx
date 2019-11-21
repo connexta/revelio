@@ -2,7 +2,7 @@ import * as React from 'react'
 import TextField from '@material-ui/core/TextField'
 import { coordinates as coordinateEditor } from 'geospatialdraw'
 
-type MaterialUIInputProps = {
+export type MaterialUIInputProps = {
   autoComplete?: string
   autoFocus?: boolean
   color?: 'primary' | 'secondary'
@@ -26,6 +26,7 @@ type MaterialUIInputProps = {
   select?: boolean
   SelectProps?: any
   type?: string
+  InputProps?: any
 }
 
 type Props = MaterialUIInputProps &

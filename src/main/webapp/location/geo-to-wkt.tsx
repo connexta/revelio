@@ -1,9 +1,9 @@
 import { geometry, shapes } from 'geospatialdraw'
 import WKT from 'ol/format/WKT'
-import Geojson from 'ol/format/geojson'
+import GeoJSON from 'ol/format/GeoJSON'
 
 const wktFormatter = new WKT()
-const geojsonFormatter = new Geojson()
+const geojsonFormatter = new GeoJSON()
 const shapeDetector = new shapes.ShapeDetector()
 
 export const geoToWKT = (geo: geometry.GeometryJSON): string =>
