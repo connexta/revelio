@@ -269,6 +269,7 @@ type MetacardType {
   isInjected: Boolean
   multivalued: Boolean
   type: String
+  enums: [String]
 }
 
 type FacetResult {

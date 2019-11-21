@@ -1,7 +1,9 @@
 import * as React from 'react'
 import { QueryFilterProps } from '../filter/individual-filter'
 import { TextField, Box } from '@material-ui/core'
-import { Map } from 'immutable'
+import { Map, getIn } from 'immutable'
+import { useFilterContext } from '../filter-context'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 
 export const comparatorOptions = ['ILIKE', 'LIKE', '=', 'NEAR', 'IS NULL']
 export const comparatorAliases = Map({
@@ -19,20 +21,28 @@ const validateText = (value: any) => {
 }
 
 const TextFilter = (props: QueryFilterProps) => {
+  const { metacardTypes } = useFilterContext()
   const errors = validateText(props.value)
   return (
-    <TextField
-      error={errors.value !== undefined}
-      helperText={errors.value}
-      placeholder="Use * for wildcard"
-      variant="outlined"
-      fullWidth
-      onChange={event => {
+    <Autocomplete
+      freeSolo
+      disableClearable
+      options={getIn(metacardTypes, [props.property, 'enums'], [])}
+      value={props.value}
+      onChange={(_, value: any) => {
         const { property, type } = props
-        const value = event.target.value
         props.onChange({ property, type, value })
       }}
-      value={props.value}
+      renderInput={params => (
+        <TextField
+          {...params}
+          error={errors.value !== undefined}
+          helperText={errors.value}
+          placeholder="Use * for wildcard"
+          variant="outlined"
+          fullWidth
+        />
+      )}
     />
   )
 }

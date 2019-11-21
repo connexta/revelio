@@ -321,36 +321,42 @@ const metacardStartingTypes = [
     type: 'STRING',
     multivalued: false,
     isInjected: false,
+    enums: [],
   },
   {
     id: 'anyGeo',
     type: 'LOCATION',
     multivalued: false,
     isInjected: false,
+    enums: [],
   },
   {
     id: ' metacard-type',
     type: 'STRING',
     multivalued: false,
     isInjected: false,
+    enums: [],
   },
   {
     id: 'source-id',
     type: 'STRING',
     multivalued: false,
     isInjected: false,
+    enums: [],
   },
   {
     id: 'cached',
     type: 'STRING',
     multivalued: false,
     isInjected: false,
+    enums: [],
   },
   {
     id: 'metacard-tags',
     type: 'STRING',
     multivalued: true,
     isInjected: false,
+    enums: [],
   },
 ]
 
@@ -361,6 +367,16 @@ const metacardTypes = async () => {
   const types = Object.keys(json).reduce((types, group) => {
     return Object.assign(types, json[group])
   }, {})
+
+  await Promise.all(
+    Object.keys(json).map(async group => {
+      const enumRes = await fetch(`${ROOT}/enumerations/metacardtype/${group}`)
+      const enumJson = await enumRes.json()
+      Object.keys(enumJson).forEach(attribute => {
+        types[attribute].enums = enumJson[attribute]
+      })
+    })
+  )
 
   return metacardStartingTypes.concat(Object.keys(types).map(k => types[k]))
 }
