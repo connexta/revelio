@@ -504,7 +504,7 @@ public class CatalogMethods implements MethodSet {
 
   private ImmutablePair<Attribute, String> getAttribute(String name, Object value) {
     if (value == null) {
-      return of(null, "Value for attribute '%s' was null");
+      return of(null, String.format("Value for attribute '%s' was null", name));
     }
 
     AttributeDescriptor ad =
