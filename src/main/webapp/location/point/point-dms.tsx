@@ -3,10 +3,12 @@ import Box from '@material-ui/core/Box'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
 import Props from './props'
 import { coordinates as coordinateEditor } from 'geospatialdraw'
+import NumberInput from '../number'
 
 type DMSComponentProps = {
   value: coordinateEditor.DMS
   onChange: (value: coordinateEditor.DMS) => void
+  isValid: boolean
 }
 
 type DMSValueProps = DMSComponentProps & {
@@ -19,36 +21,28 @@ type DMSValueProps = DMSComponentProps & {
 
 const SECONDS_PRECISION = 1
 
-const SMALL_INPUT_STYLE = {
-  width: '3rem',
-  marginRight: '0.5rem',
-}
-
-const WIDE_INPUT_STYLE = {
-  width: '5rem',
-  marginRight: '0.5rem',
-}
-
 const DMSValue: React.SFC<DMSValueProps> = ({
+  value,
   onChange,
+  isValid,
   maxDegrees,
   negativeHeadingTooltip,
   positiveHeadingTooltip,
   negativeHeadingName,
   positiveHeadingName,
-  value,
 }) => {
   const display = coordinateEditor.dmsSetSign(value, 1)
   const sign = coordinateEditor.dmsSign(value)
   return (
     <React.Fragment>
-      <coordinateEditor.NumberInput
-        style={SMALL_INPUT_STYLE}
+      <NumberInput
         maxValue={maxDegrees}
         minValue={0}
         value={display.degree}
         decimalPlaces={0}
-        placeholder="DD"
+        label="DD"
+        error={!isValid}
+        helperText={isValid ? '' : 'invalid value'}
         onChange={(n: number) => {
           const degree = n * sign
           const minute = n < maxDegrees ? value.minute : 0
@@ -60,14 +54,15 @@ const DMSValue: React.SFC<DMSValueProps> = ({
           })
         }}
       />
-      <coordinateEditor.NumberInput
-        style={SMALL_INPUT_STYLE}
-        type="text"
+      &deg;
+      <NumberInput
         maxValue={display.degree >= maxDegrees ? 0 : 59}
         minValue={0}
         decimalPlaces={0}
         value={display.minute}
-        placeholder="MM"
+        label="MM"
+        error={!isValid}
+        helperText={isValid ? '' : 'invalid value'}
         onChange={(n: number) =>
           onChange({
             ...value,
@@ -75,14 +70,15 @@ const DMSValue: React.SFC<DMSValueProps> = ({
           })
         }
       />
-      <coordinateEditor.NumberInput
-        style={WIDE_INPUT_STYLE}
-        type="text"
+      &apos;
+      <NumberInput
         maxValue={display.degree >= maxDegrees ? 0 : 59}
         minValue={0}
         decimalPlaces={SECONDS_PRECISION}
         value={display.second}
-        placeholder="SS"
+        label="SS"
+        error={!isValid}
+        helperText={isValid ? '' : 'invalid value'}
         onChange={(n: number) =>
           onChange({
             ...value,
@@ -90,6 +86,7 @@ const DMSValue: React.SFC<DMSValueProps> = ({
           })
         }
       />
+      &quot;
       <ToggleButtonGroup
         onChange={(_e, sign) => {
           onChange(coordinateEditor.dmsSetSign(value, sign))
@@ -160,12 +157,14 @@ const PointDMS: React.SFC<Props> = ({ value, onChange }) => {
   return (
     <Row>
       <DMSLatitude
+        isValid={isValid}
         value={dmsLat}
         onChange={dms => {
           setDMS({ lat: dms, lon: dmsLon })
         }}
       />
       <DMSLongitude
+        isValid={isValid}
         value={dmsLon}
         onChange={dms => {
           setDMS({ lat: dmsLat, lon: dms })

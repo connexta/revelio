@@ -1,8 +1,34 @@
 import * as React from 'react'
-import TextField, { TextFieldProps } from '@material-ui/core/TextField'
+import TextField from '@material-ui/core/TextField'
 import { coordinates as coordinateEditor } from 'geospatialdraw'
 
-type Props = TextFieldProps &
+type MaterialUIInputProps = {
+  autoComplete?: string
+  autoFocus?: boolean
+  color?: 'primary' | 'secondary'
+  children?: React.ReactNode
+  defaultValue?: unknown
+  disabled?: boolean
+  error?: boolean
+  fullWidth?: boolean
+  helperText?: React.ReactNode
+  id?: string
+  InputLabelProps?: any
+  inputRef?: React.Ref<any>
+  label?: React.ReactNode
+  margin?: any
+  multiline?: boolean
+  name?: string
+  placeholder?: string
+  required?: boolean
+  rows?: string | number
+  rowsMax?: string | number
+  select?: boolean
+  SelectProps?: any
+  type?: string
+}
+
+type Props = MaterialUIInputProps &
   coordinateEditor.NumericConstraints & {
     /** Numeric value */
     value: number
@@ -32,7 +58,6 @@ const NumberInput: React.SFC<Props> = ({
   })
   return (
     <TextField
-      fullWidth
       value={text}
       error={number === null}
       helperText={number === null ? 'invalid value' : ''}
