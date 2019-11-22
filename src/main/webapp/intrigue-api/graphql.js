@@ -321,36 +321,42 @@ const metacardStartingTypes = [
     type: 'STRING',
     multivalued: false,
     isInjected: false,
+    enums: [],
   },
   {
     id: 'anyGeo',
     type: 'LOCATION',
     multivalued: false,
     isInjected: false,
+    enums: [],
   },
   {
     id: ' metacard-type',
     type: 'STRING',
     multivalued: false,
     isInjected: false,
+    enums: [],
   },
   {
     id: 'source-id',
     type: 'STRING',
     multivalued: false,
     isInjected: false,
+    enums: [],
   },
   {
     id: 'cached',
     type: 'STRING',
     multivalued: false,
     isInjected: false,
+    enums: [],
   },
   {
     id: 'metacard-tags',
     type: 'STRING',
     multivalued: true,
     isInjected: false,
+    enums: [],
   },
 ]
 
@@ -358,11 +364,31 @@ const metacardTypes = async () => {
   const res = await fetch(`${ROOT}/metacardtype`)
   const json = await res.json()
 
-  const types = Object.keys(json).reduce((types, group) => {
+  let types = Object.keys(json).reduce((types, group) => {
     return Object.assign(types, json[group])
   }, {})
-
+  const enums = await getEnumerations()
+  Object.keys(enums).forEach(attribute => {
+    types[attribute].enums = enums[attribute]
+  })
   return metacardStartingTypes.concat(Object.keys(types).map(k => types[k]))
+}
+
+const getEnumerations = async () => {
+  const { enums } = await (await fetch(`${ROOT}/config`)).json()
+
+  const res = await fetch(`${ROOT}/metacardtype`)
+  const json = await res.json()
+
+  await Promise.all(
+    Object.keys(json).map(async group => {
+      const enumRes = await fetch(`${ROOT}/enumerations/metacardtype/${group}`)
+      const enumJson = await enumRes.json()
+      Object.assign(enums, enumJson)
+    })
+  )
+  console.log(enums)
+  return enums
 }
 
 const facet = async (parent, args) => {
