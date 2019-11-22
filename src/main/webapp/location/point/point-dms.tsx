@@ -1,7 +1,9 @@
 import * as React from 'react'
-import Box from '@material-ui/core/Box'
+import SpacedLinearContainer from '../../spaced-linear-container'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
 import InputAdornment from '@material-ui/core/InputAdornment'
+import FormControl from '@material-ui/core/FormControl'
+import FormLabel from '@material-ui/core/FormLabel'
 import Props from './props'
 import { coordinates as coordinateEditor } from 'geospatialdraw'
 import NumberInput from '../number'
@@ -35,7 +37,7 @@ const DMSValue: React.SFC<DMSValueProps> = ({
   const display = coordinateEditor.dmsSetSign(value, 1)
   const sign = coordinateEditor.dmsSign(value)
   return (
-    <React.Fragment>
+    <SpacedLinearContainer direction="row" spacing={1}>
       <NumberInput
         maxValue={maxDegrees}
         minValue={0}
@@ -56,7 +58,12 @@ const DMSValue: React.SFC<DMSValueProps> = ({
         }}
         InputProps={{
           endAdornment: <InputAdornment position="end">&deg;</InputAdornment>,
-          style: { textAlign: 'end' }
+        }}
+        inputProps={{
+          style: { textAlign: 'end' },
+        }}
+        style={{
+          width: '3em',
         }}
       />
       <NumberInput
@@ -75,7 +82,12 @@ const DMSValue: React.SFC<DMSValueProps> = ({
         }
         InputProps={{
           endAdornment: <InputAdornment position="end">&apos;</InputAdornment>,
+        }}
+        inputProps={{
           style: { textAlign: 'end' },
+        }}
+        style={{
+          width: '3em',
         }}
       />
       <NumberInput
@@ -94,30 +106,36 @@ const DMSValue: React.SFC<DMSValueProps> = ({
         }
         InputProps={{
           endAdornment: <InputAdornment position="end">&quot;</InputAdornment>,
+        }}
+        inputProps={{
           style: { textAlign: 'end' },
+        }}
+        style={{
+          width: '5em',
         }}
       />
       <ToggleButtonGroup
+        exclusive
+        size="small"
+        value={sign}
         onChange={(_e, sign) => {
           onChange(coordinateEditor.dmsSetSign(value, sign))
         }}
       >
         <ToggleButton
           title={positiveHeadingTooltip}
-          selected={sign === 1}
           value={1}
         >
           {positiveHeadingName}
         </ToggleButton>
         <ToggleButton
           title={negativeHeadingTooltip}
-          selected={sign === -1}
           value={-1}
         >
           {negativeHeadingName}
         </ToggleButton>
       </ToggleButtonGroup>
-    </React.Fragment>
+    </SpacedLinearContainer>
   )
 }
 
@@ -143,14 +161,6 @@ const DMSLongitude: React.SFC<DMSComponentProps> = props => (
   />
 )
 
-type DivProps = {
-  children: React.ReactNode
-}
-
-const Root: React.SFC<DivProps> = (props: DivProps) => (
-  <Box flex="flex" flexDirection="column" padding={1} {...props} />
-)
-
 const PointDMS: React.SFC<Props> = ({ value, onChange }) => {
   const [
     coordinates,
@@ -165,22 +175,28 @@ const PointDMS: React.SFC<Props> = ({ value, onChange }) => {
     [coordinates]
   )
   return (
-    <Root>
-      <DMSLatitude
-        isValid={isValid}
-        value={dmsLat}
-        onChange={dms => {
-          setDMS({ lat: dms, lon: dmsLon })
-        }}
-      />
-      <DMSLongitude
-        isValid={isValid}
-        value={dmsLon}
-        onChange={dms => {
-          setDMS({ lat: dmsLat, lon: dms })
-        }}
-      />
-    </Root>
+    <SpacedLinearContainer direction="column" spacing={1}>
+      <FormControl>
+        <FormLabel>Latitude</FormLabel>
+        <DMSLatitude
+          isValid={isValid}
+          value={dmsLat}
+          onChange={dms => {
+            setDMS({ lat: dms, lon: dmsLon })
+          }}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Longitude</FormLabel>
+        <DMSLongitude
+          isValid={isValid}
+          value={dmsLon}
+          onChange={dms => {
+            setDMS({ lat: dmsLat, lon: dms })
+          }}
+        />
+      </FormControl>
+    </SpacedLinearContainer>
   )
 }
 

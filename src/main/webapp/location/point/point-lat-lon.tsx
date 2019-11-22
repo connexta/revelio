@@ -1,7 +1,8 @@
 import * as React from 'react'
-import Box from '@material-ui/core/Box'
+import InputAdornment from '@material-ui/core/InputAdornment'
 import Props from './props'
 import NumberInput from '../number'
+import SpacedLinearContainer from '../../spaced-linear-container'
 
 const DECIMAL_DEGREES_PRECISION = 6
 
@@ -17,6 +18,15 @@ const LatitudeInput: React.SFC<NumberProps> = props => (
     decimalPlaces={DECIMAL_DEGREES_PRECISION}
     label="Latitude"
     {...props}
+    InputProps={{
+      endAdornment: <InputAdornment position="end">&deg;</InputAdornment>,
+    }}
+    inputProps={{
+      style: { textAlign: 'end' },
+    }}
+    style={{
+      width: '7em',
+    }}
   />
 )
 const LongitudeInput: React.SFC<NumberProps> = props => (
@@ -26,15 +36,16 @@ const LongitudeInput: React.SFC<NumberProps> = props => (
     decimalPlaces={DECIMAL_DEGREES_PRECISION}
     label="Longitude"
     {...props}
+    InputProps={{
+      endAdornment: <InputAdornment position="end">&deg;</InputAdornment>,
+    }}
+    inputProps={{
+      style: { textAlign: 'end' },
+    }}
+    style={{
+      width: '7em',
+    }}
   />
-)
-
-type DivProps = {
-  children: React.ReactNode
-}
-
-const Row: React.SFC<DivProps> = (props: DivProps) => (
-  <Box flex="flex" flexDirection="row" padding={1} {...props} />
 )
 
 const PointLatLon: React.SFC<Props> = ({
@@ -50,10 +61,10 @@ const PointLatLon: React.SFC<Props> = ({
     [lat, lon]
   )
   return (
-    <Row>
+    <SpacedLinearContainer direction="row" spacing={1}>
       <LatitudeInput value={lat} onChange={setLat} />
       <LongitudeInput value={lon} onChange={setLon} />
-    </Row>
+    </SpacedLinearContainer>
   )
 }
 

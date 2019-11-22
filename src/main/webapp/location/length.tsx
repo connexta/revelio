@@ -1,8 +1,8 @@
 import * as React from 'react'
-import Box from '@material-ui/core/Box'
 import { geometry } from 'geospatialdraw'
 import NumberInput, { MaterialUIInputProps } from './number'
 import Units from './units'
+import SpacedLinearContainer from '../spaced-linear-container'
 
 const LENGTH_PRECISION = 3
 
@@ -16,31 +16,31 @@ type Props = MaterialUIInputProps & {
   onChange: (value: Measurement) => void
 }
 
-type DivProps = {
-  children: React.ReactNode
-}
-
-const Row: React.SFC<DivProps> = (props: DivProps) => (
-  <Box flex="flex" flexDirection="row" padding={1} {...props} />
-)
-
 const Length: React.SFC<Props> = ({
   value: { length, unit },
   onChange,
   ...rest
 }) => (
-  <Row>
+  <SpacedLinearContainer direction="row" spacing={1}>
     <NumberInput
       value={length}
       onChange={update => onChange({ length: update, unit })}
       decimalPlaces={LENGTH_PRECISION}
       {...rest}
+      inputProps={{
+        style: {
+          textAlign: 'end',
+        },
+      }}
+      style={{
+        width: '7rem',
+      }}
     />
     <Units
       value={unit}
       onChange={update => onChange({ length, unit: update })}
     />
-  </Row>
+  </SpacedLinearContainer>
 )
 
 export default Length

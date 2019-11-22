@@ -7,7 +7,13 @@ import { geometry, coordinates as coordinateEditor } from 'geospatialdraw'
 const stories = storiesOf('GeoLocation', module)
 stories.addDecorator(Story => <Story />)
 
-const pointRadiusGeo = geometry.makePointRadiusGeo('pointRadiusGeo', 45, 38, 600, geometry.MILES)
+const pointRadiusGeo = geometry.makePointRadiusGeo(
+  'pointRadiusGeo',
+  45,
+  38,
+  600,
+  geometry.MILES
+)
 
 const coordinateUnits = [
   coordinateEditor.LAT_LON,

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Box from '@material-ui/core/Box'
+import SpacedLinearContainer from '../../spaced-linear-container'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -21,14 +21,6 @@ const {
 
 type SelectEvent = React.ChangeEvent<HTMLSelectElement>
 
-type DivProps = {
-  children: React.ReactNode
-}
-
-const Column: React.SFC<DivProps> = (props: DivProps) => (
-  <Box flex="flex" flexDirection="column" padding={1} {...props} />
-)
-
 const PointUTM: React.SFC<Props> = ({ value, onChange }) => {
   const [
     coordinates,
@@ -44,9 +36,8 @@ const PointUTM: React.SFC<Props> = ({ value, onChange }) => {
     [coordinates]
   )
   return (
-    <Column>
+    <SpacedLinearContainer direction="column" spacing={1}>
       <NumberInput
-        fullWidth
         label="Easting"
         error={!isValid}
         helperText={isValid ? '' : 'invalid UTM value'}
@@ -60,9 +51,11 @@ const PointUTM: React.SFC<Props> = ({ value, onChange }) => {
             easting: value,
           })
         }}
+        style={{
+          width: '7em',
+        }}
       />
       <NumberInput
-        fullWidth
         label="Northing"
         error={!isValid}
         helperText={isValid ? '' : 'invalid UTM value'}
@@ -76,6 +69,9 @@ const PointUTM: React.SFC<Props> = ({ value, onChange }) => {
             northing: value,
           })
         }}
+        style={{
+          width: '7em',
+        }}
       />
       <FormControl>
         <InputLabel>Zone</InputLabel>
@@ -88,7 +84,7 @@ const PointUTM: React.SFC<Props> = ({ value, onChange }) => {
             })
           }}
           renderValue={(selected: React.ReactNode) => selected}
-          style={{ minWidth: 100 }}
+          style={{ minWidth: 50 }}
         >
           {Array(MAX_ZONE + 1)
             .fill(0)
@@ -101,6 +97,9 @@ const PointUTM: React.SFC<Props> = ({ value, onChange }) => {
         </Select>
       </FormControl>
       <ToggleButtonGroup
+        exclusive
+        size="small"
+        value={hemisphere}
         onChange={(_e, selection) => {
           setUTM({
             ...utm,
@@ -110,20 +109,18 @@ const PointUTM: React.SFC<Props> = ({ value, onChange }) => {
       >
         <ToggleButton
           title="Northern Hemisphere"
-          selected={hemisphere === 'N'}
           value="N"
         >
           N
         </ToggleButton>
         <ToggleButton
           title="Southern Hemisphere"
-          selected={hemisphere === 'S'}
           value="S"
         >
           S
         </ToggleButton>
       </ToggleButtonGroup>
-    </Column>
+    </SpacedLinearContainer>
   )
 }
 

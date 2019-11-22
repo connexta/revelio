@@ -2,18 +2,10 @@ import * as React from 'react'
 import { geometry, coordinates as coordinateEditor } from 'geospatialdraw'
 import { Filter, DWITHIN, ANY_GEO, GEOMETRY } from './filter'
 import { geoToWKT } from './geo-to-wkt'
-import Box from '@material-ui/core/Box'
 import Point from './point'
 import Props from './geo-editor'
 import Length from './length'
-
-type DivProps = {
-  children: React.ReactNode
-}
-
-const Column: React.SFC<DivProps> = (props: DivProps) => (
-  <Box flex="flex" flexDirection="column" padding={1} {...props} />
-)
+import SpacedLinearContainer from '../spaced-linear-container'
 
 export const generateFilter = (geo: geometry.GeometryJSON): Filter => ({
   type: DWITHIN,
@@ -39,7 +31,7 @@ const PointRadius: React.SFC<Props> = ({
     properties,
   } = coordinateEditor.geoToPointRadiusProps(value)
   return (
-    <Column>
+    <SpacedLinearContainer direction="column" spacing={1}>
       <Point
         coordinateUnit={coordinateUnit}
         value={{ lat, lon }}
@@ -57,6 +49,7 @@ const PointRadius: React.SFC<Props> = ({
         }}
       />
       <Length
+        label="Radius"
         value={{ length: radius, unit: radiusUnit }}
         onChange={({ length, unit }) =>
           onChange(
@@ -71,7 +64,7 @@ const PointRadius: React.SFC<Props> = ({
           )
         }
       />
-    </Column>
+    </SpacedLinearContainer>
   )
 }
 

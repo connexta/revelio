@@ -21,12 +21,18 @@ const PointUSNG: React.SFC<Props> = ({ value, onChange }) => {
   return (
     <TextField
       fullWidth
-      label="Line"
+      label="USNG/MGRS"
       error={!isValid}
       helperText={isValid ? '' : 'invalid USNG value'}
       value={usng}
       onChange={(e: ChangeEvent) => {
         setUSNG(e.target.value)
+      }}
+      inputProps={{
+        style: { textAlign: 'end' },
+      }}
+      style={{
+        width: '12em',
       }}
     />
   )

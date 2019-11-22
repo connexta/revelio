@@ -27,6 +27,8 @@ export type MaterialUIInputProps = {
   SelectProps?: any
   type?: string
   InputProps?: any
+  inputProps?: any
+  style?: any
 }
 
 type Props = MaterialUIInputProps &
