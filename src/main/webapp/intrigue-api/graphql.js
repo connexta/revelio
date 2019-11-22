@@ -369,9 +369,9 @@ const facet = async (parent, args) => {
   const { attribute } = args
 
   const filterTree = {
-    type: '=',
+    type: 'ILIKE',
     property: 'anyText',
-    value: '',
+    value: '%',
   }
 
   const q = {
