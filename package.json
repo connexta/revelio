@@ -33,7 +33,7 @@
     "apollo-server-express": "^2.9.7",
     "date-fns": "^2.0.0-beta.5",
     "express": "4.17.1",
-    "geospatialdraw": "https://github.com/connexta/geospatialdraw.git#240e3246400e2d43b5af1beb071d48efad2ef3e7",
+    "geospatialdraw": "https://github.com/connexta/geospatialdraw.git#62d6307c2fed6eec489bf99b9e8be50f9964225c",
     "golden-layout": "^1.5.9",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",

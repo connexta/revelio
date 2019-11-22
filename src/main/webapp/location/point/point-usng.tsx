@@ -21,7 +21,6 @@ const PointUSNG: React.SFC<Props> = ({ value, onChange }) => {
   )
   return (
     <TextField
-      fullWidth
       label="USNG/MGRS"
       error={!isValid}
       helperText={isValid ? '' : 'invalid USNG value'}
