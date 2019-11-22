@@ -11,6 +11,7 @@ const PointUSNG: React.SFC<Props> = ({ value, onChange }) => {
     usng,
     setUSNG,
     isValid,
+    formattedUSNG,
   ] = coordinateEditor.useUSNGCoordinates(value)
   React.useEffect(
     () => {
@@ -28,6 +29,7 @@ const PointUSNG: React.SFC<Props> = ({ value, onChange }) => {
       onChange={(e: ChangeEvent) => {
         setUSNG(e.target.value)
       }}
+      onBlur={() => setUSNG(formattedUSNG)}
       inputProps={{
         style: { textAlign: 'end' },
       }}
