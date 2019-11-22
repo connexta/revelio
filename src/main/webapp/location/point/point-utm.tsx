@@ -33,7 +33,7 @@ const PointUTM: React.SFC<Props> = ({ value, onChange }) => {
     () => {
       onChange(coordinates)
     },
-    [coordinates]
+    [coordinates.lat, coordinates.lon]
   )
   return (
     <SpacedLinearContainer direction="column" spacing={1}>
@@ -107,16 +107,10 @@ const PointUTM: React.SFC<Props> = ({ value, onChange }) => {
           })
         }}
       >
-        <ToggleButton
-          title="Northern Hemisphere"
-          value="N"
-        >
+        <ToggleButton title="Northern Hemisphere" value="N">
           N
         </ToggleButton>
-        <ToggleButton
-          title="Southern Hemisphere"
-          value="S"
-        >
+        <ToggleButton title="Southern Hemisphere" value="S">
           S
         </ToggleButton>
       </ToggleButtonGroup>

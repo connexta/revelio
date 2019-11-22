@@ -122,16 +122,10 @@ const DMSValue: React.SFC<DMSValueProps> = ({
           onChange(coordinateEditor.dmsSetSign(value, sign))
         }}
       >
-        <ToggleButton
-          title={positiveHeadingTooltip}
-          value={1}
-        >
+        <ToggleButton title={positiveHeadingTooltip} value={1}>
           {positiveHeadingName}
         </ToggleButton>
-        <ToggleButton
-          title={negativeHeadingTooltip}
-          value={-1}
-        >
+        <ToggleButton title={negativeHeadingTooltip} value={-1}>
           {negativeHeadingName}
         </ToggleButton>
       </ToggleButtonGroup>
@@ -172,7 +166,7 @@ const PointDMS: React.SFC<Props> = ({ value, onChange }) => {
     () => {
       onChange(coordinates)
     },
-    [coordinates]
+    [coordinates.lat, coordinates.lon]
   )
   return (
     <SpacedLinearContainer direction="column" spacing={1}>

@@ -16,7 +16,7 @@ const PointUSNG: React.SFC<Props> = ({ value, onChange }) => {
     () => {
       onChange(coordinates)
     },
-    [coordinates]
+    [coordinates.lat, coordinates.lon]
   )
   return (
     <TextField

@@ -64,14 +64,14 @@ const NumberInput: React.SFC<Props> = ({
       value={text}
       error={number === null}
       helperText={number === null ? 'invalid value' : ''}
-      onChange={({ target: { value: textValue } }: ChangeEvent) => {
-        const number = setText(textValue)
+      onChange={({ target: { value: textValue } }: ChangeEvent) =>
+        setText(textValue)
+      }
+      onBlur={() => {
+        setText(formattedText)
         if (number !== null) {
           onChange(number)
         }
-      }}
-      onBlur={() => {
-        setText(formattedText)
       }}
       {...rest}
     />

@@ -48,24 +48,17 @@ const LongitudeInput: React.SFC<NumberProps> = props => (
   />
 )
 
-const PointLatLon: React.SFC<Props> = ({
-  value: { lat: initLat, lon: initLon },
-  onChange,
-}) => {
-  const [lat, setLat] = React.useState(initLat)
-  const [lon, setLon] = React.useState(initLon)
-  React.useEffect(
-    () => {
-      onChange({ lat, lon })
-    },
-    [lat, lon]
-  )
-  return (
-    <SpacedLinearContainer direction="row" spacing={1}>
-      <LatitudeInput value={lat} onChange={setLat} />
-      <LongitudeInput value={lon} onChange={setLon} />
-    </SpacedLinearContainer>
-  )
-}
+const PointLatLon: React.SFC<Props> = ({ value: { lat, lon }, onChange }) => (
+  <SpacedLinearContainer direction="row" spacing={1}>
+    <LatitudeInput
+      value={lat}
+      onChange={value => onChange({ lat: value, lon })}
+    />
+    <LongitudeInput
+      value={lon}
+      onChange={value => onChange({ lon: value, lat })}
+    />
+  </SpacedLinearContainer>
+)
 
 export default PointLatLon
