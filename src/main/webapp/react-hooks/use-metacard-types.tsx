@@ -7,6 +7,7 @@ const query = gql`
     metacardTypes {
       id
       type
+      enums
     }
   }
 `

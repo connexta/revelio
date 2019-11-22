@@ -1,12 +1,6 @@
 import * as React from 'react'
 import { QueryFilterProps } from '../filter/individual-filter'
-import {
-  TextField,
-  Box,
-  Paper,
-  LinearProgress,
-  Typography,
-} from '@material-ui/core'
+import { TextField, Box } from '@material-ui/core'
 import { Map, getIn, List } from 'immutable'
 import { useFilterContext } from '../filter-context'
 import Autocomplete from '@material-ui/lab/Autocomplete'
@@ -37,69 +31,79 @@ const FACETED_QUERY = gql`
     }
   }
 `
-const Loading = () => {
-  return (
-    <Paper>
-      <LinearProgress />
-    </Paper>
-  )
-}
-const Error = (props: any) => {
-  return (
-    <Paper>
-      <Typography>
-        {props.message ? props.message : 'Something went wrong'}
-      </Typography>
-    </Paper>
-  )
+const FACET_WHITELIST = gql`
+  query {
+    systemProperties {
+      facetWhitelist
+    }
+  }
+`
+
+const WithFacetWhitelist = (props: QueryFilterProps) => {
+  const { data, loading, error } = useQuery(FACET_WHITELIST)
+  if (loading) {
+    return <TextFilterContainer {...props} loading={true} />
+  }
+  if (error) {
+    return <TextFilterContainer {...props} />
+  }
+
+  const facetWhitelist = getIn(data, ['systemProperties', 'facetWhitelist'], [])
+  if (!facetWhitelist.includes(props.property)) {
+    return <TextFilterContainer {...props} />
+  }
+  return <WithFacetedQuery {...props} />
 }
 
-const TextFilterContainer = (props: QueryFilterProps) => {
+const WithFacetedQuery = (props: QueryFilterProps) => {
   const { data, loading, error } = useQuery(FACETED_QUERY, {
     variables: { attribute: props.property },
   })
+
   if (loading) {
-    return <Loading />
+    return <TextFilterContainer {...props} loading={true} />
+  }
+  if (error) {
+    return <TextFilterContainer {...props} />
   }
 
-  if (error) {
-    return <Error message={error} />
-  }
-  return (
-    <TextFilter
-      {...props}
-      enums={getIn(data, ['facet'], []).map((facet: any) => facet.value)}
-    />
+  const enums = getIn(data, ['facet'], []).map((facet: any) => facet.value)
+
+  return <TextFilterContainer {...props} enums={enums} />
+}
+
+const TextFilterContainer = (props: TextFilterProps) => {
+  const { metacardTypes } = useFilterContext()
+  let { enums = [] } = props
+  enums = List(
+    enums.concat(getIn(metacardTypes, [props.property, 'enums'], []))
   )
+    .toSet()
+    .toArray()
+
+  return <TextFilter {...props} enums={enums} />
 }
 
 type TextFilterProps = QueryFilterProps & {
   enums?: string[]
+  loading?: boolean
 }
 
 const TextFilter = (props: TextFilterProps) => {
-  const { metacardTypes } = useFilterContext()
   const { enums = [] } = props
   const errors = validateText(props.value)
-
-  const getOptions = () => {
-    return List(
-      enums.concat(getIn(metacardTypes, [props.property, 'enums'], []))
-    )
-      .toSet()
-      .toArray()
-  }
 
   return (
     <Autocomplete
       freeSolo
       disableClearable
-      options={getOptions()}
+      options={enums}
       value={props.value}
       onChange={(_, value: any) => {
         const { property, type } = props
         props.onChange({ property, type, value })
       }}
+      loading={props.loading}
       renderInput={params => (
         <TextField
           {...params}
@@ -177,7 +181,7 @@ const Filter = (props: QueryFilterProps) => {
     return <NearFilter {...props} />
   }
 
-  const Component = useApolloFallback(TextFilterContainer, TextFilter)
+  const Component = useApolloFallback(WithFacetWhitelist, TextFilterContainer)
   return <Component {...props} />
 }
 export default Filter

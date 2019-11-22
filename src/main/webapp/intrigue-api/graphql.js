@@ -364,7 +364,7 @@ const metacardTypes = async () => {
   const res = await fetch(`${ROOT}/metacardtype`)
   const json = await res.json()
 
-  let types = Object.keys(json).reduce((types, group) => {
+  const types = Object.keys(json).reduce((types, group) => {
     return Object.assign(types, json[group])
   }, {})
   const enums = await getEnumerations()
@@ -387,7 +387,6 @@ const getEnumerations = async () => {
       Object.assign(enums, enumJson)
     })
   )
-  console.log(enums)
   return enums
 }
 
