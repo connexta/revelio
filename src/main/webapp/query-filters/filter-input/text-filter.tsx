@@ -25,7 +25,7 @@ const validateText = (value: any) => {
 }
 
 const FACETED_QUERY = gql`
-  query getFactedOptions($attribute: String!) {
+  query getFacetedOptions($attribute: String!) {
     facet(attribute: $attribute) {
       value
     }
@@ -34,12 +34,12 @@ const FACETED_QUERY = gql`
 const FACET_WHITELIST = gql`
   query {
     systemProperties {
-      facetWhitelist
+      attributeSuggestionList
     }
   }
 `
 
-const WithFacetWhitelist = (props: QueryFilterProps) => {
+const WithFacetedSuggestions = (props: QueryFilterProps) => {
   const { data, loading, error } = useQuery(FACET_WHITELIST)
   if (loading) {
     return <TextFilterContainer {...props} loading={true} />
@@ -48,8 +48,12 @@ const WithFacetWhitelist = (props: QueryFilterProps) => {
     return <TextFilterContainer {...props} />
   }
 
-  const facetWhitelist = getIn(data, ['systemProperties', 'facetWhitelist'], [])
-  if (!facetWhitelist.includes(props.property)) {
+  const attributeSuggestionList = getIn(
+    data,
+    ['systemProperties', 'attributeSuggestionList'],
+    []
+  )
+  if (!attributeSuggestionList.includes(props.property)) {
     return <TextFilterContainer {...props} />
   }
   return <WithFacetedQuery {...props} />
@@ -76,7 +80,9 @@ const TextFilterContainer = (props: TextFilterProps) => {
   const { metacardTypes } = useFilterContext()
   let { enums = [] } = props
   enums = List(
-    enums.concat(getIn(metacardTypes, [props.property, 'enums'], []))
+    enums.concat(
+      getIn(metacardTypes, [props.property, 'enums'], undefined) || []
+    )
   )
     .toSet()
     .toArray()
@@ -181,7 +187,10 @@ const Filter = (props: QueryFilterProps) => {
     return <NearFilter {...props} />
   }
 
-  const Component = useApolloFallback(WithFacetWhitelist, TextFilterContainer)
+  const Component = useApolloFallback(
+    WithFacetedSuggestions,
+    TextFilterContainer
+  )
   return <Component {...props} />
 }
 export default Filter
