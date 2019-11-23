@@ -52,6 +52,16 @@
             <artifactId>platform-util</artifactId>
             <version>${ddf.version}</version>
         </dependency>
+	<dependency>
+	  <groupId>ddf.action.core</groupId>
+	  <artifactId>action-core-api</artifactId>
+	  <version>${ddf.version}</version>
+	</dependency>
+	<dependency>
+	  <groupId>ddf.action.core</groupId>
+	  <artifactId>action-core-impl</artifactId>
+	  <version>${ddf.version}</version>
+	</dependency>
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
@@ -98,18 +108,18 @@
                 </configuration>
             </plugin>
 	    <plugin>
-                <groupId>com.coveo</groupId>
-                <artifactId>fmt-maven-plugin</artifactId>
-                <version>2.3.0</version>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <groupId>com.coveo</groupId>
+            <artifactId>fmt-maven-plugin</artifactId>
+            <version>2.3.0</version>
+            <executions>
+                <execution>
+                    <phase>validate</phase>
+                    <goals>
+                        <goal>check</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
         </plugins>
     </build>
 

@@ -8,6 +8,9 @@ import static org.codice.jsonrpc.JsonRpc.INVALID_PARAMS;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
+import ddf.action.Action;
+import ddf.action.ActionRegistry;
+import ddf.action.impl.ActionImpl;
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.AttributeDescriptor;
@@ -88,23 +91,35 @@ public class CatalogMethods implements MethodSet {
         "ddf.catalog/create",
         new DocMethod(
             this::create,
-            "Takes the specified parameters (metacards) and calls CatalogFramework::create.`params` takes: `metacards(Required, value: List(Object(`metacardType`:string, `attributes`:Object(Required, `id`: String))) "));
+            "Takes the specified parameters (metacards) and calls"
+                + " CatalogFramework::create.`params` takes: `metacards(Required, value:"
+                + " List(Object(`metacardType`:string, `attributes`:Object(Required, `id`:"
+                + " String))) "));
     builder.put(
         "ddf.catalog/query",
         new DocMethod(
             this::query,
-            "Takes the specified parameters and calls CatalogFramework::query. `params` takes: `cql` (TemporarilyRequired, value: String of cql), `sourceIds` (Optional, value: List of strings, Default: ['ddf.distribution']), `isEnterprise` (Optional, value: boolean, default: false), `properties` (Not yet supported), `startIndex` (Optional, value: integer, default: 1), `pageSize` (Optional, value: integer, default: 250), `sortPolicy` (Optional, value: Object(`propertyName`:String, `sortOrder`: String(ASC or DESC))"));
+            "Takes the specified parameters and calls CatalogFramework::query. `params` takes:"
+                + " `cql` (TemporarilyRequired, value: String of cql), `sourceIds` (Optional,"
+                + " value: List of strings, Default: ['ddf.distribution']), `isEnterprise`"
+                + " (Optional, value: boolean, default: false), `properties` (Not yet supported),"
+                + " `startIndex` (Optional, value: integer, default: 1), `pageSize` (Optional,"
+                + " value: integer, default: 250), `sortPolicy` (Optional, value:"
+                + " Object(`propertyName`:String, `sortOrder`: String(ASC or DESC))"));
 
     builder.put(
         "ddf.catalog/update",
         new DocMethod(
             this::update,
-            "Takes the specified parameters and calls CatalogFramework::query. `params` takes: `metacards(Required, value: List(Object(`metacardType`:string, `attributes`:Object(Required, `id`: String)))"));
+            "Takes the specified parameters and calls CatalogFramework::query. `params` takes:"
+                + " `metacards(Required, value: List(Object(`metacardType`:string,"
+                + " `attributes`:Object(Required, `id`: String)))"));
     builder.put(
         "ddf.catalog/delete",
         new DocMethod(
             this::delete,
-            "Takes the specified parameters and calls CatalogFramework::query. `params` takes: `ids` (Required, value: List(String))"));
+            "Takes the specified parameters and calls CatalogFramework::query. `params` takes:"
+                + " `ids` (Required, value: List(String))"));
     builder.put("ddf.catalog/getSourceIds", new DocMethod(this::getSourceIds, ""));
     builder.put("ddf.catalog/getSourceInfo", new DocMethod(this::getSourceInfo, ""));
     METHODS = builder.build();
@@ -123,15 +138,19 @@ public class CatalogMethods implements MethodSet {
 
   private FilterBuilder filterBuilder;
 
+  private ActionRegistry actionRegistry;
+
   public CatalogMethods(
       CatalogFramework catalogFramework,
       AttributeRegistry attributeRegistry,
       List<MetacardType> metacardTypes,
-      FilterBuilder filterBuilder) {
+      FilterBuilder filterBuilder,
+      ActionRegistry actionRegistry) {
     this.catalogFramework = catalogFramework;
     this.attributeRegistry = attributeRegistry;
     this.metacardTypes = metacardTypes;
     this.filterBuilder = filterBuilder;
+    this.actionRegistry = actionRegistry;
   }
 
   private Object getSourceIds(Map<String, Object> params) {
@@ -384,20 +403,39 @@ public class CatalogMethods implements MethodSet {
           INTERNAL_ERROR, "An error occured while running your query - " + e.getMessage());
     }
     return new ImmutableMap.Builder<String, Object>()
-        .put(
-            "results",
-            queryResponse
-                .getResults()
-                .stream()
-                .map(Result::getMetacard)
-                .map(this::metacard2map)
-                .map(m -> ImmutableMap.of("metacard", ImmutableMap.of("properties", m)))
-                .collect(Collectors.toList()))
+        .put("results", getResults(queryResponse))
         .put("status", getQueryInfo(queryResponse))
         .put(
             "facets",
             getFacetResults(queryResponse.getPropertyValue(EXPERIMENTAL_FACET_RESULTS_KEY)))
         .build();
+  }
+
+  private List<Action> getMetacardActions(Metacard metacard) {
+    return this.actionRegistry
+        .list(metacard)
+        .stream()
+        .map(
+            action ->
+                new ActionImpl(
+                    action.getId(), action.getTitle(), action.getDescription(), action.getUrl()))
+        .collect(Collectors.toList());
+  }
+
+  private Map<String, Object> getMetacardInfo(Metacard metacard) {
+    return new ImmutableMap.Builder<String, Object>()
+        .put("metacard", ImmutableMap.of("properties", this.metacard2map(metacard)))
+        .put("actions", getMetacardActions(metacard))
+        .build();
+  }
+
+  private List<Object> getResults(QueryResponse queryResponse) {
+    return queryResponse
+        .getResults()
+        .stream()
+        .map(Result::getMetacard)
+        .map(this::getMetacardInfo)
+        .collect(Collectors.toList());
   }
 
   private Map<String, Integer> getQueryInfo(QueryResponse queryResponse) {
