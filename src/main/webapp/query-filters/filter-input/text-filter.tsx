@@ -1,7 +1,13 @@
 import * as React from 'react'
 import { QueryFilterProps } from '../filter/individual-filter'
 import { TextField, Box } from '@material-ui/core'
-import { Map } from 'immutable'
+import { Map, getIn, List } from 'immutable'
+import { useFilterContext } from '../filter-context'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import { useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
+const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
+  .default
 
 export const comparatorOptions = ['ILIKE', 'LIKE', '=', 'NEAR', 'IS NULL']
 export const comparatorAliases = Map({
@@ -18,21 +24,102 @@ const validateText = (value: any) => {
   return errors
 }
 
-const TextFilter = (props: QueryFilterProps) => {
+const FACETED_QUERY = gql`
+  query getFacetedOptions($attribute: String!) {
+    facet(attribute: $attribute) {
+      value
+    }
+  }
+`
+const FACET_WHITELIST = gql`
+  query {
+    systemProperties {
+      attributeSuggestionList
+    }
+  }
+`
+
+const WithFacetedSuggestions = (props: QueryFilterProps) => {
+  const { data, loading, error } = useQuery(FACET_WHITELIST)
+  if (loading) {
+    return <TextFilterContainer {...props} loading={true} />
+  }
+  if (error) {
+    return <TextFilterContainer {...props} />
+  }
+
+  const attributeSuggestionList = getIn(
+    data,
+    ['systemProperties', 'attributeSuggestionList'],
+    []
+  )
+  if (!attributeSuggestionList.includes(props.property)) {
+    return <TextFilterContainer {...props} />
+  }
+  return <WithFacetedQuery {...props} />
+}
+
+const WithFacetedQuery = (props: QueryFilterProps) => {
+  const { data, loading, error } = useQuery(FACETED_QUERY, {
+    variables: { attribute: props.property },
+  })
+
+  if (loading) {
+    return <TextFilterContainer {...props} loading={true} />
+  }
+  if (error) {
+    return <TextFilterContainer {...props} />
+  }
+
+  const enums = getIn(data, ['facet'], []).map((facet: any) => facet.value)
+
+  return <TextFilterContainer {...props} enums={enums} />
+}
+
+const TextFilterContainer = (props: TextFilterProps) => {
+  const { metacardTypes } = useFilterContext()
+  let { enums = [] } = props
+  enums = List(
+    enums.concat(
+      getIn(metacardTypes, [props.property, 'enums'], undefined) || []
+    )
+  )
+    .toSet()
+    .toArray()
+
+  return <TextFilter {...props} enums={enums} />
+}
+
+type TextFilterProps = QueryFilterProps & {
+  enums?: string[]
+  loading?: boolean
+}
+
+const TextFilter = (props: TextFilterProps) => {
+  const { enums = [] } = props
   const errors = validateText(props.value)
+
   return (
-    <TextField
-      error={errors.value !== undefined}
-      helperText={errors.value}
-      placeholder="Use * for wildcard"
-      variant="outlined"
-      fullWidth
-      onChange={event => {
+    <Autocomplete
+      freeSolo
+      disableClearable
+      options={enums}
+      value={props.value}
+      onChange={(_, value: any) => {
         const { property, type } = props
-        const value = event.target.value
         props.onChange({ property, type, value })
       }}
-      value={props.value}
+      loading={props.loading}
+      renderInput={params => (
+        <TextField
+          {...params}
+          error={errors.value !== undefined}
+          helperText={errors.value}
+          placeholder="Use * for wildcard"
+          variant="outlined"
+          fullWidth
+        />
+      )}
     />
   )
 }
@@ -96,14 +183,14 @@ const NearFilter = (props: QueryFilterProps) => {
 }
 
 const Filter = (props: QueryFilterProps) => {
-  return (
-    <React.Fragment>
-      {props.type !== 'NEAR' ? (
-        <TextFilter {...props} />
-      ) : (
-        <NearFilter {...props} />
-      )}
-    </React.Fragment>
+  if (props.type === 'NEAR') {
+    return <NearFilter {...props} />
+  }
+
+  const Component = useApolloFallback(
+    WithFacetedSuggestions,
+    TextFilterContainer
   )
+  return <Component {...props} />
 }
 export default Filter

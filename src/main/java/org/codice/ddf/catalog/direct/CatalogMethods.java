@@ -1,5 +1,6 @@
 package org.codice.ddf.catalog.direct;
 
+import static ddf.catalog.Constants.EXPERIMENTAL_FACET_RESULTS_KEY;
 import static org.apache.commons.lang3.tuple.ImmutablePair.of;
 import static org.codice.jsonrpc.JsonRpc.INTERNAL_ERROR;
 import static org.codice.jsonrpc.JsonRpc.INVALID_PARAMS;
@@ -26,14 +27,18 @@ import ddf.catalog.filter.FilterBuilder;
 import ddf.catalog.filter.impl.PropertyNameImpl;
 import ddf.catalog.operation.CreateResponse;
 import ddf.catalog.operation.DeleteResponse;
+import ddf.catalog.operation.FacetAttributeResult;
+import ddf.catalog.operation.FacetValueCount;
 import ddf.catalog.operation.QueryResponse;
 import ddf.catalog.operation.Update;
 import ddf.catalog.operation.UpdateResponse;
 import ddf.catalog.operation.impl.CreateRequestImpl;
 import ddf.catalog.operation.impl.DeleteRequestImpl;
+import ddf.catalog.operation.impl.FacetedQueryRequest;
 import ddf.catalog.operation.impl.QueryImpl;
 import ddf.catalog.operation.impl.QueryRequestImpl;
 import ddf.catalog.operation.impl.SourceInfoRequestSources;
+import ddf.catalog.operation.impl.TermFacetPropertiesImpl;
 import ddf.catalog.operation.impl.UpdateRequestImpl;
 import ddf.catalog.source.IngestException;
 import ddf.catalog.source.SourceUnavailableException;
@@ -43,6 +48,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -365,20 +372,32 @@ public class CatalogMethods implements MethodSet {
     Map<String, Serializable> properties = new HashMap<>();
     QueryResponse queryResponse;
 
+    QueryRequestImpl queryRequest =
+        new QueryRequestImpl(
+            new QueryImpl(
+                filter, startIndex, pageSize, sortPolicy, requestTotalResultsCount, timeoutMillis),
+            isEnterprise,
+            sourceIds,
+            properties);
+
+    if (params.containsKey("facets")) {
+      if (!(params.get("facets") instanceof Collection)) {
+        return new Error(
+            JsonRpc.INVALID_PARAMS,
+            "facets was not a Collection",
+            ImmutableMap.of("path", ImmutableList.of("params", "facets")));
+      }
+
+      queryRequest =
+          new FacetedQueryRequest(
+              queryRequest.getQuery(),
+              queryRequest.isEnterprise(),
+              queryRequest.getSourceIds(),
+              queryRequest.getProperties(),
+              new TermFacetPropertiesImpl(new HashSet((Collection) params.get("facets"))));
+    }
     try {
-      queryResponse =
-          catalogFramework.query(
-              new QueryRequestImpl(
-                  new QueryImpl(
-                      filter,
-                      startIndex,
-                      pageSize,
-                      sortPolicy,
-                      requestTotalResultsCount,
-                      timeoutMillis),
-                  isEnterprise,
-                  sourceIds,
-                  properties));
+      queryResponse = catalogFramework.query(queryRequest);
     } catch (UnsupportedQueryException | SourceUnavailableException | FederationException e) {
       return new Error(
           INTERNAL_ERROR, "An error occured while running your query - " + e.getMessage());
@@ -386,6 +405,9 @@ public class CatalogMethods implements MethodSet {
     return new ImmutableMap.Builder<String, Object>()
         .put("results", getResults(queryResponse))
         .put("status", getQueryInfo(queryResponse))
+        .put(
+            "facets",
+            getFacetResults(queryResponse.getPropertyValue(EXPERIMENTAL_FACET_RESULTS_KEY)))
         .build();
   }
 
@@ -421,6 +443,19 @@ public class CatalogMethods implements MethodSet {
         .put("hits", Math.toIntExact(queryResponse.getHits()))
         .put("count", queryResponse.getResults().size())
         .build();
+  }
+
+  private Map<String, List<FacetValueCount>> getFacetResults(Serializable facetResults) {
+    if (!(facetResults instanceof List)) return Collections.emptyMap();
+    List<Object> list = (List<Object>) facetResults;
+    return list.stream()
+        .filter(result -> result instanceof FacetAttributeResult)
+        .map(result -> (FacetAttributeResult) result)
+        .collect(
+            Collectors.toMap(
+                FacetAttributeResult::getAttributeName,
+                FacetAttributeResult::getFacetValues,
+                (a, b) -> b));
   }
 
   //  private Filter recur(Map tree) throws FilterTreeParseException {

@@ -102,6 +102,7 @@ type TerrainProvider {
 type SystemProperties {
   attributeAliases: Json
   attributeDescriptions: Json
+  attributeSuggestionList: [String]
   basicSearchMatchType: String
   basicSearchTemporalSelectionDefault: [String]
   bingKey: String
@@ -124,7 +125,6 @@ type SystemProperties {
   enums: Json
   exportResultLimit: Int
   externalAuthentication: Boolean
-  facetWhitelist: [String]
   gazetteer: Boolean
   hiddenAttributes: [String]
   i18n: Json
@@ -269,6 +269,7 @@ type MetacardType {
   isInjected: Boolean
   multivalued: Boolean
   type: String
+  enums: [String]
 }
 
 type FacetResult {
