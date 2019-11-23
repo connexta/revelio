@@ -389,7 +389,7 @@ public class CatalogMethods implements MethodSet {
         .build();
   }
 
-  private List<Action> getActions(Metacard metacard) {
+  private List<Action> getMetacardActions(Metacard metacard) {
     return this.actionRegistry
         .list(metacard)
         .stream()
@@ -403,7 +403,7 @@ public class CatalogMethods implements MethodSet {
   private Map<String, Object> getMetacardInfo(Metacard metacard) {
     return new ImmutableMap.Builder<String, Object>()
         .put("metacard", ImmutableMap.of("properties", this.metacard2map(metacard)))
-        .put("actions", getActions(metacard))
+        .put("actions", getMetacardActions(metacard))
         .build();
   }
 
