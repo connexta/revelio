@@ -150,7 +150,11 @@ const fromGraphqlMap = map => {
   }, {})
 }
 
-const queries = ids => async parent => {
+const queries = (ids = []) => async parent => {
+  if (ids.length === 0) {
+    return []
+  }
+
   const filters = ids.map(id => {
     return {
       type: '=',
