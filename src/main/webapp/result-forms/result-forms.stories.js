@@ -18,7 +18,7 @@ import { useUndoState } from '../react-hooks'
 
 import TransferList from './transfer-list'
 import { ResultForms } from './result-forms'
-import { Route, Editor, ConfirmDelete } from './route'
+import { Route, Editor } from './route'
 
 const getAttributes = total => {
   const attributes = []
@@ -29,12 +29,6 @@ const getAttributes = total => {
 
   return attributes
 }
-
-stories.add('confirm delete', () => {
-  const message = text('Message', 'This will permanently do a thing')
-
-  return <ConfirmDelete onDelete={action('onDelete')}>{message}</ConfirmDelete>
-})
 
 stories.add('transfer list', () => {
   const props = useUndoState(Set())

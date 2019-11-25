@@ -10,17 +10,11 @@ import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
 
-import Button from '@material-ui/core/Button'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 
 import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
 
 import ShareIcon from '@material-ui/icons/Share'
-import DeleteIcon from '@material-ui/icons/Delete'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 
@@ -30,6 +24,8 @@ import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 
 import moment from 'moment'
+
+import ConfirmDelete from '../confirm-delete'
 
 const Loading = () => {
   return (
@@ -98,57 +94,6 @@ const AddItem = props => {
       >
         <AddCircleOutlineIcon style={{ width: '50%', height: '50%' }} />
       </ItemContainer>
-    </Fragment>
-  )
-}
-
-export const ConfirmDelete = props => {
-  const [confirmDelete, setConfirmDelete] = useState(false)
-  const { children, onDelete } = props
-
-  return (
-    <Fragment>
-      {confirmDelete ? (
-        <Dialog
-          open
-          onClick={e => e.stopPropagation()}
-          onClose={() => setConfirmDelete(false)}
-        >
-          <DialogTitle>Are you sure?</DialogTitle>
-          <DialogContent>
-            <DialogContentText>{children}</DialogContentText>
-          </DialogContent>
-          <DialogActions style={{ textAlign: 'center' }}>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => {
-                setConfirmDelete(false)
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              color="secondary"
-              variant="contained"
-              onClick={() => {
-                onDelete()
-                setConfirmDelete(false)
-              }}
-            >
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
-      ) : null}
-      <IconButton
-        onClick={e => {
-          e.stopPropagation()
-          setConfirmDelete(true)
-        }}
-      >
-        <DeleteIcon />
-      </IconButton>
     </Fragment>
   )
 }
