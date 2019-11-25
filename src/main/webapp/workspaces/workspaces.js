@@ -8,6 +8,14 @@ import Divider from '@material-ui/core/Divider'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 
+import {
+  IndexCards,
+  IndexCardItem,
+  DeleteAction,
+  ShareAction,
+  Actions,
+} from '../index-cards'
+
 import { Link, useParams } from 'react-router-dom'
 
 import { useQueryExecutor } from '../react-hooks'
@@ -163,6 +171,8 @@ const workspaces = gql`
       attributes {
         id
         title
+        metacard_owner
+        metacard_modified
       }
     }
   }
@@ -182,14 +192,23 @@ export default () => {
   const attributes = data.metacardsByTag.attributes
 
   return (
-    <div>
+    <IndexCards>
       {attributes.map(attrs => {
         return (
-          <Link key={attrs.id} to={`/workspaces/${attrs.id}`}>
-            {attrs.title}
+          <Link
+            key={attrs.id}
+            to={`/workspaces/${attrs.id}`}
+            style={{ textDecoration: 'none' }}
+          >
+            <IndexCardItem {...attrs}>
+              <Actions>
+                <ShareAction />
+                <DeleteAction />
+              </Actions>
+            </IndexCardItem>
           </Link>
         )
       })}
-    </div>
+    </IndexCards>
   )
 }

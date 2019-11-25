@@ -41,7 +41,9 @@ const ConfirmDelete = props => {
               color="secondary"
               variant="contained"
               onClick={() => {
-                onDelete()
+                if (typeof onDelete === 'function') {
+                  onDelete()
+                }
                 setConfirmDelete(false)
               }}
             >
@@ -53,6 +55,7 @@ const ConfirmDelete = props => {
       <IconButton
         onClick={e => {
           e.stopPropagation()
+          e.preventDefault()
           setConfirmDelete(true)
         }}
       >
