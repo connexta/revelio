@@ -5,27 +5,21 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 
 import ResultFroms from './result-forms'
 
-import Card from '@material-ui/core/Card'
-import CardActions from '@material-ui/core/CardActions'
-import CardContent from '@material-ui/core/CardContent'
-import CardHeader from '@material-ui/core/CardHeader'
-
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
-
 import Dialog from '@material-ui/core/Dialog'
-
-import ShareIcon from '@material-ui/icons/Share'
-import Typography from '@material-ui/core/Typography'
-import IconButton from '@material-ui/core/IconButton'
 
 import LinearProgress from '@material-ui/core/LinearProgress'
 
 import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 
-import moment from 'moment'
-
-import ConfirmDelete from '../confirm-delete'
+import {
+  IndexCards,
+  IndexCardItem,
+  AddCardItem,
+  DeleteAction,
+  ShareAction,
+  Actions,
+} from '../index-cards'
 
 const Loading = () => {
   return (
@@ -40,26 +34,6 @@ const Loading = () => {
     >
       <LinearProgress style={{ width: '25vw', height: 10 }} />
     </div>
-  )
-}
-
-const ItemContainer = props => {
-  const { children, style, onClick } = props
-
-  return (
-    <Fragment>
-      <Card
-        style={{
-          width: 345,
-          margin: 20,
-          cursor: 'pointer',
-          ...style,
-        }}
-        onClick={onClick}
-      >
-        {children}
-      </Card>
-    </Fragment>
   )
 }
 
@@ -84,16 +58,7 @@ const AddItem = props => {
           <Editor onSave={onSave} onCancel={onCancel} />
         </Dialog>
       ) : null}
-      <ItemContainer
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        onClick={() => setEditing(true)}
-      >
-        <AddCircleOutlineIcon style={{ width: '50%', height: '50%' }} />
-      </ItemContainer>
+      <AddCardItem onClick={() => setEditing(true)} />
     </Fragment>
   )
 }
@@ -119,29 +84,12 @@ const Item = props => {
           <Editor form={form} onSave={onSave} onCancel={onCancel} />
         </Dialog>
       ) : null}
-      <ItemContainer onClick={() => setEditing(true)}>
-        <CardHeader
-          title={form.title}
-          subheader={moment(form.modified).fromNow()}
-        />
-        <CardContent>
-          <Typography variant="body2" color="textSecondary" component="p">
-            Owner: {form.owner}
-          </Typography>
-        </CardContent>
-        <CardActions>
-          <IconButton
-            onClick={e => {
-              e.stopPropagation()
-            }}
-          >
-            <ShareIcon />
-          </IconButton>
-          <ConfirmDelete onDelete={onDelete}>
-            This will permanently delete the search form.
-          </ConfirmDelete>
-        </CardActions>
-      </ItemContainer>
+      <IndexCardItem {...form} onClick={() => setEditing(true)}>
+        <Actions>
+          <ShareAction />
+          <DeleteAction onDelete={onDelete} />
+        </Actions>
+      </IndexCardItem>
     </Fragment>
   )
 }
@@ -178,7 +126,7 @@ export const Route = props => {
   }
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+    <IndexCards>
       {message ? (
         <Notification message={message} onClose={() => setMessage(null)} />
       ) : null}
@@ -209,7 +157,7 @@ export const Route = props => {
             />
           )
         })}
-    </div>
+    </IndexCards>
   )
 }
 
@@ -223,6 +171,8 @@ const fragment = gql`
     title
     description
     modified: metacard_modified
+    metacard_modified
+    metacard_owner
     attributes: ui_attribute_group
   }
 `
