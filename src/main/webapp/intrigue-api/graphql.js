@@ -48,9 +48,9 @@ const removeNullValues = object => filterDeep(value => value !== null)(object)
 
 const getBuildInfo = () => {
   /* eslint-disable */
-  const commitHash = process.env.__COMMIT_HASH__ || ''
-  const isDirty = process.env.__IS_DIRTY__ || ''
-  const commitDate = process.env.__COMMIT_DATE__ || ''
+  const commitHash = __COMMIT_HASH__
+  const isDirty = __IS_DIRTY__
+  const commitDate = __COMMIT_DATE__
   /* eslint-enable */
 
   return {
