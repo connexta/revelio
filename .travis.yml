@@ -13,6 +13,9 @@ script:
   - yarn test
   - yarn build
   - set +e
+branches:
+  only:
+  - master
 deploy:
   provider: pages
   skip-cleanup: true
