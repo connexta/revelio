@@ -164,7 +164,9 @@ const PointDMS: React.SFC<Props> = ({ value, onChange }) => {
   ] = coordinateEditor.useDMSCoordinates(value)
   React.useEffect(
     () => {
-      onChange(coordinates)
+      if (value.lat !== coordinates.lat || value.lon !== coordinates.lon) {
+        onChange(coordinates)
+      }
     },
     [coordinates.lat, coordinates.lon]
   )

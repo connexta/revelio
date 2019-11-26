@@ -31,7 +31,9 @@ const PointUTM: React.SFC<Props> = ({ value, onChange }) => {
   const { northing, easting, zone, hemisphere } = utm
   React.useEffect(
     () => {
-      onChange(coordinates)
+      if (value.lat !== coordinates.lat || value.lon !== coordinates.lon) {
+        onChange(coordinates)
+      }
     },
     [coordinates.lat, coordinates.lon]
   )
