@@ -216,7 +216,14 @@ const AppRouter = () => {
             return (
               <React.Fragment>
                 <NavBar title={title} onMenuOpen={handleDrawerOpen} />
-                <Component />
+                <div
+                  style={{
+                    overflow: 'auto',
+                    height: 'calc(100vh - 64px)',
+                  }}
+                >
+                  <Component />
+                </div>
               </React.Fragment>
             )
           }
