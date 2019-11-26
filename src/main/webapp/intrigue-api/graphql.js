@@ -2,7 +2,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloClient } from 'apollo-client'
 import { SchemaLink } from 'apollo-link-schema'
 import { makeExecutableSchema } from 'graphql-tools'
-import { fromJS, set, setIn } from 'immutable'
+import { fromJS, getIn, removeIn, set, setIn } from 'immutable'
 import { mergeDeepOverwriteLists } from '../utils'
 const { BatchHttpLink } = require('apollo-link-batch-http')
 const { genSchema, toGraphqlName, fromGraphqlName } = require('./gen-schema')
@@ -98,38 +98,6 @@ const renameKeys = (f, map) => {
   return Object.keys(map).reduce((attrs, attr) => {
     const name = f(attr)
     attrs[name] = map[attr]
-    return attrs
-  }, {})
-}
-
-const toGraphqlDeep = data => {
-  if (Object(data) !== data) {
-    return data
-  }
-
-  if (Array.isArray(data)) {
-    return data.map(attr => toGraphqlDeep(attr))
-  }
-
-  return Object.keys(data).reduce((attrs, attr) => {
-    const name = toGraphqlName(attr)
-    attrs[name] = toGraphqlDeep(data[attr])
-    return attrs
-  }, {})
-}
-
-const fromGraphqlDeep = data => {
-  if (Object(data) !== data) {
-    return data
-  }
-
-  if (Array.isArray(data)) {
-    return data.map(attr => fromGraphqlDeep(attr))
-  }
-
-  return Object.keys(data).reduce((attrs, attr) => {
-    const name = fromGraphqlName(attr)
-    attrs[name] = fromGraphqlDeep(data[attr])
     return attrs
   }, {})
 }
@@ -281,10 +249,31 @@ const metacardById = async (ctx, args) => {
   })
 }
 
+const preferencesToGraphql = preferences => {
+  const transformed = setIn(
+    preferences,
+    ['querySettings', 'detail_level'],
+    getIn(preferences, ['querySettings', 'detail-level'])
+  )
+  return removeIn(transformed, ['querySettings', 'detail-level'])
+}
+
+const preferencesFromGraphql = preferences => {
+  const transformed = setIn(
+    preferences,
+    ['querySettings', 'detail-level'],
+    getIn(preferences, ['querySettings', 'detail_level'])
+  )
+  return removeIn(transformed, ['querySettings', 'detail_level'])
+}
+
 const user = async () => {
   const res = await fetch(`${ROOT}/user`)
   const json = await res.json()
-  return setIn(json, ['preferences'], () => toGraphqlDeep(json.preferences))
+
+  return setIn(json, ['preferences'], () =>
+    preferencesToGraphql(json.preferences)
+  )
 }
 
 const getLocalCatalogId = async () => {
@@ -498,7 +487,7 @@ const updateUserPreferences = async (parent, args) => {
 
   const body = mergeDeepOverwriteLists(
     fromJS(previousPreferences),
-    fromJS(fromGraphqlDeep(removeTypenameFields(userPreferences)))
+    fromJS(preferencesFromGraphql(removeTypenameFields(userPreferences)))
   ).toJS()
 
   const res = await fetch(`${ROOT}/user/preferences`, {
