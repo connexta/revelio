@@ -6,6 +6,7 @@ import Line from './line'
 import Polygon from './polygon'
 import BBox from './bbox'
 import Keyword from './keyword'
+import Location from './location'
 import {
   shapes,
   geometry,
@@ -163,6 +164,27 @@ stories.add(`keyword`, () => {
   })
   return (
     <Keyword
+      value={geo}
+      onChange={update => {
+        action('onChange')(update)
+        setGeo(update)
+      }}
+    />
+  )
+})
+
+stories.add(`location`, () => {
+  const [geo, setGeo] = useState(
+    geometry.makeEmptyGeometry('location', shapes.LINE)
+  )
+  mock.get('glob:**/internal/geofeature/suggestions?q=*', keywordSuggestions, {
+    overwriteRoutes: true,
+  })
+  mock.get('glob:**/internal/geofeature?id=*', keywordResult, {
+    overwriteRoutes: true,
+  })
+  return (
+    <Location
       value={geo}
       onChange={update => {
         action('onChange')(update)

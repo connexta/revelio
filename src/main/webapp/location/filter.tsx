@@ -21,7 +21,7 @@ export type Filter = {
   geojson: geometry.GeometryJSON
 }
 
-export const geoToFilter = (geo:geometry.GeometryJSON): Filter => ({
+export const geoToFilter = (geo: geometry.GeometryJSON): Filter => ({
   type: (geo.properties.buffer || 0) > 0 ? DWITHIN : INTERSECTS,
   property: ANY_GEO,
   value: {

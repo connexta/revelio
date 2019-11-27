@@ -13,66 +13,76 @@ import { BasicEditorProps as Props } from './geo-editor'
 import { geometry, shapes } from 'geospatialdraw'
 
 type LocationType = 'line' | 'polygon' | 'pointRadius' | 'bbox' | 'keyword'
-const defaultLocationType:LocationType = 'line'
+const defaultLocationType: LocationType = 'line'
 
 type LocationTypeComponentMap = {
   [type in LocationType]: {
-    label: string,
+    label: string
     Component: React.ComponentType<Props>
+    shape: shapes.Shape
   }
 }
 
 const componentMap: LocationTypeComponentMap = {
-  'line': {
+  line: {
     label: 'Line',
-    Component: withCoordinateUnitTabs(Line)
+    Component: withCoordinateUnitTabs(Line),
+    shape: shapes.LINE,
   },
-  'polygon': {
+  polygon: {
     label: 'Polygon',
-    Component: withCoordinateUnitTabs(Polygon)
+    Component: withCoordinateUnitTabs(Polygon),
+    shape: shapes.POLYGON,
   },
-  'pointRadius': {
+  pointRadius: {
     label: 'Point-Radius',
-    Component: withCoordinateUnitTabs(PointRadius)
+    Component: withCoordinateUnitTabs(PointRadius),
+    shape: shapes.POINT_RADIUS,
   },
-  'bbox': {
+  bbox: {
     label: 'Bounding Box',
-    Component: withCoordinateUnitTabs(BBox)
+    Component: withCoordinateUnitTabs(BBox),
+    shape: shapes.BOUNDING_BOX,
   },
-  'keyword': {
+  keyword: {
     label: 'Keyword',
-    Component: Keyword
-  }
+    Component: Keyword,
+    shape: shapes.POLYGON,
+  },
 }
 
 const Location: React.SFC<Props> = ({ value, onChange }) => {
-  const [locationType, setLocationType] = React.useState<LocationType>(defaultLocationType)
-  const { Component } = componentMap[locationType]
+  const [locationType, setLocationType] = React.useState<LocationType>(
+    defaultLocationType
+  )
+  const { Component, shape } = componentMap[locationType]
   const [editValue, setEditValue] = React.useState<geometry.GeometryJSON>(value)
-  React.useEffect(() => {
-    if (JSON.stringify(editValue) !== JSON.stringify(value)) {
-      setEditValue(value)
-    }
-  }, [value])
-  const updateLocationType = (update: LocationType) => {
-    setLocationType(update)
+  React.useEffect(
+    () => {
+      if (JSON.stringify(editValue) !== JSON.stringify(value)) {
+        setEditValue(value)
+      }
+    },
+    [value]
+  )
+  const onSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLocationType(e.target.value as LocationType)
+    const geo = geometry.makeEmptyGeometry(editValue.properties.id, shape)
+    setEditValue(geo)
   }
   return (
     <FormControl fullWidth>
       <InputLabel>Location</InputLabel>
-      <Select value={locationType} onChange={e =>
-        setLocationType(e.target.value as LocationType)
-      }>
+      <Select value={locationType} onChange={onSelection}>
         {Object.keys(componentMap).map((key: LocationType) => (
           <MenuItem key={key} value={key}>
             {componentMap[key].label}
           </MenuItem>
         ))}
       </Select>
-      <Component
-        value={editValue}
-        onChange={onChange}
-      />
+      <Component value={editValue} onChange={onChange} />
     </FormControl>
   )
 }
+
+export default Location
