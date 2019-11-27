@@ -15,7 +15,9 @@ const PointUSNG: React.SFC<Props> = ({ value, onChange }) => {
   ] = coordinateEditor.useUSNGCoordinates(value)
   React.useEffect(
     () => {
-      onChange(coordinates)
+      if (value.lat !== coordinates.lat || value.lon !== coordinates.lon) {
+        onChange(coordinates)
+      }
     },
     [coordinates.lat, coordinates.lon]
   )
