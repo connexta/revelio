@@ -1,4 +1,5 @@
 import { geometry } from 'geospatialdraw'
+import { geoToWKT } from './geo-to-wkt'
 
 export type FilterType = 'DWITHIN' | 'INTERSECTS'
 export const DWITHIN: FilterType = 'DWITHIN'
@@ -19,3 +20,13 @@ export type Filter = {
   }
   geojson: geometry.GeometryJSON
 }
+
+export const geoToFilter = (geo:geometry.GeometryJSON): Filter => ({
+  type: (geo.properties.buffer || 0) > 0 ? DWITHIN : INTERSECTS,
+  property: ANY_GEO,
+  value: {
+    type: GEOMETRY,
+    value: geoToWKT(geo),
+  },
+  geojson: geo,
+})
