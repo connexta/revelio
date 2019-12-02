@@ -1,14 +1,15 @@
 import { action } from '@connexta/ace/@storybook/addon-actions'
 import { boolean } from '@connexta/ace/@storybook/addon-knobs'
-import { storiesOf } from '../@storybook/react'
 import { Map } from 'immutable'
 import React from 'react'
+import { storiesOf } from '../@storybook/react'
+import { useState } from '../react-hooks'
 import HiddenResultsSettings from './hidden-results-settings'
 import NotificationSettings from './notification-settings'
 import SearchSettings from './search-settings'
+import SourceSelect from './source-select'
 import TimeSettings from './time-settings'
 import Settings from './user-settings'
-import SourceSelect from './source-select'
 
 const stories = storiesOf('User Settings', module)
 stories.addDecorator(Story => <Story />)
@@ -57,15 +58,6 @@ const UserSettings = () => {
       }}
     />
   )
-}
-
-const useState = initialState => {
-  const [state, setState] = React.useState(initialState)
-  const onChange = newState => {
-    setState(newState)
-    action('onChange')(newState)
-  }
-  return [state, onChange]
 }
 
 stories.add('Notification Settings', () => {
