@@ -67,15 +67,16 @@ const Sources = props => {
           <ListItemText primary={`All Sources`} />
         </MenuItem>
 
-        {props.sources.sort(sourcesSort).map(source => {
-          const selected =
-            props.value !== null && props.value.includes(source.id)
-          return (
-            <MenuItem key={source.id} value={source.id}>
-              <Source source={source} selected={selected} />
-            </MenuItem>
-          )
-        })}
+        {props.sources &&
+          props.sources.sort(sourcesSort).map(source => {
+            const selected =
+              props.value !== null && props.value.includes(source.id)
+            return (
+              <MenuItem key={source.id} value={source.id}>
+                <Source source={source} selected={selected} />
+              </MenuItem>
+            )
+          })}
       </OutlinedSelect>
     </FormControl>
   )

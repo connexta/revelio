@@ -1,59 +1,18 @@
 import { action } from '@connexta/ace/@storybook/addon-actions'
 import { boolean } from '@connexta/ace/@storybook/addon-knobs'
-import { storiesOf } from '../@storybook/react'
 import { Map } from 'immutable'
 import React from 'react'
+import { storiesOf } from '../@storybook/react'
+import { useState } from '../react-hooks'
 import HiddenResultsSettings from './hidden-results-settings'
 import NotificationSettings from './notification-settings'
 import SearchSettings from './search-settings'
+import SourceSelect from './source-select'
 import TimeSettings from './time-settings'
 import Settings from './user-settings'
-import SourceSelect from './source-select'
 
 const stories = storiesOf('User Settings', module)
 stories.addDecorator(Story => <Story />)
-
-const userPrefs = Map({
-  alertPersistence: true,
-  alertExpiration: 2592000000,
-  resultCount: 50,
-  dateTimeFormat: {
-    datetimefmt: 'DD MMM YYYY h:mm:ss.SSS a Z',
-    timefmt: 'h:mm:ss a Z',
-  },
-  timeZone: 'Etc/UTC',
-})
-
-const UserSettings = () => {
-  const [state, setState] = React.useState(Map({}))
-  const open = boolean('Open Drawer', true)
-  return (
-    <Settings
-      open={open}
-      value={state}
-      onSave={newState => {
-        setState(newState)
-        action('onSave')(newState)
-      }}
-    />
-  )
-}
-
-const Setting = component => {
-  const [state, setState] = React.useState(userPrefs)
-  const Component = component ? component : null
-  return (
-    Component && (
-      <Component
-        value={state}
-        onChange={newState => {
-          setState(newState)
-          action('onChange')(newState)
-        }}
-      />
-    )
-  )
-}
 
 const sampleBlackList = [
   {
@@ -68,7 +27,7 @@ const sampleBlackList = [
 ]
 
 const HiddenResults = () => {
-  const populated = boolean('Populated', false)
+  const populated = boolean('Populated', true)
   const [state, setState] = React.useState(Map({}))
   React.useEffect(
     () => setState(Map(populated ? { resultBlacklist: sampleBlackList } : {})),
@@ -86,48 +45,68 @@ const HiddenResults = () => {
   )
 }
 
-const SourceSelectComponent = () => {
-  const [state, setState] = React.useState([])
+const UserSettings = () => {
+  const [state, setState] = React.useState(Map({}))
+  const open = boolean('Open Drawer', true)
   return (
-    <SourceSelect
+    <Settings
+      open={open}
       value={state}
-      onChange={newState => {
+      onSave={newState => {
         setState(newState)
-        action('onChange')(newState)
+        action('onSave')(newState)
       }}
-      sources={[
-        {
-          available: false,
-          id: 'Source1',
-          local: false,
-        },
-        {
-          available: true,
-          id: 'ddf.distribution',
-          local: true,
-        },
-        {
-          available: true,
-          id: 'Source2',
-          local: false,
-        },
-      ]}
     />
   )
 }
-const generateStory = (label, component) => ({ label, component })
-const generatedStories = [
-  generateStory('Notification Settings', () => Setting(NotificationSettings)),
-  generateStory('Search Settings', () => Setting(SearchSettings)),
-  generateStory('Time Settings', () => Setting(TimeSettings)),
-  generateStory('Hidden Results Settings', HiddenResults),
-  generateStory('User Settings', UserSettings),
-  generateStory('Source Select', SourceSelectComponent),
-]
 
-generatedStories.forEach(setting => {
-  stories.add(setting.label, () => {
-    const Component = setting.component ? setting.component : null
-    return Component && <Component />
-  })
+stories.add('Notification Settings', () => {
+  const [value, onChange] = useState(
+    Map({ alertPersistence: true, alertExpiration: 2592000000 })
+  )
+  return <NotificationSettings value={value} onChange={onChange} />
 })
+
+stories.add('Search Settings', () => {
+  const [value, onChange] = useState()
+  return <SearchSettings value={value} onChange={onChange} />
+})
+
+stories.add('Time Settings', () => {
+  const [value, onChange] = useState(
+    Map({
+      dateTimeFormat: {
+        datetimefmt: 'DD MMM YYYY h:mm:ss.SSS a Z',
+        timefmt: 'h:mm:ss a Z',
+      },
+      timeZone: 'Etc/UTC',
+    })
+  )
+  return <TimeSettings value={value} onChange={onChange} />
+})
+
+stories.add('Hidden Results Settings', () => <HiddenResults />)
+
+stories.add('Source Select', () => {
+  const sources = [
+    {
+      available: false,
+      id: 'Source1',
+      local: false,
+    },
+    {
+      available: true,
+      id: 'ddf.distribution',
+      local: true,
+    },
+    {
+      available: true,
+      id: 'Source2',
+      local: false,
+    },
+  ]
+  const [value, onChange] = useState(['Source1', 'Source2'])
+  return <SourceSelect value={value} onChange={onChange} sources={sources} />
+})
+
+stories.add('User Settings', () => <UserSettings />)

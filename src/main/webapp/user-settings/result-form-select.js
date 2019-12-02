@@ -32,11 +32,12 @@ const ResultForms = props => {
           All Fields
         </MenuItem>
 
-        {props.resultForms.map(resultForm => (
-          <MenuItem key={resultForm.id} value={resultForm.title}>
-            {resultForm.title}
-          </MenuItem>
-        ))}
+        {props.resultForms &&
+          props.resultForms.map(resultForm => (
+            <MenuItem key={resultForm.id} value={resultForm.title}>
+              {resultForm.title}
+            </MenuItem>
+          ))}
       </OutlinedSelect>
     </FormControl>
   )
