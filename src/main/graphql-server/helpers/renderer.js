@@ -6,16 +6,16 @@ import { getDataFromTree } from '@apollo/react-ssr'
 import { ServerStyleSheets } from '@material-ui/styles'
 import { createClient } from '../../webapp/intrigue-api/graphql'
 import { ApolloProvider } from '@apollo/react-hooks'
-
 const ROOT_PATH = '/search/catalog'
 
 module.exports = async (req, res, next) => {
   const path = req.originalUrl.replace(ROOT_PATH, '')
+
   try {
     if (hasPath(path)) {
       const { originalUrl, clientBundle } = req
       const html = await executeSSR(originalUrl, clientBundle)
-      res.end(html)
+      res.send(html)
     } else {
       next()
     }

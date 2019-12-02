@@ -24,14 +24,23 @@ import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 
 import QueryStatus from '../query-status'
+import { LoadingComponent } from '../routes'
 import { BasicSearch } from '../basic-search'
 import QuerySelector from './query-selector'
 
+import loadable from 'react-loadable'
+
 let MemoizedVisualizations = () => null
-let Visualizations = null
 if (typeof window !== 'undefined') {
-  Visualizations = require('./visualizations').default
-  MemoizedVisualizations = memo(Visualizations)
+  MemoizedVisualizations = loadable({
+    loader: async () => {
+      const {
+        default: module,
+      } = await import(/* webpackChunkName: "visualizations" */ './visualizations')
+      return memo(module)
+    },
+    loading: LoadingComponent,
+  })
 }
 
 const Loading = () => {
