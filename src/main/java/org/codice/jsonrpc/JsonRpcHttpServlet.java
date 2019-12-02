@@ -1,5 +1,6 @@
 package org.codice.jsonrpc;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.IOException;
@@ -17,6 +18,15 @@ public class JsonRpcHttpServlet extends HttpServlet {
 
   public JsonRpcHttpServlet(Method method) {
     this.method = method;
+  }
+
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    resp.setHeader("Content-Type", "application/json");
+    Map<String, Object> request =
+        ImmutableMap.of("id", 0, "method", "list-methods", "params", ImmutableMap.of());
+    Object methods = method.apply(request);
+    GSON.toJson(methods, resp.getWriter());
   }
 
   @Override
