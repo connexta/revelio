@@ -15,7 +15,7 @@ module.exports = async (req, res, next) => {
     if (hasPath(path)) {
       const { originalUrl, clientBundle } = req
       const html = await executeSSR(originalUrl, clientBundle)
-      res.send(html)
+      res.end(html)
     } else {
       next()
     }
