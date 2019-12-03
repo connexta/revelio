@@ -24,6 +24,7 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import Divider from '@material-ui/core/Divider'
+import LinearProgress from '@material-ui/core/LinearProgress'
 
 import { useTheme } from '@material-ui/core/styles'
 import { ThemeProvider } from './theme'
@@ -34,13 +35,11 @@ import { useQuery } from '@apollo/react-hooks'
 import { SelectionProvider } from './react-hooks/use-selection-interface'
 import { Link as ReactLink, Route, matchPath } from 'react-router-dom'
 
-import AboutRoute from './about'
-import SourcesRoute from './sources'
-import SimpleSearch from './simple-search'
-import ResultForms from './result-forms'
-import WorkspacesIndex, { Workspace } from './workspaces/workspaces'
-import UserSettings from './user-settings'
 import User from './user'
+import UserSettings from './user-settings'
+import loadable from 'react-loadable'
+
+export const LoadingComponent = () => <LinearProgress />
 
 const Link = props => {
   return (
@@ -54,6 +53,30 @@ const Link = props => {
       {props.children}
     </Button>
   )
+}
+
+const loadDynamicRoute = route => {
+  const routes = {
+    workspace: async () => {
+      return (await import(/* webpackChunkName: "workspace" */ './workspaces/workspaces'))
+        .Workspace
+    },
+    workspaces: () =>
+      import(/* webpackChunkName: "workspaces-index" */ './workspaces/workspaces'),
+    about: () => import(/* webpackChunkName: "about" */ './about'),
+    sources: () => import(/* webpackChunkName: "sources" */ './sources'),
+    'simple-search': () =>
+      import(/* webpackChunkName: "simple-search" */ './simple-search'),
+    'result-forms': () =>
+      import(/* webpackChunkName: "result-forms" */ './result-forms'),
+  }
+
+  const loader = routes[route]
+
+  return loadable({
+    loader,
+    loading: LoadingComponent,
+  })
 }
 
 const createRoute = (path, title, Icon = AccessibleForwardIcon, component) => {
@@ -80,16 +103,35 @@ const createRoute = (path, title, Icon = AccessibleForwardIcon, component) => {
 }
 
 const routes = [
-  createRoute('/', 'Workspaces', CollectionsBookmarkIcon, WorkspacesIndex),
-  createRoute('/search', 'Search', SearchIcon, SimpleSearch),
-  createRoute('/sources', 'Sources', CloudIcon, SourcesRoute),
+  createRoute(
+    '/',
+    'Workspaces',
+    CollectionsBookmarkIcon,
+    loadDynamicRoute('workspaces')
+  ),
+  createRoute(
+    '/search',
+    'Search',
+    SearchIcon,
+    loadDynamicRoute('simple-search')
+  ),
+  createRoute('/sources', 'Sources', CloudIcon, loadDynamicRoute('sources')),
   createRoute('/search-forms', 'Search Forms', FindInPageIcon),
-  createRoute('/result-forms', 'Result Forms', ViewListIcon, ResultForms),
-  createRoute('/about', 'About', InfoSharpIcon, AboutRoute),
+  createRoute(
+    '/result-forms',
+    'Result Forms',
+    ViewListIcon,
+    loadDynamicRoute('result-forms')
+  ),
+  createRoute('/about', 'About', InfoSharpIcon, loadDynamicRoute('about')),
 ]
 
 const otherRoutes = [
-  { title: 'Workspace', path: '/workspaces/:id', component: Workspace },
+  {
+    title: 'Workspace',
+    path: '/workspaces/:id',
+    component: loadDynamicRoute('workspace'),
+  },
 ]
 
 export const hasPath = path => {

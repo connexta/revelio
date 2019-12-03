@@ -896,17 +896,15 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@connexta/ace@https://github.com/connexta/ace.git#fb0fad4fb347023cc38f022fad2a94b54198dc1f":
+"@connexta/ace@https://github.com/connexta/ace.git#f54ca0a66e1f16212d23bf411ab414ea068d715f":
   version "1.0.0"
-  resolved "https://github.com/connexta/ace.git#fb0fad4fb347023cc38f022fad2a94b54198dc1f"
+  resolved "https://github.com/connexta/ace.git#f54ca0a66e1f16212d23bf411ab414ea068d715f"
   dependencies:
     "@babel/core" "^7.0.0"
     "@storybook/addon-actions" "5.2.3"
     "@storybook/addon-info" "5.2.3"
     "@storybook/addon-knobs" "5.2.3"
     "@storybook/react" "5.2.3"
-    "@types/storybook__addon-info" "^4.1.2"
-    "@types/storybook__react" "^4.0.2"
     ansi-colors "3.0.5"
     archiver "2.1.1"
     babel-core "6.26.0"
@@ -3024,20 +3022,6 @@
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
 
-"@types/storybook__addon-info@^4.1.2":
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/@types/storybook__addon-info/-/storybook__addon-info-4.1.2.tgz#a61c0b201e23380b6ec6ed3902a87350d92652d8"
-  dependencies:
-    "@types/react" "*"
-    "@types/storybook__react" "*"
-
-"@types/storybook__react@*", "@types/storybook__react@^4.0.2":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@types/storybook__react/-/storybook__react-4.0.2.tgz#f36fb399574c662e79c1a0cf6e429b6ff730da40"
-  dependencies:
-    "@types/react" "*"
-    "@types/webpack-env" "*"
-
 "@types/styled-jsx@^2.2.8":
   version "2.2.8"
   resolved "https://registry.yarnpkg.com/@types/styled-jsx/-/styled-jsx-2.2.8.tgz#b50d13d8a3c34036282d65194554cf186bab7234"
@@ -3050,10 +3034,6 @@
   integrity sha512-ZZYZUgkmUls9Uhxx2WZNt9f/h2+H3abUUjOVmq+AaaDFckC5oAwd+MDp95kBirk+XCXrYj0hfpI6DSUiJMrpYQ==
   dependencies:
     "@types/geojson" "*"
-
-"@types/webpack-env@*":
-  version "1.14.0"
-  resolved "https://registry.yarnpkg.com/@types/webpack-env/-/webpack-env-1.14.0.tgz#8edfc5f8e6eae20eeed3ca0d02974ed4ee5e4efc"
 
 "@types/webpack-env@^1.13.7":
   version "1.14.1"
@@ -11312,7 +11292,7 @@ promise@^7.0.3, promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@15.7.2, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@15.7.2, prop-types@^15.5.0, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   dependencies:
@@ -11750,6 +11730,13 @@ react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.3, react-is
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
+
+react-loadable@^5.5.0:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/react-loadable/-/react-loadable-5.5.0.tgz#582251679d3da86c32aae2c8e689c59f1196d8c4"
+  integrity sha512-C8Aui0ZpMd4KokxRdVAm2bQtI03k2RMRNzOB+IipV3yxFTSVICv7WoUr5L9ALB5BmKO1iHgZtWM8EvYG83otdg==
+  dependencies:
+    prop-types "^15.5.0"
 
 react-popper-tooltip@^2.8.3:
   version "2.8.3"

@@ -27,11 +27,18 @@ import QueryStatus from '../query-status'
 import { BasicSearch } from '../basic-search'
 import QuerySelector from './query-selector'
 
+import loadable from 'react-loadable'
+
+const LoadingComponent = () => <LinearProgress />
 let MemoizedVisualizations = () => null
-let Visualizations = null
 if (typeof window !== 'undefined') {
-  Visualizations = require('./visualizations').default
-  MemoizedVisualizations = memo(Visualizations)
+  MemoizedVisualizations = loadable({
+    loader: () =>
+      import(/* webpackChunkName: "visualizations" */ './visualizations').then(
+        module => memo(module.default)
+      ),
+    loading: LoadingComponent,
+  })
 }
 
 const Loading = () => {
