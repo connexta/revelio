@@ -403,7 +403,7 @@ const Query = {
   facet,
 }
 
-const createMetacard = async (parent, args) => {
+const createMetacard = async (parent, args, { catalog }) => {
   const { attrs } = args
 
   const metacard = fromGraphqlMap(attrs)
