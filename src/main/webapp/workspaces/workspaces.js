@@ -35,7 +35,7 @@ if (typeof window !== 'undefined') {
   MemoizedVisualizations = loadable({
     loader: () =>
       import(/* webpackChunkName: "visualizations" */ './visualizations').then(
-        module => module.default
+        module => memo(module.default)
       ),
     loading: LoadingComponent,
   })
