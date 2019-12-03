@@ -10,6 +10,22 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Length from './length'
 import SpacedLinearContainer from '../spaced-linear-container'
+import { useLazyQuery } from '@apollo/react-hooks'
+// const { SUGGESTION_QUERY, FEATURE_QUERY } = require('./keyword-queries')
+import gql from 'graphql-tag'
+
+const SUGGESTION_QUERY = gql`
+  query suggestions($q: String) {
+    id
+    name
+  }
+`
+
+const FEATURE_QUERY = gql`
+  query geofeature($id: String) {
+    value
+  }
+`
 
 type Props = BasicEditorProps & {
   placeholder?: string
@@ -21,10 +37,12 @@ type Suggestion = {
   name: string
 }
 
-type KeywordGeoProperties = geometry.GeometryJSONProperties & {
+type SelectedKeyword = {
   keyword?: string
   keywordId?: number
 }
+
+type KeywordGeoProperties = geometry.GeometryJSONProperties & SelectedKeyword
 
 const MINIMUM_INPUT_LENGTH = 2
 
@@ -43,11 +61,30 @@ const Keyword: React.SFC<Props> = ({
   } = coordinateEditor.geoToPolygonProps(value)
   const { keyword = '', keywordId, color } = properties as KeywordGeoProperties
   const hasSelection = keyword && keywordId ? true : false
-  const [suggestions, setSuggestions] = React.useState<Suggestion[]>([])
   const [input, setInput] = React.useState<string>(keyword)
   const [open, setOpen] = React.useState(false)
-  const loading =
-    open && suggestions.length === 0 && input.length >= minimumInputLength
+  const [selectedKeyword, setSelectedKeyword] = React.useState<SelectedKeyword>(
+    {}
+  )
+  // const loading =
+  //   open && suggestions.length === 0 && input.length >= minimumInputLength
+  const [
+    loadSuggestions,
+    { data: suggestions, loading: suggestionLoading },
+  ] = useLazyQuery(SUGGESTION_QUERY, {
+    variables: {
+      q: input,
+    },
+  })
+  const [
+    loadFeature,
+    { data: geoFeature, loading: featureLoading },
+  ] = useLazyQuery(FEATURE_QUERY, {
+    variables: {
+      id: selectedKeyword.keywordId || '',
+    },
+  })
+  const loading = suggestionLoading || featureLoading
   React.useEffect(
     () => {
       if (keyword !== input) {
@@ -58,39 +95,28 @@ const Keyword: React.SFC<Props> = ({
   )
   React.useEffect(
     () => {
-      let active = true
-      if (input.length < minimumInputLength) {
-        if (suggestions.length > 0) {
-          setSuggestions([])
-        }
-        return undefined
-      }
-      ;(async () => {
-        const response = await fetch(
-          `./internal/geofeature/suggestions?q=${input}`
-        )
-        const json = await response.json()
-        if (active) {
-          setSuggestions(
-            json.filter(
-              (suggestion: Suggestion) => !suggestion.id.startsWith('LITERAL')
-            )
-          )
-        }
-      })()
-      return () => {
-        active = false
+      if (input.length >= minimumInputLength) {
+        loadSuggestions()
       }
     },
     [input]
   )
   React.useEffect(
     () => {
-      if (!open) {
-        setSuggestions([])
+      loadFeature()
+    },
+    [selectedKeyword.keyword, selectedKeyword.keywordId]
+  )
+  React.useEffect(
+    () => {
+      if (geoFeature && selectedKeyword.keyword === geoFeature.id) {
+        const geo = geometry.makeGeometry(id, geoFeature, color, shapes.POLYGON)
+        geo.properties.keyword = name
+        geo.properties.keywordId = keywordId
+        onChange(geo)
       }
     },
-    [open]
+    [geoFeature, selectedKeyword.keyword]
   )
   return (
     <SpacedLinearContainer direction="column" spacing={1}>
@@ -113,15 +139,11 @@ const Keyword: React.SFC<Props> = ({
         inputValue={input}
         onChange={(_e, value) => {
           if (value) {
-            const { id: keywordId, name } = value
-            ;(async () => {
-              const response = await fetch(`./internal/geofeature?id=${id}`)
-              const json = await response.json()
-              const geo = geometry.makeGeometry(id, json, color, shapes.POLYGON)
-              geo.properties.keyword = name
-              geo.properties.keywordId = keywordId
-              onChange(geo)
-            })()
+            const { id: keywordId, name: keyword } = value
+            setSelectedKeyword({
+              keywordId,
+              keyword,
+            })
           }
         }}
         renderInput={params => (

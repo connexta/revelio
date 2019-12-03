@@ -277,6 +277,11 @@ type FacetResult {
   value: String
 }
 
+type Suggestion {
+  id: String!
+  name: String!
+}
+
 type Query {
   user: User
   sources: [Source]
@@ -305,6 +310,9 @@ type Query {
   #
   # NOTE: attributes need to be **whitelisted by an Admin** before they can be faceted
   facet(attribute: String!): [FacetResult]
+
+  suggestions(q: String!): [Suggestion]
+  geofeature(id: String!): Json
 }
 
 type MutationResponse {
