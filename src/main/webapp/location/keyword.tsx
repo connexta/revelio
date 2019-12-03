@@ -10,7 +10,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Length from './length'
 import SpacedLinearContainer from '../spaced-linear-container'
-import { useLazyQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/react-hooks'
 // const { SUGGESTION_QUERY, FEATURE_QUERY } = require('./keyword-queries')
 import gql from 'graphql-tag'
 
@@ -75,14 +75,12 @@ const Keyword: React.SFC<Props> = ({
   )
   // const loading =
   //   open && suggestions.length === 0 && input.length >= minimumInputLength
-  const [
-    loadSuggestions,
-    { data: suggestions, loading: suggestionLoading },
-  ] = useLazyQuery(SuggestionsQuery, {
+  const { data: suggestions, loading: suggestionLoading } = useQuery(SuggestionsQuery, {
     variables: {
-      q: input,
+      q: 'italy',
     },
   })
+  const loadSuggestions = () => {}
   // const [
   //   loadFeature,
   //   { data: geoFeature, loading: featureLoading },
