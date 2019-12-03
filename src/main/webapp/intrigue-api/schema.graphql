@@ -282,6 +282,13 @@ type Suggestion {
   name: String!
 }
 
+type GeoJSON {
+  type: String!
+  geometry: Json!
+  properties: Json!
+  id: String!
+}
+
 type Query {
   user: User
   sources: [Source]
@@ -312,7 +319,7 @@ type Query {
   facet(attribute: String!): [FacetResult]
 
   suggestions(q: String!): [Suggestion]
-  geofeature(id: String!): Json
+  geofeature(id: String!): GeoJSON
 }
 
 type MutationResponse {

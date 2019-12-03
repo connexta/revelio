@@ -371,13 +371,13 @@ const facet = async (parent, args, { catalog }) => {
 }
 
 const geofeature = async id => {
-  const response = await fetch(`${ROOT}/internal/geofeature?id=${id}`)
+  const response = await fetch(`${ROOT}/geofeature?id=${id}`)
   const json = await response.json()
   return json
 }
 
 const suggestions = async q => {
-  const response = await fetch(`${ROOT}/internal/geofeature/suggestions?q=${q}`)
+  const response = await fetch(`${ROOT}/geofeature/suggestions?q=${q}`)
   const json = await response.json()
   return json.filter(suggestion => !suggestion.id.startsWith('LITERAL'))
 }

@@ -14,18 +14,25 @@ import { useLazyQuery } from '@apollo/react-hooks'
 // const { SUGGESTION_QUERY, FEATURE_QUERY } = require('./keyword-queries')
 import gql from 'graphql-tag'
 
-const SUGGESTION_QUERY = gql`
-  query suggestions($q: String) {
-    id
-    name
+const SuggestionsQuery = gql`
+  query SuggestionsQuery($q: String!) {
+    suggestions(q: $q) {
+      id
+      name
+    }
   }
 `
 
-const FEATURE_QUERY = gql`
-  query geofeature($id: String) {
-    value
-  }
-`
+// const FeatureQuery = gql`
+//   query FeatureQuery($id: String!) {
+//     geofeature(id: $id) {
+//       type
+//       geometry
+//       properties
+//       id
+//     }
+//   }
+// `
 
 type Props = BasicEditorProps & {
   placeholder?: string
@@ -71,19 +78,22 @@ const Keyword: React.SFC<Props> = ({
   const [
     loadSuggestions,
     { data: suggestions, loading: suggestionLoading },
-  ] = useLazyQuery(SUGGESTION_QUERY, {
+  ] = useLazyQuery(SuggestionsQuery, {
     variables: {
       q: input,
     },
   })
-  const [
-    loadFeature,
-    { data: geoFeature, loading: featureLoading },
-  ] = useLazyQuery(FEATURE_QUERY, {
-    variables: {
-      id: selectedKeyword.keywordId || '',
-    },
-  })
+  // const [
+  //   loadFeature,
+  //   { data: geoFeature, loading: featureLoading },
+  // ] = useLazyQuery(FeatureQuery, {
+  //   variables: {
+  //     id: selectedKeyword.keywordId || '',
+  //   },
+  // })
+  const loadFeature = () => {}
+  const geoFeature = {id:''}
+  const featureLoading = false
   const loading = suggestionLoading || featureLoading
   React.useEffect(
     () => {
