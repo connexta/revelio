@@ -7,26 +7,7 @@ import { mergeDeepOverwriteLists } from '../utils'
 const { BatchHttpLink } = require('apollo-link-batch-http')
 const { genSchema, toGraphqlName, fromGraphqlName } = require('./gen-schema')
 
-const createRpcClient = require('./rpc')
-
-const fetch = require('./fetch')
 const ROOT = '/search/catalog/internal'
-
-const request = createRpcClient()
-
-const methods = {
-  create: 'ddf.catalog/create',
-  query: 'ddf.catalog/query',
-  update: 'ddf.catalog/update',
-  delete: 'ddf.catalog/delete',
-  getSourceIds: 'ddf.catalog/getSourceIds',
-  getSourceInfo: 'ddf.catalog/getSourceInfo',
-}
-
-const catalog = Object.keys(methods).reduce((catalog, method) => {
-  catalog[method] = params => request(methods[method], params)
-  return catalog
-}, {})
 
 const filterDeepHelper = filterFunction => object =>
   object
@@ -62,7 +43,7 @@ const getBuildInfo = () => {
   }
 }
 
-const systemProperties = async () => {
+const systemProperties = async (parent, args, { fetch }) => {
   const [configProperties, configUiProperties] = await Promise.all([
     (await fetch(`${ROOT}/config`)).json(),
     (await fetch(`${ROOT}/platform/config/ui`)).json(),
@@ -90,10 +71,6 @@ const processQuery = ({ filterTree, cql, ...query }) => {
   return { cql: cqlString, ...query }
 }
 
-const send = async query => {
-  return await catalog.query(processQuery(query))
-}
-
 const renameKeys = (f, map) => {
   return Object.keys(map).reduce((attrs, attr) => {
     const name = f(attr)
@@ -118,7 +95,7 @@ const fromGraphqlMap = map => {
   }, {})
 }
 
-const queries = (ids = []) => async parent => {
+const queries = (ids = []) => async (args, context) => {
   if (ids.length === 0) {
     return []
   }
@@ -146,7 +123,7 @@ const queries = (ids = []) => async parent => {
     ],
   }
 
-  const res = await metacards(parent, { filterTree })
+  const res = await metacards({}, { filterTree }, context)
 
   return res.attributes.map(attrs => {
     const { filterTree } = attrs
@@ -158,9 +135,9 @@ const queries = (ids = []) => async parent => {
   })
 }
 
-const metacards = async (ctx, args) => {
+const metacards = async (parent, args, { catalog }) => {
   const q = { ...args.settings, filterTree: args.filterTree }
-  const json = await send(q)
+  const json = await catalog.query(processQuery(q))
 
   const attributes = json.results.map(result => {
     const properties = toGraphqlMap(result.metacard.properties)
@@ -188,7 +165,7 @@ const queryTemplates = {
   title: 'title',
 }
 
-const fetchQueryTemplates = async () => {
+const fetchQueryTemplates = async (parent, args, { fetch }) => {
   const res = await fetch(`${ROOT}/forms/query`)
   const json = await res.json()
   const attributes = json
@@ -213,40 +190,49 @@ const fetchQueryTemplates = async () => {
   return { attributes, status }
 }
 
-const metacardsByTag = async (ctx, args) => {
+const metacardsByTag = async (parent, args, context) => {
+  //TO-DO: Fix this to use graphql context
   if (args.tag === 'query-template') {
     return fetchQueryTemplates()
   }
 
-  return metacards(ctx, {
-    filterTree: {
-      type: '=',
-      property: 'metacard-tags',
-      value: args.tag,
+  return metacards(
+    parent,
+    {
+      filterTree: {
+        type: '=',
+        property: 'metacard-tags',
+        value: args.tag,
+      },
+      settings: args.settings,
     },
-    settings: args.settings,
-  })
+    context
+  )
 }
 
-const metacardById = async (ctx, args) => {
-  return metacards(ctx, {
-    filterTree: {
-      type: 'AND',
-      filters: [
-        {
-          type: '=',
-          property: 'id',
-          value: args.id,
-        },
-        {
-          type: 'LIKE',
-          property: 'metacard-tags',
-          value: '%',
-        },
-      ],
+const metacardById = async (parent, args, context) => {
+  return metacards(
+    parent,
+    {
+      filterTree: {
+        type: 'AND',
+        filters: [
+          {
+            type: '=',
+            property: 'id',
+            value: args.id,
+          },
+          {
+            type: 'LIKE',
+            property: 'metacard-tags',
+            value: '%',
+          },
+        ],
+      },
+      settings: args.settings,
     },
-    settings: args.settings,
-  })
+    context
+  )
 }
 
 const preferencesToGraphql = preferences => {
@@ -267,7 +253,7 @@ const preferencesFromGraphql = preferences => {
   return removeIn(transformed, ['querySettings', 'detail_level'])
 }
 
-const user = async () => {
+const user = async (parent, args, { fetch }) => {
   const res = await fetch(`${ROOT}/user`)
   const json = await res.json()
 
@@ -276,16 +262,17 @@ const user = async () => {
   )
 }
 
-const getLocalCatalogId = async () => {
+const getLocalCatalogId = async (parent, args, { fetch }) => {
   const res = await fetch(`${ROOT}/localcatalogid`)
   return res.json()
 }
-const localCatalogId = getLocalCatalogId()
 
-const sources = async () => {
+const sources = async (parent, args, context) => {
+  const { catalog } = context
   const sourceIds = await catalog.getSourceIds({})
   const res = await catalog.getSourceInfo({ ids: sourceIds })
-  const local = await localCatalogId
+  //TO-DO: cache this in future, local catalog id doesn't change
+  const local = await getLocalCatalogId(parent, args, context)
 
   //needed until we change the schema to match the json rpc stuff
   const rpcToSchema = {
@@ -353,21 +340,21 @@ const metacardStartingTypes = [
   },
 ]
 
-const metacardTypes = async () => {
+const metacardTypes = async (parent, args, { fetch }) => {
   const res = await fetch(`${ROOT}/metacardtype`)
   const json = await res.json()
 
   const types = Object.keys(json).reduce((types, group) => {
     return Object.assign(types, json[group])
   }, {})
-  const enums = await getEnumerations()
+  const enums = await getEnumerations(parent, args, { fetch })
   Object.keys(enums).forEach(attribute => {
     types[attribute].enums = enums[attribute]
   })
   return metacardStartingTypes.concat(Object.keys(types).map(k => types[k]))
 }
 
-const getEnumerations = async () => {
+const getEnumerations = async (parent, args, { fetch }) => {
   const { enums } = await (await fetch(`${ROOT}/config`)).json()
 
   const res = await fetch(`${ROOT}/metacardtype`)
@@ -383,7 +370,7 @@ const getEnumerations = async () => {
   return enums
 }
 
-const facet = async (parent, args) => {
+const facet = async (parent, args, { catalog }) => {
   const { attribute } = args
 
   const filterTree = {
@@ -398,7 +385,7 @@ const facet = async (parent, args) => {
     facets: [attribute],
   }
 
-  const json = await send(q)
+  const json = await catalog.query(processQuery(q))
 
   const facet = json.facets[attribute]
 
@@ -416,7 +403,7 @@ const Query = {
   facet,
 }
 
-const createMetacard = async (parent, args) => {
+const createMetacard = async (parent, args, { catalog }) => {
   const { attrs } = args
 
   const metacard = fromGraphqlMap(attrs)
@@ -433,7 +420,7 @@ const createMetacard = async (parent, args) => {
   const res = await catalog.create(metacardsToCreate)
   return toGraphqlMap(res.created_metacards[0].attributes)
 }
-const saveMetacard = async (parent, args) => {
+const saveMetacard = async (parent, args, { fetch }) => {
   const { id, attrs } = args
 
   const attributes = Object.keys(attrs).map(attribute => {
@@ -469,13 +456,13 @@ const saveMetacard = async (parent, args) => {
   }
 }
 
-const deleteMetacard = async (parent, args) => {
+const deleteMetacard = async (parent, args, { catalog }) => {
   const { id } = args
   await catalog.delete({ ids: [id] })
   return id
 }
 
-const updateUserPreferences = async (parent, args) => {
+const updateUserPreferences = async (parent, args, { fetch }) => {
   const { userPreferences } = args
 
   const user = await fetch(`${ROOT}/user`)
@@ -527,18 +514,29 @@ const defaultOptions = {
   ssrMode: false,
 }
 
+const btoa = arg => {
+  if (typeof window !== 'undefined') {
+    return window.btoa(arg)
+  }
+  return Buffer.from(arg).toString('base64')
+}
 const createClient = (options = defaultOptions) => {
   const cache = new InMemoryCache()
   const { ssrMode } = options
-
+  const auth = btoa('admin:admin')
   if (typeof window !== 'undefined') {
     cache.restore(window.__APOLLO_STATE__)
   }
-
   return new ApolloClient({
     link: ssrMode
       ? new SchemaLink({ schema: executableSchema })
-      : new BatchHttpLink({ uri: serverLocation }),
+      : new BatchHttpLink({
+          uri: serverLocation,
+          credentials: 'same-origin',
+          headers: {
+            Authorization: `Basic ${auth}`,
+          },
+        }),
     cache,
     ssrMode,
   })

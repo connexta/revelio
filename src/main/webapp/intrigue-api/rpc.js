@@ -1,7 +1,4 @@
-const fetch = require('./fetch')
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
-
-const createClient = () => {
+const createClient = fetch => {
   let id = 0
   const url = '/direct'
 
