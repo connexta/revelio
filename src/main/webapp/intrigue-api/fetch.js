@@ -32,7 +32,6 @@ const cacheBust = urlString => {
 }
 
 module.exports = (url, { headers, ...opts } = {}) => {
-  const auth = Buffer.from('admin:admin').toString('base64')
   return fetch(cacheBust(url), {
     credentials: 'same-origin',
     cache: 'no-cache',
@@ -40,7 +39,6 @@ module.exports = (url, { headers, ...opts } = {}) => {
     headers: {
       'User-Agent': 'ace',
       'X-Requested-With': 'XMLHttpRequest',
-      Authorization: `Basic ${auth}`,
       'Content-Type': 'application/json',
       Referer: `https://localhost:8993`,
       ...headers,
