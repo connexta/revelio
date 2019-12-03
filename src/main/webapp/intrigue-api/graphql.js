@@ -95,7 +95,7 @@ const fromGraphqlMap = map => {
   }, {})
 }
 
-const queries = (ids = []) => async (parent, args, context) => {
+const queries = (ids = []) => async (args, context) => {
   if (ids.length === 0) {
     return []
   }
@@ -123,7 +123,7 @@ const queries = (ids = []) => async (parent, args, context) => {
     ],
   }
 
-  const res = await metacards(parent, { filterTree }, context)
+  const res = await metacards({}, { filterTree }, context)
 
   return res.attributes.map(attrs => {
     const { filterTree } = attrs
