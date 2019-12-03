@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -22,10 +23,12 @@ public class JsonRpc implements Method {
 
   private final Map<String, DocMethod> methods;
 
-  public JsonRpc(MethodSet methods) {
+  public JsonRpc(List<MethodSet> methodSets) {
     Builder<String, DocMethod> builder = ImmutableMap.builder();
     builder.put("list-methods", new DocMethod(this::listMethods, "list all available methods"));
-    builder.putAll(methods.getMethods());
+    for (MethodSet methods : methodSets) {
+      builder.putAll(methods.getMethods());
+    }
     this.methods = builder.build();
   }
 

@@ -28,25 +28,45 @@
   </bean>
 
 
-  <bean id="catalogMethods"
-	class="org.codice.ddf.catalog.direct.CatalogMethods">
-    <argument ref="catalogFramework"/>
-    <argument ref="attributeRegistry"/>
-    <argument ref="metacardTypes"/>
-    <argument ref="filterBuilder"/>
-    <argument ref="metacardActionRegistry"/>
 
-    <!--    <cm:managed-properties persistent-id="org.codice.ddf.resourcemanagement.usage"-->
-    <!--      update-strategy="container-managed"/>-->
-    <!--    <property name="monitorLocalSources" value="false"/>-->
+
+  <reference id="defaultAttributeValidatorRegistry" interface="ddf.catalog.validation.AttributeValidatorRegistry" availability="optional"/>
+  <reference-list id="attributeInjectors" interface="ddf.catalog.data.AttributeInjector"
+                  availability="optional"/>
+  <bean id="enumerationExtractor" class="org.codice.ddf.catalog.ui.enumeration.ExperimentalEnumerationExtractor">
+    <argument ref="defaultAttributeValidatorRegistry" />
+    <argument ref="metacardTypes" />
+    <argument ref="attributeInjectors" />
   </bean>
+
 
   <bean id="jsonRpc" class="org.codice.jsonrpc.JsonRpc">
-    <argument ref="catalogMethods"/>
+    <argument>
+      <list>
+        <bean class="org.codice.ddf.catalog.direct.CatalogMethods">
+          <argument ref="catalogFramework"/>
+          <argument ref="attributeRegistry"/>
+          <argument ref="metacardTypes"/>
+          <argument ref="filterBuilder"/>
+          <argument ref="metacardActionRegistry"/>
+
+          <!--    <cm:managed-properties persistent-id="org.codice.ddf.resourcemanagement.usage"-->
+          <!--      update-strategy="container-managed"/>-->
+          <!--    <property name="monitorLocalSources" value="false"/>-->
+        </bean>
+        <bean class="org.codice.ddf.attribute.enumerations.EnumerationMethods">
+          <argument ref="enumerationExtractor" />
+          <property name="metacardTypes">
+            <reference-list interface="ddf.catalog.data.MetacardType" availability="optional"/>
+          </property>
+        </bean>
+      </list>
+    </argument>
   </bean>
 
+
   <bean id="jsonRpcHttpServlet"
-	class="org.codice.jsonrpc.JsonRpcHttpServlet">
+        class="org.codice.jsonrpc.JsonRpcHttpServlet">
     <argument ref="jsonRpc"/>
   </bean>
 

@@ -338,20 +338,14 @@ const metacardTypes = async (parent, args, { fetch }) => {
   return metacardStartingTypes.concat(Object.keys(types).map(k => types[k]))
 }
 
-const getEnumerations = async (parent, args, { fetch }) => {
-  const { enums } = await (await fetch(`${ROOT}/config`)).json()
+const getEnumerations = async (parent, args, { fetch, catalog }) => {
+  const { enumerations } = await catalog.getAllEnumerations({})
 
-  const res = await fetch(`${ROOT}/metacardtype`)
-  const json = await res.json()
+  const { enums: configEnums } = await (await fetch(`${ROOT}/config`)).json()
 
-  await Promise.all(
-    Object.keys(json).map(async group => {
-      const enumRes = await fetch(`${ROOT}/enumerations/metacardtype/${group}`)
-      const enumJson = await enumRes.json()
-      Object.assign(enums, enumJson)
-    })
-  )
-  return enums
+  Object.assign(enumerations, configEnums)
+
+  return enumerations
 }
 
 const facet = async (parent, args, { catalog }) => {

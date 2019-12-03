@@ -42,6 +42,7 @@ const server = new ApolloServer({
       delete: 'ddf.catalog/delete',
       getSourceIds: 'ddf.catalog/getSourceIds',
       getSourceInfo: 'ddf.catalog/getSourceInfo',
+      getAllEnumerations: 'ddf.enumerations/all',
     }
 
     const catalog = Object.keys(methods).reduce((catalog, method) => {
