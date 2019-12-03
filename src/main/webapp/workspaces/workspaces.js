@@ -29,16 +29,15 @@ import QuerySelector from './query-selector'
 
 import loadable from 'react-loadable'
 
+const LoadingComponent = () => <LinearProgress />
 let MemoizedVisualizations = () => null
 if (typeof window !== 'undefined') {
   MemoizedVisualizations = loadable({
-    loader: async () => {
-      const {
-        default: module,
-      } = await import(/* webpackChunkName: "visualizations" */ './visualizations')
-      return memo(module)
-    },
-    loading: <LinearProgress />,
+    loader: () =>
+      import(/* webpackChunkName: "visualizations" */ './visualizations').then(
+        module => module.default
+      ),
+    loading: LoadingComponent,
   })
 }
 
