@@ -186,12 +186,12 @@ type SystemProperties {
 }
 
 type Source {
-  available: Boolean
+  isAvailable: Boolean
   # #### Determines if this source is the local catalog.
   local: Boolean
-  contentTypes: [String]
-  id: ID
-  sourceActions: [String]
+  catalogedTypes: [String]
+  sourceId: ID
+  actions: [String]
   version: String
 }
 

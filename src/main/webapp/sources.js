@@ -35,8 +35,8 @@ const sourcesMessage = offlineCount => {
 export const sources = gql`
   query SourcesPages {
     sources {
-      available
-      id
+      isAvailable
+      sourceId
       local
     }
   }
@@ -44,8 +44,8 @@ export const sources = gql`
 
 export const Sources = props => {
   const { sources } = props
-  const offlineCount = sources.filter(source => !source.available).length
-  const getIcon = source => (source.available ? OnlineIcon : OfflineIcon)
+  const offlineCount = sources.filter(source => !source.isAvailable).length
+  const getIcon = source => (source.isAvailable ? OnlineIcon : OfflineIcon)
 
   return (
     <div style={{ maxWidth: 600, margin: '20px auto' }}>
@@ -60,12 +60,12 @@ export const Sources = props => {
               const Icon = getIcon(source)
 
               return (
-                <ListItem key={source.id}>
+                <ListItem key={source.sourceId}>
                   <ListItemIcon>
-                    <Icon key={source.available} />
+                    <Icon key={source.isAvailable} />
                   </ListItemIcon>
                   <ListItemText>
-                    <Typography>{source.id}</Typography>
+                    <Typography>{source.sourceId}</Typography>
                   </ListItemText>
                 </ListItem>
               )
@@ -112,8 +112,8 @@ const SourcesSelectContainer = props => {
         loading
           ? []
           : data.sources
-              .filter(source => source.available)
-              .map(source => source.id)
+              .filter(source => source.isAvailable)
+              .map(source => source.sourceId)
       }
     />
   )
