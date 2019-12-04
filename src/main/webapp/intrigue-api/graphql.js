@@ -7,7 +7,7 @@ import { mergeDeepOverwriteLists } from '../utils'
 const { BatchHttpLink } = require('apollo-link-batch-http')
 const { genSchema, toGraphqlName, fromGraphqlName } = require('./gen-schema')
 
-const ROOT = '/search/catalog/internal'
+const ROOT = 'https://localhost:8993/search/catalog/internal'
 
 const filterDeepHelper = filterFunction => object =>
   object
@@ -370,16 +370,18 @@ const facet = async (parent, args, { catalog }) => {
   return facet
 }
 
-const geofeature = async id => {
-  const response = await fetch(`${ROOT}/geofeature?id=${id}`)
-  const json = await response.json()
-  return json
+const geofeature = async (parent, args, { fetch }) => {
+  const response = await fetch(
+    `${ROOT}/geofeature?id=${encodeURIComponent(args.id)}`
+  )
+  return response.json()
 }
 
-const suggestions = async q => {
-  const response = await fetch(`${ROOT}/geofeature/suggestions?q=${q}`)
-  const json = await response.json()
-  return json.filter(suggestion => !suggestion.id.startsWith('LITERAL'))
+const suggestions = async (parent, args, { fetch }) => {
+  const response = await fetch(
+    `${ROOT}/geofeature/suggestions?q=${encodeURIComponent(args.q)}`
+  )
+  return response.json()
 }
 
 const Query = {

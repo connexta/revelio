@@ -56,7 +56,7 @@ type Suggestion = {
 
 type SelectedKeyword = {
   keyword?: string
-  keywordId?: number
+  keywordId?: string
 }
 
 type KeywordGeoProperties = geometry.GeometryJSONProperties & SelectedKeyword
@@ -85,6 +85,9 @@ const Keyword: React.SFC<Props> = ({
   const [input, setInput] = React.useState<string>(keyword)
   const [open, setOpen] = React.useState(false)
   const [suggestions, setSuggestions] = React.useState<Suggestion[]>([])
+  const [selectedKeyword, setSelectedKeyword] = React.useState<SelectedKeyword>(
+    {}
+  )
   React.useEffect(
     () => {
       if (keyword !== input) {
@@ -122,6 +125,28 @@ const Keyword: React.SFC<Props> = ({
     },
     [open]
   )
+  React.useEffect(
+    () => {
+      let active = true
+      const { keyword, keywordId } = selectedKeyword
+      if (!keyword || !keywordId) {
+        return undefined
+      }
+      ;(async () => {
+        const json = await getGeoFeature(keywordId)
+        const geo = geometry.makeGeometry(id, json, color, shapes.POLYGON)
+        geo.properties.keyword = name
+        geo.properties.keywordId = keywordId
+        if (active) {
+          onChange(geo)
+        }
+      })()
+      return () => {
+        active = false
+      }
+    },
+    [selectedKeyword.keyword, selectedKeyword.keywordId]
+  )
   return (
     <SpacedLinearContainer direction="column" spacing={1}>
       <Autocomplete
@@ -143,14 +168,8 @@ const Keyword: React.SFC<Props> = ({
         inputValue={input}
         onChange={(_e, value) => {
           if (value) {
-            const { id: keywordId, name } = value
-            ;(async () => {
-              const json = await getGeoFeature(keywordId)
-              const geo = geometry.makeGeometry(id, json, color, shapes.POLYGON)
-              geo.properties.keyword = name
-              geo.properties.keywordId = keywordId
-              onChange(geo)
-            })()
+            const { id: keywordId, name: keyword } = value
+            setSelectedKeyword({ keywordId, keyword })
           }
         }}
         renderInput={params => (
@@ -219,6 +238,14 @@ const runQuery = async <T extends {}>(
   }
 }
 
+type suggestionResult = {
+  suggestions: Suggestion[]
+}
+
+type geofeatureResult = {
+  geofeature: geometry.GeometryJSON
+}
+
 const Container: React.SFC<BasicEditorProps> = props => {
   const client = useApolloClient()
   const [featureQueryState, setFeatureQueryState] = React.useState<QueryState>(
@@ -229,26 +256,26 @@ const Container: React.SFC<BasicEditorProps> = props => {
   >('idle')
   const getGeoFeature = async (id: string) => {
     return runQuery(
-      client.query<geometry.GeometryJSON>({
+      client.query<geofeatureResult>({
         query: FeatureQuery,
         variables: {
           id,
         },
       }),
       setFeatureQueryState
-    )
+    ).then(r => r.geofeature)
   }
   const getSuggestions = async (q: string) => {
     return runQuery(
-      client.query<Suggestion[]>({
+      client.query<suggestionResult>({
         query: SuggestionsQuery,
         variables: {
           q,
         },
       }),
       setSuggestionQueryState
-    ).then(suggestions =>
-      suggestions.filter(suggestion => !suggestion.id.startsWith('LITERAL'))
+    ).then(r =>
+      r.suggestions.filter(suggestion => !suggestion.id.startsWith('LITERAL'))
     )
   }
   const loading =
