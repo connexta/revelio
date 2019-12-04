@@ -13,7 +13,6 @@ import {
   coordinates as coordinateEditor,
 } from 'geospatialdraw'
 import withCoordinateUnitTabs from './with-coordinate-unit-tabs'
-import mock from 'fetch-mock'
 
 const stories = storiesOf('GeoLocation', module)
 stories.addDecorator(Story => <Story />)
@@ -156,12 +155,6 @@ stories.add(`keyword`, () => {
   const [geo, setGeo] = useState(
     geometry.makeEmptyGeometry('keyword', shapes.POLYGON)
   )
-  mock.get('glob:**/internal/geofeature/suggestions?q=*', keywordSuggestions, {
-    overwriteRoutes: true,
-  })
-  mock.get('glob:**/internal/geofeature?id=*', keywordResult, {
-    overwriteRoutes: true,
-  })
   return (
     <Keyword
       value={geo}
@@ -169,6 +162,10 @@ stories.add(`keyword`, () => {
         action('onChange')(update)
         setGeo(update)
       }}
+      getGeoFeature={() => JSON.parse(JSON.stringify(keywordSuggestions))}
+      getSuggestions={() => JSON.parse(JSON.stringify(keywordResult))}
+      loading={false}
+      error={false}
     />
   )
 })
@@ -177,12 +174,6 @@ stories.add(`location`, () => {
   const [geo, setGeo] = useState(
     geometry.makeEmptyGeometry('location', shapes.LINE)
   )
-  mock.get('glob:**/internal/geofeature/suggestions?q=*', keywordSuggestions, {
-    overwriteRoutes: true,
-  })
-  mock.get('glob:**/internal/geofeature?id=*', keywordResult, {
-    overwriteRoutes: true,
-  })
   return (
     <Location
       value={geo}
@@ -190,6 +181,10 @@ stories.add(`location`, () => {
         action('onChange')(update)
         setGeo(update)
       }}
+      getGeoFeature={() => JSON.parse(JSON.stringify(keywordSuggestions))}
+      getSuggestions={() => JSON.parse(JSON.stringify(keywordResult))}
+      loading={false}
+      error={false}
     />
   )
 })
