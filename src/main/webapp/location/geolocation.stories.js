@@ -150,6 +150,12 @@ const keywordResult = {
   properties: {},
   id: 'Italy Valley Cemetery',
 }
+const extendedKeywordProps = {
+  getSuggestions: () => JSON.parse(JSON.stringify(keywordSuggestions)),
+  getGeoFeature: () => JSON.parse(JSON.stringify(keywordResult)),
+  loading: false,
+  error: false,
+}
 
 stories.add(`keyword`, () => {
   const [geo, setGeo] = useState(
@@ -162,10 +168,7 @@ stories.add(`keyword`, () => {
         action('onChange')(update)
         setGeo(update)
       }}
-      getGeoFeature={() => JSON.parse(JSON.stringify(keywordSuggestions))}
-      getSuggestions={() => JSON.parse(JSON.stringify(keywordResult))}
-      loading={false}
-      error={false}
+      {...extendedKeywordProps}
     />
   )
 })
@@ -181,10 +184,9 @@ stories.add(`location`, () => {
         action('onChange')(update)
         setGeo(update)
       }}
-      getGeoFeature={() => JSON.parse(JSON.stringify(keywordSuggestions))}
-      getSuggestions={() => JSON.parse(JSON.stringify(keywordResult))}
-      loading={false}
-      error={false}
+      editorProps={{
+        keyword: extendedKeywordProps,
+      }}
     />
   )
 })

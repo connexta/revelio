@@ -9,7 +9,7 @@ import PointRadius from './point-radius'
 import BBox from './bbox'
 import withCoordinateUnitTabs from './with-coordinate-unit-tabs'
 import Keyword from './keyword'
-import { BasicEditorProps as Props } from './geo-editor'
+import { BasicEditorProps } from './geo-editor'
 import { geometry, shapes } from 'geospatialdraw'
 
 type LocationType = 'line' | 'polygon' | 'pointRadius' | 'bbox' | 'keyword'
@@ -18,9 +18,15 @@ const defaultLocationType: LocationType = 'line'
 type LocationTypeComponentMap = {
   [type in LocationType]: {
     label: string
-    Component: React.ComponentType<Props>
+    Component: React.ComponentType<BasicEditorProps>
     shape: shapes.Shape
   }
+}
+
+type EditorPropsMap = { [editorType in LocationType]: any }
+
+type Props = BasicEditorProps & {
+  editorProps?: EditorPropsMap
 }
 
 const componentMap: LocationTypeComponentMap = {
@@ -51,12 +57,19 @@ const componentMap: LocationTypeComponentMap = {
   },
 }
 
-const Location: React.SFC<Props> = ({ value, onChange }) => {
+const Location: React.SFC<Props> = ({
+  value,
+  onChange,
+  editorProps = {} as EditorPropsMap,
+}) => {
   const [locationType, setLocationType] = React.useState<LocationType>(
     defaultLocationType
   )
   const { Component, shape } = componentMap[locationType]
   const [editValue, setEditValue] = React.useState<geometry.GeometryJSON>(value)
+  const extendedComponentProps = editorProps.hasOwnProperty(locationType)
+    ? editorProps[locationType]
+    : {}
   React.useEffect(
     () => {
       if (JSON.stringify(editValue) !== JSON.stringify(value)) {
@@ -80,7 +93,11 @@ const Location: React.SFC<Props> = ({ value, onChange }) => {
           </MenuItem>
         ))}
       </Select>
-      <Component value={editValue} onChange={onChange} />
+      <Component
+        value={editValue}
+        onChange={onChange}
+        {...extendedComponentProps}
+      />
     </FormControl>
   )
 }
