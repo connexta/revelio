@@ -80,21 +80,25 @@ const Keyword: React.SFC<Props> = ({
     buffer,
     bufferUnit,
   } = coordinateEditor.geoToPolygonProps(value)
-  const { keyword = '', keywordId, color } = properties as KeywordGeoProperties
-  const hasSelection = keyword && keywordId ? true : false
-  const [input, setInput] = React.useState<string>(keyword)
+  const {
+    keyword: initKeyword = '',
+    keywordId: initKeywordId,
+    color,
+  } = properties as KeywordGeoProperties
+  const hasSelection = initKeyword && initKeywordId ? true : false
+  const [input, setInput] = React.useState<string>(initKeyword)
   const [open, setOpen] = React.useState(false)
   const [suggestions, setSuggestions] = React.useState<Suggestion[]>([])
-  const [selectedKeyword, setSelectedKeyword] = React.useState<SelectedKeyword>(
-    {}
-  )
+  const [{ keyword, keywordId }, setSelectedKeyword] = React.useState<
+    SelectedKeyword
+  >({})
   React.useEffect(
     () => {
-      if (keyword !== input) {
-        setInput(keyword)
+      if (initKeyword !== input) {
+        setInput(initKeyword)
       }
     },
-    [keyword]
+    [initKeyword]
   )
   React.useEffect(
     () => {
@@ -128,14 +132,13 @@ const Keyword: React.SFC<Props> = ({
   React.useEffect(
     () => {
       let active = true
-      const { keyword, keywordId } = selectedKeyword
       if (!keyword || !keywordId) {
         return undefined
       }
       ;(async () => {
         const json = await getGeoFeature(keywordId)
         const geo = geometry.makeGeometry(id, json, color, shapes.POLYGON)
-        geo.properties.keyword = name
+        geo.properties.keyword = keyword
         geo.properties.keywordId = keywordId
         if (active) {
           onChange(geo)
@@ -145,7 +148,7 @@ const Keyword: React.SFC<Props> = ({
         active = false
       }
     },
-    [selectedKeyword.keyword, selectedKeyword.keywordId]
+    [keyword, keywordId]
   )
   return (
     <SpacedLinearContainer direction="column" spacing={1}>
@@ -158,8 +161,8 @@ const Keyword: React.SFC<Props> = ({
         }}
         onClose={() => {
           setOpen(false)
-          if (keyword !== input) {
-            onChange(geometry.makeEmptyGeometry(id, shapes.POLYGON))
+          if (keyword && keyword !== input) {
+            setInput(keyword)
           }
         }}
         getOptionLabel={(suggestion: Suggestion) => suggestion.name}
@@ -168,8 +171,8 @@ const Keyword: React.SFC<Props> = ({
         inputValue={input}
         onChange={(_e, value) => {
           if (value) {
-            const { id: keywordId, name: keyword } = value
-            setSelectedKeyword({ keywordId, keyword })
+            const { id, name } = value
+            setSelectedKeyword({ keywordId: id, keyword: name })
           }
         }}
         renderInput={params => (

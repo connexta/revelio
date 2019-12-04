@@ -7,7 +7,7 @@ import { mergeDeepOverwriteLists } from '../utils'
 const { BatchHttpLink } = require('apollo-link-batch-http')
 const { genSchema, toGraphqlName, fromGraphqlName } = require('./gen-schema')
 
-const ROOT = 'https://localhost:8993/search/catalog/internal'
+const ROOT = '/search/catalog/internal'
 
 const filterDeepHelper = filterFunction => object =>
   object
