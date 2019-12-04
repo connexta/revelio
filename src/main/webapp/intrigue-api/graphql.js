@@ -274,22 +274,6 @@ const sources = async (parent, args, context) => {
   //TO-DO: cache this in future, local catalog id doesn't change
   const local = await getLocalCatalogId(parent, args, context)
 
-  //needed until we change the schema to match the json rpc stuff
-  const rpcToSchema = {
-    sourceId: 'id',
-    isAvailable: 'available',
-    catalogedTypes: 'contentTypes',
-    actions: 'sourceActions',
-    version: 'version',
-  }
-  res.sourceInfo.forEach(source => {
-    Object.keys(source).forEach(key => {
-      if (key in rpcToSchema) {
-        delete Object.assign(source, { [rpcToSchema[key]]: source[key] })[key]
-      }
-    })
-  })
-
   return res.sourceInfo.map(source =>
     set(source, 'local', source.id === local['local-catalog-id'])
   )
