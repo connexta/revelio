@@ -10,9 +10,12 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Length from './length'
 import SpacedLinearContainer from '../spaced-linear-container'
-import { useLazyQuery } from '@apollo/react-hooks'
+import { useApolloClient } from '@apollo/react-hooks'
+import { ApolloQueryResult } from 'apollo-client'
 import gql from 'graphql-tag'
 const { useApolloFallback } = require('../react-hooks')
+
+type QueryState = 'idle' | 'loading' | 'error'
 
 const SuggestionsQuery = gql`
   query SuggestionsQuery($q: String!) {
@@ -196,39 +199,62 @@ const Keyword: React.SFC<Props> = ({
   )
 }
 
+const runQuery = async <T extends {}>(
+  promise: Promise<ApolloQueryResult<T>>,
+  setState: (v: QueryState) => void
+): Promise<T> => {
+  setState('loading')
+  let isError = false
+  try {
+    const result = await promise
+    return result.data
+  } catch (e) {
+    setState('error')
+    isError = false
+    throw e
+  } finally {
+    if (!isError) {
+      setState('idle')
+    }
+  }
+}
+
 const Container: React.SFC<BasicEditorProps> = props => {
-  let q = ''
-  let id = ''
-  const [
-    loadSuggestions,
-    { data: suggestions, loading: suggestionLoading, error: suggestionError },
-  ] = useLazyQuery(SuggestionsQuery, {
-    variables: {
-      q,
-    },
-  })
-  const [
-    loadFeature,
-    { data: feature, loading: featureLoading, error: featureError },
-  ] = useLazyQuery(FeatureQuery, {
-    variables: {
-      id,
-    },
-  })
-  const getGeoFeature = async (value: string) => {
-    id = value
-    loadFeature()
-    const results = await feature
-    return results
+  const client = useApolloClient()
+  const [featureQueryState, setFeatureQueryState] = React.useState<QueryState>(
+    'idle'
+  )
+  const [suggestionQueryState, setSuggestionQueryState] = React.useState<
+    QueryState
+  >('idle')
+  const getGeoFeature = async (id: string) => {
+    return runQuery(
+      client.query<geometry.GeometryJSON>({
+        query: FeatureQuery,
+        variables: {
+          id,
+        },
+      }),
+      setFeatureQueryState
+    )
   }
-  const getSuggestions = async (value: string) => {
-    q = value
-    loadSuggestions()
-    const results = await suggestions
-    return results
+  const getSuggestions = async (q: string) => {
+    return runQuery(
+      client.query<Suggestion[]>({
+        query: SuggestionsQuery,
+        variables: {
+          q,
+        },
+      }),
+      setSuggestionQueryState
+    ).then(suggestions =>
+      suggestions.filter(suggestion => !suggestion.id.startsWith('LITERAL'))
+    )
   }
-  const loading = suggestionLoading || featureLoading
-  const error = suggestionError || featureError ? true : false
+  const loading =
+    suggestionQueryState === 'loading' || featureQueryState === 'loading'
+  const error =
+    suggestionQueryState === 'error' || featureQueryState === 'error'
   return (
     <Keyword
       getGeoFeature={getGeoFeature}
