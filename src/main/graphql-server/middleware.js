@@ -35,7 +35,7 @@ const server = new ApolloServer({
     }
     const request = createRpcClient(universalFetch)
 
-    const methods = {
+    const catalogMethods = {
       create: 'ddf.catalog/create',
       query: 'ddf.catalog/query',
       update: 'ddf.catalog/update',
@@ -43,12 +43,24 @@ const server = new ApolloServer({
       getSourceIds: 'ddf.catalog/getSourceIds',
       getSourceInfo: 'ddf.catalog/getSourceInfo',
     }
+    const enumerationMethods = {
+      getAllEnumerations: 'ddf.enumerations/all',
+    }
 
-    const catalog = Object.keys(methods).reduce((catalog, method) => {
-      catalog[method] = params => request(methods[method], params)
+    const catalog = Object.keys(catalogMethods).reduce((catalog, method) => {
+      catalog[method] = params => request(catalogMethods[method], params)
       return catalog
     }, {})
-    return { catalog, fetch: universalFetch }
+
+    const enumerations = Object.keys(enumerationMethods).reduce(
+      (enumerations, method) => {
+        enumerations[method] = params =>
+          request(enumerationMethods[method], params)
+        return enumerations
+      },
+      {}
+    )
+    return { catalog, fetch: universalFetch, enumerations }
   },
 })
 
