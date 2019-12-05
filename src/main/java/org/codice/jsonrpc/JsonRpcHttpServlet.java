@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class JsonRpcHttpServlet extends HttpServlet {
-  private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
+
+  private static final Gson GSON =
+      new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
 
   private Method method;
 
