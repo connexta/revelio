@@ -53,9 +53,10 @@ const server = new ApolloServer({
     }, {})
 
     const enumerations = Object.keys(enumerationMethods).reduce(
-      (catalog, method) => {
-        catalog[method] = params => request(enumerationMethods[method], params)
-        return catalog
+      (enumerations, method) => {
+        enumerations[method] = params =>
+          request(enumerationMethods[method], params)
+        return enumerations
       },
       {}
     )
