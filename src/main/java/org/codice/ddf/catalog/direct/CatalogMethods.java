@@ -15,6 +15,7 @@ import ddf.catalog.CatalogFramework;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.AttributeRegistry;
+import ddf.catalog.data.AttributeType.AttributeFormat;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.MetacardType;
 import ddf.catalog.data.Result;
@@ -44,6 +45,7 @@ import ddf.catalog.source.IngestException;
 import ddf.catalog.source.SourceUnavailableException;
 import ddf.catalog.source.UnsupportedQueryException;
 import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,6 +57,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -539,10 +542,22 @@ public class CatalogMethods implements MethodSet {
       if (attribute == null) {
         continue;
       }
+
+      Function<Object, Object> preprocessor = Function.identity();
+      if (AttributeFormat.BINARY.equals(ad.getType().getAttributeFormat())) {
+        preprocessor =
+            preprocessor.andThen(
+                input ->
+                    new String(
+                        Base64.getEncoder().encode((byte[]) input), Charset.defaultCharset()));
+      }
+
       if (ad.isMultiValued()) {
-        builder.put(attribute.getName(), attribute.getValues());
+        builder.put(
+            attribute.getName(),
+            attribute.getValues().stream().map(preprocessor).collect(Collectors.toList()));
       } else {
-        builder.put(attribute.getName(), attribute.getValue());
+        builder.put(attribute.getName(), preprocessor.apply(attribute.getValue()));
       }
     }
     return builder.build();
