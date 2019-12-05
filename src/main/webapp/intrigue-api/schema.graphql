@@ -278,7 +278,7 @@ type FacetResult {
 }
 
 type Suggestion {
-  id: String!
+  id: ID!
   name: String!
 }
 
