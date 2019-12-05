@@ -324,14 +324,14 @@ const metacardStartingTypes = [
   },
 ]
 
-const metacardTypes = async (parent, args, { fetch }) => {
+const metacardTypes = async (parent, args, { fetch, catalog }) => {
   const res = await fetch(`${ROOT}/metacardtype`)
   const json = await res.json()
 
   const types = Object.keys(json).reduce((types, group) => {
     return Object.assign(types, json[group])
   }, {})
-  const enums = await getEnumerations(parent, args, { fetch })
+  const enums = await getEnumerations(parent, args, { fetch, catalog })
   Object.keys(enums).forEach(attribute => {
     types[attribute].enums = enums[attribute]
   })
