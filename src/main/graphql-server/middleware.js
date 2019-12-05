@@ -7,10 +7,21 @@ import createRpcClient from '../webapp/intrigue-api/rpc'
 const fetch = require('../webapp/intrigue-api/fetch')
 const { resolvers } = require('../webapp/intrigue-api/graphql')
 
+const btoa = arg => {
+  return Buffer.from(arg).toString('base64')
+}
+
+const Authorization = 'Basic ' + btoa('admin:admin')
+
 const app = express.Router()
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  playground: {
+    headers: {
+      Authorization,
+    },
+  },
   context: ({ req }) => {
     const { authorization = '' } = req.headers
     const universalFetch = (url, opts = {}) => {
