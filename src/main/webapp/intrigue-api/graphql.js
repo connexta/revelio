@@ -324,28 +324,28 @@ const metacardStartingTypes = [
   },
 ]
 
-const metacardTypes = async (parent, args, { fetch, catalog }) => {
+const metacardTypes = async (parent, args, { fetch, enumerations }) => {
   const res = await fetch(`${ROOT}/metacardtype`)
   const json = await res.json()
 
   const types = Object.keys(json).reduce((types, group) => {
     return Object.assign(types, json[group])
   }, {})
-  const enums = await getEnumerations(parent, args, { fetch, catalog })
+  const enums = await getEnumerations(parent, args, { fetch, enumerations })
   Object.keys(enums).forEach(attribute => {
     types[attribute].enums = enums[attribute]
   })
   return metacardStartingTypes.concat(Object.keys(types).map(k => types[k]))
 }
 
-const getEnumerations = async (parent, args, { fetch, catalog }) => {
-  const { enumerations } = await catalog.getAllEnumerations({})
+const getEnumerations = async (parent, args, { fetch, enumerations }) => {
+  const { enumerations: enums } = await enumerations.getAllEnumerations({})
 
   const { enums: configEnums } = await (await fetch(`${ROOT}/config`)).json()
 
-  Object.assign(enumerations, configEnums)
+  Object.assign(enums, configEnums)
 
-  return enumerations
+  return enums
 }
 
 const facet = async (parent, args, { catalog }) => {
