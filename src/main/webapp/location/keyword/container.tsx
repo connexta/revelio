@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { geometry, shapes } from 'geospatialdraw'
+import { geometry } from 'geospatialdraw'
 import { useLazyQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import {
@@ -71,17 +71,14 @@ const Container: React.SFC<Props> = ({
   React.useEffect(
     () => {
       if (selectedId) {
-        const geo = geometry.makeGeometry(
-          geofeature.properties.id,
+        const geo = geometry.geoJSONToGeometryJSON(geofeature.properties.id, {
           geofeature,
-          geofeature.properties.color,
-          shapes.POLYGON
-        )
-        geo.properties = {
-          ...value.properties,
-          keyword: input,
-          keywordId: selectedId,
-        }
+          properties: {
+            ...value.properties,
+            keyword: input,
+            keywordId: selectedId,
+          },
+        })
         onChange(geo)
       }
     },

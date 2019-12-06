@@ -1,10 +1,9 @@
-import { geometry, shapes } from 'geospatialdraw'
+import { geometry } from 'geospatialdraw'
 import WKT from 'ol/format/WKT'
 import GeoJSON from 'ol/format/GeoJSON'
 
 const wktFormatter = new WKT()
 const geojsonFormatter = new GeoJSON()
-const shapeDetector = new shapes.ShapeDetector()
 
 export const geoToWKT = (geo: geometry.GeometryJSON): string =>
   wktFormatter.writeFeature(geojsonFormatter.readFeature(geo))
@@ -24,14 +23,14 @@ export const wktToGeo = ({
   bufferUnit,
   properties = {},
 }: WKTProps): geometry.GeometryJSON => {
-  const feature = wktFormatter.readFeature(wkt)
-  return geometry.makeGeometry(
-    id,
-    geojsonFormatter.writeFeatureObject(feature),
-    (properties as any).color || '',
-    shapeDetector.shapeFromFeature(feature),
-    buffer,
-    bufferUnit,
-    properties
-  )
+  const geo = wktFormatter.readGeometry(wkt)
+  return geometry.geoJSONToGeometryJSON(id, {
+    type: 'Feature',
+    geometry: geojsonFormatter.writeGeometryObject(geo),
+    properties: {
+      ...properties,
+      buffer,
+      bufferUnit,
+    },
+  })
 }
