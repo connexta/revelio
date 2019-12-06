@@ -13,7 +13,6 @@ import { BasicEditorProps } from './geo-editor'
 import { geometry, shapes } from 'geospatialdraw'
 
 type LocationType = 'line' | 'polygon' | 'pointRadius' | 'bbox' | 'keyword'
-const defaultLocationType: LocationType = 'line'
 
 type LocationTypeComponentMap = {
   [type in LocationType]: {
@@ -57,31 +56,38 @@ const componentMap: LocationTypeComponentMap = {
   },
 }
 
+type ShapeToLocationTypeMap = { [key: string]: LocationType }
+
+const shapeToLocationTypeMap: ShapeToLocationTypeMap = {
+  [shapes.LINE]: 'line',
+  [shapes.POLYGON]: 'polygon',
+  [shapes.POINT_RADIUS]: 'pointRadius',
+  [shapes.POINT]: 'pointRadius',
+  [shapes.BOUNDING_BOX]: 'bbox',
+}
+
 const Location: React.SFC<Props> = ({
   value,
   onChange,
   editorProps = {} as EditorPropsMap,
 }) => {
-  const [locationType, setLocationType] = React.useState<LocationType>(
-    defaultLocationType
+  const locationType: LocationType = componentMap.hasOwnProperty(
+    value.properties.locationType
   )
-  const { Component, shape } = componentMap[locationType]
-  const [editValue, setEditValue] = React.useState<geometry.GeometryJSON>(value)
+    ? value.properties.locationType
+    : shapeToLocationTypeMap[value.properties.shape]
+  const Component = componentMap[locationType].Component
   const extendedComponentProps = editorProps.hasOwnProperty(locationType)
     ? editorProps[locationType]
     : {}
-  React.useEffect(
-    () => {
-      if (JSON.stringify(editValue) !== JSON.stringify(value)) {
-        setEditValue(value)
-      }
-    },
-    [value]
-  )
   const onSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setLocationType(e.target.value as LocationType)
-    const geo = geometry.makeEmptyGeometry(editValue.properties.id, shape)
-    setEditValue(geo)
+    const updatedType = e.target.value as LocationType
+    const shape = componentMap[updatedType].shape
+    const geo = geometry.makeEmptyGeometry(value.properties.id, shape, {
+      ...value.properties,
+      locationType: updatedType,
+    })
+    onChange(geo)
   }
   return (
     <FormControl fullWidth>
@@ -94,7 +100,7 @@ const Location: React.SFC<Props> = ({
         ))}
       </Select>
       <Component
-        value={editValue}
+        value={value}
         onChange={onChange}
         {...extendedComponentProps}
       />
