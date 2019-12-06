@@ -91,13 +91,14 @@ Object.keys(editors).forEach(key => {
   })
 })
 
-const useKeywordProps = (
-  geoId,
-  initialValue = geometry.makeEmptyGeometry(geoId, shapes.POLYGON)
-) => {
+const useKeywordProps = initialValue => {
   const minimumInputLength = 2
   const [isOpen, setIsOpen] = useState(false)
-  const [value, setValue] = useState(initialValue)
+  const [value, setValue] = useState(
+    typeof initialValue === 'string'
+      ? geometry.makeEmptyGeometry(initialValue, shapes.POLYGON)
+      : initialValue
+  )
   const [input, setInput] = useState(value.properties.keyword || '')
   const onChange = update => {
     action('onChange')(update)
@@ -219,8 +220,7 @@ stories.add(`keyword`, () => {
 
 stories.add(`keyword prefilled`, () => {
   const props = useKeywordProps(
-    'keyword',
-    geometry.geoJSONToGeometryJSON('keyword', {
+    geometry.geoJSONToGeometryJSON('keyword-prefilled', {
       type: 'Feature',
       geometry: {
         type: 'Polygon',
@@ -244,11 +244,75 @@ stories.add(`keyword prefilled`, () => {
 })
 
 stories.add(`location`, () => {
-  const { value, onChange, ...keywordProps } = useKeywordProps('location')
+  const [value, setValue] = useState(
+    geometry.makeEmptyGeometry('location', shapes.LINE)
+  )
+  const keywordProps = useKeywordProps(value)
   return (
     <Location
       value={value}
-      onChange={onChange}
+      onChange={update => {
+        action('onChange')(update)
+        setValue(update)
+      }}
+      editorProps={{
+        keyword: keywordProps,
+      }}
+    />
+  )
+})
+
+stories.add(`location with keyword`, () => {
+  const [value, setValue] = useState(
+    geometry.geoJSONToGeometryJSON('location-keyword', {
+      type: 'Feature',
+      geometry: {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [-77.3811, 42.5304],
+            [-77.1811, 42.5304],
+            [-77.1811, 42.7304],
+            [-77.3811, 42.7304],
+            [-77.3811, 42.5304],
+          ],
+        ],
+      },
+      properties: {
+        keyword: 'Italy',
+        keywordId: '1dc06d71-dc20-44d5-b211-de33816071c1',
+        buffer: 50,
+        bufferUnit: geometry.MILES,
+      },
+    })
+  )
+  const keywordProps = useKeywordProps(value)
+  return (
+    <Location
+      value={value}
+      onChange={update => {
+        action('onChange')(update)
+        setValue(update)
+      }}
+      editorProps={{
+        keyword: keywordProps,
+      }}
+    />
+  )
+})
+
+stories.add(`location with bounding box`, () => {
+  const [value, setValue] = useState(
+    geometry.makeBBoxGeo('location-bbox', [20, 30, 50, 50])
+  )
+  const keywordProps = useKeywordProps(value)
+  return (
+    <Location
+      value={value}
+      onChange={update => {
+        action('onChange')(update)
+        setValue(update)
+      }}
       editorProps={{
         keyword: keywordProps,
       }}

@@ -66,27 +66,43 @@ const shapeToLocationTypeMap: ShapeToLocationTypeMap = {
   [shapes.BOUNDING_BOX]: 'bbox',
 }
 
+const shapeDetector = new shapes.ShapeDetector()
+
+const locationTypeFromGeo = (geo: geometry.GeometryJSON): LocationType => {
+  if (
+    typeof geo.properties.keyword === 'string'
+  ) {
+    return 'keyword'
+  } else {
+    const shape = geo.properties.shape || shapeDetector.shapeFromGeoJSON(geo)
+    return shapeToLocationTypeMap[shape]
+  }
+}
+
 const Location: React.SFC<Props> = ({
   value,
   onChange,
   editorProps = {} as EditorPropsMap,
 }) => {
-  const locationType: LocationType = componentMap.hasOwnProperty(
-    value.properties.locationType
-  )
-    ? value.properties.locationType
-    : shapeToLocationTypeMap[value.properties.shape]
+  const locationType = locationTypeFromGeo(value)
   const Component = componentMap[locationType].Component
   const extendedComponentProps = editorProps.hasOwnProperty(locationType)
     ? editorProps[locationType]
     : {}
   const onSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    // the geo must match the location type
     const updatedType = e.target.value as LocationType
     const shape = componentMap[updatedType].shape
-    const geo = geometry.makeEmptyGeometry(value.properties.id, shape, {
-      ...value.properties,
-      locationType: updatedType,
-    })
+    const { id, keyword = '', keywordId = '', ...rest } = value.properties
+    const properties =
+      updatedType === 'keyword'
+        ? {
+            ...rest,
+            keyword,
+            keywordId,
+          }
+        : rest
+    const geo = geometry.makeEmptyGeometry(id, shape, properties)
     onChange(geo)
   }
   return (
