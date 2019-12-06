@@ -38,6 +38,7 @@ export const LogIn = props => {
         fullwidth
         label="Password"
         variant="outlined"
+        type="password"
         style={{ marginBottom: 20 }}
       />
       <Button
