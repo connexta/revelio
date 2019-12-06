@@ -3,10 +3,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.codice.ddf</groupId>
-    <artifactId>jsonrpc-api</artifactId>
-    <version>1.0.0</version>
+    <groupId>org.connexta</groupId>
+    <artifactId>revelio</artifactId>
+    <version>0.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
+    <name>Connexta :: Revelio</name>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -14,7 +15,31 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <ddf.version>2.18.0</ddf.version>
         <opengis.version>19.1</opengis.version>
+        <releases.repository.url />
+        <snapshots.repository.url />
     </properties>
+
+    <scm>
+        <url>https://github.com/connexta/revelio</url>
+        <connection>scm:git:https://github.com/connexta/revelio.git</connection>
+        <developerConnection>scm:git:https://github.com/connexta/revelio.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>${snapshots.repository.url}</url>
+        </snapshotRepository>
+        <repository>
+            <id>releases</id>
+            <url>${releases.repository.url}</url>
+        </repository>
+        <site>
+            <id>reports</id>
+            <url>${reports.repository.url}</url>
+        </site>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -87,6 +112,11 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+            </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
