@@ -69,9 +69,7 @@ const shapeToLocationTypeMap: ShapeToLocationTypeMap = {
 const shapeDetector = new shapes.ShapeDetector()
 
 const locationTypeFromGeo = (geo: geometry.GeometryJSON): LocationType => {
-  if (
-    typeof geo.properties.keyword === 'string'
-  ) {
+  if (typeof geo.properties.keyword === 'string') {
     return 'keyword'
   } else {
     const shape = geo.properties.shape || shapeDetector.shapeFromGeoJSON(geo)
