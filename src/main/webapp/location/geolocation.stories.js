@@ -91,12 +91,13 @@ Object.keys(editors).forEach(key => {
   })
 })
 
-const useKeywordProps = geoId => {
+const useKeywordProps = (
+  geoId,
+  initialValue = geometry.makeEmptyGeometry(geoId, shapes.POLYGON)
+) => {
   const minimumInputLength = 2
   const [isOpen, setIsOpen] = useState(false)
-  const [value, setValue] = useState(
-    geometry.makeEmptyGeometry(geoId, shapes.POLYGON)
-  )
+  const [value, setValue] = useState(initialValue)
   const [input, setInput] = useState(value.properties.keyword || '')
   const onChange = update => {
     action('onChange')(update)
@@ -214,6 +215,32 @@ const useKeywordProps = geoId => {
 
 stories.add(`keyword`, () => {
   const [props] = useKeywordProps('keyword')
+  return <Keyword {...props} />
+})
+
+stories.add(`keyword prefilled`, () => {
+  const [props] = useKeywordProps('keyword', {
+    type: 'Feature',
+    geometry: {
+      type: 'Polygon',
+      coordinates: [
+        [
+          [-77.3811, 42.5304],
+          [-77.1811, 42.5304],
+          [-77.1811, 42.7304],
+          [-77.3811, 42.7304],
+          [-77.3811, 42.5304],
+        ],
+      ],
+    },
+    properties: {
+      id: 'keyword-prefilled',
+      shape: 'Polygon',
+      color: '',
+      keyword: 'Italy',
+      keywordId: '1dc06d71-dc20-44d5-b211-de33816071c1',
+    },
+  })
   return <Keyword {...props} />
 })
 
