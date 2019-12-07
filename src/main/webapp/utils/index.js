@@ -1,1 +1,1 @@
-export { mergeDeep, mergeDeepOverwriteLists } from './immutable-utils'
+module.exports = require('./immutable-utils')

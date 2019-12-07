@@ -1,11 +1,13 @@
-const { genSchema } = require('../webapp/intrigue-api/gen-schema')
 const { ApolloServer } = require('apollo-server-express')
 const express = require('express')
-const typeDefs = genSchema()
 const renderer = require('./helpers/renderer')
 import createRpcClient from '../webapp/intrigue-api/rpc'
 const fetch = require('../webapp/intrigue-api/fetch')
-const { resolvers } = require('../webapp/intrigue-api/graphql')
+const {
+  resolvers,
+  typeDefs,
+  context,
+} = require('../webapp/intrigue-api/graphql')
 
 const btoa = arg => {
   return Buffer.from(arg).toString('base64')
@@ -22,7 +24,9 @@ const server = new ApolloServer({
       Authorization,
     },
   },
-  context: ({ req }) => {
+  context: args => {
+    const { req } = args
+
     const { authorization = '' } = req.headers
     const universalFetch = (url, opts = {}) => {
       return fetch(url, {
@@ -60,9 +64,57 @@ const server = new ApolloServer({
       },
       {}
     )
-    return { catalog, fetch: universalFetch, enumerations }
+    return { catalog, fetch: universalFetch, enumerations, ...context(args) }
   },
 })
+
+// Useful for getting example request/responses from the graphql endpoint.
+// Off by default.
+const captureGraphql = () => {
+  // eslint-disable-next-line no-console
+  console.log('GraphQL capturing enabled.')
+  const captures = []
+
+  return (req, res, next) => {
+    if (req.path === '/captures') {
+      return res.json(captures)
+    }
+
+    if (req.method !== 'POST') {
+      return next()
+    }
+
+    const request = req.body
+
+    const defaultWrite = res.write
+    const defaultEnd = res.end
+    const chunks = []
+
+    res.write = (...restArgs) => {
+      chunks.push(new Buffer(restArgs[0]))
+      defaultWrite.apply(res, restArgs)
+    }
+
+    res.end = (...restArgs) => {
+      if (restArgs[0]) {
+        chunks.push(new Buffer(restArgs[0]))
+      }
+
+      const response = JSON.parse(Buffer.concat(chunks).toString('utf8'))
+
+      captures.push({ request, response })
+
+      defaultEnd.apply(res, restArgs)
+    }
+
+    next()
+  }
+}
+
+if (process.env.GRAPHQL_CAPTURE) {
+  router.use(express.json())
+  router.use('/graphql', captureGraphql())
+}
 
 server.applyMiddleware({ app: router })
 router.use('*', renderer)
