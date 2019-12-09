@@ -23,7 +23,6 @@ export const LogIn = props => {
     let flip = !values['showPassword']
     setValues({ showPassword: flip })
   }
-  const logIn = props.logIn()
   return (
     <div
       style={{
