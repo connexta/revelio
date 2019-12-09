@@ -1,4 +1,7 @@
 language: java
+sudo: 'required'
+services:
+  - 'docker'
 node_js:
   - '10.16.1'
 cache: yarn
@@ -6,6 +9,7 @@ before_install:
   - nvm install 10
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.17.3
   - export PATH="$HOME/.yarn/bin:$PATH"
+  - './.travis/main.sh'
 script:
   - set -e
   - mvn clean install
@@ -13,9 +17,15 @@ script:
   - yarn test
   - yarn build
   - set +e
+  - 'make image'
 branches:
   only:
   - master
+after_success:
+  - if [[ "$TRAVIS_BRANCH" == "docker-aws" ]]; then
+    docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD ;
+    make push-image ;
+  fi
 deploy:
   provider: pages
   skip-cleanup: true
@@ -24,3 +34,8 @@ deploy:
   target-branch: gh-pages
   on:
     branch: master
+  # Setup registry deployment
+  provider: script
+  script: bash scripts/deploy.sh 
+  on:
+    branch: docker-aws
