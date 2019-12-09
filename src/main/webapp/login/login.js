@@ -1,13 +1,10 @@
 import React from 'react'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
-import FormControl from '@material-ui/core/FormControl'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import FormLabel from '@material-ui/core/FormLabel'
-import OutlinedInput from '@material-ui/core/OutlinedInput'
-import InputLabel from '@material-ui/core/InputLabel'
 import IconButton from '@material-ui/core/IconButton'
 
 export const LogIn = props => {
@@ -45,17 +42,15 @@ export const LogIn = props => {
         style={{ marginBottom: 20 }}
         onBlur={handleChange('username')}
       />
-      <FormControl
-        fullWidth
+      <TextField
         required
+        fullWidth
         variant="outlined"
+        label="Password"
+        type={values.showPassword ? 'text' : 'password'}
         style={{ marginBottom: 20 }}
-      >
-        <InputLabel>Password</InputLabel>
-        <OutlinedInput
-          labelWidth={80}
-          type={values.showPassword ? 'text' : 'password'}
-          endAdornment={
+        InputProps={{
+          endAdornment: (
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle-password-visibility"
@@ -64,10 +59,10 @@ export const LogIn = props => {
                 {values.showPassword ? <Visibility /> : <VisibilityOff />}
               </IconButton>
             </InputAdornment>
-          }
-          onBlur={handleChange('password')}
-        />
-      </FormControl>
+          ),
+        }}
+        onBlur={handleChange('password')}
+      />
       <Button
         variant="contained"
         color="primary"
