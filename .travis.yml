@@ -24,9 +24,9 @@ branches:
   - docker-aws
 after_success:
   - if [[ "$TRAVIS_BRANCH" == "docker-aws" ]]; then
-    docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD ;
-    make push-image ;
-  fi
+      docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD ;
+      make push-image ;
+    fi
 deploy:
   provider: pages
   skip-cleanup: true
