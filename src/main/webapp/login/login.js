@@ -1,21 +1,29 @@
 import React from 'react'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+import FormControl from '@material-ui/core/FormControl'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import FormLabel from '@material-ui/core/FormLabel'
-import gql from 'graphql-tag'
-import { useMutation } from '@apollo/react-hooks'
-
-export const logIn = () => {
-  const mutation = gql`
-    mutation LogIn($username: String!, $password: String!) {
-      logIn(userName: $username, password: $password)
-    }
-  `
-  return useMutation(mutation)
-}
+import OutlinedInput from '@material-ui/core/OutlinedInput'
+import InputLabel from '@material-ui/core/InputLabel'
+import IconButton from '@material-ui/core/IconButton'
 
 export const LogIn = props => {
-  const [logIn] = logIn()
+  const [values, setValues] = React.useState({
+    username: '',
+    password: '',
+    showPassword: false,
+  })
+  const handleChange = prop => event => {
+    setValues({ values, [prop]: event.target.value })
+  }
+  const changePasswordVisibility = () => {
+    let flip = !values['showPassword']
+    setValues({ showPassword: flip })
+  }
+  const logIn = props.logIn()
   return (
     <div
       style={{
@@ -33,18 +41,34 @@ export const LogIn = props => {
         autoFocus
         required
         fullWidth
+        variant="outlined"
         label="Username"
-        variant="outlined"
         style={{ marginBottom: 20 }}
+        onBlur={handleChange('username')}
       />
-      <TextField
+      <FormControl
+        fullWidth
         required
-        fullwidth
-        label="Password"
         variant="outlined"
-        type="password"
         style={{ marginBottom: 20 }}
-      />
+      >
+        <InputLabel>Password</InputLabel>
+        <OutlinedInput
+          labelWidth={80}
+          type={values.showPassword ? 'text' : 'password'}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle-password-visibility"
+                onClick={changePasswordVisibility}
+              >
+                {values.showPassword ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            </InputAdornment>
+          }
+          onBlur={handleChange('password')}
+        />
+      </FormControl>
       <Button
         variant="contained"
         color="primary"
