@@ -12,7 +12,6 @@ before_install:
   - './.travis/main.sh'
 script:
   - set -e
-  - mvn clean install
   - yarn install --frozen-lockfile
   - yarn build-bundles
   - set +e
