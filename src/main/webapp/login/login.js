@@ -3,15 +3,19 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import FormLabel from '@material-ui/core/FormLabel'
 import gql from 'graphql-tag'
+import { useMutation } from '@apollo/react-hooks'
 
-export const logIn = gql`
-  query LogIn {
-    logIn {
-      setCookie
+export const logIn = () => {
+  const mutation = gql`
+    mutation LogIn($username: String!, $password: String!) {
+      logIn(userName: $username, password: $password)
     }
-  }
-`
+  `
+  return useMutation(mutation)
+}
+
 export const LogIn = props => {
+  const [logIn] = logIn()
   return (
     <div
       style={{
