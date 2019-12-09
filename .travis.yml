@@ -14,8 +14,7 @@ script:
   - set -e
   - mvn clean install
   - yarn install --frozen-lockfile
-  - yarn test
-  - yarn build
+  - yarn build-bundles
   - set +e
   - 'make image'
 branches:
