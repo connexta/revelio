@@ -38,10 +38,6 @@ if (process.env.NODE_ENV !== 'production') {
   module.hot.accept('./routes', () => {
     render(require('./routes').default, createClientApollo())
   })
-  module.hot.accept('./store', () => {
-    const { rootReducer } = require('./store')
-    store.replaceReducer(rootReducer)
-  })
   module.hot.accept('./intrigue-api/graphql', () => {
     const { createClientApollo } = require('./intrigue-api/graphql')
     render(require('./routes').default, createClientApollo())
