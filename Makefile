@@ -1,4 +1,4 @@
-IMAGE := schachte/revelio
+IMAGE := meschachte/revelio
 image: 
 	docker build -t $(IMAGE) .
 
