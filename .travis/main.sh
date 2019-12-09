@@ -10,7 +10,6 @@ set -o errexit
 # concise way via function invocations.
 main() {
   setup_dependencies
-  update_docker_configuration
 
   echo "SUCCESS:
   Done! Finished setting up Travis machine.
@@ -30,32 +29,15 @@ setup_dependencies() {
   Setting up dependencies.
   "
 
-  sudo apt update -y
-  sudo apt install realpath python python-pip -y
-  sudo apt install --only-upgrade docker-ce -y
-
-  sudo pip install docker-compose || true
+#  sudo apt-get update -y
+#  sudo apt-get curl
+#  sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+#  sudo chmod +x /usr/local/bin/docker-compose
 
   docker info
   docker-compose --version
-}
 
-# Tweak the daemon configuration so that we
-# can make use of experimental features (like image
-# squashing) as well as have a bigger amount of
-# concurrent downloads and uploads.
-update_docker_configuration() {
-  echo "INFO:
-  Updating docker configuration
-  "
-
-  echo '{
-  "experimental": true,
-  "storage-driver": "overlay2",
-  "max-concurrent-downloads": 50,
-  "max-concurrent-uploads": 50
-}' | sudo tee /etc/docker/daemon.json
-  sudo service docker restart
+  echo "Completed Installation Setup"
 }
 
 main
