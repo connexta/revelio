@@ -485,42 +485,39 @@ const executableSchema = makeExecutableSchema({
   resolvers,
 })
 
-const serverLocation =
-  process.env.SERVER_LOCATION || 'http://localhost:8080/graphql'
-
-const defaultOptions = {
-  ssrMode: false,
-}
-
 const btoa = arg => {
   if (typeof window !== 'undefined') {
     return window.btoa(arg)
   }
   return Buffer.from(arg).toString('base64')
 }
-const createClient = (options = defaultOptions) => {
+const createServerApollo = () => {
   const cache = new InMemoryCache()
-  const { ssrMode } = options
-  const auth = btoa('admin:admin')
-  if (typeof window !== 'undefined') {
-    cache.restore(window.__APOLLO_STATE__)
-  }
   return new ApolloClient({
-    link: ssrMode
-      ? new SchemaLink({ schema: executableSchema })
-      : new BatchHttpLink({
-          uri: serverLocation,
-          credentials: 'same-origin',
-          headers: {
-            Authorization: `Basic ${auth}`,
-          },
-        }),
+    link: new SchemaLink({ schema: executableSchema }),
+    ssrMode: true,
     cache,
-    ssrMode,
+  })
+}
+
+const createClientApollo = () => {
+  const cache = new InMemoryCache()
+  const auth = btoa('admin:admin')
+  cache.restore(window.__APOLLO_STATE__)
+  return new ApolloClient({
+    link: new BatchHttpLink({
+      uri: '/graphql',
+      credentials: 'same-origin',
+      headers: {
+        Authorization: `Basic ${auth}`,
+      },
+    }),
+    cache,
   })
 }
 
 module.exports = {
-  createClient,
+  createClientApollo,
+  createServerApollo,
   resolvers,
 }

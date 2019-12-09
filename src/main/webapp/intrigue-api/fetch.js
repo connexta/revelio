@@ -22,8 +22,8 @@ const cacheBust = urlString => {
   const { query, ...rest } = url.parse(urlString)
   return url.format({
     ...rest,
-    hostname: 'localhost',
-    port: '8993',
+    hostname: process.env.DDF_HOST_NAME || 'localhost',
+    port: process.env.DDF_PORT || '8993',
     protocol: 'https:',
     ...(typeof window !== 'undefined' ? window.location : {}),
     pathname: rest.pathname,
@@ -40,6 +40,7 @@ module.exports = (url, { headers, ...opts } = {}) => {
       'User-Agent': 'ace',
       'X-Requested-With': 'XMLHttpRequest',
       'Content-Type': 'application/json',
+      // TODO: Fix this for prod
       Referer: `https://localhost:8993`,
       ...headers,
     },
