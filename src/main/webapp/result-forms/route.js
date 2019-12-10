@@ -3,7 +3,7 @@ import React, { Fragment, useState } from 'react'
 import gql from 'graphql-tag'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 
-import ResultFroms from './result-forms'
+import ResultForms from './result-forms'
 
 import Dialog from '@material-ui/core/Dialog'
 
@@ -171,14 +171,13 @@ const fragment = gql`
     title
     description
     modified: metacard_modified
-    metacard_modified
-    metacard_owner
+    owner: metacard_owner
     attributes: ui_attribute_group
   }
 `
 
-const searchForms = gql`
-  query SearchForms {
+const resultForms = gql`
+  query ResultForms {
     metacardsByTag(tag: "attribute-group") {
       attributes {
         ...ResultFormAttributes
@@ -191,7 +190,7 @@ const searchForms = gql`
 
 const useCreate = () => {
   const mutation = gql`
-    mutation CreateSearchForms($attrs: MetacardAttributesInput!) {
+    mutation CreateResultForms($attrs: MetacardAttributesInput!) {
       createMetacard(attrs: $attrs) {
         ...ResultFormAttributes
         owner: metacard_owner
@@ -202,7 +201,7 @@ const useCreate = () => {
 
   return useMutation(mutation, {
     update: (cache, { data }) => {
-      const query = searchForms
+      const query = resultForms
 
       const { metacardsByTag } = cache.readQuery({ query })
       const attributes = metacardsByTag.attributes
@@ -224,7 +223,7 @@ const useCreate = () => {
 
 const useSave = () => {
   const mutation = gql`
-    mutation SaveSearchForms($id: ID!, $attrs: MetacardAttributesInput!) {
+    mutation SaveResultForms($id: ID!, $attrs: MetacardAttributesInput!) {
       saveMetacard(id: $id, attrs: $attrs) {
         ...ResultFormAttributes
       }
@@ -236,14 +235,14 @@ const useSave = () => {
 
 const useDelete = () => {
   const mutation = gql`
-    mutation DeleteSearchForms($id: ID!) {
+    mutation DeleteResultForms($id: ID!) {
       deleteMetacard(id: $id)
     }
   `
 
   return useMutation(mutation, {
     update: (cache, { data }) => {
-      const query = searchForms
+      const query = resultForms
 
       const { metacardsByTag } = cache.readQuery({ query })
       const attributes = metacardsByTag.attributes.filter(
@@ -283,7 +282,7 @@ export const Editor = props => {
   }
 
   return (
-    <ResultFroms
+    <ResultForms
       style={{
         maxHeight: '60vh',
       }}
@@ -311,7 +310,7 @@ const EditorWithAttributes = props => {
 }
 
 export default () => {
-  const { loading, error, data } = useQuery(searchForms)
+  const { loading, error, data } = useQuery(resultForms)
 
   const [create] = useCreate()
   const [save] = useSave()
@@ -326,13 +325,15 @@ export default () => {
   }
 
   const onCreate = form => {
-    const { attributes, ...rest } = form
+    const { attributes, modified, owner, ...rest } = form
     create({
       variables: {
         attrs: {
           ui_attribute_group: attributes,
           metacard_type: 'attribute-group',
           metacard_tags: ['VALID', 'attribute-group'],
+          metacard_modified: modified,
+          metacard_owner: owner,
           ...rest,
         },
       },
@@ -340,12 +341,14 @@ export default () => {
   }
 
   const onSave = form => {
-    const { attributes, ...rest } = form
+    const { attributes, modified, owner, ...rest } = form
     save({
       variables: {
         id: form.id,
         attrs: {
           ui_attribute_group: attributes,
+          metacard_modified: modified,
+          metacard_owner: owner,
           ...rest,
         },
       },

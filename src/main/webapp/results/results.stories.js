@@ -8,7 +8,6 @@ import tn from './story-thumb'
 import genResults from '../gen-results'
 
 const stories = storiesOf('Result', module)
-stories.addDecorator(Story => <Story />)
 
 const attributes = [
   'Title',

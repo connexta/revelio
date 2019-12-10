@@ -4,7 +4,6 @@ import { storiesOf } from './@storybook/react'
 import User from './user'
 
 const stories = storiesOf('User', module)
-stories.addDecorator(Story => <Story />)
 
 const Component = props => {
   const open = boolean('Open Drawer', true)

@@ -69,6 +69,8 @@ const loadDynamicRoute = route => {
       import(/* webpackChunkName: "simple-search" */ './simple-search'),
     'result-forms': () =>
       import(/* webpackChunkName: "result-forms" */ './result-forms'),
+    'search-forms': () =>
+      import(/* webpackChunkName: "search-forms" */ './search-forms'),
   }
 
   const loader = routes[route]
@@ -116,7 +118,12 @@ const routes = [
     loadDynamicRoute('simple-search')
   ),
   createRoute('/sources', 'Sources', CloudIcon, loadDynamicRoute('sources')),
-  createRoute('/search-forms', 'Search Forms', FindInPageIcon),
+  createRoute(
+    '/search-forms',
+    'Search Forms',
+    FindInPageIcon,
+    loadDynamicRoute('search-forms')
+  ),
   createRoute(
     '/result-forms',
     'Result Forms',

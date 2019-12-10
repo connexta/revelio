@@ -4,8 +4,6 @@ import { action } from '@connexta/ace/@storybook/addon-actions'
 
 const stories = storiesOf('QueryStatus', module)
 
-stories.addDecorator(Story => <Story />)
-
 import QueryStatus from './query-status'
 
 stories.add('one of each', () => {

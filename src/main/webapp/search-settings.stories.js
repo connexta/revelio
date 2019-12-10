@@ -7,8 +7,6 @@ import SortOrder from './search-settings'
 
 const stories = storiesOf('Search Settings', module)
 
-stories.addDecorator(Story => <Story />)
-
 const useSortState = (sorts = []) => {
   const [value, setState] = useState(sorts)
 

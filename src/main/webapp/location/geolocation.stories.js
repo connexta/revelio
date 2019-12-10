@@ -17,7 +17,6 @@ import withCoordinateUnitTabs from './with-coordinate-unit-tabs'
 const MOCK_AJAX_DELAY = 2000
 
 const stories = storiesOf('GeoLocation', module)
-stories.addDecorator(Story => <Story />)
 
 const editors = {
   pointRadius: {

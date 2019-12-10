@@ -5,8 +5,6 @@ import TimeRange, { validate } from './time-range'
 
 const stories = storiesOf('TimeRange', module)
 
-stories.addDecorator(Story => <Story />)
-
 stories.add('basic', () => {
   const [timeRange, setTimeRange] = React.useState({})
   return (

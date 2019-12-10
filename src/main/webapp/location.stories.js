@@ -8,7 +8,6 @@ import PointRadius, { validate as validatePointRadius } from './point-radius'
 import Polygon, { validate as validatePolygon } from './polygon'
 
 const stories = storiesOf('Location', module)
-stories.addDecorator(Story => <Story />)
 
 const lineState = Map({
   coordinates: [[[0, 0], [1, 1], [2, 2], [3, 3]]],
