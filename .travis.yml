@@ -23,6 +23,8 @@ branches:
 after_success:
   - if [[ "$TRAVIS_BRANCH" == "docker-aws" ]]; then
       echo "$TRAVIS_BRANCH"
+      echo "$DOCKER_HUB_USER"
+      echo "$DOCKER_HUB_PASSWORD"
       docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD ;
       make push-image ;
     fi
