@@ -1,13 +1,12 @@
 import { action } from '@connexta/ace/@storybook/addon-actions'
 import { storiesOf } from '../@storybook/react'
-import { withKnobs, select } from '@connexta/ace/@storybook/addon-knobs'
+import { select } from '@connexta/ace/@storybook/addon-knobs'
 import React, { useState } from 'react'
 import WorldMapWithDrawMenu from './world-map-with-draw-menu'
 import { geometry, shapes, coordinates } from 'geospatialdraw'
 import { DRAWING_STYLE, RENDERER_STYLE } from './map-style'
 
 const stories = storiesOf('Maps', module)
-stories.addDecorator(withKnobs)
 
 const PROJECTION = 'EPSG:4326'
 

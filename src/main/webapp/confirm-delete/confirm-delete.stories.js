@@ -2,13 +2,11 @@ import React from 'react'
 
 import { storiesOf } from '../@storybook/react'
 
-import { withKnobs, text } from '@connexta/ace/@storybook/addon-knobs'
+import { text } from '@connexta/ace/@storybook/addon-knobs'
 
 import { action } from '@connexta/ace/@storybook/addon-actions'
 
 const stories = storiesOf('ConfirmDelete', module)
-
-stories.addDecorator(withKnobs)
 
 import ConfirmDelete from '.'
 

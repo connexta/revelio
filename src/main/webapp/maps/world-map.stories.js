@@ -1,5 +1,5 @@
 import { storiesOf } from '../@storybook/react'
-import { withKnobs, select } from '@connexta/ace/@storybook/addon-knobs'
+import { select } from '@connexta/ace/@storybook/addon-knobs'
 import React from 'react'
 import WorldMap from './world-map'
 import { geometry, coordinates } from 'geospatialdraw'
@@ -42,7 +42,6 @@ const MAP_STYLE = feature =>
 const PROJECTION = 'EPSG:4326'
 
 const stories = storiesOf('Maps', module)
-stories.addDecorator(withKnobs)
 
 stories.add('bare map', () => {
   return (
