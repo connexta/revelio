@@ -1,7 +1,7 @@
 const { storiesOf } = require('../@storybook/react')
 import * as React from 'react'
 import { action } from '@storybook/addon-actions'
-import { withKnobs, number } from '@storybook/addon-knobs'
+import { number } from '@storybook/addon-knobs'
 import { useState } from 'react'
 import Filter from './filter'
 
@@ -41,7 +41,6 @@ const deserializedFilters = {
   filters: [nearFilter, rangeFilter],
 }
 
-stories.addDecorator(withKnobs)
 stories.add('basic', () => {
   const [filter, setFilter]: any = useState(baseFilterGroup)
 
