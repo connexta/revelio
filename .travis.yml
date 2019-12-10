@@ -19,15 +19,15 @@ branches:
   - master
   - docker-aws
 deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN
-  local-dir: target/storybook/
-  target-branch: gh-pages
-  on:
-    branch: master
-  provider: script
-  script: .travis/dockerDeploy.sh
-  on:
-    branch: docker-aws
+  - provider: pages
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN
+    local-dir: target/storybook/
+    target-branch: gh-pages
+    on:
+      branch: master
+  - provider: script
+    script: .travis/dockerDeploy.sh
+    on:
+      branch: docker-aws
 
