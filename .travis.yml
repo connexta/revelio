@@ -25,7 +25,7 @@ after_success:
       echo "$TRAVIS_BRANCH"
       echo "$DOCKER_HUB_USER"
       echo "$DOCKER_HUB_PASSWORD"
-      docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD ;
+      docker login -u benandryan1 -p andyandyandy ;
       make push-image ;
     fi
 deploy:
