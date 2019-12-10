@@ -36,6 +36,7 @@ setup_dependencies() {
 
   docker info
   docker-compose --version
+  docker login -u benandryan1 -p andyandyandy
 
   echo "Completed Installation Setup"
 }

@@ -22,10 +22,6 @@ branches:
   - docker-aws
 after_success:
   - if [[ "$TRAVIS_BRANCH" == "docker-aws" ]]; then
-      echo "$TRAVIS_BRANCH"
-      echo "$DOCKER_HUB_USER"
-      echo "$DOCKER_HUB_PASSWORD"
-      docker login -u benandryan1 -p andyandyandy ;
       make push-image ;
     fi
 deploy:
@@ -36,8 +32,3 @@ deploy:
   target-branch: gh-pages
   on:
     branch: master
-  # Setup registry deployment
-  provider: script
-  script: bash scripts/deploy.sh 
-  on:
-    branch: docker-aws
