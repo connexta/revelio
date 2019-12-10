@@ -1,16 +1,11 @@
 import * as React from 'react'
-import { geometry, coordinates as coordinateEditor } from 'geospatialdraw'
-import EditorProps from './geo-editor'
+import { coordinates as coordinateEditor } from 'geospatialdraw'
+import EditorProps, { BasicEditorProps } from './geo-editor'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 import SpacedLinearContainer from '../spaced-linear-container'
 
-type Props = {
-  value: geometry.GeometryJSON
-  onChange: (geo: geometry.GeometryJSON) => void
-}
-
-type OutputComponent = React.SFC<Props>
+type OutputComponent = React.SFC<BasicEditorProps>
 type EditorComponent = React.ComponentType<EditorProps>
 
 const tabMap: coordinateEditor.CoordinateUnit[] = [

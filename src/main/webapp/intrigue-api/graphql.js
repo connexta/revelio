@@ -370,6 +370,20 @@ const facet = async (parent, args, { catalog }) => {
   return facet
 }
 
+const geofeature = async (parent, args, { fetch }) => {
+  const response = await fetch(
+    `${ROOT}/geofeature?id=${encodeURIComponent(args.id)}`
+  )
+  return response.json()
+}
+
+const suggestions = async (parent, args, { fetch }) => {
+  const response = await fetch(
+    `${ROOT}/geofeature/suggestions?q=${encodeURIComponent(args.q)}`
+  )
+  return response.json()
+}
+
 const Query = {
   user,
   sources,
@@ -379,6 +393,8 @@ const Query = {
   metacardTypes,
   systemProperties,
   facet,
+  suggestions,
+  geofeature,
 }
 
 const createMetacard = async (parent, args, { catalog }) => {

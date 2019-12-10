@@ -1,22 +1,10 @@
 import * as React from 'react'
-import { geometry, coordinates as coordinateEditor } from 'geospatialdraw'
-import { Filter, INTERSECTS, ANY_GEO, GEOMETRY } from './filter'
-import { geoToWKT } from './geo-to-wkt'
+import { coordinates as coordinateEditor } from 'geospatialdraw'
 import FormControl from '@material-ui/core/FormControl'
 import FormLabel from '@material-ui/core/FormLabel'
 import Point from './point'
 import Props from './geo-editor'
 import SpacedLinearContainer from '../spaced-linear-container'
-
-export const generateFilter = (geo: geometry.GeometryJSON): Filter => ({
-  type: INTERSECTS,
-  property: ANY_GEO,
-  value: {
-    type: GEOMETRY,
-    value: geoToWKT(geo),
-  },
-  geojson: geo,
-})
 
 const BBox: React.SFC<Props> = ({ value, onChange, coordinateUnit }) => {
   const { id, bbox, properties } = coordinateEditor.geoToBBoxProps(value)

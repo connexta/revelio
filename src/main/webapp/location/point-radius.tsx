@@ -1,21 +1,9 @@
 import * as React from 'react'
-import { geometry, coordinates as coordinateEditor } from 'geospatialdraw'
-import { Filter, DWITHIN, ANY_GEO, GEOMETRY } from './filter'
-import { geoToWKT } from './geo-to-wkt'
+import { coordinates as coordinateEditor } from 'geospatialdraw'
 import Point from './point'
 import Props from './geo-editor'
 import Length from './length'
 import SpacedLinearContainer from '../spaced-linear-container'
-
-export const generateFilter = (geo: geometry.GeometryJSON): Filter => ({
-  type: DWITHIN,
-  property: ANY_GEO,
-  value: {
-    type: GEOMETRY,
-    value: geoToWKT(geo),
-  },
-  geojson: geo,
-})
 
 const PointRadius: React.SFC<Props> = ({
   value,

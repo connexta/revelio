@@ -14,7 +14,7 @@ import ResultTable from '../results/results'
 import { ClusterMap, RENDERER_STYLE } from '../maps'
 import WKT from 'ol/format/WKT'
 import GeoJSON from 'ol/format/GeoJSON'
-import { geometry, coordinates, shapes } from 'geospatialdraw'
+import { geometry, coordinates } from 'geospatialdraw'
 import { Set } from 'immutable'
 
 const AddVisualization = () => {
@@ -141,7 +141,6 @@ const Visualizations = props => {
 
   const wkt = new WKT({ splitCollection: true })
   const geoJSON = new GeoJSON()
-  const shapeDetector = new shapes.ShapeDetector()
   const MapVis = () => {
     const PROJECTION = 'EPSG:4326'
     const [selection, onSelect] = useSelectionInterface()
@@ -151,19 +150,19 @@ const Visualizations = props => {
           result.metacard.properties.location
             ? wkt
                 .readFeatures(result.metacard.properties.location)
-                .map(feature =>
-                  geometry.makeGeometry(
+                .map(locationGeo => {
+                  const featureGeo = geoJSON.writeFeatureObject(locationGeo)
+                  return geometry.geoJSONToGeometryJSON(
                     result.metacard.properties.id,
-                    geoJSON.writeFeatureObject(feature),
-                    '',
-                    shapeDetector.shapeFromFeature(feature),
-                    0,
-                    geometry.METERS,
                     {
-                      selected: selection.has(result.metacard.properties.id),
+                      ...featureGeo,
+                      properties: {
+                        ...featureGeo.properties,
+                        selected: selection.has(result.metacard.properties.id),
+                      },
                     }
                   )
-                )
+                })
             : []
       )
       .reduce((list, value) => list.concat(value), [])
