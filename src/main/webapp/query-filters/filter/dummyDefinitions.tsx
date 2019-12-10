@@ -41,7 +41,7 @@ export const sampleMetacardTypes = {
     enums: [],
   },
   location: {
-    type: 'GEOMETRY',
+    type: 'anyGeo',
     enums: [],
   },
   'topic.vocabulary': {
