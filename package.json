@@ -66,8 +66,7 @@
     "pretest": "ace format && eslint src",
     "test": "ace",
     "storybook": "ace storybook",
-    "build": "ace bundle && yarn storybook --static",
-    "build-bundles": "NODE_ENV=production ace bundle --middleware src/main/graphql-server/server.js",
+    "build": "NODE_ENV=production ace bundle --middleware src/main/graphql-server/server.js && yarn storybook --static",
     "prestart": "ace disable-idp"
   },
   "context-path": "/search/catalog/",
