@@ -245,9 +245,8 @@ const fetchQueryTemplates = async (parent, args, { fetch }) => {
 }
 
 const metacardsByTag = async (parent, args, context) => {
-  //TO-DO: Fix this to use graphql context
   if (args.tag === 'query-template') {
-    return fetchQueryTemplates()
+    return fetchQueryTemplates(parent, args, context)
   }
 
   return metacards(

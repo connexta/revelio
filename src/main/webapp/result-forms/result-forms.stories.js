@@ -5,8 +5,6 @@ import { action } from '@connexta/ace/@storybook/addon-actions'
 
 const stories = storiesOf('ResultFroms', module)
 
-stories.addDecorator(Story => <Story />)
-
 import { Set } from 'immutable'
 import { useUndoState } from '../react-hooks'
 

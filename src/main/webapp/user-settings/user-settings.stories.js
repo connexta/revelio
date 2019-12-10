@@ -12,7 +12,6 @@ import TimeSettings from './time-settings'
 import Settings from './user-settings'
 
 const stories = storiesOf('User Settings', module)
-stories.addDecorator(Story => <Story />)
 
 const sampleBlackList = [
   {

@@ -5,8 +5,6 @@ import { select } from '@connexta/ace/@storybook/addon-knobs'
 
 const stories = storiesOf('Thumbnail', module)
 
-stories.addDecorator(Story => <Story />)
-
 stories.add('Error', () => {
   return (
     <div

@@ -8,8 +8,6 @@ import Inspector from './inspector'
 
 const stories = storiesOf('Inspector', module)
 
-stories.addDecorator(Story => <Story />)
-
 stories.add('basic', () => {
   const sampleResult = select(
     'Result Set',

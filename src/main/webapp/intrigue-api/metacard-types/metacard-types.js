@@ -51,13 +51,6 @@ const metacardStartingTypes = [
     isInjected: false,
     enums: [],
   },
-  {
-    id: 'metacard-tags',
-    type: 'STRING',
-    multivalued: true,
-    isInjected: false,
-    enums: [],
-  },
 ]
 
 const getEnumerations = async (parent, args, { fetch, enumerations }) => {

@@ -178,8 +178,8 @@ const workspaces = gql`
       attributes {
         id
         title
-        metacard_owner
-        metacard_modified
+        owner: metacard_owner
+        modified: metacard_modified
       }
     }
   }
