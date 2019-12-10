@@ -40,8 +40,8 @@ export const sampleMetacardTypes = {
     type: 'LONG',
     enums: [],
   },
-  location: {
-    type: 'anyGeo',
+  anyGeo: {
+    type: 'GEOMETRY',
     enums: [],
   },
   'topic.vocabulary': {
