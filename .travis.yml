@@ -21,6 +21,7 @@ branches:
   - master
   - docker-aws
 after_success:
+  #Should update the branch of this to master
   - if [[ "$TRAVIS_BRANCH" == "docker-aws" ]]; then
       make push-image ;
     fi
