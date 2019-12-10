@@ -1,16 +1,10 @@
 import React, { useState } from 'react'
 import { storiesOf } from '../@storybook/react'
-import {
-  withKnobs,
-  number,
-  boolean,
-  text,
-} from '@connexta/ace/@storybook/addon-knobs'
+import { number, boolean, text } from '@connexta/ace/@storybook/addon-knobs'
 import { action } from '@connexta/ace/@storybook/addon-actions'
 
 const stories = storiesOf('ResultFroms', module)
 
-stories.addDecorator(withKnobs)
 stories.addDecorator(Story => <Story />)
 
 import { Set } from 'immutable'

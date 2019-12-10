@@ -1,10 +1,9 @@
 import React from 'react'
 import { storiesOf } from './@storybook/react'
 import { Sources } from './sources'
-import { withKnobs, number, select } from '@connexta/ace/@storybook/addon-knobs'
+import { number, select } from '@connexta/ace/@storybook/addon-knobs'
 
 const stories = storiesOf('Sources', module)
-stories.addDecorator(withKnobs)
 
 const available = availability => {
   if (availability === 'all') {

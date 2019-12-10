@@ -1,12 +1,10 @@
 import React from 'react'
 import { storiesOf } from './@storybook/react'
 import { About } from './about'
-import { withKnobs, text } from '@connexta/ace/@storybook/addon-knobs'
+import { text } from '@connexta/ace/@storybook/addon-knobs'
 import { action } from '@connexta/ace/@storybook/addon-actions'
 
 const stories = storiesOf('About', module)
-
-stories.addDecorator(withKnobs)
 
 stories.add('success', () => {
   const attributes = {

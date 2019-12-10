@@ -1,6 +1,6 @@
 import { storiesOf } from '@connexta/ace/@storybook/react'
 import { action } from '@connexta/ace/@storybook/addon-actions'
-import { withKnobs, select } from '@connexta/ace/@storybook/addon-knobs'
+import { select } from '@connexta/ace/@storybook/addon-knobs'
 import React, { useState } from 'react'
 import ClusterMap from './cluster-map'
 import { coordinates } from 'geospatialdraw'
@@ -9,7 +9,6 @@ import { RENDERER_STYLE as MAP_STYLE } from './map-style'
 const PROJECTION = 'EPSG:4326'
 
 const stories = storiesOf('Maps', module)
-stories.addDecorator(withKnobs)
 
 stories.add('render clusters', () => {
   const sampleGeos = [

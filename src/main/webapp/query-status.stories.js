@@ -1,11 +1,9 @@
 import React from 'react'
 import { storiesOf } from './@storybook/react'
-import { withKnobs } from '@connexta/ace/@storybook/addon-knobs'
 import { action } from '@connexta/ace/@storybook/addon-actions'
 
 const stories = storiesOf('QueryStatus', module)
 
-stories.addDecorator(withKnobs)
 stories.addDecorator(Story => <Story />)
 
 import QueryStatus from './query-status'

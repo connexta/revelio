@@ -1,5 +1,5 @@
 import { storiesOf } from './@storybook/react'
-import { withKnobs, number } from '@connexta/ace/@storybook/addon-knobs'
+import { number } from '@connexta/ace/@storybook/addon-knobs'
 import React from 'react'
 import SpacedLinearContainer from './spaced-linear-container'
 import Button from '@material-ui/core/Button'
@@ -8,7 +8,6 @@ import TextField from '@material-ui/core/TextField'
 
 const stories = storiesOf('SpacedLinearContainer', module)
 stories.addDecorator(Story => <Story />)
-stories.addDecorator(withKnobs)
 
 stories.add('column direction', () => {
   const spacing = number('spacing', 1)
