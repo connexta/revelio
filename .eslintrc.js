@@ -1,20 +1,18 @@
-const { genSchema } = require('./src/main/webapp/intrigue-api/gen-schema')
+const schemaJson = require('./schema')
 
 const graphqlRules = () => {
-  const schemaString = genSchema()
-
   return {
     'graphql/template-strings': [
       'error',
       {
         env: 'apollo',
-        schemaString,
+        schemaJson,
       },
     ],
     'graphql/named-operations': [
       'error',
       {
-        schemaString,
+        schemaJson,
       },
     ],
   }
