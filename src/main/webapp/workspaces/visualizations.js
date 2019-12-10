@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 
 import { useSelectionInterface } from '../react-hooks'
 
-import { Layout, Provider, AddConfig, DragSource } from '../react-layout'
+import { Layout, Provider, AddConfig, DragSource } from '../react-golden-layout'
 
 import Inspector from '../inspector/inspector'
 import ResultTable from '../results/results'

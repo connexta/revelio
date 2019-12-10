@@ -1,11 +1,11 @@
 import React from 'react'
 
-import { storiesOf } from '..//@storybook/react'
+import { storiesOf } from '../@storybook/react'
 import { action } from '@connexta/ace/@storybook/addon-actions'
 
-import { Provider, Layout } from './react-layout'
+import { Provider, Layout } from './react-golden-layout'
 
-const stories = storiesOf('ReactLayout', module)
+const stories = storiesOf('ReactGoldenLayout', module)
 
 stories.add('basic', () => {
   const Test = () => 'Hi'
