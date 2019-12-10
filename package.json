@@ -63,7 +63,7 @@
     "start:test": "ace start --env=test",
     "test:api": "mocha src/main/webapp/intrigue-api/test",
     "pretest": "ace format && eslint src",
-    "test": "ace bundle --env=test && ace test",
+    "test": "ace",
     "storybook": "ace storybook",
     "build": "ace bundle && yarn storybook --static",
     "build-bundles": "NODE_ENV=production ace bundle --middleware src/main/graphql-server/server.js",
