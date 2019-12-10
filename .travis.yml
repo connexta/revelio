@@ -27,7 +27,7 @@ deploy:
     on:
       branch: master
   - provider: script
-    script: .travis/dockerDeploy.sh
+    script: dockerDeploy
     on:
       branch: docker-aws
 
