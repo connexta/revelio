@@ -1,88 +1,59 @@
 import * as React from 'react'
 import { geometry } from 'geospatialdraw'
-import { useLazyQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
 import {
-  Suggestion,
   KeywordGeoProperties,
   ContainerProps as Props,
+  Suggestion,
 } from './props'
 import Keyword from './presentation'
 
 const MINIMUM_INPUT_LENGTH = 2
 
-const SuggestionsQuery = gql`
-  query SuggestionsQuery($q: String!) {
-    suggestions(q: $q) {
-      id
-      name
-    }
-  }
-`
-
-const FeatureQuery = gql`
-  query FeatureQuery($id: String!) {
-    geofeature(id: $id) {
-      type
-      geometry
-      properties
-      id
-    }
-  }
-`
-
-type suggestionResult = {
-  suggestions: Suggestion[]
-}
-
-type geofeatureResult = {
-  geofeature: geometry.GeometryJSON
-}
-
 const Container: React.SFC<Props> = ({
   value,
   onChange,
   minimumInputLength = MINIMUM_INPUT_LENGTH,
+  useFeatureQuery,
+  useSuggestionQuery,
   ...rest
 }) => {
   const {
     keyword = '',
     keywordId = '',
   } = value.properties as KeywordGeoProperties
-  const [selectedId, setSelectedId] = React.useState('')
+  const [selectedSuggestion, setSelectedSuggestion] = React.useState<
+    Suggestion
+  >({ name: '', id: '' })
   const [input, setInput] = React.useState(keyword)
   const [isOpen, setIsOpen] = React.useState(false)
-  const [
-    getFeature,
-    {
-      data: { geofeature } = { geofeature: value },
-      loading: featureLoading,
-      error: featureError,
-    },
-  ] = useLazyQuery<geofeatureResult>(FeatureQuery)
-  const [
-    getSuggestions,
-    {
-      data: { suggestions } = { suggestions: [] },
-      loading: suggestionLoading,
-      error: suggestionError,
-    },
-  ] = useLazyQuery<suggestionResult>(SuggestionsQuery)
+  const {
+    fetch: getFeature,
+    data: geofeature,
+    loading: featureLoading,
+    error: featureError,
+  } = useFeatureQuery()
+  const {
+    fetch: getSuggestions,
+    data: suggestions,
+    loading: suggestionLoading,
+    error: suggestionError,
+  } = useSuggestionQuery()
   React.useEffect(
     () => {
-      if (selectedId) {
+      if (selectedSuggestion.id && !featureLoading) {
         const geo = geometry.geoJSONToGeometryJSON(geofeature.properties.id, {
-          geofeature,
+          ...geofeature,
           properties: {
             ...value.properties,
-            keyword: input,
-            keywordId: selectedId,
+            keyword: selectedSuggestion.name,
+            keywordId: selectedSuggestion.id,
           },
         })
+        setInput(selectedSuggestion.name)
         onChange(geo)
       }
     },
-    [geofeature.id]
+    [selectedSuggestion.id, selectedSuggestion.name, featureLoading]
   )
   const loading = suggestionLoading || featureLoading
   const error = suggestionError || featureError ? true : false
@@ -106,22 +77,15 @@ const Container: React.SFC<Props> = ({
           },
         })
       }
-      getGeoFeature={({ id, name }) => {
-        setInput(name)
-        setSelectedId(id)
-        getFeature({
-          variables: {
-            id,
-          },
-        })
+      getGeoFeature={suggestion => {
+        getFeature(suggestion.id)
+        setSelectedSuggestion(suggestion)
       }}
       getSuggestions={q => {
         setInput(q)
-        getSuggestions({
-          variables: {
-            q,
-          },
-        })
+        if (q.length >= minimumInputLength) {
+          getSuggestions(q)
+        }
       }}
       loading={loading}
       error={error}
@@ -132,13 +96,14 @@ const Container: React.SFC<Props> = ({
       }}
       onClose={() => {
         setIsOpen(false)
-        if (keyword && keyword !== input) {
-          setInput(keyword)
+        if (selectedSuggestion.id && selectedSuggestion.name !== input) {
+          setInput(selectedSuggestion.name)
         }
       }}
       {...rest}
     />
   )
 }
+Container.displayName = 'KeywordContainer'
 
 export default Container

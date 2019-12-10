@@ -97,5 +97,6 @@ const Keyword: React.SFC<Props> = ({
     </SpacedLinearContainer>
   )
 }
+Keyword.displayName = 'Keyword'
 
 export default Keyword

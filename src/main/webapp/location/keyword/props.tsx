@@ -6,12 +6,24 @@ export type Suggestion = {
   name: string
 }
 
-export type ContainerProps = BasicEditorProps & {
+export type queryHook<DataType, QueryParams> = () => {
+  fetch: (q: QueryParams) => void
+  data: DataType
+  loading: boolean
+  error: boolean
+}
+
+export type KeywordProps = BasicEditorProps & {
   placeholder?: string
   minimumInputLength?: number
 }
 
-export type PresentationProps = ContainerProps & {
+export type ContainerProps = KeywordProps & {
+  useFeatureQuery: queryHook<geometry.GeometryJSON, string>
+  useSuggestionQuery: queryHook<Suggestion[], string>
+}
+
+export type PresentationProps = KeywordProps & {
   getSuggestions: (q: string) => void
   getGeoFeature: (suggestion: Suggestion) => void
   loading: boolean
