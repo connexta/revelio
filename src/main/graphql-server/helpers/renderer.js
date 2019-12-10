@@ -4,16 +4,23 @@ import { renderToString, renderToStaticMarkup } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom'
 import { getDataFromTree } from '@apollo/react-ssr'
 import { ServerStyleSheets } from '@material-ui/styles'
-import { createClient } from '../../webapp/intrigue-api/graphql'
+import { createServerApollo } from '../../webapp/intrigue-api/graphql'
 import { ApolloProvider } from '@apollo/react-hooks'
+import fs from 'fs'
 
 const ROOT_PATH = '/search/catalog'
+
+const retrieveClientBundle = () => {
+  return fs.readdirSync('./public').filter(file => {
+    return file.match(/^bundle.[a-z0-9]+.\.js$/)
+  })[0]
+}
 
 module.exports = async (req, res, next) => {
   const path = req.originalUrl.replace(ROOT_PATH, '')
   try {
     if (hasPath(path)) {
-      const { originalUrl, clientBundle } = req
+      const { originalUrl, clientBundle = retrieveClientBundle() } = req
       const html = await executeSSR(originalUrl, clientBundle)
       res.end(html)
     } else {
@@ -30,7 +37,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const executeSSR = async (originalUrl, clientBundle) => {
   const sheets = new ServerStyleSheets()
-  const client = createClient({ ssrMode: true })
+  const client = createServerApollo()
 
   const App = sheets.collect(
     <ApolloProvider client={client}>

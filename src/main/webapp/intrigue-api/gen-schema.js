@@ -1,17 +1,5 @@
 const json = require('./attributes.json')
-
-const getTypeDefs = () => {
-  if (typeof window === 'undefined') {
-    // prevent webpack from resolving fs/path which is only required for node
-    const r = eval('require')
-    const fs = r('fs')
-    const path = r('path')
-    const schema = path.join(__dirname, 'schema.graphql')
-    return fs.readFileSync(schema)
-  } else {
-    return require('raw-loader!./schema.graphql')
-  }
-}
+const definition = require('./schema-graphql')
 
 const toGraphqlName = name => name.replace(/-|\./g, '_')
 
@@ -21,10 +9,12 @@ const attributes = json.concat({
   type: 'STRING',
 })
 
-const idMap = attributes.map(a => a.id).reduce((map, id) => {
-  map[toGraphqlName(id)] = id
-  return map
-}, {})
+const idMap = attributes
+  .map(a => a.id)
+  .reduce((map, id) => {
+    map[toGraphqlName(id)] = id
+    return map
+  }, {})
 
 const fromGraphqlName = name => idMap[name] || name
 
@@ -78,7 +68,7 @@ const genSchema = () => {
   ${attrs(true)}
   }
 
-  ${getTypeDefs()}
+  ${definition}
   `
 }
 

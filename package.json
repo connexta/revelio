@@ -4,7 +4,7 @@
   "main": "src/main/webapp/app.js",
   "license": "MIT",
   "devDependencies": {
-    "@connexta/ace": "https://github.com/connexta/ace.git#f54ca0a66e1f16212d23bf411ab414ea068d715f",
+    "@connexta/ace": "https://github.com/connexta/ace.git#2851ad7b0264b3215a13171db4d61fb4b37355ad",
     "@types/ol": "^5.3.6",
     "@types/react": "^16.9.5",
     "@typescript-eslint/parser": "^2.3.3",
@@ -34,6 +34,7 @@
     "apollo-link-http": "^1.5.16",
     "apollo-link-schema": "^1.2.4",
     "apollo-server-express": "^2.9.7",
+    "compression": "^1.7.4",
     "date-fns": "^2.0.0-beta.5",
     "express": "4.17.1",
     "geospatialdraw": "https://github.com/connexta/geospatialdraw.git#ce9830eeca9e1400734eb3c87eaaff20fbc611e0",
@@ -65,9 +66,10 @@
     "test": "ace bundle --env=test && ace test",
     "storybook": "ace storybook",
     "build": "ace bundle && yarn storybook --static",
+    "build-bundles": "NODE_ENV=production ace bundle --middleware src/main/graphql-server/server.js",
     "prestart": "ace disable-idp"
   },
-  "context-path": "/search/catalog",
+  "context-path": "/search/catalog/",
   "resolutions": {
     "react-hot-loader": "4.12.9"
   }
