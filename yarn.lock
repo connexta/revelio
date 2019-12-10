@@ -896,9 +896,9 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@connexta/ace@https://github.com/connexta/ace.git#2851ad7b0264b3215a13171db4d61fb4b37355ad":
+"@connexta/ace@https://github.com/connexta/ace.git#d58809d4c6e87554482939647f3f8d8c1690178d":
   version "1.0.0"
-  resolved "https://github.com/connexta/ace.git#2851ad7b0264b3215a13171db4d61fb4b37355ad"
+  resolved "https://github.com/connexta/ace.git#d58809d4c6e87554482939647f3f8d8c1690178d"
   dependencies:
     "@babel/core" "^7.0.0"
     "@storybook/addon-actions" "5.2.3"
