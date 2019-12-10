@@ -18,9 +18,6 @@ setup_dependencies() {
   docker info
   docker-compose --version
 
-  # Use travis env vars here
-  docker login -u USER_HERE -p PASS_HERE
-
   echo "Completed Installation Setup"
 }
 

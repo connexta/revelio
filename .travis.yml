@@ -9,22 +9,15 @@ before_install:
   - nvm install 10
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.17.3
   - export PATH="$HOME/.yarn/bin:$PATH"
-  - './.travis/main.sh'
 script:
   - set -e
   - yarn install --frozen-lockfile
   - yarn build-bundles
   - set +e
-  - 'make image'
 branches:
   only:
   - master
   - docker-aws
-after_success:
-  #Should update the branch of this to master
-  - if [[ "$TRAVIS_BRANCH" == "docker-aws" ]]; then
-      make push-image ;
-    fi
 deploy:
   provider: pages
   skip-cleanup: true
@@ -33,3 +26,8 @@ deploy:
   target-branch: gh-pages
   on:
     branch: master
+  provider: script
+  script: .travis/dockerDeploy.sh
+  on:
+    branch: docker-aws
+
