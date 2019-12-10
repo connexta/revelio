@@ -19,7 +19,7 @@ const sourcesSort = (source1, source2) => {
 
 const Source = props => {
   const {
-    source: { id, local, available },
+    source: { sourceId, local, isAvailable },
     selected,
   } = props
   return (
@@ -32,10 +32,10 @@ const Source = props => {
           overflow: 'hidden',
           textOverflow: 'ellipsis',
         }}
-        primary={id}
+        primary={sourceId}
       />
 
-      {!available && (
+      {!isAvailable && (
         <ListItemIcon>
           <WarningIcon />
         </ListItemIcon>
@@ -70,9 +70,9 @@ const Sources = props => {
         {props.sources &&
           props.sources.sort(sourcesSort).map(source => {
             const selected =
-              props.value !== null && props.value.includes(source.id)
+              props.value !== null && props.value.includes(source.sourceId)
             return (
-              <MenuItem key={source.id} value={source.id}>
+              <MenuItem key={source.sourceId} value={source.sourceId}>
                 <Source source={source} selected={selected} />
               </MenuItem>
             )

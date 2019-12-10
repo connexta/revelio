@@ -90,18 +90,18 @@ stories.add('Hidden Results Settings', () => <HiddenResults />)
 stories.add('Source Select', () => {
   const sources = [
     {
-      available: false,
-      id: 'Source1',
+      isAvailable: false,
+      sourceId: 'Source1',
       local: false,
     },
     {
-      available: true,
-      id: 'ddf.distribution',
+      isAvailable: true,
+      sourceId: 'ddf.distribution',
       local: true,
     },
     {
-      available: true,
-      id: 'Source2',
+      isAvailable: true,
+      sourceId: 'Source2',
       local: false,
     },
   ]

@@ -21,10 +21,10 @@ const generateSources = (numSources = 0, availability) => {
 
   for (let i = 0; i < numSources; i++) {
     sources.push({
-      sourceActions: [],
-      available: available(availability),
-      id: `ddf.distribution.${i}`,
-      contentTypes: [],
+      actions: [],
+      isAvailable: available(availability),
+      sourceId: `ddf.distribution.${i}`,
+      cataloguedTypes: [],
       version: '',
     })
   }
