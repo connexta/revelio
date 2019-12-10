@@ -64,7 +64,7 @@
     "start:test": "ace start --env=test",
     "test:api": "mocha src/main/webapp/intrigue-api/test",
     "pretest": "ace format && eslint src",
-    "test": "ace",
+    "test": "ace bundle --env=test && ace test",
     "storybook": "ace storybook",
     "build": "NODE_ENV=production ace bundle --middleware src/main/graphql-server/server.js && yarn storybook --static",
     "prestart": "ace disable-idp"
