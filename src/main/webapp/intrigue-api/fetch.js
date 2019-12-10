@@ -17,13 +17,13 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 const url = require('url')
 const qs = require('querystring')
 const fetch = require('isomorphic-fetch')
-const DDF_LOCATION = new url.URL(
+const ddfLocation = url.parse(
   process.env.DDF_LOCATION || 'https://localhost:8993'
 )
 
 const cacheBust = urlString => {
   const { query, ...rest } = url.parse(urlString)
-  const { hostname, port, protocol } = DDF_LOCATION
+  const { hostname, port, protocol } = ddfLocation
   return url.format({
     ...rest,
     hostname,
@@ -44,7 +44,7 @@ module.exports = (url, { headers, ...opts } = {}) => {
       'User-Agent': 'ace',
       'X-Requested-With': 'XMLHttpRequest',
       'Content-Type': 'application/json',
-      Referer: DDF_LOCATION,
+      Referer: ddfLocation.href,
       ...headers,
     },
   })

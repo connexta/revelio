@@ -9,12 +9,10 @@ const attributes = json.concat({
   type: 'STRING',
 })
 
-const idMap = attributes
-  .map(a => a.id)
-  .reduce((map, id) => {
-    map[toGraphqlName(id)] = id
-    return map
-  }, {})
+const idMap = attributes.map(a => a.id).reduce((map, id) => {
+  map[toGraphqlName(id)] = id
+  return map
+}, {})
 
 const fromGraphqlName = name => idMap[name] || name
 
