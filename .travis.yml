@@ -19,6 +19,7 @@ branches:
   - master
   - docker-aws
 deploy:
+  skip_cleanup: true
   - provider: pages
     skip-cleanup: true
     github-token: $GITHUB_TOKEN
@@ -27,7 +28,7 @@ deploy:
     on:
       branch: master
   - provider: script
-    script: dockerDeploy
+    script: ./dockerDeploy.sh
     on:
       branch: docker-aws
 
