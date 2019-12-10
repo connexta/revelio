@@ -41,7 +41,7 @@ const Container: React.SFC<Props> = ({
   React.useEffect(
     () => {
       if (selectedSuggestion.id && !featureLoading) {
-        const geo = geometry.geoJSONToGeometryJSON(geofeature.properties.id, {
+        const geo = geometry.geoJSONToGeometryJSON(value.properties.id, {
           ...geofeature,
           properties: {
             ...value.properties,

@@ -3,7 +3,7 @@ import { Box } from '@material-ui/core'
 import Fab from '@material-ui/core/Fab'
 import { Remove } from '@material-ui/icons'
 import { MetacardType } from './dummyDefinitions'
-import { Map } from 'immutable'
+import { makeDefaultSearchGeo } from './search-geo-factory'
 
 export const withRemoveButton = (Component: any) => {
   return (props: any) => {
@@ -66,7 +66,7 @@ export const filterComponentStyle = {
 export const getDefaultValue = (type: MetacardType | undefined) => {
   switch (type) {
     case 'LOCATION':
-      return Map({ type: 'line' })
+      return makeDefaultSearchGeo()
     case 'DATE':
       return ''
     case 'BOOLEAN':

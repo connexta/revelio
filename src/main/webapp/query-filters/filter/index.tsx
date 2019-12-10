@@ -8,6 +8,7 @@ import { FilterContext } from '../filter-context'
 import { sampleMetacardTypes } from './dummyDefinitions'
 import useMetacardTypes from '../../react-hooks/use-metacard-types'
 import { Paper, LinearProgress, Typography } from '@material-ui/core'
+export { makeDefaultSearchGeo, makeSearchGeoId } from './search-geo-factory'
 
 const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
   .default
