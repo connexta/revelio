@@ -20,8 +20,7 @@ module.exports = async (req, res, next) => {
   const path = req.originalUrl.replace(ROOT_PATH, '')
   try {
     if (hasPath(path)) {
-      const { originalUrl, clientBundle = retrieveClientBundle() } = req
-      const html = await executeSSR(originalUrl, clientBundle)
+      const html = await executeSSR(req)
       res.end(html)
     } else {
       next()
@@ -35,9 +34,11 @@ module.exports = async (req, res, next) => {
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const executeSSR = async (originalUrl, clientBundle) => {
+const executeSSR = async req => {
+  const { originalUrl, clientBundle = retrieveClientBundle() } = req
+
   const sheets = new ServerStyleSheets()
-  const client = createServerApollo()
+  const client = createServerApollo({ req })
 
   const App = sheets.collect(
     <ApolloProvider client={client}>

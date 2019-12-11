@@ -2,7 +2,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloClient } from 'apollo-client'
 import { SchemaLink } from 'apollo-link-schema'
 import { makeExecutableSchema } from 'graphql-tools'
-const { BatchHttpLink } = require('apollo-link-batch-http')
+import { BatchHttpLink } from 'apollo-link-batch-http'
 import schema from './schema'
 
 const { resolvers, typeDefs, context } = schema
@@ -10,7 +10,6 @@ const { resolvers, typeDefs, context } = schema
 const executableSchema = makeExecutableSchema({
   typeDefs,
   resolvers,
-  context,
 })
 
 const btoa = arg => {
@@ -20,10 +19,21 @@ const btoa = arg => {
   return Buffer.from(arg).toString('base64')
 }
 
-const createServerApollo = () => {
+const authorization = `Basic ${btoa('admin:admin')}`
+
+const createServerApollo = (...args) => {
+  // TODO: remove this block when we get auth working
+  const { req } = args[0]
+  if (!req.headers.authorization) {
+    req.headers.authorization = authorization
+  }
+
   const cache = new InMemoryCache()
   return new ApolloClient({
-    link: new SchemaLink({ schema: executableSchema }),
+    link: new SchemaLink({
+      schema: executableSchema,
+      context: context(...args),
+    }),
     ssrMode: true,
     cache,
   })
@@ -31,15 +41,12 @@ const createServerApollo = () => {
 
 const createClientApollo = () => {
   const cache = new InMemoryCache()
-  const auth = btoa('admin:admin')
   cache.restore(window.__APOLLO_STATE__)
   return new ApolloClient({
     link: new BatchHttpLink({
       uri: '/graphql',
       credentials: 'same-origin',
-      headers: {
-        Authorization: `Basic ${auth}`,
-      },
+      headers: { authorization },
     }),
     cache,
   })

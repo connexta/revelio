@@ -1,4 +1,5 @@
-const { mergeDeep } = require('immutable')
+import { mergeDeep } from 'immutable'
+import context from './context'
 
 const ensureArray = value => {
   if (value === undefined) {
@@ -37,7 +38,7 @@ const mergeModules = (a, b) => {
   }
 }
 
-const baseTypeDefs = `
+const typeDefs = `
   # Arbitrary Json
   scalar Json
   # Binary content embedded as a base64 String
@@ -58,8 +59,8 @@ const baseTypeDefs = `
   }
 `
 
-const { resolvers, typeDefs = [], context } = [
-  { resolvers: {}, typeDefs: baseTypeDefs },
+export default [
+  { resolvers: {}, typeDefs, context },
   require('./metacards/metacards')(),
   require('./location/location'),
   require('./user/user'),
@@ -67,9 +68,3 @@ const { resolvers, typeDefs = [], context } = [
   require('./metacard-types/metacard-types'),
   require('./system-properties/system-properties'),
 ].reduce(mergeModules)
-
-module.exports = {
-  resolvers,
-  typeDefs,
-  context,
-}
