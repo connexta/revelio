@@ -1,11 +1,18 @@
 module.exports = (json = require('../attributes.json')) => {
   const toGraphqlName = name => name.replace(/-|\./g, '_')
 
-  const attributes = json.concat({
-    id: 'metacard-type',
-    multivalued: false,
-    type: 'STRING',
-  })
+  const attributes = json.concat([
+    {
+      id: 'metacard-type',
+      multivalued: false,
+      type: 'STRING',
+    },
+    {
+      id: 'filter_template',
+      multivalued: false,
+      type: 'JSON',
+    },
+  ])
 
   const idMap = attributes.map(a => a.id).reduce((map, id) => {
     map[toGraphqlName(id)] = id

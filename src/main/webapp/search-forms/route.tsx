@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { LinearProgress } from '@material-ui/core'
+import { LinearProgress, Dialog } from '@material-ui/core'
 const {
   IndexCards,
   AddCardItem,
@@ -8,9 +8,11 @@ const {
   ShareAction,
   DeleteAction,
 } = require('../index-cards')
+import { useState, Fragment } from 'react'
+import SearchFormEditor from './editor'
 
 type SearchForm = {
-  title: string
+  title?: string
   id: string
   modified: string
   owner: string
@@ -18,13 +20,31 @@ type SearchForm = {
 }
 
 const SearchForm = (props: SearchForm) => {
+  const [editing, setEditing] = useState(false)
+
   return (
-    <IndexCardItem {...props}>
-      <Actions>
-        <ShareAction />
-        <DeleteAction onDelete={props.onDelete} />
-      </Actions>
-    </IndexCardItem>
+    <Fragment>
+      {editing ? (
+        <Dialog
+          fullWidth
+          maxWidth={false}
+          open
+          onClose={() => setEditing(false)}
+        >
+          <SearchFormEditor
+            {...props}
+            onCancel={() => setEditing(false)}
+            onSave={() => setEditing(false)}
+          />
+        </Dialog>
+      ) : null}
+      <IndexCardItem {...props} onClick={() => setEditing(true)}>
+        <Actions>
+          <ShareAction />
+          <DeleteAction onDelete={props.onDelete} />
+        </Actions>
+      </IndexCardItem>
+    </Fragment>
   )
 }
 
@@ -46,8 +66,10 @@ const Route = (props: RouteProps) => {
       {forms
         .slice()
         .sort((a: any, b: any) => (a.modified > b.modified ? -1 : 1))
-        .map(form => {
-          return <SearchForm {...form} onDelete={() => onDelete(form)} />
+        .map((form, i) => {
+          return (
+            <SearchForm key={i} {...form} onDelete={() => onDelete(form)} />
+          )
         })}
     </IndexCards>
   )

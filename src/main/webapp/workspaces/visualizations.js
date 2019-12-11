@@ -195,10 +195,9 @@ const Visualizations = props => {
     table: TableVis,
     '2d-map': MapVis,
   }
-
   return (
     <Provider>
-      <div style={{ position: 'relative', height: 'calc(100vh - 64px)' }}>
+      <div style={{ position: 'relative', height: '100%' }}>
         <Layout
           config={config}
           components={components}

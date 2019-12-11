@@ -70,7 +70,7 @@ const loadDynamicRoute = route => {
     'result-forms': () =>
       import(/* webpackChunkName: "result-forms" */ './result-forms'),
     'search-forms': () =>
-      import(/* webpackChunkName: "search-forms" */ './search-forms'),
+      import(/* webpackChunkName: "search-forms" */ './search-forms/index.tsx'),
   }
 
   const loader = routes[route]
