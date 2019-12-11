@@ -1,5 +1,7 @@
+import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import Paper from '@material-ui/core/Card'
+import Thumbnail from '../thumbnail/thumbnail'
 import Divider from '@material-ui/core/Divider'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Link from '@material-ui/core/Link'
@@ -9,44 +11,66 @@ import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 import Typography from '@material-ui/core/Typography'
 import gql from 'graphql-tag'
-import React from 'react'
+
 import { useApolloFallback } from '../react-hooks'
 
-const Info = ({ title, value }) => {
-  const count = value instanceof Array ? value.length : 1
+const AttributeTitle = props => {
+  const { title } = props
+
+  return (
+    <Typography variant="h6" component="h2">
+      {title}
+    </Typography>
+  )
+}
+const AttributeValue = props => {
+  const { title, value } = props
   const values = value instanceof Array ? value : [value]
-  const countLabel = count > 1 ? ` (${count} values)` : ''
 
   return (
     <div>
-      <Typography variant="h6" component="h2">
-        {title}
-        {countLabel}
-      </Typography>
-      {values.map(itemValue => {
-        return (
-          <Typography key={itemValue} color="textSecondary" gutterBottom>
-            {itemValue}
-          </Typography>
-        )
+      {values.map((itemValue, index) => {
+        if (title === 'thumbnail' && itemValue !== 'No Value') {
+          return <ThumbnailValue key={index} value={itemValue} />
+        }
+        return <TextValue key={index} value={itemValue} />
       })}
     </div>
   )
 }
 
-const MultiResultInfo = ({ title, values }) => {
+const ThumbnailValue = props => {
+  const { value } = props
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+      }}
+    >
+      <Thumbnail src={`data:image/jpeg;base64,${value}`} />
+    </div>
+  )
+}
+
+const TextValue = props => {
+  const { value } = props
+  return (
+    <Typography color="textSecondary" gutterBottom>
+      {value}
+    </Typography>
+  )
+}
+
+const AttributeEntry = props => {
+  const { title, value } = props
+
   return (
     <div style={{ width: '100%' }}>
-      <Typography variant="h6" component="h2">
-        {title}
-      </Typography>
-      {values.map((itemValue, index, array) => {
-        return (
-          <ListItem key={index} divider={index < array.length - 1}>
-            <Info title="" value={itemValue} />
-          </ListItem>
-        )
-      })}
+      <AttributeTitle title={title} />
+      <AttributeValue title={title} value={value} />
     </div>
   )
 }
@@ -64,7 +88,9 @@ const MultiResultPropertiesList = props => {
       return (
         <div key={key}>
           <ListItem divider>
-            <MultiResultInfo title={key} values={values} />
+            <List style={{ width: '100%' }}>
+              <AttributeEntry title={key} value={values} />
+            </List>
           </ListItem>
         </div>
       )
@@ -81,7 +107,7 @@ const PropertiesList = props => {
       return (
         <div key={key}>
           <ListItem divider>
-            <Info title={key} value={value} />
+            <AttributeEntry title={key} value={value} />
           </ListItem>
         </div>
       )
@@ -129,7 +155,10 @@ const ActionLinks = props => {
         return (
           <ListItem key={action.id}>
             <Typography color="textSecondary" gutterBottom>
-              <Link href={action.url}> {action.id} </Link>
+              <Link target="_blank" href={action.url}>
+                {' '}
+                {action.id}{' '}
+              </Link>
             </Typography>
           </ListItem>
         )
@@ -216,12 +245,7 @@ const MultiResultDetails = props => {
 
   return (
     <Paper>
-      <Typography
-        variant="h6"
-        component="h2"
-        fullWidth
-        style={{ textAlign: 'center' }}
-      >
+      <Typography variant="h6" component="h2" style={{ textAlign: 'center' }}>
         {results.length} results selected
       </Typography>
       <List>
