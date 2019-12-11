@@ -96,8 +96,12 @@ const Container: React.SFC<Props> = ({
       }}
       onClose={() => {
         setIsOpen(false)
-        if (selectedSuggestion.id && selectedSuggestion.name !== input) {
-          setInput(selectedSuggestion.name)
+        if (selectedSuggestion.id) {
+          if (selectedSuggestion.name !== input) {
+            setInput(selectedSuggestion.name)
+          }
+        } else if (keyword && keyword !== input) {
+          setInput(keyword)
         }
       }}
       {...rest}
