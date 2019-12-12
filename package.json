@@ -59,7 +59,7 @@
     "styled-components": "^4.3.2"
   },
   "scripts": {
-    "start": "cross-env NODE_OPTIONS='--inspect' ace start --middleware src/main/graphql-server/middleware.js",
+    "start": "cross-env NODE_OPTIONS=\"--inspect --max_old_space_size=8192\" ace start --middleware src/main/graphql-server/middleware.js",
     "fmt": "ace format -w",
     "start:test": "ace start --env=test",
     "test:api": "mocha src/main/webapp/intrigue-api/test",
