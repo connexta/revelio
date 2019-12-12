@@ -1,4 +1,7 @@
 language: java
+sudo: 'required'
+services:
+  - 'docker'
 node_js:
   - '10.16.1'
 cache: yarn
@@ -15,12 +18,17 @@ script:
   - set +e
 branches:
   only:
-  - master
+    - master
 deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN
-  local-dir: target/storybook/
-  target-branch: gh-pages
-  on:
-    branch: master
+  - provider: pages
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN
+    local-dir: target/storybook/
+    target-branch: gh-pages
+    on:
+      branch: master
+  - provider: script
+    skip_cleanup: true
+    script: ./dockerDeploy.sh
+    on:
+      branch: master
