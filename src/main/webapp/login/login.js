@@ -68,6 +68,7 @@ export const LogIn = props => {
         color="primary"
         onClick={() => {
           //TO:DO parse cookie from gql query and set it
+          props.handleClose()
         }}
       >
         Log In
