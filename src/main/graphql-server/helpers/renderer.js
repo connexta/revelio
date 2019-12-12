@@ -57,7 +57,10 @@ const executeSSR = async req => {
               __html: `window.__APOLLO_STATE__ = ${JSON.stringify(state)}`,
             }}
           />
-          <style id="css-server-side">${css}</style>
+          <style
+            id="css-server-side"
+            dangerouslySetInnerHTML={{ __html: css }}
+          />
         </head>
         <body style={{ margin: 0 }}>
           <div id="root" dangerouslySetInnerHTML={{ __html: content }} />
