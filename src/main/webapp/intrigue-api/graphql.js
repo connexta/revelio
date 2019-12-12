@@ -42,9 +42,23 @@ const createServerApollo = (...args) => {
   })
 }
 
-const retryLink = new RetryLink()
+const retryLink = new RetryLink({
+  delay: { initial: 300, max: Infinity, jitter: true },
+  attempts: {
+    max: 1,
+    retryIf: (error, _operation) => {},
+  },
+})
 const errorLink = onError(
-  ({ graphQLErrors, networkError, operation, forward }) => {}
+  ({ graphQLErrors, networkError, operation, forward }) => {
+    if (graphQLErrors) {
+      // if unauthenticated forward operation with new context
+      // containing new headers
+	return forward(graphQLErrors, operation)
+    } else if (networkError) {
+	return forward(networkError, operation)
+    }
+  }
 )
 
 const createClientApollo = () => {
