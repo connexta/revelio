@@ -3,6 +3,9 @@ import { ApolloClient } from 'apollo-client'
 import { SchemaLink } from 'apollo-link-schema'
 import { makeExecutableSchema } from 'graphql-tools'
 import { BatchHttpLink } from 'apollo-link-batch-http'
+import { RetryLink } from 'apollo-link-retry'
+import { ApolloLink } from 'apollo-link'
+import { onError } from 'apollo-link-error'
 import schema from './schema'
 
 const { resolvers, typeDefs, context } = schema
@@ -39,15 +42,24 @@ const createServerApollo = (...args) => {
   })
 }
 
+const retryLink = new RetryLink()
+const errorLink = onError(
+  ({ graphQLErrors, networkError, operation, forward }) => {}
+)
+
 const createClientApollo = () => {
   const cache = new InMemoryCache()
   cache.restore(window.__APOLLO_STATE__)
   return new ApolloClient({
-    link: new BatchHttpLink({
-      uri: '/graphql',
-      credentials: 'same-origin',
-      headers: { authorization },
-    }),
+    link: ApolloLink.from([
+      errorLink,
+      retryLink,
+      new BatchHttpLink({
+        uri: '/graphql',
+        credentials: 'same-origin',
+        headers: { authorization },
+      }),
+    ]),
     cache,
   })
 }

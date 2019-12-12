@@ -2,7 +2,24 @@ import React from 'react'
 import { storiesOf } from '../@storybook/react'
 const stories = storiesOf('LogIn', module)
 import { LogIn } from './login'
+import { LogInModal } from './loginModal'
 
-stories.add('login modal', () => {
+stories.add('Login Form', () => {
   return <LogIn label="Login" logIn={() => {}} />
+})
+
+stories.add('Login modal', () => {
+  const [open, setOpen] = React.useState(false)
+  return (
+    <div>
+      <button
+        onClick={() => {
+          setOpen(true)
+        }}
+      >
+        Open Modal
+      </button>
+      <LogInModal open={open} handleClose={() => setOpen(false)} />
+    </div>
+  )
 })
