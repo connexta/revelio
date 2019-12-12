@@ -11,13 +11,13 @@
     },
     "primary": {
       "light": "rgba(15, 54, 87, 1)",
-      "main": "rgba(105, 225, 232, 1)",
+      "main": "rgba(0, 169, 175, 1)",
       "dark": "rgba(71, 90, 102, 1)",
       "contrastText": "rgba(11, 24, 33, 1)"
     },
     "secondary": {
       "light": "rgba(229, 229, 229, 1)",
-      "main": "rgba(105, 225, 232, 1)",
+      "main": "rgba(0, 169, 175, 1)",
       "dark": "rgba(58, 74, 84, 1)",
       "contrastText": "rgba(255,255,255,1.0)"
     },
