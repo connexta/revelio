@@ -23,6 +23,8 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import Collapse from '@material-ui/core/Collapse'
 import SortOrder from './search-settings'
 import { SourcesSelect } from './sources'
+import { makeDefaultSearchGeo } from './query-filters/filter'
+import { Location } from './location'
 
 import {
   APPLY_TO_KEY,
@@ -33,7 +35,6 @@ import {
   toFilterTree,
   fromFilterTree,
 } from './basic-search-helper'
-import Location, { validate as validateLocation } from './location'
 import TimeRange, {
   createTimeRange,
   validate as validateTimeRange,
@@ -252,14 +253,15 @@ const AttributeSelector = props => {
   )
 }
 
-const BasicLocation = ({ state = Map(), setState, errors }) => {
-  return (
-    <Location
-      value={state}
-      onChange={setState}
-      errors={errors.locationErrors}
-    />
-  )
+const isGeo = geo =>
+  geo.hasOwnProperty('type') &&
+  geo.hasOwnProperty('geometry') &&
+  geo.hasOwnProperty('properties') &&
+  geo.type.toLowerCase() === 'feature'
+
+const BasicLocation = ({ state, setState }) => {
+  const geo = isGeo(state) ? state : makeDefaultSearchGeo()
+  return <Location value={geo} onChange={setState} />
 }
 
 const filters = {
@@ -283,9 +285,7 @@ const defaultFilters = {
     value: createTimeRange({ type: 'BEFORE' }),
     applyTo: ['created'],
   }),
-  [LOCATION_KEY]: Map({
-    type: 'line',
-  }),
+  [LOCATION_KEY]: makeDefaultSearchGeo(),
 }
 
 const getFilterTree = props => {
@@ -455,13 +455,6 @@ const validateMatchTypes = () => {
 
 const validate = (filterMap = Map()) => {
   let errors = {}
-
-  if (filterMap.has(LOCATION_KEY)) {
-    const locationErrors = validateLocation(filterMap.getIn([LOCATION_KEY]))
-    if (!isEmpty(locationErrors)) {
-      errors['locationErrors'] = locationErrors
-    }
-  }
 
   if (filterMap.has(TIME_RANGE_KEY)) {
     const timeRangeErrors = validateTimeRange(

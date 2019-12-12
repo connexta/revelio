@@ -1,5 +1,7 @@
+import { geometry, shapes } from 'geospatialdraw'
+import { geoToFilter } from './location'
+import { makeSearchGeoId } from './query-filters/filter'
 const { Map, Set, fromJS } = require('immutable')
-import { locationTypes } from './location'
 export const APPLY_TO_KEY = 'applyTo'
 export const DATATYPES_KEY = 'datatypes'
 export const LOCATION_KEY = 'location'
@@ -43,42 +45,11 @@ const unitsMap = Map(fromJS(relativeUnits))
 
 const datatypeProperties = ['metadata-content-type', 'datatype']
 
+const shapeDetector = new shapes.ShapeDetector()
+
 const parseGeoFilter = (filter = {}) => {
-  const value = filter.value.value ? filter.value.value : filter.value
-  const geojson = Map(filter.geojson)
-  if (value.includes('POINT')) {
-    return {
-      type: 'pointRadius',
-      location: Map({
-        lon: geojson.getIn(['geometry', 'coordinates'])[0],
-        lat: geojson.getIn(['geometry', 'coordinates'])[1],
-        bufferWidth: geojson.getIn(['properties', 'buffer', 'width']),
-        unit: geojson.getIn(['properties', 'buffer', 'unit']),
-      }),
-    }
-  }
-
-  if (value.includes('POLYGON')) {
-    return {
-      type: 'polygon',
-      location: Map({
-        coordinates: geojson.getIn(['geometry', 'coordinates', 0]),
-        bufferWidth: geojson.getIn(['properties', 'buffer', 'width']),
-        unit: geojson.getIn(['properties', 'buffer', 'unit']),
-      }),
-    }
-  }
-
-  if (value.includes('LINESTRING')) {
-    return {
-      type: 'line',
-      location: Map({
-        coordinates: geojson.getIn(['geometry', 'coordinates']),
-        bufferWidth: geojson.getIn(['properties', 'buffer', 'width']),
-        unit: geojson.getIn(['properties', 'buffer', 'unit']),
-      }),
-    }
-  }
+  const shape = shapeDetector.shapeFromGeoJSON(filter.geojson)
+  return geometry.makeGeometry(makeSearchGeoId(), filter.geojson, '', shape)
 }
 
 export const fromFilterTree = filterTree => {
@@ -91,7 +62,7 @@ export const fromFilterTree = filterTree => {
         }
 
         if (property === 'anyGeo') {
-          return accumulator.set(LOCATION_KEY, Map(parseGeoFilter(filter)))
+          return accumulator.set(LOCATION_KEY, parseGeoFilter(filter))
         }
 
         if (filters && filters[0]) {
@@ -134,14 +105,6 @@ export const parseRelative = relative => {
   }
 
   return {}
-}
-
-export const getLocationFilter = (data = Map()) => {
-  const { type, location } = data.toJSON()
-  if (!type || !location) {
-    return null
-  }
-  return locationTypes[type].generateFilter(location)
 }
 
 export const toFilterTree = basicData => {
@@ -196,7 +159,7 @@ export const toFilterTree = basicData => {
       }
     : null
 
-  const location = getLocationFilter(basicData.get(LOCATION_KEY))
+  const location = geoToFilter(basicData.get(LOCATION_KEY))
   const timeRange = getTimeRangeFilter()
   const datatypes = getDatatypesFilter()
 

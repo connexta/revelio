@@ -1,15 +1,15 @@
 import { geometry } from 'geospatialdraw'
 import { geoToWKT } from './geo-to-wkt'
 
-export type FilterType = 'DWITHIN' | 'INTERSECTS'
-export const DWITHIN: FilterType = 'DWITHIN'
-export const INTERSECTS: FilterType = 'INTERSECTS'
+type FilterType = 'DWITHIN' | 'INTERSECTS'
+const DWITHIN: FilterType = 'DWITHIN'
+const INTERSECTS: FilterType = 'INTERSECTS'
 
-export type Property = 'anyGeo'
-export const ANY_GEO: Property = 'anyGeo'
+type Property = 'anyGeo'
+const ANY_GEO: Property = 'anyGeo'
 
-export type ValueType = 'GEOMETRY'
-export const GEOMETRY: ValueType = 'GEOMETRY'
+type ValueType = 'GEOMETRY'
+const GEOMETRY: ValueType = 'GEOMETRY'
 
 export type Filter = {
   type: FilterType

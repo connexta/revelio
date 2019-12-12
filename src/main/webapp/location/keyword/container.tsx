@@ -41,7 +41,7 @@ const Container: React.SFC<Props> = ({
   React.useEffect(
     () => {
       if (selectedSuggestion.id && !featureLoading) {
-        const geo = geometry.geoJSONToGeometryJSON(geofeature.properties.id, {
+        const geo = geometry.geoJSONToGeometryJSON(value.properties.id, {
           ...geofeature,
           properties: {
             ...value.properties,
@@ -96,8 +96,12 @@ const Container: React.SFC<Props> = ({
       }}
       onClose={() => {
         setIsOpen(false)
-        if (selectedSuggestion.id && selectedSuggestion.name !== input) {
-          setInput(selectedSuggestion.name)
+        if (selectedSuggestion.id) {
+          if (selectedSuggestion.name !== input) {
+            setInput(selectedSuggestion.name)
+          }
+        } else if (keyword && keyword !== input) {
+          setInput(keyword)
         }
       }}
       {...rest}
