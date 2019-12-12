@@ -19,6 +19,7 @@ script:
 branches:
   only:
     - master
+    - docker
 deploy:
   - provider: pages
     skip-cleanup: true
@@ -31,4 +32,4 @@ deploy:
     skip_cleanup: true
     script: ./dockerDeploy.sh
     on:
-      branch: master
+      branch: docker
