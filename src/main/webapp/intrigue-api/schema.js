@@ -67,4 +67,5 @@ export default [
   require('./sources/sources'),
   require('./metacard-types/metacard-types'),
   require('./system-properties/system-properties'),
+  require('./login/login'),
 ].reduce(mergeModules)
