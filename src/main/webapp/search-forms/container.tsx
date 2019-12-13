@@ -10,6 +10,7 @@ const fragment = gql`
     modified
     title
     metacard_owner
+    filterTree: filter_template
   }
 `
 const searchForms = gql`

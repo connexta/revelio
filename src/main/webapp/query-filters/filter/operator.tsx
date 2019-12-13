@@ -1,6 +1,6 @@
 import * as React from 'react'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
-import { Button, Popover, MenuItem } from '@material-ui/core'
+import { Button, Popover, MenuItem, Typography } from '@material-ui/core'
 import { ArrowDropDown } from '@material-ui/icons'
 import { filterHeaderButtonStyle } from './filter-utils'
 
@@ -26,9 +26,9 @@ const Operator = withOperators((props: OperatorProps) => {
         style={filterHeaderButtonStyle}
         variant="outlined"
         onClick={open as any}
+        endIcon={<ArrowDropDown />}
       >
-        {props.selected}
-        <ArrowDropDown />
+        <Typography noWrap>{props.selected}</Typography>
       </Button>
       <Popover
         transformOrigin={{ vertical: 'top', horizontal: 'center' }}

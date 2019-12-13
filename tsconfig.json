@@ -9,7 +9,9 @@
     "noUnusedParameters": true,
     "strictNullChecks": true,
     "lib": ["es6", "dom", "es2017"],
-    "target": "es5"
+    "target": "es5",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

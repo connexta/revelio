@@ -1,11 +1,12 @@
 const { storiesOf } = require('../@storybook/react')
-import * as React from 'react'
-import { withKnobs, boolean } from '@storybook/addon-knobs'
+import React from 'react'
+import { boolean } from '@storybook/addon-knobs'
 import { useState } from 'react'
 import SearchFormRoute from './route'
+import SearchFormEditor from './editor'
+const { SelectionProvider } = require('../react-hooks/use-selection-interface')
 
 const stories = storiesOf('Search Forms', module)
-stories.addDecorator(withKnobs)
 
 const startingForms = [
   {
@@ -29,10 +30,19 @@ stories.add('route', () => {
     )
   }
   return (
-    <SearchFormRoute
-      forms={searchForms}
-      onDelete={onDelete}
-      loading={loading}
-    />
+    <SelectionProvider>
+      <SearchFormRoute
+        forms={searchForms}
+        onDelete={onDelete}
+        loading={loading}
+      />
+    </SelectionProvider>
+  )
+})
+stories.add('editor', () => {
+  return (
+    <SelectionProvider>
+      <SearchFormEditor />
+    </SelectionProvider>
   )
 })

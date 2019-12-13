@@ -98,11 +98,11 @@ type TextFilterProps = QueryFilterProps & {
 const TextFilter = (props: TextFilterProps) => {
   const { enums = [] } = props
   const errors = validateText(props.value)
-
   return (
     <Autocomplete
       freeSolo
       disableClearable
+      autoSelect
       options={enums}
       value={props.value}
       onChange={(_, value: any) => {
@@ -110,16 +110,22 @@ const TextFilter = (props: TextFilterProps) => {
         props.onChange({ property, type, value })
       }}
       loading={props.loading}
-      renderInput={params => (
-        <TextField
-          {...params}
-          error={errors.value !== undefined}
-          helperText={errors.value}
-          placeholder="Use * for wildcard"
-          variant="outlined"
-          fullWidth
-        />
-      )}
+      renderInput={params => {
+        return (
+          <TextField
+            {...params}
+            error={errors.value !== undefined}
+            helperText={errors.value}
+            placeholder="Use * for wildcard"
+            variant="outlined"
+            onChange={event => {
+              const { property, type } = props
+              props.onChange({ property, type, value: event.target.value })
+            }}
+            fullWidth
+          />
+        )
+      }}
     />
   )
 }

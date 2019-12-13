@@ -53,7 +53,6 @@ export const defaultFilter = {
 }
 
 export const filterHeaderButtonStyle = {
-  height: 'fit-content',
   margin: 'auto',
   marginLeft: 0,
   marginRight: 10,

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import IndividualFilter, { QueryFilter } from './individual-filter'
-import { Box, Button } from '@material-ui/core'
+import { Box, Button, Typography } from '@material-ui/core'
 import { Add } from '@material-ui/icons'
 import {
   defaultFilter,
@@ -55,9 +55,9 @@ const Header = (props: FilterGroupProps) => {
         }}
         style={filterHeaderButtonStyle}
         variant="outlined"
+        startIcon={<Add fontSize="small" />}
       >
-        <Add fontSize="small" style={{ marginRight: 5 }} />
-        <Box m="auto">Add Field</Box>
+        <Typography noWrap>Add Field</Typography>
       </Button>
       {(props.limitDepth === undefined || props.limitDepth !== 0) && (
         <Button
@@ -68,9 +68,9 @@ const Header = (props: FilterGroupProps) => {
             props.onChange({ ...getValue(props), filters })
           }}
           variant="outlined"
+          startIcon={<Add fontSize="small" />}
         >
-          <Add fontSize="small" style={{ marginRight: 5 }} />
-          <Box m="auto">Add Group</Box>
+          <Typography noWrap>Add Group</Typography>
         </Button>
       )}
     </Box>

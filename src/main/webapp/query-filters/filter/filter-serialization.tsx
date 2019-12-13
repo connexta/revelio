@@ -2,6 +2,7 @@ import { getDefaultValue } from './filter-utils'
 import { getIn } from 'immutable'
 
 export const deserialize = (filter: any, metacardTypes: any) => {
+  const deserializedFilter = { ...filter }
   if (typeof filter.property === 'object') {
     // if the filter is something like NEAR (which maps to a CQL filter function such as 'proximity'),
     // there is an enclosing filter that creates the necessary '= TRUE' predicate, and the 'property'
@@ -13,23 +14,23 @@ export const deserialize = (filter: any, metacardTypes: any) => {
       )
     }
     const [property, distance, value] = params
-    filter.property = property
-    filter.type = 'NEAR'
-    filter.value = { distance, value }
+    deserializedFilter.property = property
+    deserializedFilter.type = 'NEAR'
+    deserializedFilter.value = { distance, value }
   }
 
   if (filter.type === 'BETWEEN') {
-    filter.value = {
+    deserializedFilter.value = {
       lower: filter.lowerBoundary,
       upper: filter.upperBoundary,
     }
   }
   if (filter.type === 'IS NULL') {
-    filter.value = getDefaultValue(
+    deserializedFilter.value = getDefaultValue(
       getIn(metacardTypes, [filter.property, 'type'], 'STRING')
     )
   }
-  return { ...filter }
+  return deserializedFilter
 }
 const generateFilterFunction = (filterFunctionName: string, params: any) => {
   return {
