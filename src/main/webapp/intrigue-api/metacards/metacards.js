@@ -107,7 +107,7 @@ const typeDefs = `
     metacards(filterTree: Json!, settings: QuerySettingsInput): QueryResponse
 
     metacardsByTag(tag: String!, settings: QuerySettingsInput): QueryResponse
-    metacardById(id: ID!, settings: QuerySettingsInput): QueryResponse
+    metacardsById(ids: [ID]!, settings: QuerySettingsInput): [QueryResponse]
 
     # Get known values for a given attribute.
     #
@@ -189,7 +189,15 @@ const queries = (ids = []) => async (args, context) => {
   })
 }
 
-const metacards = async (parent, args, { catalog, toGraphqlName }) => {
+const lists = (id, fetch, toGraphqlName) => async () => {
+  const res = await fetch(`${ROOT}/workspaces/${id}`)
+  const data = await res.json()
+  return data.lists !== undefined
+    ? data.lists.map(list => renameKeys(toGraphqlName, list))
+    : null
+}
+
+const metacards = async (parent, args, { catalog, toGraphqlName, fetch }) => {
   const q = { ...args.settings, filterTree: args.filterTree }
   const json = await catalog.query(processQuery(q))
 
@@ -198,6 +206,7 @@ const metacards = async (parent, args, { catalog, toGraphqlName }) => {
     return {
       ...properties,
       queries: queries(properties.queries),
+      lists: lists(properties.id, fetch, toGraphqlName),
     }
   })
   json.status['elapsed'] = json.request_duration_millis
@@ -263,28 +272,30 @@ const metacardsByTag = async (parent, args, context) => {
   )
 }
 
-const metacardById = async (parent, args, context) => {
-  return metacards(
-    parent,
-    {
-      filterTree: {
-        type: 'AND',
-        filters: [
-          {
-            type: '=',
-            property: 'id',
-            value: args.id,
-          },
-          {
-            type: 'LIKE',
-            property: 'metacard-tags',
-            value: '%',
-          },
-        ],
+const metacardsById = async (parent, args, context) => {
+  return args.ids.map(id =>
+    metacards(
+      parent,
+      {
+        filterTree: {
+          type: 'AND',
+          filters: [
+            {
+              type: '=',
+              property: 'id',
+              value: id,
+            },
+            {
+              type: 'LIKE',
+              property: 'metacard-tags',
+              value: '%',
+            },
+          ],
+        },
+        settings: args.settings,
       },
-      settings: args.settings,
-    },
-    context
+      context
+    )
   )
 }
 
@@ -376,7 +387,7 @@ const resolvers = {
   Query: {
     metacards,
     metacardsByTag,
-    metacardById,
+    metacardsById,
     facet,
   },
   Mutation: {

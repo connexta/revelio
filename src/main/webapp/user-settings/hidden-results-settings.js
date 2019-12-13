@@ -15,8 +15,8 @@ import Inspector from '../inspector'
 import { useApolloFallback } from '../react-hooks'
 
 const resultQuery = gql`
-  query ResultQuery($id: ID!) {
-    metacardById(id: $id) {
+  query ResultQuery($ids: [ID]!) {
+    metacardsById(ids: $ids) {
       results {
         metacard
         actions {
@@ -67,7 +67,13 @@ const ResultInfoContainer = props => {
       {loading ? (
         <Loading />
       ) : (
-        <Inspector results={data.metacardById.results} />
+        <Inspector
+          results={
+            data.metacardsById.results.length > 0
+              ? data.metacardsById.results[0]
+              : null
+          }
+        />
       )}
     </Dialog>
   )
