@@ -79,9 +79,9 @@ const NumberInput = (props: any) => {
 }
 
 const NumberFilter = (props: QueryFilterProps) => {
-  const context = useFilterContext()
+  const { metacardTypes } = useFilterContext()
   const isInt = isInteger(
-    getIn(context.metacardTypes, [props.property, 'type'], 'INTEGER')
+    getIn(metacardTypes, [props.property, 'type'], 'INTEGER')
   )
   if (props.type !== 'BETWEEN') {
     return (

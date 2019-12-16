@@ -5,39 +5,24 @@ import IndividualFilter, {
 } from './individual-filter'
 import FilterGroup, { FilterGroupType, FilterGroupProps } from './filter-group'
 import { FilterContext } from '../filter-context'
-import { sampleMetacardTypes } from './dummyDefinitions'
 import useMetacardTypes from '../../react-hooks/use-metacard-types'
 import Paper from '@material-ui/core/Paper'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Typography from '@material-ui/core/Typography'
 export { makeDefaultSearchGeo, makeSearchGeoId } from './search-geo-factory'
 
-const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
-  .default
+const { useApolloFallback } = require('../../react-hooks')
 
 export const isFilterGroup = (
   object: QueryFilter | FilterGroupType
 ): object is FilterGroupType =>
   (object as FilterGroupType).filters !== undefined
 
-type FilterProps = (FilterGroupProps | QueryFilterProps) & {
-  metacardTypes: any
-  editing?: boolean
-}
+type FilterProps = FilterGroupProps | QueryFilterProps
 
 const Filter = (props: FilterProps) => {
-  const { metacardTypes = sampleMetacardTypes } = props
   const Component = isFilterGroup(props) ? FilterGroup : IndividualFilter
-  return (
-    <FilterContext.Provider
-      value={{
-        metacardTypes,
-        editing: props.editing !== false,
-      }}
-    >
-      <Component {...props} />
-    </FilterContext.Provider>
-  )
+  return <Component {...props} />
 }
 
 const Loading = () => {
@@ -57,7 +42,7 @@ const Error = (props: any) => {
   )
 }
 
-const Container = (props: any) => {
+const Container = (props: FilterProps) => {
   const { loading, error, metacardTypes } = useMetacardTypes()
   if (loading) {
     return <Loading />
@@ -67,7 +52,15 @@ const Container = (props: any) => {
     return <Error message={error} />
   }
 
-  return <Filter {...props} metacardTypes={metacardTypes} />
+  return (
+    <FilterContext.Provider
+      value={{
+        metacardTypes,
+      }}
+    >
+      <Filter {...props} />
+    </FilterContext.Provider>
+  )
 }
 
 export default (props: FilterProps) => {

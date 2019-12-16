@@ -20,6 +20,7 @@ export type FilterGroupType = {
 
 export type FilterGroupProps = FilterGroupType & {
   limitDepth?: number // Used to limit number of nested groups
+  editing?: boolean
   onChange: (value: FilterGroupType) => void
   onRemove?: () => void
 }
@@ -106,6 +107,7 @@ const FilterList = (props: FilterGroupProps) => {
                     : undefined
                 }
                 {...filter}
+                editing={props.editing}
                 onChange={onChange}
                 onRemove={onRemove}
               />
@@ -116,6 +118,7 @@ const FilterList = (props: FilterGroupProps) => {
             <Box key={i} style={{ margin: 10, marginLeft: 0 }}>
               <IndividualFilter
                 {...filter}
+                editing={props.editing}
                 onChange={onChange}
                 onRemove={onRemove}
               />

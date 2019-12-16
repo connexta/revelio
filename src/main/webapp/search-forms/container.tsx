@@ -7,18 +7,18 @@ import SearchFormsRoute from './route'
 const fragment = gql`
   fragment SearchFormAttributes on MetacardAttributes {
     id
-    modified
     title
-    metacard_owner
-    filterTree: filter_template
+    filterTree
+    modified
+    owner: metacard_owner
   }
 `
+
 const searchForms = gql`
   query SearchForms {
     metacardsByTag(tag: "query-template") {
       attributes {
         ...SearchFormAttributes
-        owner: metacard_owner
       }
     }
   }
@@ -39,7 +39,53 @@ const useDelete = () => {
         cache.readQuery({ query }),
         ['metacardsByTag', 'attributes'],
         []
-      ).filter(({ id }: any) => id !== data.deleteMetacard)
+      ).filter(({ id }: { id: string }) => id !== data.deleteMetacard)
+
+      cache.writeQuery({
+        query,
+        data: {
+          metacardsByTag: {
+            attributes,
+            __typeName: 'QueryResponse',
+          },
+        },
+      })
+    },
+  })
+}
+
+const useSave = () => {
+  const mutation = gql`
+    mutation SaveSearchForm($id: ID!, $attrs: MetacardAttributesInput!) {
+      saveMetacard(id: $id, attrs: $attrs) {
+        ...SearchFormAttributes
+      }
+    }
+    ${fragment}
+  `
+  return useMutation(mutation)
+}
+
+const useCreate = () => {
+  const mutation = gql`
+    mutation CreateSearchForm($attrs: MetacardAttributesInput!) {
+      createMetacard(attrs: $attrs) {
+        ...SearchFormAttributes
+      }
+    }
+    ${fragment}
+  `
+  return useMutation(mutation, {
+    update: (cache, { data }) => {
+      const query = searchForms
+
+      const attributes = getIn(
+        cache.readQuery({ query }),
+        ['metacardsByTag', 'attributes'],
+        []
+      )
+        .filter(({ id }: { id: string }) => id !== data.createMetacard.id)
+        .concat(data.createMetacard)
 
       cache.writeQuery({
         query,
@@ -64,10 +110,39 @@ export default () => {
       },
     })
   }
+  const [save] = useSave()
+  const onSave = (form: any) => {
+    save({
+      variables: {
+        id: form.id,
+        attrs: {
+          title: form.title,
+          filterTree: form.filterTree,
+          metacard_tags: ['query-template', 'VALID'],
+        },
+      },
+    })
+  }
+
+  const [create] = useCreate()
+  const onCreate = (form: any) => {
+    create({
+      variables: {
+        attrs: {
+          title: form.title,
+          filterTree: form.filterTree,
+          metacard_tags: ['query-template', 'VALID'],
+        },
+      },
+    })
+  }
+
   const forms = getIn(data, ['metacardsByTag', 'attributes'], [])
 
   return (
     <SearchFormsRoute
+      onCreate={onCreate}
+      onSave={onSave}
       loading={loading}
       error={error}
       onDelete={onDelete}

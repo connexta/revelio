@@ -36,6 +36,7 @@ export type QueryFilter = {
   property: string
   type: string
   value: any
+  editing?: boolean
 }
 export type QueryFilterProps = QueryFilter & {
   onChange: (value: QueryFilter) => void
@@ -92,10 +93,10 @@ const withSerialization = (Component: any) => {
 export default withRemoveButton(
   withDivider(
     withSerialization((props: QueryFilterProps) => {
-      const context = useFilterContext()
+      const { metacardTypes } = useFilterContext()
       const getType = (property: string) => {
         return getIn(
-          context.metacardTypes,
+          metacardTypes,
           [property, 'type'],
           'STRING'
         ) as MetacardType
@@ -137,6 +138,7 @@ export default withRemoveButton(
                 props.onChange({ type, value, property: newProperty })
               }
             }}
+            editing={props.editing}
           />
           {type !== 'LOCATION' && type !== 'GEOMETRY' ? (
             <ComparatorDropdown
@@ -155,6 +157,7 @@ export default withRemoveButton(
               selected={props.type}
               options={comparatorOptions}
               aliases={comparatorAliases}
+              editing={props.editing}
             />
           ) : null}
 

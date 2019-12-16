@@ -4,7 +4,13 @@ import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField'
 import { useFilterContext } from '../filter-context'
 
-const AttributeDropdown = (props: any) => {
+type Props = {
+  editing?: boolean
+  value: string
+  onChange: (value: string) => void
+}
+
+const AttributeDropdown = (props: Props) => {
   const context = useFilterContext()
   return (
     <Box style={{ margin: 5 }}>
@@ -17,7 +23,7 @@ const AttributeDropdown = (props: any) => {
           props.onChange(value)
         }}
         renderInput={params => <TextField {...params} fullWidth />}
-        disabled={!context.editing}
+        disabled={props.editing === false}
       />
     </Box>
   )

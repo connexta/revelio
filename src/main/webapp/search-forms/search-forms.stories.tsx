@@ -3,7 +3,7 @@ import React from 'react'
 import { boolean } from '@storybook/addon-knobs'
 import { useState } from 'react'
 import SearchFormRoute from './route'
-import SearchFormEditor from './editor'
+import { SearchFormEditor } from './editor'
 const { SelectionProvider } = require('../react-hooks/use-selection-interface')
 const { DrawProvider } = require('../react-hooks/use-draw-interface')
 
@@ -12,12 +12,12 @@ const stories = storiesOf('Search Forms', module)
 const startingForms = [
   {
     id: '1',
-    title: 'Title',
+    title: 'Title 1',
     modified: new Date().toISOString(),
   },
   {
     id: '2',
-    title: 'Title',
+    title: 'Title 2',
     modified: new Date().toISOString(),
   },
 ]
@@ -30,10 +30,34 @@ stories.add('route', () => {
       searchForms.filter((searchForm: any) => searchForm.id !== form.id)
     )
   }
+
+  const onSave = (form: any) => {
+    setSearchForms(
+      searchForms.map((searchForm: any) => {
+        if (searchForm.id === form.id) {
+          return { ...form, modified: new Date().toISOString() }
+        }
+        return searchForm
+      })
+    )
+  }
+
+  const onCreate = (form: any) => {
+    setSearchForms(
+      searchForms.concat({
+        ...form,
+        id: Math.random(),
+        modified: new Date().toISOString(),
+      })
+    )
+  }
+
   return (
     <DrawProvider>
       <SelectionProvider>
         <SearchFormRoute
+          onCreate={onCreate}
+          onSave={onSave}
           forms={searchForms}
           onDelete={onDelete}
           loading={loading}

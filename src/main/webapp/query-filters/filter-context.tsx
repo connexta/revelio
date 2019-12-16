@@ -4,7 +4,6 @@ import { sampleMetacardTypes } from './filter/dummyDefinitions'
 
 const FilterContext = React.createContext({
   metacardTypes: sampleMetacardTypes,
-  editing: true,
 })
 const useFilterContext = () => {
   const context = useContext(FilterContext)

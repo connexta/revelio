@@ -49,11 +49,9 @@ const WithFacetedSuggestions = (props: QueryFilterProps) => {
     return <TextFilterContainer {...props} />
   }
 
-  const attributeSuggestionList = getIn(
-    data,
-    ['systemProperties', 'attributeSuggestionList'],
+  const attributeSuggestionList =
+    getIn(data, ['systemProperties', 'attributeSuggestionList'], undefined) ||
     []
-  )
   if (!attributeSuggestionList.includes(props.property)) {
     return <TextFilterContainer {...props} />
   }

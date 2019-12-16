@@ -6,7 +6,6 @@ import Popover from '@material-ui/core/Popover'
 import MenuItem from '@material-ui/core/MenuItem'
 import DropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { Map } from 'immutable'
-import { useFilterContext } from '../filter-context'
 
 type Props = {
   selected: string
@@ -14,18 +13,18 @@ type Props = {
   aliases?: Map<string, string>
   onChange: (value: string) => void
   style?: React.CSSProperties
+  editing?: boolean
 }
 
 const ComparatorMenu = (props: Props) => {
   const [anchorEl, open, close] = useAnchorEl()
-  const context = useFilterContext()
   return (
     <React.Fragment>
       <Button
         style={{ width: 'fit-content', margin: 5 }}
         variant="outlined"
         onClick={open as any}
-        disabled={!context.editing}
+        disabled={props.editing === false}
       >
         <Box>
           <Box

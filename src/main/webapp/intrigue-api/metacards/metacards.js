@@ -91,7 +91,7 @@ const typeDefs = `
   }
 
   extend type Query {
-    # #### Query the Catalog Framework for Metcards.
+    # #### Query the Catalog Framework for Metacards.
     #
     # Below is an example filterTree to query for all resource Metacards:
     #
@@ -128,6 +128,11 @@ const typeDefs = `
 `
 
 const { write } = require('./cql')
+import {
+  getQueryTemplates,
+  createQueryTemplate,
+  saveQueryTemplate,
+} from '../query-templates/query-templates'
 
 const getCql = ({ filterTree, cql }) => {
   if (filterTree !== undefined) {
@@ -213,51 +218,10 @@ const metacards = async (parent, args, { catalog, toGraphqlName, fetch }) => {
   return { attributes, ...json }
 }
 
-const queryTemplates = {
-  accessAdministrators: 'security_access_administrators',
-  accessGroups: 'security_access_groups',
-  accessGroupsRead: 'security_access_groups_read',
-  accessIndividuals: 'security_access_individuals',
-  accessIndividualsRead: 'security_access_individuals_read',
-  created: 'created',
-  filterTemplate: 'filter_template',
-  modified: 'modified',
-  owner: 'metacard_owner',
-  querySettings: 'query_settings',
-  id: 'id',
-  title: 'title',
-}
-
-const fetchQueryTemplates = async (parent, args, { fetch }) => {
-  const res = await fetch(`${ROOT}/forms/query`)
-  const json = await res.json()
-  const attributes = json
-    .map(attrs => renameKeys(k => queryTemplates[k], attrs))
-    .map(({ modified, created, ...rest }) => {
-      return {
-        ...rest,
-        created: new Date(created).toISOString(),
-        modified: new Date(modified).toISOString(),
-      }
-    })
-  const status = {
-    // count: Int
-    // elapsed: Int
-    // hits: Int
-    // id: ID
-    // successful: Boolean
-    count: attributes.length,
-    successful: true,
-    hits: attributes.length,
-  }
-  return { attributes, status }
-}
-
 const metacardsByTag = async (parent, args, context) => {
   if (args.tag === 'query-template') {
-    return fetchQueryTemplates(parent, args, context)
+    return await getQueryTemplates(parent, args, context)
   }
-
   return metacards(
     parent,
     {
@@ -323,6 +287,12 @@ const facet = async (parent, args, { catalog }) => {
 
 const createMetacard = async (parent, args, context) => {
   const { attrs } = args
+  if (
+    Array.isArray(attrs.metacard_tags) &&
+    attrs.metacard_tags.includes('query-template')
+  ) {
+    return await createQueryTemplate(parent, args, context)
+  }
   const { catalog, fromGraphqlName, toGraphqlName } = context
 
   const metacard = renameKeys(fromGraphqlName, attrs)
@@ -342,6 +312,13 @@ const createMetacard = async (parent, args, context) => {
 
 const saveMetacard = async (parent, args, context) => {
   const { id, attrs } = args
+  if (
+    Array.isArray(attrs.metacard_tags) &&
+    attrs.metacard_tags.includes('query-template')
+  ) {
+    return await saveQueryTemplate(parent, args, context)
+  }
+
   const { fetch, fromGraphqlName, toGraphqlName } = context
 
   const attributes = Object.keys(attrs).map(attribute => {

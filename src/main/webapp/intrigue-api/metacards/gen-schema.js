@@ -8,7 +8,7 @@ module.exports = (json = require('../attributes.json')) => {
       type: 'STRING',
     },
     {
-      id: 'filter_template',
+      id: 'query_settings',
       multivalued: false,
       type: 'JSON',
     },

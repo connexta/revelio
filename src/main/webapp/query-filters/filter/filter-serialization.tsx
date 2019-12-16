@@ -25,7 +25,7 @@ export const deserialize = (filter: any, metacardTypes: any) => {
       upper: filter.upperBoundary,
     }
   }
-  if (filter.type === 'IS NULL') {
+  if (filter.type === 'IS NULL' || filter.value == undefined) {
     deserializedFilter.value = getDefaultValue(
       getIn(metacardTypes, [filter.property, 'type'], 'STRING')
     )
