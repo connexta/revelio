@@ -1,6 +1,10 @@
 import * as React from 'react'
 import { QueryFilterProps } from '../filter/individual-filter'
-import { Box, Switch, Button } from '@material-ui/core'
+
+import Box from '@material-ui/core/Box'
+import Switch from '@material-ui/core/Switch'
+import Button from '@material-ui/core/Button'
+
 import { Map } from 'immutable'
 
 export const comparatorOptions = ['=', 'IS NULL']

@@ -1,5 +1,8 @@
 import * as React from 'react'
-import { LinearProgress, Dialog } from '@material-ui/core'
+
+import LinearProgress from '@material-ui/core/LinearProgress'
+import Dialog from '@material-ui/core/Dialog'
+
 const {
   IndexCards,
   AddCardItem,

@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 import Filter from '../query-filters/filter'
-import { Box, Paper, TextField, Divider } from '@material-ui/core'
+
+import Box from '@material-ui/core/Box'
+import Paper from '@material-ui/core/Paper'
+import TextField from '@material-ui/core/TextField'
+import Divider from '@material-ui/core/Divider'
+
 import loadable from 'react-loadable'
 import { memo } from 'react'
 

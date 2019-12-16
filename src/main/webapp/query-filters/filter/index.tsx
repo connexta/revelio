@@ -7,7 +7,9 @@ import FilterGroup, { FilterGroupType, FilterGroupProps } from './filter-group'
 import { FilterContext } from '../filter-context'
 import { sampleMetacardTypes } from './dummyDefinitions'
 import useMetacardTypes from '../../react-hooks/use-metacard-types'
-import { Paper, LinearProgress, Typography } from '@material-ui/core'
+import Paper from '@material-ui/core/Paper'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import Typography from '@material-ui/core/Typography'
 export { makeDefaultSearchGeo, makeSearchGeoId } from './search-geo-factory'
 
 const useApolloFallback = require('../../react-hooks/use-apollo-fallback')

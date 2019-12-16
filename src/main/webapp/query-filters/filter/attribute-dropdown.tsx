@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Select from '@material-ui/lab/Autocomplete'
-import { Box } from '@material-ui/core'
+import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField'
 import { useFilterContext } from '../filter-context'
 

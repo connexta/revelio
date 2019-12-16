@@ -1,7 +1,9 @@
 import * as React from 'react'
 import IndividualFilter, { QueryFilter } from './individual-filter'
-import { Box, Button, Typography } from '@material-ui/core'
-import { Add } from '@material-ui/icons'
+import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
+import Add from '@material-ui/icons/Add'
 import {
   defaultFilter,
   filterHeaderButtonStyle,

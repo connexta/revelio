@@ -1,7 +1,10 @@
 import * as React from 'react'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
-import { Button, Popover, MenuItem, Typography } from '@material-ui/core'
-import { ArrowDropDown } from '@material-ui/icons'
+import Button from '@material-ui/core/Button'
+import Popover from '@material-ui/core/Popover'
+import MenuItem from '@material-ui/core/MenuItem'
+import Typography from '@material-ui/core/Typography'
+import ArrowDropDown from '@material-ui/icons/ArrowDropDown'
 import { filterHeaderButtonStyle } from './filter-utils'
 
 const operators = ['AND', 'OR', 'NOT AND', 'NOT OR']
