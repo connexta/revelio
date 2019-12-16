@@ -1,18 +1,22 @@
 import createRpcClient from './rpc'
 import fetch from './fetch'
+import { AuthenticationError } from 'apollo-server-errors'
 
 const context = args => {
   const { req } = args
 
   const { authorization = '' } = req.headers
-  const universalFetch = (url, opts = {}) => {
-    return fetch(url, {
+  const universalFetch = async (url, opts = {}) => {
+    const res = await fetch(url, {
       ...opts,
       headers: {
         ...opts.headers,
         authorization,
       },
     })
+    if (res.status === 401) {
+      throw new AuthenticationError('UNAUTHENTICATED')
+    } else return res
   }
   const request = createRpcClient(universalFetch)
 
