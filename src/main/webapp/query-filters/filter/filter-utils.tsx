@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { Box } from '@material-ui/core'
+import Box from '@material-ui/core/Box'
 import Fab from '@material-ui/core/Fab'
-import { Remove } from '@material-ui/icons'
+import Remove from '@material-ui/icons/Remove'
 import { MetacardType } from './dummyDefinitions'
 import { makeDefaultSearchGeo } from './search-geo-factory'
 

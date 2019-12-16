@@ -1,7 +1,10 @@
 import * as React from 'react'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
-import { Button, Box, Popover, MenuItem } from '@material-ui/core'
-import { ArrowDropDown as DropDownIcon } from '@material-ui/icons'
+import Button from '@material-ui/core/Button'
+import Box from '@material-ui/core/Box'
+import Popover from '@material-ui/core/Popover'
+import MenuItem from '@material-ui/core/MenuItem'
+import DropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { Map } from 'immutable'
 import { useFilterContext } from '../filter-context'
 
