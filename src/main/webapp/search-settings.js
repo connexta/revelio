@@ -302,7 +302,7 @@ const Error = props => {
 }
 
 const query = gql`
-  query MetacardTypes {
+  query MetacardTypesSearchSettings {
     metacardTypes {
       id
       type
