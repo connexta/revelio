@@ -417,7 +417,7 @@
   {
     "id": "lists",
     "multivalued": true,
-    "type": "XML"
+    "type": "MetacardAttributes"
   },
   {
     "id": "queries",

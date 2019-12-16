@@ -7,6 +7,8 @@ import TextField from '@material-ui/core/TextField'
 import Divider from '@material-ui/core/Divider'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
+import Tab from '@material-ui/core/Tab'
+import Tabs from '@material-ui/core/Tabs'
 
 import {
   IndexCards,
@@ -28,6 +30,7 @@ import { BasicSearch } from '../basic-search'
 import QuerySelector from './query-selector'
 
 import loadable from 'react-loadable'
+import Lists from '../lists'
 
 const LoadingComponent = () => <LinearProgress />
 let MemoizedVisualizations = () => null
@@ -58,8 +61,8 @@ const Loading = () => {
 }
 
 const workspaceById = gql`
-  query WorkspaceById($id: ID!) {
-    metacardById(id: $id) {
+  query WorkspaceById($ids: [ID]!) {
+    metacardsById(ids: $ids) {
       attributes {
         id
         title
@@ -69,6 +72,12 @@ const workspaceById = gql`
           cql
           filterTree
         }
+        lists {
+          list_bookmarks
+          list_icon
+          id
+          title
+        }
       }
     }
   }
@@ -77,11 +86,14 @@ const workspaceById = gql`
 export const Workspace = () => {
   const { id } = useParams()
 
+  const [listResults, setListResults] = React.useState([])
   const [query, setQuery] = useState(null)
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
+  const [tab, setTab] = React.useState(0)
+
   const { loading, error, data } = useQuery(workspaceById, {
-    variables: { id },
+    variables: { ids: [id] },
   })
 
   if (loading) {
@@ -92,9 +104,9 @@ export const Workspace = () => {
     return <div>Error</div>
   }
 
-  const attributes = data.metacardById.attributes[0]
+  const attributes = data.metacardsById[0].attributes[0]
 
-  const { title, queries } = attributes
+  const { title, queries, lists } = attributes
 
   return (
     <div
@@ -116,57 +128,83 @@ export const Workspace = () => {
           {title}
         </Typography>
         <Divider />
-        {query === null ? (
-          <QuerySelector
-            queries={queries}
-            onSelect={query => {
-              onClear()
-              setQuery(query)
-            }}
-          />
-        ) : null}
-        {query !== null ? (
-          <div style={{ padding: 20 }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <TextField
-                style={{ marginBottom: 20 }}
-                label="Query Title"
-                value={query.title || ''}
-                fullWidth
-              />
-              <IconButton onClick={() => setQuery(null)}>
-                <CloseIcon />
-              </IconButton>
-            </div>
-            <div style={{ overflow: 'hidden', padding: 2 }}>
-              <BasicSearch
-                query={query}
-                onSearch={query => {
-                  //setPageIndex(0)
-                  setQuery(query)
+
+        <Tabs
+          value={tab}
+          onChange={(_, selectedIndex) => setTab(selectedIndex)}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="fullWidth"
+        >
+          <Tab label="Search" />
+          <Tab label="Lists" />
+        </Tabs>
+
+        {tab === 0 && (
+          <React.Fragment>
+            {query !== null ? (
+              <div style={{ padding: 20 }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <TextField
+                    style={{ marginBottom: 20 }}
+                    label="Query Title"
+                    value={query.title || ''}
+                    fullWidth
+                  />
+                  <IconButton onClick={() => setQuery(null)}>
+                    <CloseIcon />
+                  </IconButton>
+                </div>
+                <div style={{ overflow: 'hidden', padding: 2 }}>
+                  <BasicSearch
+                    query={query}
+                    onSearch={query => {
+                      //setPageIndex(0)
+                      setQuery(query)
+                      onClear()
+                      onSearch(query)
+                    }}
+                  />
+                </div>
+                <QueryStatus
+                  sources={status}
+                  onRun={srcs => {
+                    //setPageIndex(0)
+                    onSearch({ ...query, srcs })
+                  }}
+                  onCancel={srcs => {
+                    srcs.forEach(src => {
+                      onCancel(src)
+                    })
+                  }}
+                />
+              </div>
+            ) : (
+              <QuerySelector
+                queries={queries}
+                onSelect={query => {
                   onClear()
-                  onSearch(query)
+                  setQuery(query)
                 }}
               />
-            </div>
+            )}
+          </React.Fragment>
+        )}
 
-            <QueryStatus
-              sources={status}
-              onRun={srcs => {
-                //setPageIndex(0)
-                onSearch({ ...query, srcs })
-              }}
-              onCancel={srcs => {
-                srcs.forEach(src => {
-                  onCancel(src)
-                })
-              }}
-            />
-          </div>
-        ) : null}
+        {tab === 1 && (
+          <Lists
+            lists={lists}
+            onSelect={data => {
+              const results = data.metacardsById.reduce((acc, metacard) => {
+                return acc.concat(metacard.results)
+              }, [])
+              setListResults(results)
+            }}
+          />
+        )}
       </div>
       <div style={{ flex: '1' }}>
-        <MemoizedVisualizations results={results} />
+        <MemoizedVisualizations results={tab === 0 ? results : listResults} />
       </div>
     </div>
   )
