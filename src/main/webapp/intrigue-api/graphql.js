@@ -22,11 +22,17 @@ const btoa = arg => {
   return Buffer.from(arg).toString('base64')
 }
 
-const authorization = `Basic ${btoa('admin:admin')}`
+const authorization = '' //`Basic ${btoa('admin:admin')}`
 
 const serverErrorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
-    return forward(operation, graphQLErrors)
+    if (graphQLErrors) {
+      return forward(operation, graphQLErrors)
+    }
+    if (networkError) {
+      return forward(operation, networkError)
+    }
+    return forward(operation, {})
   }
 )
 
@@ -54,21 +60,27 @@ const createServerApollo = (...args) => {
 const clientErrorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
-      //initialize modal to forward credentials to retry link
+      for (let err of graphQLErrors) {
+        if (err.extensions.code === 'UNAUTHENTICATED') {
+          //open modal and get credientials
+          const oldHeaders = operation.getContext().headers
+          operation.setContext({
+            headers: {
+              ...oldHeaders,
+              authorization: `Basic ${btoa('admin:admin')}`,
+            },
+          })
+        }
+      }
+      //retry request with new credentials
       return forward(operation, graphQLErrors)
     }
     if (networkError) {
+      //retry if network error
       return forward(networkError, operation)
     }
   }
 )
-const retryLink = new RetryLink({
-  delay: { initial: 300, max: Infinity, jitter: true },
-  attempts: {
-    max: 1,
-    retryIf: (error, _operation) => {},
-  },
-})
 
 const createClientApollo = () => {
   const cache = new InMemoryCache()
@@ -76,7 +88,6 @@ const createClientApollo = () => {
   return new ApolloClient({
     link: ApolloLink.from([
       clientErrorLink,
-      retryLink,
       new BatchHttpLink({
         uri: '/graphql',
         credentials: 'same-origin',
