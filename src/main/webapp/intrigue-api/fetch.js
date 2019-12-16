@@ -20,6 +20,7 @@ const fetch = require('isomorphic-fetch')
 const ddfLocation = url.parse(
   process.env.DDF_LOCATION || 'https://localhost:8993'
 )
+const Origin = process.env.DDF_ORIGIN || ddfLocation.href
 
 const cacheBust = urlString => {
   const { query, ...rest } = url.parse(urlString)
@@ -44,7 +45,7 @@ module.exports = (url, { headers, ...opts } = {}) => {
       'User-Agent': 'ace',
       'X-Requested-With': 'XMLHttpRequest',
       'Content-Type': 'application/json',
-      Referer: ddfLocation.href,
+      Origin,
       ...headers,
     },
   })
