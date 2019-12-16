@@ -159,7 +159,9 @@ export const toFilterTree = basicData => {
       }
     : null
 
-  const location = geoToFilter(basicData.get(LOCATION_KEY))
+  const location = basicData.has(LOCATION_KEY)
+    ? geoToFilter(basicData.get(LOCATION_KEY))
+    : null
   const timeRange = getTimeRangeFilter()
   const datatypes = getDatatypesFilter()
 
