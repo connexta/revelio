@@ -28,29 +28,32 @@ const Lists = props => {
   const { onSelect, lists, isLoading } = props
   const [selected, setSelected] = React.useState(null)
 
-  return lists.map(list => {
-    const isSelected = list.id === selected
-    return (
-      <React.Fragment key={list.id}>
-        <MenuItem
-          onClick={() => {
-            setSelected(list.id)
-            onSelect(list['list_bookmarks'])
-          }}
-          selected={isSelected}
-        >
-          <ListItemText primary={list.title} secondary="Has not been run" />
-          {isLoading &&
-            isSelected && (
-              <ListItemIcon>
-                <CircularProgress size={25} />
-              </ListItemIcon>
-            )}
-        </MenuItem>
-        <Divider />
-      </React.Fragment>
-    )
-  })
+  return (
+    lists &&
+    lists.map(list => {
+      const isSelected = list.id === selected
+      return (
+        <React.Fragment key={list.id}>
+          <MenuItem
+            onClick={() => {
+              setSelected(list.id)
+              onSelect(list['list_bookmarks'])
+            }}
+            selected={isSelected}
+          >
+            <ListItemText primary={list.title} secondary="Has not been run" />
+            {isLoading &&
+              isSelected && (
+                <ListItemIcon>
+                  <CircularProgress size={25} />
+                </ListItemIcon>
+              )}
+          </MenuItem>
+          <Divider />
+        </React.Fragment>
+      )
+    })
+  )
 }
 
 const Container = props => {
