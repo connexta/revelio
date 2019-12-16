@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { featureCollection, centerOfMass, getCoord } from '@turf/turf'
 
 import Button from '@material-ui/core/Button'
 import Menu from '@material-ui/core/Menu'
@@ -166,12 +167,10 @@ const Visualizations = props => {
             : []
       )
       .reduce((list, value) => list.concat(value), [])
-    const selectedExtents = geos
-      .filter(g => g.properties.selected)
-      .map(g => g.bbox)
-    const viewport =
-      selectedExtents.length > 0
-        ? geometry.combineExtents(selectedExtents)
+    const selectedGeos = geos.filter(g => g.properties.selected)
+    const center =
+      selectedGeos.length > 0
+        ? getCoord(centerOfMass(featureCollection(selectedGeos)))
         : null
     return (
       <ClusterMap
@@ -182,7 +181,7 @@ const Visualizations = props => {
         minZoom={1.5}
         zoom={2}
         geos={geos}
-        viewport={viewport}
+        center={center}
         selectGeos={ids => {
           onSelect(Set(ids))
         }}
