@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.codice.ddf.catalog.ui.enumeration.ExperimentalEnumerationExtractor;
 import org.codice.jsonrpc.DocMethod;
 import org.codice.jsonrpc.Error;
 import org.codice.jsonrpc.MethodSet;
@@ -26,7 +25,7 @@ public class EnumerationMethods implements MethodSet {
         "ddf.enumerations/by-type",
         new DocMethod(
             this::getEnumsByType,
-            "Takes the specified parameters and calls ExperimentalEnumerationExtractor::getEnumerations as many times"
+            "Takes the specified parameters and calls EnumerationExtractor::getEnumerations as many times"
                 + "as necessary. `params` takes: `types(Required, value:List(String))`"));
     METHODS = builder.build();
   }
@@ -38,9 +37,9 @@ public class EnumerationMethods implements MethodSet {
     return METHODS;
   }
 
-  private final ExperimentalEnumerationExtractor enumerationExtractor;
+  private final EnumerationExtractor enumerationExtractor;
 
-  public EnumerationMethods(ExperimentalEnumerationExtractor enumerationExtractor) {
+  public EnumerationMethods(EnumerationExtractor enumerationExtractor) {
     this.enumerationExtractor = enumerationExtractor;
   }
 
