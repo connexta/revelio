@@ -29,8 +29,10 @@ export const wktToGeo = ({
     geometry: geojsonFormatter.writeGeometryObject(geo),
     properties: {
       ...properties,
-      buffer,
-      bufferUnit,
+      buffer: {
+        width: buffer,
+        unit: bufferUnit,
+      },
     },
   })
 }

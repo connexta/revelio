@@ -1,4 +1,4 @@
-import { geometry, shapes } from 'geospatialdraw'
+import { geometry } from 'geospatialdraw'
 import { geoToFilter } from './location'
 import { makeSearchGeoId } from './query-filters/filter'
 const { Map, Set, fromJS } = require('immutable')
@@ -45,12 +45,8 @@ const unitsMap = Map(fromJS(relativeUnits))
 
 const datatypeProperties = ['metadata-content-type', 'datatype']
 
-const shapeDetector = new shapes.ShapeDetector()
-
-const parseGeoFilter = (filter = {}) => {
-  const shape = shapeDetector.shapeFromGeoJSON(filter.geojson)
-  return geometry.makeGeometry(makeSearchGeoId(), filter.geojson, '', shape)
-}
+const parseGeoFilter = (filter = {}) =>
+  geometry.geoJSONToGeometryJSON(makeSearchGeoId(), filter.geojson)
 
 export const fromFilterTree = filterTree => {
   return filterTree.filters

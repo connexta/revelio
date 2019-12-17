@@ -220,19 +220,21 @@ describe('<Keyword />', () => {
           ...value,
           properties: {
             ...value.properties,
-            buffer: 50,
-            bufferUnit: geometry.MILES,
+            buffer: {
+              width: 50,
+              unit: geometry.MILES,
+            },
           },
         })
         expect(changes.length).to.equal(2)
         expect(changes[0].properties.keyword).to.equal('test')
         expect(changes[0].properties.keywordId).to.equal('test-id')
-        expect(changes[0].properties.buffer).to.equal(0)
-        expect(changes[0].properties.bufferUnit).to.equal(geometry.METERS)
+        expect(changes[0].properties.buffer.width).to.equal(0)
+        expect(changes[0].properties.buffer.unit).to.equal(geometry.METERS)
         expect(changes[1].properties.keyword).to.equal('test')
         expect(changes[1].properties.keywordId).to.equal('test-id')
-        expect(changes[1].properties.buffer).to.equal(50)
-        expect(changes[1].properties.bufferUnit).to.equal(geometry.MILES)
+        expect(changes[1].properties.buffer.width).to.equal(50)
+        expect(changes[1].properties.buffer.unit).to.equal(geometry.MILES)
       })
     })
   })

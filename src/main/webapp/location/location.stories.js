@@ -275,8 +275,10 @@ stories.add(`location with keyword`, () => {
       properties: {
         keyword: 'Italy',
         keywordId: '1dc06d71-dc20-44d5-b211-de33816071c1',
-        buffer: 50,
-        bufferUnit: geometry.MILES,
+        buffer: {
+          width: 50,
+          unit: geometry.MILES,
+        },
       },
     })
   )
