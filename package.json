@@ -1,7 +1,7 @@
 {
   "name": "revelio",
   "version": "1.0.0",
-  "main": "src/main/webapp/app.js",
+  "main": "src/main/webapp/main.js",
   "license": "MIT",
   "devDependencies": {
     "@connexta/ace": "https://github.com/connexta/ace.git#d58809d4c6e87554482939647f3f8d8c1690178d",
