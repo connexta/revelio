@@ -3,7 +3,6 @@ import { ApolloClient } from 'apollo-client'
 import { SchemaLink } from 'apollo-link-schema'
 import { makeExecutableSchema } from 'graphql-tools'
 import { BatchHttpLink } from 'apollo-link-batch-http'
-import { RetryLink } from 'apollo-link-retry'
 import { ApolloLink } from 'apollo-link'
 import { onError } from 'apollo-link-error'
 import schema from './schema'
@@ -22,7 +21,7 @@ const btoa = arg => {
   return Buffer.from(arg).toString('base64')
 }
 
-const authorization = '' //`Basic ${btoa('admin:admin')}`
+const authorization = ''// `Basic ${btoa('admin:admin')}`
 
 const serverErrorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
@@ -57,11 +56,13 @@ const createServerApollo = (...args) => {
   })
 }
 
+let logInModal
 const clientErrorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
       for (let err of graphQLErrors) {
         if (err.extensions.code === 'UNAUTHENTICATED') {
+          logInModal(true)
           //open modal and get credientials
           const oldHeaders = operation.getContext().headers
           operation.setContext({
@@ -72,6 +73,7 @@ const clientErrorLink = onError(
           })
         }
       }
+
       //retry request with new credentials
       return forward(operation, graphQLErrors)
     }
@@ -82,7 +84,8 @@ const clientErrorLink = onError(
   }
 )
 
-const createClientApollo = () => {
+const createClientApollo = params => {
+  logInModal = params.onAuthentication
   const cache = new InMemoryCache()
   cache.restore(window.__APOLLO_STATE__)
   return new ApolloClient({

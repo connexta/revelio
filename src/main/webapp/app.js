@@ -1,11 +1,10 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { AppContainer } from '@connexta/ace/react-hot-loader'
 import Routes from './routes'
 import { BrowserRouter } from 'react-router-dom'
 import { createClientApollo } from './intrigue-api/graphql'
 import { ApolloProvider } from '@apollo/react-hooks'
 import Loadable from 'react-loadable'
+import { LogInModal } from './login/loginModal'
 
 const render = async (Routes, client) => {
   // TODO: Update render to be hydrate to improve performance
@@ -17,6 +16,12 @@ const render = async (Routes, client) => {
 }
 
 const Application = ({ Routes, client }) => {
+  const [showLogin, setShowLogIn] = React.useState(false)
+  const client = createClientApollo({
+    onAuthentication: tryLogIn => {
+      setShowLogIn(tryLogIn)
+    },
+  })
   React.useEffect(() => {
     const ssrStyles = document.querySelector('#css-server-side')
     if (ssrStyles) {
@@ -24,24 +29,17 @@ const Application = ({ Routes, client }) => {
     }
   }, [])
   return (
-    <AppContainer>
-      <ApolloProvider client={client}>
-        <BrowserRouter basename="/search/catalog">
+    <ApolloProvider client={client}>
+      <BrowserRouter basename="/search/catalog">
+        <div>
           <Routes />
-        </BrowserRouter>
-      </ApolloProvider>
-    </AppContainer>
+          {showLogin ? (
+            <LogInModal open={true} handleClose={() => setShowLogIn(false)} />
+          ) : null}
+        </div>
+      </BrowserRouter>
+    </ApolloProvider>
   )
 }
 
-render(Routes, createClientApollo())
-
-if (process.env.NODE_ENV !== 'production') {
-  module.hot.accept('./routes', () => {
-    render(require('./routes').default, createClientApollo())
-  })
-  module.hot.accept('./intrigue-api/graphql', () => {
-    const { createClientApollo } = require('./intrigue-api/graphql')
-    render(require('./routes').default, createClientApollo())
-  })
-}
+export default App
