@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +32,10 @@ public class JsonRpcHttpServlet extends HttpServlet {
     Map<String, Object> request =
         ImmutableMap.of("id", 0, "method", "list-methods", "params", ImmutableMap.of());
     Object methods = method.apply(request);
-    GSON.toJson(methods, resp.getWriter());
+
+    try (Writer writer = getWriter(req, resp)) {
+      GSON.toJson(methods, writer);
+    }
   }
 
   @Override
@@ -49,9 +52,9 @@ public class JsonRpcHttpServlet extends HttpServlet {
       response = method.apply((Map<String, Object>) request);
     }
 
-    Writer writer = getWriter(req, resp);
-    GSON.toJson(response, writer);
-    writer.flush();
+    try (Writer writer = getWriter(req, resp)) {
+      GSON.toJson(response, writer);
+    }
   }
 
   private Writer getWriter(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -66,6 +69,6 @@ public class JsonRpcHttpServlet extends HttpServlet {
     }
 
     resp.addHeader("Content-Encoding", "gzip");
-    return new PrintWriter(new GZIPOutputStream(resp.getOutputStream(), true));
+    return new OutputStreamWriter(new GZIPOutputStream(resp.getOutputStream(), true));
   }
 }
