@@ -337,7 +337,7 @@ const createMetacard = async (parent, args, context) => {
   }
 
   const res = await catalog.create(metacardsToCreate)
-  return renameKeys(toGraphqlName, res.created_metacards[0].attributes)
+  return renameKeys(toGraphqlName, res.createdMetacards[0].attributes)
 }
 
 const saveMetacard = async (parent, args, context) => {
