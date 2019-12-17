@@ -33,7 +33,7 @@
   <reference id="defaultAttributeValidatorRegistry" interface="ddf.catalog.validation.AttributeValidatorRegistry" availability="optional"/>
   <reference-list id="attributeInjectors" interface="ddf.catalog.data.AttributeInjector"
                   availability="optional"/>
-  <bean id="enumerationExtractor" class="org.codice.ddf.catalog.ui.enumeration.ExperimentalEnumerationExtractor">
+  <bean id="enumerationExtractor" class="org.codice.ddf.attribute.enumerations.EnumerationExtractor">
     <argument ref="defaultAttributeValidatorRegistry" />
     <argument ref="metacardTypes" />
     <argument ref="attributeInjectors" />
