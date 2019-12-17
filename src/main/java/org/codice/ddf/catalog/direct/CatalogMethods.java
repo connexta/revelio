@@ -569,7 +569,7 @@ public class CatalogMethods implements MethodSet {
     }
     Map<String, Object> attributes = (Map) metacard.get(ATTRIBUTES);
 
-    Object rawType = metacard.get("metacard-type");
+    Object rawType = metacard.get("metacardType");
     String desiredMetacardType = rawType instanceof String ? String.valueOf(rawType) : null;
     MetacardType metacardType =
         metacardTypes
