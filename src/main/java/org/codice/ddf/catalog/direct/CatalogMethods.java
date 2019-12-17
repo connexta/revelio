@@ -197,7 +197,7 @@ public class CatalogMethods implements MethodSet {
     }
 
     return ImmutableMap.of(
-        "deleted_metacards",
+        "deletedMetacards",
         deleteResponse
             .getDeletedMetacards()
             .stream()
@@ -245,7 +245,7 @@ public class CatalogMethods implements MethodSet {
     }
 
     return ImmutableMap.of(
-        "updated_metacards",
+        "updatedMetacards",
         updateResponse
             .getUpdatedMetacards()
             .stream()
@@ -526,7 +526,7 @@ public class CatalogMethods implements MethodSet {
     }
 
     return ImmutableMap.of(
-        "created_metacards",
+        "createdMetacards",
         createResponse
             .getCreatedMetacards()
             .stream()
