@@ -28,6 +28,13 @@ specialized components, such as
 
 ## Getting Started
 
+Revelio should be run alongside an instance of [DDF](https://github.com/codice/ddf).
+Changes made on DDF (creating/deleting workspaces, result forms, etc.) will
+then be reflected in Revelio.
+
+    mvn clean install
+    copy over the jar generated in the targets directory over to the deploy folder of your ddf distribution
+    yarn install
     yarn start
 
 ## Architecture
