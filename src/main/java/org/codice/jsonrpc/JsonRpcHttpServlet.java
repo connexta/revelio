@@ -4,9 +4,13 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.zip.GZIPOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +32,10 @@ public class JsonRpcHttpServlet extends HttpServlet {
     Map<String, Object> request =
         ImmutableMap.of("id", 0, "method", "list-methods", "params", ImmutableMap.of());
     Object methods = method.apply(request);
-    GSON.toJson(methods, resp.getWriter());
+
+    try (Writer writer = getWriter(req, resp)) {
+      GSON.toJson(methods, writer);
+    }
   }
 
   @Override
@@ -45,6 +52,23 @@ public class JsonRpcHttpServlet extends HttpServlet {
       response = method.apply((Map<String, Object>) request);
     }
 
-    GSON.toJson(response, resp.getWriter());
+    try (Writer writer = getWriter(req, resp)) {
+      GSON.toJson(response, writer);
+    }
+  }
+
+  private Writer getWriter(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    boolean wantsGzip =
+        Optional.of(req)
+            .map(r -> r.getHeader("Accept-Encoding"))
+            .map(s -> s.contains("gzip"))
+            .orElse(false);
+
+    if (!wantsGzip) {
+      return resp.getWriter();
+    }
+
+    resp.addHeader("Content-Encoding", "gzip");
+    return new OutputStreamWriter(new GZIPOutputStream(resp.getOutputStream(), true));
   }
 }
