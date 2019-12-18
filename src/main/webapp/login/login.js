@@ -13,12 +13,12 @@ export const LogIn = props => {
     password: '',
     showPassword: false,
   })
-  const handleChange = prop => event => {
-    setValues({ values, [prop]: event.target.value })
+    const handleChange = prop => event => {
+      setValues({...values, [prop]: event.target.value })
   }
   const changePasswordVisibility = () => {
     let flip = !values['showPassword']
-    setValues({ showPassword: flip })
+      setValues({ ...values, showPassword: flip })
   }
   return (
     <div
@@ -40,7 +40,7 @@ export const LogIn = props => {
         variant="outlined"
         label="Username"
         style={{ marginBottom: 20 }}
-        onBlur={handleChange('username')}
+      onChange={handleChange('username')}
       />
       <TextField
         required
@@ -61,7 +61,7 @@ export const LogIn = props => {
             </InputAdornment>
           ),
         }}
-        onBlur={handleChange('password')}
+      onChange={handleChange('password')}
       />
       <Button
         variant="contained"
