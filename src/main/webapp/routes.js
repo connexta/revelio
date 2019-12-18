@@ -37,7 +37,7 @@ import { Link as ReactLink, Route, matchPath } from 'react-router-dom'
 
 import User from './user'
 import UserSettings from './user-settings'
-import loadable from '@connexta/ace/react-loadable'
+import loadable from 'react-loadable'
 
 export const LoadingComponent = () => <LinearProgress />
 

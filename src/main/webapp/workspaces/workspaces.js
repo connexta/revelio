@@ -29,7 +29,7 @@ import QueryStatus from '../query-status'
 import { BasicSearch } from '../basic-search'
 import QuerySelector from './query-selector'
 
-import loadable from '@connexta/ace/react-loadable'
+import loadable from 'react-loadable'
 import Lists from '../lists'
 
 const LoadingComponent = () => <LinearProgress />

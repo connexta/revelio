@@ -75,7 +75,7 @@ const executeSSR = async req => {
       </Loadable.Capture>
     )
     await getDataFromTree(App)
-    await sleep(500)
+    await sleep(300)
 
     const modulesToBeLoaded = [
       ...clientBundles.entrypoints,
