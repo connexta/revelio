@@ -21,7 +21,7 @@ const btoa = arg => {
   return Buffer.from(arg).toString('base64')
 }
 
-const authorization = ''// `Basic ${btoa('admin:admin')}`
+const authorization = `Basic ${btoa('admin:admin')}`
 
 const serverErrorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
