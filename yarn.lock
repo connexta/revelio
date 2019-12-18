@@ -7895,9 +7895,9 @@ geojson-rbush@2.1.0:
     "@turf/meta" "*"
     rbush "*"
 
-"geospatialdraw@https://github.com/connexta/geospatialdraw.git#ce9830eeca9e1400734eb3c87eaaff20fbc611e0":
+"geospatialdraw@https://github.com/connexta/geospatialdraw.git#c330407bda2442a983b42e9f1afbb4575c1e21fc":
   version "0.4.0"
-  resolved "https://github.com/connexta/geospatialdraw.git#ce9830eeca9e1400734eb3c87eaaff20fbc611e0"
+  resolved "https://github.com/connexta/geospatialdraw.git#c330407bda2442a983b42e9f1afbb4575c1e21fc"
   dependencies:
     "@turf/turf" "5.1.6"
     lodash.clonedeep "4.5.0"

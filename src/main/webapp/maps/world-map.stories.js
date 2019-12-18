@@ -81,8 +81,10 @@ stories.add('render geometries', () => {
         shape: 'Polygon',
         id: 'shape1',
         color: '#a020f0',
-        buffer: 0,
-        bufferUnit: 'meters',
+        buffer: {
+          width: 0,
+          unit: 'meters',
+        },
       },
       bbox: [
         -77.39377564457455,
@@ -127,8 +129,10 @@ stories.add('render geometries', () => {
         shape: 'Polygon',
         id: 'shape2',
         color: '#ffd700',
-        buffer: 0,
-        bufferUnit: 'meters',
+        buffer: {
+          width: 0,
+          unit: 'meters',
+        },
       },
       bbox: [
         -50.555500573327464,
@@ -165,8 +169,10 @@ stories.add('render geometries', () => {
         shape: 'Polygon',
         id: 'shape3',
         color: '#ff00ff',
-        buffer: 0,
-        bufferUnit: 'meters',
+        buffer: {
+          width: 0,
+          unit: 'meters',
+        },
       },
       bbox: [
         129.05907305960878,
@@ -231,8 +237,10 @@ stories.add('render geometries', () => {
         shape: 'Polygon',
         id: 'shape4',
         color: '#ffff00',
-        buffer: 0,
-        bufferUnit: 'meters',
+        buffer: {
+          width: 0,
+          unit: 'meters',
+        },
       },
       bbox: [
         111.19816697657915,
@@ -251,8 +259,10 @@ stories.add('render geometries', () => {
         shape: 'Point Radius',
         id: 'shape5',
         color: '#a52a2a',
-        buffer: 86.22498402406272,
-        bufferUnit: 'kilometers',
+        buffer: {
+          width: 86.22498402406272,
+          unit: 'kilometers',
+        },
       },
       bbox: [
         1.591858105761676,
@@ -271,8 +281,10 @@ stories.add('render geometries', () => {
         id: 'shape6',
         color: '#0000ff',
         shape: 'Point',
-        buffer: 0,
-        bufferUnit: 'meters',
+        buffer: {
+          width: 0,
+          unit: 'meters',
+        },
       },
       bbox: [
         -77.03353449715513,
@@ -291,8 +303,10 @@ stories.add('render geometries', () => {
         shape: 'Point',
         id: 'shape7',
         color: '#ff0000',
-        buffer: 0,
-        bufferUnit: 'meters',
+        buffer: {
+          width: 0,
+          unit: 'meters',
+        },
       },
       bbox: [
         37.631401597084825,

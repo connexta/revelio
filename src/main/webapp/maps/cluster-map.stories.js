@@ -34,8 +34,10 @@ stories.add('render clusters', () => {
       properties: {
         id: '',
         color: '',
-        buffer: 0,
-        bufferUnit: 'meters',
+        buffer: {
+          width: 0,
+          unit: 'meters',
+        },
         shape: 'Polygon',
       },
       bbox: [
@@ -56,8 +58,10 @@ stories.add('render clusters', () => {
       properties: {
         id: '',
         color: '',
-        buffer: 0,
-        bufferUnit: 'meters',
+        buffer: {
+          width: 0,
+          unit: 'meters',
+        },
         shape: 'Bounding Box',
       },
       geometry: {
@@ -82,8 +86,10 @@ stories.add('render clusters', () => {
       properties: {
         id: '',
         color: '',
-        buffer: 979.4785955831757,
-        bufferUnit: 'meters',
+        buffer: {
+          width: 979.4785955831757,
+          unit: 'meters',
+        },
         shape: 'Point Radius',
       },
       bbox: [
@@ -114,8 +120,10 @@ stories.add('render clusters', () => {
       properties: {
         id: '',
         color: '',
-        buffer: 0,
-        bufferUnit: 'meters',
+        buffer: {
+          width: 0,
+          unit: 'meters',
+        },
         shape: 'Line',
       },
       bbox: [
@@ -134,8 +142,10 @@ stories.add('render clusters', () => {
       properties: {
         id: '',
         color: '',
-        buffer: 0,
-        bufferUnit: 'meters',
+        buffer: {
+          width: 0,
+          unit: 'meters',
+        },
         shape: 'Point',
       },
       bbox: [-77.028019, 38.898326, -77.028019, 38.898326],
@@ -149,8 +159,10 @@ stories.add('render clusters', () => {
       properties: {
         id: '',
         color: '',
-        buffer: 0,
-        bufferUnit: 'meters',
+        buffer: {
+          width: 0,
+          unit: 'meters',
+        },
         shape: 'Point',
       },
       bbox: [-77.021717, 38.898818, -77.021717, 38.898818],
@@ -164,8 +176,10 @@ stories.add('render clusters', () => {
       properties: {
         id: '',
         color: '',
-        buffer: 0,
-        bufferUnit: 'meters',
+        buffer: {
+          width: 0,
+          unit: 'meters',
+        },
         shape: 'Point',
       },
       bbox: [-77.032099, 38.90135, -77.032099, 38.90135],

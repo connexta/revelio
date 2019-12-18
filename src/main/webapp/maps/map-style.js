@@ -160,7 +160,8 @@ const GENERIC_DRAWING_STYLE = feature => [
     }),
     ...(feature.getGeometry() &&
     feature.getGeometry().getType() === 'Point' &&
-    feature.get('buffer') > 0
+    feature.get('buffer') &&
+    feature.get('buffer').width > 0
       ? {}
       : {
           image: new Circle({
