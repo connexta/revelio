@@ -414,21 +414,10 @@ public class CatalogMethods implements MethodSet {
         .build();
   }
 
-  private List<Action> getMetacardActions(Metacard metacard) {
-    return this.actionRegistry
-        .list(metacard)
-        .stream()
-        .map(
-            action ->
-                new ActionImpl(
-                    action.getId(), action.getTitle(), action.getDescription(), action.getUrl()))
-        .collect(Collectors.toList());
-  }
 
   private Map<String, Object> getMetacardInfo(Metacard metacard) {
     return new ImmutableMap.Builder<String, Object>()
         .put("metacard", ImmutableMap.of("properties", this.metacard2map(metacard)))
-        .put("actions", getMetacardActions(metacard))
         .build();
   }
 
