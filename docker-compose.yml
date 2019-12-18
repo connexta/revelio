@@ -5,7 +5,7 @@ services:
     environment:
       - NODE_ENV=production
       - DDF_LOCATION=https://docker.for.mac.localhost:8993
-      - EXPRESS_PORT=3000
+      - EXPRESS_PORT=3200
     command:
       [
         "sh",
@@ -13,4 +13,4 @@ services:
         "NODE_ENV=$${NODE_ENV} DDF_LOCATION=$${DDF_LOCATION} EXPRESS_PORT=$${EXPRESS_PORT}} node bundle.middleware.js",
       ]
     ports:
-      - "3000:3000"
+      - "3200:3200"
