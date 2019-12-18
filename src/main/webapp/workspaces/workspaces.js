@@ -29,7 +29,7 @@ import QueryStatus from '../query-status'
 import { BasicSearch } from '../basic-search'
 import QuerySelector from './query-selector'
 
-import loadable from 'react-loadable'
+import loadable from '@connexta/ace/react-loadable'
 import Lists from '../lists'
 
 const LoadingComponent = () => <LinearProgress />
@@ -159,7 +159,7 @@ export const Workspace = () => {
                   <BasicSearch
                     query={query}
                     onSearch={query => {
-                      //setPageIndex(0)
+                      // setPageIndex(0)
                       setQuery(query)
                       onClear()
                       onSearch(query)

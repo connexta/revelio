@@ -880,9 +880,9 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@connexta/ace@https://github.com/connexta/ace.git#d58809d4c6e87554482939647f3f8d8c1690178d":
+"@connexta/ace@https://github.com/schachte/ace.git#bc3b7baf3b5a83a1c79f3579b7b00e86557d2b3b":
   version "1.0.0"
-  resolved "https://github.com/connexta/ace.git#d58809d4c6e87554482939647f3f8d8c1690178d"
+  resolved "https://github.com/schachte/ace.git#bc3b7baf3b5a83a1c79f3579b7b00e86557d2b3b"
   dependencies:
     "@babel/core" "^7.0.0"
     "@storybook/addon-actions" "5.2.3"
@@ -937,6 +937,8 @@
     react-dev-utils "5.0.2"
     react-docgen-typescript-loader "^3.1.0"
     react-hot-loader "4.12.6"
+    react-loadable "^5.5.0"
+    react-loadable-ssr-addon "https://github.com/connexta/react-loadable-ssr-addon#65e3801f2929630634cf70c01a715d69d0760e34"
     require-from-string "^2.0.2"
     rimraf "2.6.2"
     script-loader "0.7.2"
@@ -12087,6 +12089,10 @@ react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.3, react-is
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
+
+"react-loadable-ssr-addon@https://github.com/connexta/react-loadable-ssr-addon#65e3801f2929630634cf70c01a715d69d0760e34":
+  version "0.2.0"
+  resolved "https://github.com/connexta/react-loadable-ssr-addon#65e3801f2929630634cf70c01a715d69d0760e34"
 
 react-loadable@^5.5.0:
   version "5.5.0"

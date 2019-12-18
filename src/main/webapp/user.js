@@ -47,7 +47,7 @@ const User = props => {
   }
 
   const signOut = () => {
-    window.location.href = '../../logout?service=' + window.location.href
+    // window.location.href = '../../logout?service=' + window.location.href
   }
 
   return (

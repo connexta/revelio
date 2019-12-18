@@ -37,7 +37,7 @@ import { Link as ReactLink, Route, matchPath } from 'react-router-dom'
 
 import User from './user'
 import UserSettings from './user-settings'
-import loadable from 'react-loadable'
+import loadable from '@connexta/ace/react-loadable'
 
 export const LoadingComponent = () => <LinearProgress />
 
@@ -57,28 +57,44 @@ const Link = props => {
 
 const loadDynamicRoute = route => {
   const routes = {
-    workspace: async () => {
-      return (await import(/* webpackChunkName: "workspace" */ './workspaces/workspaces'))
-        .Workspace
-    },
-    workspaces: () =>
-      import(/* webpackChunkName: "workspaces-index" */ './workspaces/workspaces'),
-    about: () => import(/* webpackChunkName: "about" */ './about'),
-    sources: () => import(/* webpackChunkName: "sources" */ './sources'),
-    'simple-search': () =>
-      import(/* webpackChunkName: "simple-search" */ './simple-search'),
-    'result-forms': () =>
-      import(/* webpackChunkName: "result-forms" */ './result-forms'),
-    'search-forms': () =>
-      import(/* webpackChunkName: "search-forms" */ './search-forms/index.tsx'),
+    workspace: loadable({
+      loader: async () => {
+        return (await import(/* webpackChunkName: "workspace" */ './workspaces/workspaces'))
+          .Workspace
+      },
+      loading: LoadingComponent,
+    }),
+    workspaces: loadable({
+      loader: () =>
+        import(/* webpackChunkName: "workspaces-index" */ './workspaces/workspaces'),
+      loading: LoadingComponent,
+    }),
+    sources: loadable({
+      loader: () => import(/* webpackChunkName: "sources" */ './sources'),
+      loading: LoadingComponent,
+    }),
+    'simple-search': loadable({
+      loader: () =>
+        import(/* webpackChunkName: "simple-search" */ './simple-search'),
+      loading: LoadingComponent,
+    }),
+    'result-forms': loadable({
+      loader: () =>
+        import(/* webpackChunkName: "result-forms" */ './result-forms'),
+      loading: LoadingComponent,
+    }),
+    'search-forms': loadable({
+      loader: () =>
+        import(/* webpackChunkName: "search-forms" */ './search-forms/index.tsx'),
+      loading: LoadingComponent,
+    }),
+    about: loadable({
+      loader: () => import(/* webpackChunkName: "about" */ './about'),
+      loading: LoadingComponent,
+    }),
   }
 
-  const loader = routes[route]
-
-  return loadable({
-    loader,
-    loading: LoadingComponent,
-  })
+  return routes[route]
 }
 
 const createRoute = (path, title, Icon = AccessibleForwardIcon, component) => {
