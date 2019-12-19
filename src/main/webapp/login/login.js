@@ -16,7 +16,7 @@ const LOGIN_MUTATION = gql`
 `
 
 export const LogIn = props => {
-  const [logIn, { data }] = useMutation(LOGIN_MUTATION)
+  const [logIn] = useMutation(LOGIN_MUTATION)
   const [values, setValues] = React.useState({
     username: '',
     password: '',
