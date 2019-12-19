@@ -9,6 +9,7 @@ import { useSelectionInterface } from '../react-hooks'
 
 import { Layout, Provider, AddConfig, DragSource } from '../react-golden-layout'
 
+import Histogram from '../histogram'
 import Inspector from '../inspector/inspector'
 import ResultTable from '../results/results'
 
@@ -44,6 +45,11 @@ const AddVisualization = () => {
       type: 'component',
       title: 'Inspector',
       componentName: 'inspector',
+    },
+    Histogram: {
+      type: 'component',
+      title: 'Histogram',
+      componentName: 'histogram',
     },
   }
 
@@ -140,6 +146,20 @@ const Visualizations = props => {
     )
   }
 
+  const HistogramVis = () => {
+    const [selected] = useSelectionInterface()
+
+    const selectedResults = results.filter(result => {
+      return selected.has(result.metacard.properties.id)
+    })
+
+    return (
+      <VisContainer>
+        <Histogram results={results} selected={selectedResults} />
+      </VisContainer>
+    )
+  }
+
   const wkt = new WKT({ splitCollection: true })
   const geoJSON = new GeoJSON()
   const MapVis = () => {
@@ -193,6 +213,7 @@ const Visualizations = props => {
     inspector: InspectorVis,
     table: TableVis,
     '2d-map': MapVis,
+    histogram: HistogramVis,
   }
   return (
     <Provider>

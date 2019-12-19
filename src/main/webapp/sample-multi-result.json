@@ -1,228 +1,3206 @@
 [
   {
-    "matches": {},
-    "metacard": {
-      "cached": "2019-10-01T21:26:40.811+0000",
-      "properties": {
-        "resource-size": "410",
-        "created": "2019-09-30T22:17:43.710+0000",
-        "metacard-tags": ["resource", "VALID"],
-        "media.type": "application/xml",
-        "ext.extracted.text": "   -109.031934 37.029318 -103.053117 32.015908\n",
-        "metacard-type": "fallback.common",
-        "title": "lineThruNM.gml",
-        "source-id": "ddf.distribution",
-        "metacard.created": "2019-09-30T22:17:43.710+0000",
-        "effective": "2019-09-30T22:17:43.710+0000",
-        "point-of-contact": "system@localhost.local",
-        "datatype": ["Text"],
-        "metacard.modified": "2019-09-30T22:17:43.710+0000",
-        "modified": "2019-09-30T22:17:43.710+0000",
-        "id": "fb7be8af54a9433aa63834d433f00721"
-      }
-    },
-    "distance": null,
-    "relevance": 11.068877220153809,
     "actions": [
       {
-        "displayName": "GMD Metadata",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
-        "title": "Export as gmd:MD_Metadata",
-        "description": "Provides a URL to the metacard that transforms the return value via the gmd:MD_Metadata transformer",
-        "id": "catalog.data.metacard.gmd:MD_Metadata"
-      },
-      {
-        "displayName": "Preview HTML",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
-        "title": "Export as html",
-        "description": "Provides a URL to the metacard that transforms the return value via the html transformer",
-        "id": "catalog.data.metacard.html"
-      },
-      {
-        "displayName": "Metacard XML",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
-        "title": "Export Metacard XML",
-        "description": "Provides a URL to the metacard",
-        "id": "catalog.data.metacard.view"
-      },
-      {
-        "displayName": "RTF",
+        "id": "catalog.data.metacard.rtf",
         "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
         "title": "Export as rtf",
-        "description": "Provides a URL to the metacard that transforms the return value via the rtf transformer",
-        "id": "catalog.data.metacard.rtf"
+        "displayName": null,
+        "__typename": "MetacardAction"
       },
       {
-        "displayName": "OGC GML",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
-        "title": "Export as xml",
-        "description": "Provides a URL to the metacard that transforms the return value via the xml transformer",
-        "id": "catalog.data.metacard.xml"
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
       },
       {
-        "displayName": "GeoJSON",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
-        "title": "Export as geojson",
-        "description": "Provides a URL to the metacard that transforms the return value via the geojson transformer",
-        "id": "catalog.data.metacard.geojson"
-      },
-      {
-        "displayName": "Preview",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
-        "title": "Export as preview",
-        "description": "Provides a URL to the metacard that transforms the return value via the preview transformer",
-        "id": "catalog.data.metacard.preview"
-      },
-      {
-        "displayName": "CSV",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
-        "title": "Export as csv",
-        "description": "Provides a URL to the metacard that transforms the return value via the csv transformer",
-        "id": "catalog.data.metacard.csv"
-      },
-      {
-        "displayName": "Property JSON",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
-        "title": "Export as propertyjson",
-        "description": "Provides a URL to the metacard that transforms the return value via the propertyjson transformer",
-        "id": "catalog.data.metacard.propertyjson"
-      },
-      {
-        "displayName": "Binary Resource",
+        "id": "catalog.data.metacard.resource",
         "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
         "title": "Export as resource",
-        "description": "Provides a URL to the metacard that transforms the return value via the resource transformer",
-        "id": "catalog.data.metacard.resource"
+        "displayName": null,
+        "__typename": "MetacardAction"
       },
       {
-        "displayName": "CSW Record XML",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
-        "title": "Export as csw:Record",
-        "description": "Provides a URL to the metacard that transforms the return value via the csw:Record transformer",
-        "id": "catalog.data.metacard.csw:Record"
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
       },
       {
-        "displayName": "Preview",
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
         "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
         "title": "Text Preview",
-        "description": "Provides a text preview of the resource",
-        "id": "catalog.data.metacard.html.preview"
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
       }
     ],
-    "hasThumbnail": false,
-    "isResourceLocal": false
-  },
-  {
-    "matches": {},
     "metacard": {
-      "cached": "2009-10-01T21:26:40.811+0000",
       "properties": {
-        "resource-size": "410",
-        "created": "2009-09-30T22:17:43.710+0000",
-        "metacard-tags": ["resource", "VALID"],
-        "media.type": "application/xml",
-        "ext.extracted.text": "   -109.031934 37.029318 -103.053117 32.015908\n",
-        "metacard-type": "fallback.common",
-        "title": "lineThruNM.gml",
-        "source-id": "ddf.distribution",
-        "metacard.created": "2009-09-30T22:17:43.710+0000",
-        "effective": "2009-09-30T22:17:43.710+0000",
         "point-of-contact": "system@localhost.local",
+        "resource-size": "410",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "lineThruNM.gml",
         "datatype": ["Text"],
-        "metacard.modified": "2009-09-30T22:17:43.710+0000",
-        "modified": "2009-09-30T22:17:43.710+0000",
-        "id": "fu7sa8mf54u9433sa63834m433f00721"
+        "id": "fb7be8af54a9433aa63834d433f00721",
+        "ext.extracted.text": "   -109.031934 37.029318 -103.053117 32.015908\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/xml\" />\n<title></title>\n</head>\n /></html>"
       }
     },
-    "distance": null,
-    "relevance": 11.068877220153809,
+    "__typename": "QueryResponseResult"
+  },
+  {
     "actions": [
       {
-        "displayName": "GMD Metadata",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fu7sa8mf54u9433sa63834m433f00721?transform=gmd:MD_Metadata",
-        "title": "Export as gmd:MD_Metadata",
-        "description": "Provides a URL to the metacard that transforms the return value via the gmd:MD_Metadata transformer",
-        "id": "catalog.data.metacard.gmd:MD_Metadata"
-      },
-      {
-        "displayName": "Preview HTML",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fu7sa8mf54u9433sa63834m433f00721?transform=html",
-        "title": "Export as html",
-        "description": "Provides a URL to the metacard that transforms the return value via the html transformer",
-        "id": "catalog.data.metacard.html"
-      },
-      {
-        "displayName": "Metacard XML",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fu7sa8mf54u9433sa63834m433f00721",
-        "title": "Export Metacard XML",
-        "description": "Provides a URL to the metacard",
-        "id": "catalog.data.metacard.view"
-      },
-      {
-        "displayName": "RTF",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fu7sa8mf54u9433sa63834m433f00721?transform=rtf",
-        "title": "Export as rtf",
-        "description": "Provides a URL to the metacard that transforms the return value via the rtf transformer",
-        "id": "catalog.data.metacard.rtf"
-      },
-      {
-        "displayName": "OGC GML",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fu7sa8mf54u9433sa63834m433f00721?transform=xml",
-        "title": "Export as xml",
-        "description": "Provides a URL to the metacard that transforms the return value via the xml transformer",
-        "id": "catalog.data.metacard.xml"
-      },
-      {
-        "displayName": "GeoJSON",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fu7sa8mf54u9433sa63834m433f00721?transform=geojson",
-        "title": "Export as geojson",
-        "description": "Provides a URL to the metacard that transforms the return value via the geojson transformer",
-        "id": "catalog.data.metacard.geojson"
-      },
-      {
-        "displayName": "Preview",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fu7sa8mf54u9433sa63834m433f00721?transform=preview",
-        "title": "Export as preview",
-        "description": "Provides a URL to the metacard that transforms the return value via the preview transformer",
-        "id": "catalog.data.metacard.preview"
-      },
-      {
-        "displayName": "CSV",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fu7sa8mf54u9433sa63834m433f00721?transform=csv",
-        "title": "Export as csv",
-        "description": "Provides a URL to the metacard that transforms the return value via the csv transformer",
-        "id": "catalog.data.metacard.csv"
-      },
-      {
-        "displayName": "Property JSON",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fu7sa8mf54u9433sa63834m433f00721?transform=propertyjson",
-        "title": "Export as propertyjson",
-        "description": "Provides a URL to the metacard that transforms the return value via the propertyjson transformer",
-        "id": "catalog.data.metacard.propertyjson"
-      },
-      {
-        "displayName": "Binary Resource",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fu7sa8mf54u9433sa63834m433f00721?transform=resource",
-        "title": "Export as resource",
-        "description": "Provides a URL to the metacard that transforms the return value via the resource transformer",
-        "id": "catalog.data.metacard.resource"
-      },
-      {
-        "displayName": "CSW Record XML",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fu7sa8mf54u9433sa63834m433f00721?transform=csw:Record",
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
         "title": "Export as csw:Record",
-        "description": "Provides a URL to the metacard that transforms the return value via the csw:Record transformer",
-        "id": "catalog.data.metacard.csw:Record"
+        "displayName": null,
+        "__typename": "MetacardAction"
       },
       {
-        "displayName": "Preview",
-        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fu7sa8mf54u9433sa63834m433f00721?transform=preview",
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
         "title": "Text Preview",
-        "description": "Provides a text preview of the resource",
-        "id": "catalog.data.metacard.html.preview"
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
       }
     ],
-    "hasThumbnail": false,
-    "isResourceLocal": false
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "1037",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "caTarget.kml",
+        "datatype": ["Text"],
+        "id": "3bc11a40fd2f484d8e75e652075e26e3",
+        "ext.extracted.text": "   KML Metacard Export 0  caTarget   caTarget  0    -117.619972,32.372761 -114.403725,32.718143 -114.29472,34.322491 -114.654694,35.11797 -120.036964,39.027729 -120.035591,42.080898 -124.839878,41.947346 -124.856701,40.215111 -120.60482,34.235115 -118.232803,33.10009 -117.619972,32.372761\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/vnd.google-earth.kml+xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/vnd.google-earth.kml+xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "885",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "neNmPoly.kml",
+        "datatype": ["Text"],
+        "id": "56deeedf2c364f239227c313dfbeaa27",
+        "ext.extracted.text": "   KML Metacard Export 0  neNmPoly   neNmPoly  0    -108.77322,36.980637 -103.094451,32.254259 -103.098374,36.966769 -108.77322,36.980637\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/vnd.google-earth.kml+xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/vnd.google-earth.kml+xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "836",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "neNmPoly.zip",
+        "datatype": ["Collection"],
+        "id": "8f6804c38fc1476da8bee591d6ceec07",
+        "ext.extracted.text": "\nPolygon.shp\n\n\nPolygon.dbf\n\t\tname\t\tdesc\t\tclass\t\ttype\t\tneNmPoly\t\t\t\tU\t\t\n\n\n\n\n\nPolygon.shx\n\n\nPolygon.prj\n\n\nPolygon.fix\n\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/zip",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.pkg.PackageParser\" />\n<meta name=\"Content-Type\" content=\"application/zip\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "526",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "swNmPoly.gml",
+        "datatype": ["Text"],
+        "id": "29ff0706a5194ea29347f0e9abfee488",
+        "ext.extracted.text": "     -109.013768 36.800586 -103.286083 32.025719 -108.945108 31.21782 -109.013768 36.800586\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "777",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "lineThruAz.kml",
+        "datatype": ["Text"],
+        "id": "72832afe5b374aec8936c7f0888a7d0f",
+        "ext.extracted.text": "   KML Metacard Export 0  lineThruAz   lineThruAz  1  -114.020421,37.017702 -109.057696,31.348831\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/vnd.google-earth.kml+xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/vnd.google-earth.kml+xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "887",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "swAzPoly.kml",
+        "datatype": ["Text"],
+        "id": "bb981ef6a7874163932f37fbd41f4dc3",
+        "ext.extracted.text": "   KML Metacard Export 0  swAzPoly   swAzPoly  0    -114.038259,36.809535 -109.301671,31.364628 -114.682792,32.472745 -114.038259,36.809535\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/vnd.google-earth.kml+xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/vnd.google-earth.kml+xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "852",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "lineThruAz.zip",
+        "datatype": ["Collection"],
+        "id": "552f08c3727845c595e504b6b578345d",
+        "ext.extracted.text": "\nLineString.shp\n\n\nLineString.dbf\n\t\tname\t\tdesc\t\tclass\t\ttype\t\tlineThruAz\t\t\t\tU\t\t\n\n\n\n\n\nLineString.shx\n\n\nLineString.prj\n\n\nLineString.fix\n\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/zip",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.pkg.PackageParser\" />\n<meta name=\"Content-Type\" content=\"application/zip\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "840",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "swAzPoly.zip",
+        "datatype": ["Collection"],
+        "id": "3b00087ed2b44812b735c3e160fd4838",
+        "ext.extracted.text": "\nPolygon.shp\n\n\nPolygon.dbf\n\t\tname\t\tdesc\t\tclass\t\ttype\t\tswAzPoly\t\t\t\tU\t\t\n\n\n\n\n\nPolygon.shx\n\n\nPolygon.prj\n\n\nPolygon.fix\n\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/zip",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.pkg.PackageParser\" />\n<meta name=\"Content-Type\" content=\"application/zip\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "4516",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "MultipleStates.kml",
+        "datatype": ["Text"],
+        "id": "6b575253d8cd44ebba4489207a97b130",
+        "ext.extracted.text": "   KML Metacard Export 0  TN   TN  0    -84.223938,34.957638 -81.647987,36.57692 -88.245621,36.581211 -89.584236,36.46225 -90.234661,34.963303 -84.223938,34.957638  TX   TX  0.000001    -103.029613,36.49641 -103.028927,32.02343 -106.652699,31.887817 -103.102741,28.916359 -102.546558,29.781189 -101.337891,29.724884 -98.997116,26.417999 -97.14592,25.80843 -97.366848,27.753353 -93.954735,29.770031 -93.414516,31.151047 -94.000225,33.427105 -95.149155,33.914967 -99.929237,34.308071 -99.922028,36.52113 -103.029613,36.49641  WY   WY  0.000001    -111.060791,45.037594 -111.005173,40.951366 -104.029369,40.955658 -104.020786,44.965153 -111.060791,45.037594  CA   CA  0.000001    -117.411575,32.563477 -114.50964,32.598495 -114.571609,35.000381 -119.96109,38.93383 -120.022373,42.0191 -124.749069,42.035923 -124.789581,40.193481 -120.476933,34.118214 -118.620758,33.038292 -117.411575,32.563477  AZ   AZ  0.000001    -109.04274,31.335411 -109.061794,36.966591 -114.082718,36.920586 -114.045811,35.901947 -114.938107,36.103821 -114.173183,34.257431 -114.843178,32.408123 -110.917797,31.300907 -109.04274,31.335411  NY   NY  0.000001    -79.790268,42.499065 -79.790268,41.981335 -75.323639,41.966572 -73.45871,40.565987 -73.354511,45.085144 -74.848652,44.955883 -76.764393,43.643875 -78.930759,43.492641 -79.790268,42.499065  KS   KS  0.000001    -102.055607,39.959679 -102.026768,36.978092 -94.535122,36.953888 -94.451523,39.077682 -95.274982,39.921398 -102.055607,39.959679\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/vnd.google-earth.kml+xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/vnd.google-earth.kml+xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "771",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "hiTarget.kml",
+        "datatype": ["Text"],
+        "id": "73079b419f794694b1625702295da7dc",
+        "ext.extracted.text": "   KML Metacard Export 0  hiTarget   hiTarget  1  -154.319468,19.475076 -162.120843,23.6243\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/vnd.google-earth.kml+xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/vnd.google-earth.kml+xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "525",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "neAzPoly.gml",
+        "datatype": ["Text"],
+        "id": "c8f4da9c026940199243db04c6f52b2b",
+        "ext.extracted.text": "     -113.69623 36.964489 -108.964715 31.617822 -109.018866 36.963627 -113.69623 36.964489\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "1058",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "CaliforniaCollection.kml",
+        "datatype": ["Text"],
+        "id": "5aa330c63d8041ffbc62a6950173a645",
+        "ext.extracted.text": "   KML Metacard Export 0  californiaPolygon   californiaPolygon  0    -117.352101,32.532658 -114.628747,32.68707 -114.176015,34.293823 -114.667481,35.128253 -120.026084,38.959541 -120.047618,41.986467 -124.680903,41.932895 -124.748656,40.370128 -120.658176,33.923943 -118.309693,33.578091 -117.352101,32.532658\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/vnd.google-earth.kml+xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/vnd.google-earth.kml+xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "773",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "lineThruNM.kml",
+        "datatype": ["Text"],
+        "id": "d72648a978ac4d23bf025fc2ea17e02e",
+        "ext.extracted.text": "   KML Metacard Export 0  whatever   whatever  1  -109.031934,37.029318 -103.053117,32.015908\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/vnd.google-earth.kml+xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/vnd.google-earth.kml+xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "850",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "lineThruNM.zip",
+        "datatype": ["Collection"],
+        "id": "8b0ee9a83419441d81b79fe42ce07899",
+        "ext.extracted.text": "\nLineString.shp\n\n\nLineString.dbf\n\t\tname\t\tdesc\t\tclass\t\ttype\t\twhatever\t\t\t\tU\t\t\n\n\n\n\n\nLineString.shx\n\n\nLineString.prj\n\n\nLineString.fix\n\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/zip",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.pkg.PackageParser\" />\n<meta name=\"Content-Type\" content=\"application/zip\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "1070",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "HawaiiCollection.kml",
+        "datatype": ["Text"],
+        "id": "3008c83178be4b48a89de6c1fd3cd586",
+        "ext.extracted.text": "   KML Metacard Export 0  HawaiiPolygon   HawaiiPolygon  0    -155.940872,18.929068 -154.598142,19.477294 -155.954347,20.931017 -158.155764,21.90513 -159.47243,22.253002 -178.873306,28.790942 -174.069763,25.608497 -168.10966,24.586866 -166.033597,23.068604 -160.849025,21.340237 -158.414098,21.132967 -155.940872,18.929068\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/vnd.google-earth.kml+xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/vnd.google-earth.kml+xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "1065",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "ArizonaCollection.kml",
+        "datatype": ["Text"],
+        "id": "c8bd2ca12358431fa16a3c68453ddc53",
+        "ext.extracted.text": "   KML Metacard Export 0  AZPolygon   AZPolygon  0    -109.072353,37.028913 -109.021893,31.341123 -111.175619,31.323347 -114.655927,32.472173 -114.717425,33.220472 -114.733481,33.889354 -114.266152,34.204012 -114.617795,34.948441 -114.825369,36.167509 -114.034781,36.153604 -114.034781,36.975873 -109.072353,37.028913\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/vnd.google-earth.kml+xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/vnd.google-earth.kml+xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "886",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "swNmPoly.kml",
+        "datatype": ["Text"],
+        "id": "a594474054f048ecbc9206c282252e07",
+        "ext.extracted.text": "   KML Metacard Export 0  swNmPoly   swNmPoly  0    -109.013768,36.800586 -103.286083,32.025719 -108.945108,31.21782 -109.013768,36.800586\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/vnd.google-earth.kml+xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/vnd.google-earth.kml+xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "837",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "swNmPoly.zip",
+        "datatype": ["Collection"],
+        "id": "61199ef62832488caf6199bfcbf59881",
+        "ext.extracted.text": "\nPolygon.shp\n\n\nPolygon.dbf\n\t\tname\t\tdesc\t\tclass\t\ttype\t\tswNmPoly\t\t\t\tU\t\t\n\n\n\n\n\nPolygon.shx\n\n\nPolygon.prj\n\n\nPolygon.fix\n\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/zip",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.pkg.PackageParser\" />\n<meta name=\"Content-Type\" content=\"application/zip\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "525",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "neNmPoly.gml",
+        "datatype": ["Text"],
+        "id": "f2db2e3bed04494d803ec12bf7e6a026",
+        "ext.extracted.text": "     -108.77322 36.980637 -103.094451 32.254259 -103.098374 36.966769 -108.77322 36.980637\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "1018",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "azTarget.kml",
+        "datatype": ["Text"],
+        "id": "d8605027fc3a406895b9cdfb485c7659",
+        "ext.extracted.text": "   KML Metacard Export 0  azTarget   azTarget  0    -109.043779,36.987378 -109.019569,31.216337 -111.146458,31.216337 -115.073896,32.662966 -113.976944,34.386391 -114.973435,35.513793 -114.788364,36.352793 -114.18061,35.977034 -114.127696,36.966163 -109.043779,36.987378\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/vnd.google-earth.kml+xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/vnd.google-earth.kml+xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "3203",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "MultipleStates.gml",
+        "datatype": ["Text"],
+        "id": "5691bbbdd9c04119bfc2b7785932f9dd",
+        "ext.extracted.text": "       -117.411575 32.563477 -114.50964 32.598495 -114.571609 35.000381 -119.96109 38.93383 -120.022373 42.0191 -124.749069 42.035923 -124.789581 40.193481 -120.476933 34.118214 -118.620758 33.038292 -117.411575 32.563477     -102.055607 39.959679 -102.026768 36.978092 -94.535122 36.953888 -94.451523 39.077682 -95.274982 39.921398 -102.055607 39.959679     -84.223938 34.957638 -81.647987 36.57692 -88.245621 36.581211 -89.584236 36.46225 -90.234661 34.963303 -84.223938 34.957638     -111.060791 45.037594 -111.005173 40.951366 -104.029369 40.955658 -104.020786 44.965153 -111.060791 45.037594     -79.790268 42.499065 -79.790268 41.981335 -75.323639 41.966572 -73.45871 40.565987 -73.354511 45.085144 -74.848652 44.955883 -76.764393 43.643875 -78.930759 43.492641 -79.790268 42.499065     -109.04274 31.335411 -109.061794 36.966591 -114.082718 36.920586 -114.045811 35.901947 -114.938107 36.103821 -114.173183 34.257431 -114.843178 32.408123 -110.917797 31.300907 -109.04274 31.335411     -103.029613 36.49641 -103.028927 32.02343 -106.652699 31.887817 -103.102741 28.916359 -102.546558 29.781189 -101.337891 29.724884 -98.997116 26.417999 -97.14592 25.80843 -97.366848 27.753353 -93.954735 29.770031 -93.414516 31.151047 -94.000225 33.427105 -95.149155 33.914967 -99.929237 34.308071 -99.922028 36.52113 -103.029613 36.49641\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "885",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "neAzPoly.kml",
+        "datatype": ["Text"],
+        "id": "02cf8ec32ef74c59aa1ea8f700532108",
+        "ext.extracted.text": "   KML Metacard Export 0  neAzPoly   neAzPoly  0    -113.69623,36.964489 -108.964715,31.617822 -109.018866,36.963627 -113.69623,36.964489\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/vnd.google-earth.kml+xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/vnd.google-earth.kml+xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "838",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "neAzPoly.zip",
+        "datatype": ["Collection"],
+        "id": "a9255891466640e8bb2720b10b7fb456",
+        "ext.extracted.text": "\nPolygon.shp\n\n\nPolygon.dbf\n\t\tname\t\tdesc\t\tclass\t\ttype\t\tneAzPoly\t\t\t\tU\t\t\n\n\n\n\n\nPolygon.shx\n\n\nPolygon.prj\n\n\nPolygon.fix\n\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/zip",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.pkg.PackageParser\" />\n<meta name=\"Content-Type\" content=\"application/zip\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "527",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "swAzPoly.gml",
+        "datatype": ["Text"],
+        "id": "4aa134ad38e844f892f57fe1c6bed71c",
+        "ext.extracted.text": "     -114.038259 36.809535 -109.301671 31.364628 -114.682792 32.472745 -114.038259 36.809535\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Text Preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "410",
+        "modified": "2019-09-30T15:17:43.710-0700",
+        "title": "lineThruAz.gml",
+        "datatype": ["Text"],
+        "id": "c61f11f036be4785ac55eb8ff1db5811",
+        "ext.extracted.text": "   -114.020421 37.017702 -109.057696 31.348831\n",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-30T15:17:43.710-0700",
+        "created": "2019-09-30T15:17:43.710-0700",
+        "media.type": "application/xml",
+        "effective": "2019-09-30T15:17:43.710-0700",
+        "metacard.modified": "2019-09-30T15:17:43.710-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.xml.DcXMLParser\" />\n<meta name=\"Content-Type\" content=\"application/xml\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.thumbnail",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/36f447ef377e41ee9fa298ab5682257b?transform=thumbnail",
+        "title": "Export as thumbnail",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "resource-size": "442231",
+        "modified": "2019-09-03T14:48:14.581-0700",
+        "title": "IMG_20190627_225459.jpg",
+        "datatype": ["Image"],
+        "id": "36f447ef377e41ee9fa298ab5682257b",
+        "media.width-pixels": 3036,
+        "media.height-pixels": 4048,
+        "thumbnail": "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",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-03T14:48:14.581-0700",
+        "media.compression": "Baseline",
+        "created": "2019-09-03T14:48:14.581-0700",
+        "media.type": "image/jpeg",
+        "effective": "2019-09-03T14:48:14.581-0700",
+        "metacard.modified": "2019-09-03T14:48:14.581-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"Number of Tables\" content=\"4 Huffman tables\" />\n<meta name=\"Compression Type\" content=\"Baseline\" />\n<meta name=\"Data Precision\" content=\"8 bits\" />\n<meta name=\"White Balance\" content=\"Unknown\" />\n<meta name=\"Number of Components\" content=\"3\" />\n<meta name=\"tiff:ImageLength\" content=\"4048\" />\n<meta name=\"Component 2\" content=\"Cb component: Quantization table 1, Sampling factors 1 horiz/1 vert\" />\n<meta name=\"Thumbnail Height Pixels\" content=\"0\" />\n<meta name=\"Component 1\" content=\"Y component: Quantization table 0, Sampling factors 2 horiz/2 vert\" />\n<meta name=\"X Resolution\" content=\"1 dot\" />\n<meta name=\"File Size\" content=\"442231 bytes\" />\n<meta name=\"Component 3\" content=\"Cr component: Quantization table 1, Sampling factors 1 horiz/1 vert\" />\n<meta name=\"File Name\" content=\"apache-tika-4513942528767708609.tmp\" />\n<meta name=\"tiff:BitsPerSample\" content=\"8\" />\n<meta name=\"Content-Type\" content=\"image/jpeg\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.jpeg.JpegParser\" />\n<meta name=\"Resolution Units\" content=\"none\" />\n<meta name=\"File Modified Date\" content=\"Tue Sep 03 14:48:13 -07:00 2019\" />\n<meta name=\"Image Height\" content=\"4048 pixels\" />\n<meta name=\"Thumbnail Width Pixels\" content=\"0\" />\n<meta name=\"Orientation\" content=\"Top, left side (Horizontal / normal)\" />\n<meta name=\"tiff:Orientation\" content=\"1\" />\n<meta name=\"Image Width\" content=\"3036 pixels\" />\n<meta name=\"tiff:ImageWidth\" content=\"3036\" />\n<meta name=\"Y Resolution\" content=\"1 dot\" />\n<title></title>\n</head>\n /></html>"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.kmz",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/a5f27aae58794ce18bf86a21d8d966ae?transform=kmz",
+        "title": "Export as kmz",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.kml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/a5f27aae58794ce18bf86a21d8d966ae?transform=kml",
+        "title": "Export as kml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "point-of-contact": "system@localhost.local",
+        "location": "POLYGON ((-115.073896 31.216337, -115.073896 36.987378, -109.019569 36.987378, -109.019569 31.216337, -115.073896 31.216337))",
+        "resource-size": "1018",
+        "modified": "2019-09-03T14:42:15.593-0700",
+        "title": "aztarget.kml",
+        "checksum": "f59f3daa",
+        "checksum-algorithm": "Adler32",
+        "id": "a5f27aae58794ce18bf86a21d8d966ae",
+        "metacard-tags": ["resource", "VALID"],
+        "metacard.created": "2019-09-03T14:42:15.593-0700",
+        "resource-download-url": "https://localhost:8993/services/catalog/sources/ddf.distribution/a5f27aae58794ce18bf86a21d8d966ae?transform=resource",
+        "created": "2019-09-03T14:42:15.593-0700",
+        "effective": "2019-09-03T14:42:15.593-0700",
+        "metacard.modified": "2019-09-03T14:42:15.593-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><kml:kml xmlns:gx=\"http://www.google.com/kml/ext/2.2\" xmlns:xal=\"urn:oasis:names:tc:ciq:xsdschema:xAL:2.0\" xmlns:kml=\"http://www.opengis.net/kml/2.2\" xmlns:atom=\"http://www.w3.org/2005/Atom\"><kml:Document id=\"61765098-29cd-45b5-8142-1a9fa6a209d0\"><kml:name>KML Metacard Export</kml:name><kml:open>0</kml:open><kml:Placemark id=\"Placemark-c20425ad-e2c9-40e7-ae4e-33e7c978a25a\"><kml:name>azTarget</kml:name><kml:ExtendedData><kml:Data name=\"Title\"><kml:value>azTarget</kml:value></kml:Data><kml:Data name=\"Buffer\"><kml:value>0</kml:value></kml:Data></kml:ExtendedData><kml:Polygon><kml:outerBoundaryIs><kml:LinearRing><kml:coordinates>-109.043779,36.987378 -109.019569,31.216337 -111.146458,31.216337 -115.073896,32.662966 -113.976944,34.386391 -114.973435,35.513793 -114.788364,36.352793 -114.18061,35.977034 -114.127696,36.966163 -109.043779,36.987378</kml:coordinates></kml:LinearRing></kml:outerBoundaryIs></kml:Polygon></kml:Placemark></kml:Document></kml:kml>",
+        "resource-uri": "content:a5f27aae58794ce18bf86a21d8d966ae"
+      }
+    },
+    "__typename": "QueryResponseResult"
   }
 ]
