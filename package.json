@@ -61,7 +61,7 @@
   },
   "scripts": {
     "start": "cross-env NODE_OPTIONS=\"--inspect --max_old_space_size=8192\" ace start --middleware src/main/graphql-server/middleware.js",
-    "start:prod": "node target/server/bundle.middleware.js",
+    "start:prod": "cross-env NODE_ENV=production node target/server/bundle.middleware.js",
     "fmt": "ace format -w",
     "start:test": "ace start --env=test",
     "test:api": "mocha src/main/webapp/intrigue-api/test",
@@ -69,7 +69,7 @@
     "test": "ace bundle --env=test && ace test",
     "storybook": "ace storybook",
     "build": "yarn build:prod && yarn storybook --static",
-    "build:prod": "NODE_ENV=production NODE_OPTIONS='--max_old_space_size=8192' ace bundle --middleware src/main/graphql-server/server.js",
+    "build:prod": "cross-env NODE_ENV=production NODE_OPTIONS='--max_old_space_size=8192' ace bundle --middleware src/main/graphql-server/server.js",
     "prestart": "ace disable-idp"
   },
   "context-path": "/search/catalog/",

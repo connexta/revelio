@@ -37,6 +37,27 @@ then be reflected in Revelio.
     yarn install
     yarn start
 
+### Production
+
+To run the production JavaScript code, do:
+
+    yarn build:prod
+
+And then to start the node process, do:
+
+    yarn start:prod
+
+### Docker
+
+Docker containers can be found
+[here](https://hub.docker.com/repository/docker/cnxta/revelio) and can be
+run with the following command:
+
+    docker run --rm -it -p 4000:4000 -e DDF_LOCATION=<ddf-url> cnxta/revelio:<version>
+
+**NOTE**: the docker container needs network access to DDF for this to
+work.
+
 ## Architecture
 
 To get a deeper look into the system, take a look at the
