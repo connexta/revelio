@@ -75,7 +75,6 @@ if (process.env.GRAPHQL_CAPTURE) {
 }
 
 server.applyMiddleware({ app: router })
-
 router.use('*', renderer)
 
 module.exports = router

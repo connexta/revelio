@@ -22,7 +22,19 @@ import {
 } from '../index-cards'
 
 const Loading = () => {
-  return <LinearProgress />
+  return (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <LinearProgress style={{ width: '25vw', height: 10 }} />
+    </div>
+  )
 }
 
 const AddItem = props => {

@@ -7,6 +7,6 @@ WORKDIR '/revelio'
 COPY target/server/bundle.middleware.js .
 
 # Static bundle chunks
-COPY target/webapp/* ./target/webapp/
+COPY target/webapp/* ./public/
 
 CMD ["node", "bundle.middleware.js"]
