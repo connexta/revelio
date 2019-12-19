@@ -19,7 +19,11 @@ stories.add('Login modal', () => {
       >
         Open Modal
       </button>
-      <LogInModal open={open} handleClose={() => setOpen(false)} />
+      <LogInModal
+        label="Log In"
+        open={open}
+        handleClose={() => setOpen(false)}
+      />
     </div>
   )
 })
