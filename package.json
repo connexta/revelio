@@ -36,7 +36,6 @@
     "apollo-link-batch-http": "^1.2.13",
     "apollo-link-error": "^1.1.12",
     "apollo-link-http": "^1.5.16",
-    "apollo-link-retry": "^2.2.15",
     "apollo-link-schema": "^1.2.4",
     "apollo-server-express": "^2.9.7",
     "compression": "^1.7.4",
@@ -60,7 +59,8 @@
     "react-router-dom": "^5.1.2",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
-    "styled-components": "^4.3.2"
+    "styled-components": "^4.3.2",
+    "universal-cookie": "^4.0.2"
   },
   "scripts": {
     "start": "cross-env NODE_OPTIONS=\"--inspect --max_old_space_size=8192\" ace start --middleware src/main/graphql-server/middleware.js",
