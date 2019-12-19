@@ -21,7 +21,6 @@ const btoa = arg => {
   return Buffer.from(arg).toString('base64')
 }
 
-const authorization = '' // `Basic ${btoa('admin:admin')}`
 
 const serverErrorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
@@ -38,9 +37,6 @@ const serverErrorLink = onError(
 const createServerApollo = (...args) => {
   // TODO: remove this block when we get auth working
   const { req } = args[0]
-  if (!req.headers.authorization) {
-    req.headers.authorization = authorization
-  }
 
   const cache = new InMemoryCache()
   return new ApolloClient({
@@ -94,7 +90,6 @@ const createClientApollo = params => {
       new BatchHttpLink({
         uri: '/graphql',
         credentials: 'same-origin',
-        headers: { authorization },
       }),
     ]),
     cache,

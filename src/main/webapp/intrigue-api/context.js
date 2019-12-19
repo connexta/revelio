@@ -5,13 +5,11 @@ import { AuthenticationError } from 'apollo-server-errors'
 const context = args => {
   const { req } = args
 
-  const { authorization = '' } = req.headers
   const universalFetch = async (url, opts = {}) => {
     const res = await fetch(url, {
       ...opts,
       headers: {
         ...opts.headers,
-        authorization,
       },
     })
     if (res.status === 401) {

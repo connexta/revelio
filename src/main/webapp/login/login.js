@@ -6,19 +6,9 @@ import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import FormLabel from '@material-ui/core/FormLabel'
 import IconButton from '@material-ui/core/IconButton'
-import gql from 'graphql-tag'
-import { useMutation } from '@apollo/react-hooks'
-import Cookies from 'universal-cookie'
-
-const cookies = new Cookies()
-const LOGIN_MUTATION = gql`
-  mutation LogIn($username: String!, $password: String!) {
-    logIn(username: $username, password: $password)
-  }
-`
 
 export const LogIn = props => {
-  const [logIn] = useMutation(LOGIN_MUTATION)
+    if (props.loading) { return <Loading />}
   const [values, setValues] = React.useState({
     username: '',
     password: '',
@@ -81,15 +71,7 @@ export const LogIn = props => {
         disabled={values.buttonDisabled ? true : false}
         onClick={async () => {
           setValues({ ...values, buttonDisabled: true })
-          //TO:DO parse cookie from gql query and set it
-          const { data } = await logIn({
-            variables: { username: values.username, password: values.password },
-          })
-          const origCookie = data.logIn
-          let parsedCookie = origCookie.split(';')
-          parsedCookie = parsedCookie[0].split('=')
-          cookies.set(parsedCookie[0], parsedCookie[1], { path: '/' })
-          console.log(cookies.get(parsedCookie[0]))
+	    props.login(values.username, values.password)
           props.handleClose()
         }}
       >
