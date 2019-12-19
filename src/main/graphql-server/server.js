@@ -6,7 +6,10 @@ const compression = require('compression')
 const app = express()
 const port = process.env.EXPRESS_PORT || 4000
 const path = require('path')
-const cachedBundleManifest = require('../../../target/webapp/react-loadable.json')
+const fs = require('fs')
+const cachedBundleManifest = JSON.parse(
+  fs.readFileSync('target/webapp/react-loadable.json')
+)
 
 app.use(compression())
 
