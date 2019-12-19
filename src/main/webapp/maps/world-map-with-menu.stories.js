@@ -1,10 +1,18 @@
 import { action } from '@connexta/ace/@storybook/addon-actions'
 import { storiesOf } from '../@storybook/react'
 import { select } from '@connexta/ace/@storybook/addon-knobs'
-import React, { useState } from 'react'
-import WorldMapWithDrawMenu from './world-map-with-draw-menu'
+import React, { useState, useEffect } from 'react'
+import withDrawMenu from './with-draw-menu'
+import WorldMap from './world-map'
+import ClusterMap from './cluster-map'
 import { geometry, shapes, coordinates } from 'geospatialdraw'
 import { DRAWING_STYLE, RENDERER_STYLE } from './map-style'
+
+const WorldMapWithDrawMenu = withDrawMenu(WorldMap)
+WorldMapWithDrawMenu.displayName = 'WorldMapWithDrawMenu'
+
+const ClusterMapWithDrawMenu = withDrawMenu(ClusterMap)
+ClusterMapWithDrawMenu.displayName = 'ClusterMapWithDrawMenu'
 
 const stories = storiesOf('Maps', module)
 
@@ -61,19 +69,29 @@ const geometryCatalog = {
   },
 }
 
-stories.add('draw geometry', () => {
-  const [
-    { isDrawing = true, geos = [], viewport = null },
-    setDrawingState,
-  ] = useState(true)
+const createDrawMenuStory = (Component, additionalProps) => () => {
   const drawGeoType = select(
     'starting geometry',
     Object.keys(geometryCatalog),
     'none'
   )
-  const drawGeo = geometryCatalog[drawGeoType]
+  const geoData = geometryCatalog[drawGeoType]
+  const [isDrawing, setIsDrawing] = useState(true)
+  const [viewport, setViewport] = useState(null)
+  const [geos, setGeos] = useState([])
+  const [drawGeo, setDrawGeo] = useState(geoData.geo)
+  const [drawShape, setDrawShape] = useState(geoData.shape)
+  useEffect(
+    () => {
+      const update = geometryCatalog[drawGeoType]
+      setDrawGeo(update.geo)
+      setDrawShape(update.shape)
+    },
+    [drawGeoType]
+  )
   return (
-    <WorldMapWithDrawMenu
+    <Component
+      {...additionalProps}
       projection={PROJECTION}
       maxZoom={20}
       minZoom={1.5}
@@ -84,20 +102,33 @@ stories.add('draw geometry', () => {
       isDrawing={isDrawing}
       mapStyle={RENDERER_STYLE}
       drawStyle={DRAWING_STYLE}
-      drawShape={drawGeo.shape}
-      drawGeo={drawGeo.geo}
-      onDrawnGeo={geo => {
-        const geos = geo ? [geo] : []
-        const viewport = geo ? geo.bbox : null
-        setDrawingState({
-          isDrawing: false,
-          geos,
-          viewport,
-        })
-        window.geo = JSON.stringify(geo)
-        action('Search For Geo')(geo)
+      drawShape={drawShape}
+      drawGeo={drawGeo}
+      onSetShape={shape => {
+        setDrawShape(shape)
+        setDrawGeo(null)
+      }}
+      onUpdate={setDrawGeo}
+      onOk={() => {
+        setViewport(drawGeo.bbox)
+        setGeos([...geos, drawGeo])
+        setIsDrawing(false)
+        action('Confirmed Geo ')(drawGeo)
+      }}
+      onCancel={() => {
+        setIsDrawing(false)
       }}
       height="500px"
     />
   )
-})
+}
+
+stories.add('draw on WorldMap', createDrawMenuStory(WorldMapWithDrawMenu, {}))
+stories.add(
+  'draw on ClusterMap',
+  createDrawMenuStory(ClusterMapWithDrawMenu, {
+    geos: [],
+    distance: 50,
+    selectGeos: () => {},
+  })
+)

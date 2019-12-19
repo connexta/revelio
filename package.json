@@ -39,7 +39,7 @@
     "compression": "^1.7.4",
     "date-fns": "^2.0.0-beta.5",
     "express": "4.17.1",
-    "geospatialdraw": "https://github.com/connexta/geospatialdraw.git#c330407bda2442a983b42e9f1afbb4575c1e21fc",
+    "geospatialdraw": "https://github.com/connexta/geospatialdraw.git#4641e16f3633d98f189193f7dd5435025b563e0a",
     "golden-layout": "^1.5.9",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",

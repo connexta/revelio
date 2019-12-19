@@ -13,6 +13,7 @@ import {
   coordinates as coordinateEditor,
 } from 'geospatialdraw'
 import withCoordinateUnitTabs from './with-coordinate-unit-tabs'
+import { DrawProvider } from '../react-hooks/use-draw-interface'
 
 const MOCK_AJAX_DELAY = 2000
 
@@ -244,6 +245,7 @@ stories.add(`location`, () => {
   const keyword = useKeyword(value)
   return (
     <Location
+      enableDrawing={false}
       value={value}
       onChange={update => {
         action('onChange')(update)
@@ -253,6 +255,27 @@ stories.add(`location`, () => {
         keyword,
       }}
     />
+  )
+})
+
+stories.add(`location with draw button`, () => {
+  const [value, setValue] = useState(
+    geometry.makeEmptyGeometry('location', shapes.LINE)
+  )
+  const keyword = useKeyword(value)
+  return (
+    <DrawProvider>
+      <Location
+        value={value}
+        onChange={update => {
+          action('onChange')(update)
+          setValue(update)
+        }}
+        editorProps={{
+          keyword,
+        }}
+      />
+    </DrawProvider>
   )
 })
 
@@ -285,6 +308,7 @@ stories.add(`location with keyword`, () => {
   const keyword = useKeyword(value)
   return (
     <Location
+      enableDrawing={false}
       value={value}
       onChange={update => {
         action('onChange')(update)
@@ -304,6 +328,7 @@ stories.add(`location with bounding box`, () => {
   const keyword = useKeyword(value)
   return (
     <Location
+      enableDrawing={false}
       value={value}
       onChange={update => {
         action('onChange')(update)

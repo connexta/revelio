@@ -8,6 +8,7 @@ import useState from '../@storybook/use-state'
 import QuerySelector from './query-selector'
 import queries from './sample-queries.json'
 import { BasicSearch } from '../basic-search'
+import { DrawProvider } from '../react-hooks/use-draw-interface'
 
 const stories = storiesOf('Workspaces', module)
 
@@ -17,11 +18,13 @@ stories.add('Visualizations', () => {
   const results = genResults()
 
   return (
-    <SelectionProvider>
-      <div style={{ height: '100vh' }}>
-        <Visualizations results={results} />
-      </div>
-    </SelectionProvider>
+    <DrawProvider>
+      <SelectionProvider>
+        <div style={{ height: '100vh' }}>
+          <Visualizations results={results} />
+        </div>
+      </SelectionProvider>
+    </DrawProvider>
   )
 })
 
