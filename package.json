@@ -4,7 +4,7 @@
   "main": "src/main/webapp/app.js",
   "license": "MIT",
   "devDependencies": {
-    "@connexta/ace": "https://github.com/connexta/ace.git#d58809d4c6e87554482939647f3f8d8c1690178d",
+    "@connexta/ace": "https://github.com/connexta/ace.git#7ea9da9b8d45be47848e657e42d89574141afad2",
     "@types/ol": "^5.3.6",
     "@types/react": "^16.9.5",
     "@types/react-loadable": "^5.5.3",
@@ -61,13 +61,15 @@
   },
   "scripts": {
     "start": "cross-env NODE_OPTIONS=\"--inspect --max_old_space_size=8192\" ace start --middleware src/main/graphql-server/middleware.js",
+    "start:prod": "node target/server/bundle.middleware.js",
     "fmt": "ace format -w",
     "start:test": "ace start --env=test",
     "test:api": "mocha src/main/webapp/intrigue-api/test",
     "pretest": "ace format && eslint src",
     "test": "ace bundle --env=test && ace test",
     "storybook": "ace storybook",
-    "build": "NODE_ENV=production NODE_OPTIONS='--max_old_space_size=8192' ace bundle --middleware src/main/graphql-server/server.js && yarn storybook --static",
+    "build": "yarn build:prod && yarn storybook --static",
+    "build:prod": "NODE_ENV=production NODE_OPTIONS='--max_old_space_size=8192' ace bundle --middleware src/main/graphql-server/server.js",
     "prestart": "ace disable-idp"
   },
   "context-path": "/search/catalog/",

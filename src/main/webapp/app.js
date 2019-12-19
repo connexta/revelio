@@ -5,9 +5,11 @@ import Routes from './routes'
 import { BrowserRouter } from 'react-router-dom'
 import { createClientApollo } from './intrigue-api/graphql'
 import { ApolloProvider } from '@apollo/react-hooks'
+import Loadable from 'react-loadable'
 
-const render = (Routes, client) => {
+const render = async (Routes, client) => {
   // TODO: Update render to be hydrate to improve performance
+  await Loadable.preloadReady()
   ReactDOM.render(
     <Application Routes={Routes} client={client} />,
     document.getElementById('root')

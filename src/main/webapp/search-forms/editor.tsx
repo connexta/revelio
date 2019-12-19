@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper'
 import TextField from '@material-ui/core/TextField'
 import Divider from '@material-ui/core/Divider'
 
+//@ts-ignore
 import loadable from 'react-loadable'
 import { memo } from 'react'
 
@@ -42,7 +43,6 @@ const getFilterTree = (props: EditorProps) => {
   }
   return { ...props.filterTree }
 }
-
 const Editor = (props: EditorProps) => {
   const [filterTree, setFilterTree]: any = useState(getFilterTree(props))
   return (

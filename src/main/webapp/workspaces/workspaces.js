@@ -44,22 +44,6 @@ if (typeof window !== 'undefined') {
   })
 }
 
-const Loading = () => {
-  return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <LinearProgress style={{ width: '25vw', height: 10 }} />
-    </div>
-  )
-}
-
 const workspaceById = gql`
   query WorkspaceById($ids: [ID]!) {
     metacardsById(ids: $ids) {
@@ -97,7 +81,7 @@ export const Workspace = () => {
   })
 
   if (loading) {
-    return <Loading />
+    return <LoadingComponent />
   }
 
   if (error) {
@@ -159,7 +143,7 @@ export const Workspace = () => {
                   <BasicSearch
                     query={query}
                     onSearch={query => {
-                      //setPageIndex(0)
+                      // setPageIndex(0)
                       setQuery(query)
                       onClear()
                       onSearch(query)
@@ -227,7 +211,7 @@ export default () => {
   const { loading, error, data } = useQuery(workspaces)
 
   if (loading) {
-    return <Loading />
+    return <LoadingComponent />
   }
 
   if (error) {
