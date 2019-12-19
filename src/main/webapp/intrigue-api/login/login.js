@@ -14,9 +14,11 @@ const btoa = arg => {
 
 const logIn = async (parent, args, { fetch }) => {
   const { username, password } = args
-  const Authorization = 'Basic ' + btoa(`${username}:${password}`)
+  const authorization = 'Basic ' + btoa(`${username}:${password}`)
   const res = await fetch(ROOT, {
-    Authorization,
+    headers: {
+      authorization,
+    },
   })
   return res.headers.get('set-cookie')
 }

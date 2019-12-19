@@ -15,11 +15,20 @@ const render = async (Routes, client) => {
   )
 }
 
-const Application = ({ Routes, client }) => {
-  const [showLogin, setShowLogIn] = React.useState(false)
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+const App = () => {
+  const [showLogin, setShowLogIn] = React.useState(true)
   const client = createClientApollo({
-    onAuthentication: tryLogIn => {
-      setShowLogIn(tryLogIn)
+    onAuthentication: async done => {
+      setShowLogIn(true)
+      while (true) {
+        await sleep(100)
+        if (!showLogin) {
+          break
+        }
+      }
+      done()
     },
   })
   React.useEffect(() => {
