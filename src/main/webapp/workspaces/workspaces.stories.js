@@ -14,7 +14,9 @@ stories.add('Visualizations', () => {
 
   return (
     <SelectionProvider>
-      <Visualizations results={results} />
+      <div style={{ height: '100vh' }}>
+        <Visualizations results={results} />
+      </div>
     </SelectionProvider>
   )
 })
