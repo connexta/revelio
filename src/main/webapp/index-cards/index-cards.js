@@ -6,15 +6,34 @@ import IconButton from '@material-ui/core/IconButton'
 
 import ShareIcon from '@material-ui/icons/Share'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
+import EditIcon from '@material-ui/icons/Edit'
 
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
+import CardActionArea from '@material-ui/core/CardActionArea'
 
 import moment from 'moment'
 
 import ConfirmDelete from '../confirm-delete'
+
+const onClick = action => e => {
+  e.preventDefault()
+  e.stopPropagation()
+  if (typeof action === 'function') {
+    action()
+  }
+}
+
+export const EditAction = props => {
+  const { onEdit } = props
+  return (
+    <IconButton onClick={onClick(onEdit)}>
+      <EditIcon />
+    </IconButton>
+  )
+}
 
 export const DeleteAction = props => {
   const { onDelete } = props
@@ -28,15 +47,7 @@ export const DeleteAction = props => {
 export const ShareAction = props => {
   const { onShare } = props
   return (
-    <IconButton
-      onClick={e => {
-        e.preventDefault()
-        e.stopPropagation()
-        if (typeof onShare === 'function') {
-          onShare()
-        }
-      }}
-    >
+    <IconButton onClick={onClick(onShare)}>
       <ShareIcon />
     </IconButton>
   )
@@ -80,16 +91,23 @@ export const AddCardItem = props => {
 }
 
 export const IndexCardItem = props => {
-  const { title, owner, modified, children, onClick } = props
+  const { title, subHeader, owner, modified, children, onClick } = props
 
   return (
     <ItemContainer onClick={onClick}>
-      <CardHeader title={title} subheader={moment(modified).fromNow()} />
-      <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
-          Owner: {owner}
-        </Typography>
-      </CardContent>
+      <CardActionArea>
+        <CardHeader
+          title={title}
+          subheader={subHeader || moment(modified).fromNow()}
+        />
+        <CardContent>
+          {owner && (
+            <Typography variant="body2" color="textSecondary" component="p">
+              Owner: {owner}
+            </Typography>
+          )}
+        </CardContent>
+      </CardActionArea>
       {children}
     </ItemContainer>
   )
