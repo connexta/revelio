@@ -1,53 +1,129 @@
-import createRpcClient from './rpc'
-import fetch from './fetch'
 import { AuthenticationError } from 'apollo-server-errors'
 
-const context = args => {
-  const { req } = args
+import createRpcClient from './rpc'
+import fetch from './fetch'
+import withChaos from './chaos'
+
+const withExceptionLogger = (fn, logger) => async (...args) => {
+  try {
+    return await fn(...args)
+  } catch (e) {
+    logger.done({
+      level: 'error',
+      message: e.message,
+      stack: e.stack,
+    })
+
+    throw e
+  }
+}
+
+const withRpcLogger = (rpc, logger) => async (method, params) => {
+  const profiler = logger
+    .child({ type: 'jsonrpc-request', method })
+    .startTimer()
+
+  const fn = withExceptionLogger(rpc, profiler)
+
+  const res = await fn(method, params)
+  profiler.done({ message: 'Success' })
+  return res
+}
+
+const withFetchLogger = (fetch, logger) => async (url, opts = {}) => {
+  const { method = 'GET' } = opts
+
+  const profiler = logger
+    .child({ type: 'client-fetch', url, method })
+    .startTimer()
+
+  const fn = withExceptionLogger(fetch, profiler)
+
+  const res = await fn(url, opts)
+  const { status, statusText: message } = res
+  profiler.done({ status, message })
+  return res
+}
+
+const withAuth = (fetch, req) => async (url, opts = {}) => {
   const cookie =
     req.headers.cookie !== undefined ? { cookie: req.headers.cookie } : {}
-  const universalFetch = async (url, opts = {}) => {
-    const res = await fetch(url, {
-      ...opts,
-      headers: {
-        ...opts.headers,
-        ...cookie,
-      },
-    })
-    if (res.status === 401) {
-      throw new AuthenticationError('UNAUTHENTICATED')
-    } else {
-      return res
-    }
-  }
-  const request = createRpcClient(universalFetch)
 
-  const catalogMethods = {
-    create: 'ddf.catalog/create',
-    query: 'ddf.catalog/query',
-    update: 'ddf.catalog/update',
-    delete: 'ddf.catalog/delete',
-    getSourceIds: 'ddf.catalog/getSourceIds',
-    getSourceInfo: 'ddf.catalog/getSourceInfo',
-  }
-  const enumerationMethods = {
-    getAllEnumerations: 'ddf.enumerations/all',
-  }
+  const res = await fetch(url, {
+    ...opts,
+    headers: { ...opts.headers, ...cookie },
+  })
 
+  if (res.status === 401) {
+    throw new AuthenticationError('UNAUTHENTICATED')
+  } else {
+    return res
+  }
+}
+
+const catalogMethods = {
+  create: 'ddf.catalog/create',
+  query: 'ddf.catalog/query',
+  update: 'ddf.catalog/update',
+  delete: 'ddf.catalog/delete',
+  getSourceIds: 'ddf.catalog/getSourceIds',
+  getSourceInfo: 'ddf.catalog/getSourceInfo',
+}
+
+const enumerationMethods = {
+  getAllEnumerations: 'ddf.enumerations/all',
+}
+
+const generateRpcMethods = rpc => {
   const catalog = Object.keys(catalogMethods).reduce((catalog, method) => {
-    catalog[method] = params => request(catalogMethods[method], params)
+    catalog[method] = params => rpc(catalogMethods[method], params)
     return catalog
   }, {})
 
   const enumerations = Object.keys(enumerationMethods).reduce(
     (enumerations, method) => {
-      enumerations[method] = params =>
-        request(enumerationMethods[method], params)
+      enumerations[method] = params => rpc(enumerationMethods[method], params)
       return enumerations
     },
     {}
   )
-  return { catalog, fetch: universalFetch, enumerations }
+
+  return { catalog, enumerations }
+}
+
+const getOperations = body => {
+  if (body === undefined) {
+    return []
+  }
+
+  if (Array.isArray(body)) {
+    return body.map(({ operationName }) => operationName)
+  }
+
+  return body.operationName
+}
+
+const context = args => {
+  const { req } = args
+
+  req.logger.info({
+    type: 'graphql-resolve',
+    message: 'Running graphql query',
+    operations: getOperations(req.body),
+  })
+
+  let wrappedFetch = withAuth(fetch, req)
+
+  if (process.env.CHAOS_ENABLED) {
+    wrappedFetch = withChaos(wrappedFetch)
+  }
+
+  const rpc = withRpcLogger(createRpcClient(wrappedFetch), req.logger)
+
+  return {
+    fetch: withFetchLogger(wrappedFetch, req.logger),
+    ...generateRpcMethods(rpc),
+  }
 }
 
 export default context
