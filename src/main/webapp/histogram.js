@@ -24,9 +24,13 @@ const AttributeSelect = props => {
   )
 }
 
+const getResultId = result => {
+  return result.getIn(['metacard', 'properties', 'id'])
+}
+
 const Histogram = props => {
   const [attribute, setAttribute] = useState(null)
-  const { results } = props
+  const { results, onSelect } = props
   const values = fromJS(results || {})
   const attrSet = values.reduce((acc, data) => {
     return acc.merge(
@@ -65,6 +69,7 @@ const Histogram = props => {
           attributeCount={values.size}
           selectedAttribute={attribute}
           attributeMap={attrMap}
+          onSelect={onSelect}
         />
       )}
     </div>
@@ -72,7 +77,7 @@ const Histogram = props => {
 }
 
 const Graph = props => {
-  const { attributeCount, selectedAttribute, attributeMap } = props
+  const { attributeCount, selectedAttribute, attributeMap, onSelect } = props
   const columnWidth = 100 / attributeMap.size
 
   return (
@@ -96,6 +101,7 @@ const Graph = props => {
             attributeCount={attributeCount}
             selectedAttribute={selectedAttribute}
             attributeMap={attributeMap}
+            onSelect={onSelect}
           />
           <BarTextContent
             attributeMap={attributeMap}
@@ -167,7 +173,7 @@ const BarTextContent = props => {
   )
 }
 
-const renderBars = (total, valueMap, columnWidth) => {
+const renderBars = (total, valueMap, columnWidth, onSelect) => {
   const maxHits = valueMap
     .valueSeq()
     .toList()
@@ -185,7 +191,10 @@ const renderBars = (total, valueMap, columnWidth) => {
           columnWidth={columnWidth}
           percent={percent}
           key={attr}
-          onClick={() => {}}
+          onClick={() => {
+            const ids = attributeValues.map(getResultId)
+            onSelect(ids)
+          }}
         />
       )
     })
@@ -193,7 +202,7 @@ const renderBars = (total, valueMap, columnWidth) => {
 }
 
 const BarLinesContainer = props => {
-  const { attributeCount, attributeMap, columnWidth } = props
+  const { attributeCount, attributeMap, columnWidth, onSelect } = props
   return (
     <div
       className="bar-lines-container"
@@ -209,7 +218,7 @@ const BarLinesContainer = props => {
         return <Line left={i * 10} key={i} />
       })}
 
-      {renderBars(attributeCount, attributeMap, columnWidth)}
+      {renderBars(attributeCount, attributeMap, columnWidth, onSelect)}
     </div>
   )
 }
