@@ -147,7 +147,7 @@ const SearchButton = props => (
   </Button>
 )
 
-const populateDefaultQuery = (
+export const populateDefaultQuery = (
   filterTree,
   srcs = defaultSources,
   sorts = defaultSorts

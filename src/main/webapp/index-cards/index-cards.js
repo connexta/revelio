@@ -22,7 +22,7 @@ const onClick = action => e => {
   e.preventDefault()
   e.stopPropagation()
   if (typeof action === 'function') {
-    action()
+    action(e)
   }
 }
 
