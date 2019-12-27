@@ -5,8 +5,6 @@ import Typography from '@material-ui/core/Typography'
 
 import TextField from '@material-ui/core/TextField'
 import Divider from '@material-ui/core/Divider'
-import IconButton from '@material-ui/core/IconButton'
-import CloseIcon from '@material-ui/icons/Close'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 
@@ -26,7 +24,8 @@ import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 
 import QueryStatus from '../query-status'
-import { BasicSearch } from '../basic-search'
+import { BasicSearch, populateDefaultQuery } from '../basic-search'
+import { toFilterTree, fromFilterTree } from '../basic-search-helper'
 import QuerySelector from './query-selector'
 
 import loadable from 'react-loadable'
@@ -78,6 +77,9 @@ export const Workspace = () => {
 
   const { loading, error, data } = useQuery(workspaceById, {
     variables: { ids: [id] },
+    onCompleted: data => {
+      setQuery(data.metacardsById[0].attributes[0].queries[0])
+    },
   })
 
   if (loading) {
@@ -88,9 +90,37 @@ export const Workspace = () => {
     return <div>Error</div>
   }
 
+  const QueryEditor = props => (
+    <div style={{ padding: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <TextField
+          style={{ marginBottom: 20 }}
+          label="Query Title"
+          value={props.query.title || ''}
+          fullWidth
+        />
+      </div>
+      <div style={{ overflow: 'hidden', padding: 2 }}>
+        <BasicSearch
+          query={props.query}
+          onSearch={query => {
+            if (typeof props.onSearch === 'function') {
+              props.onSearch(query)
+            }
+            // setPageIndex(0)
+            setQuery(query)
+            onClear()
+            onSearch(query)
+          }}
+        />
+      </div>
+    </div>
+  )
+
   const attributes = data.metacardsById[0].attributes[0]
 
   const { title, queries, lists } = attributes
+  const hasQueries = queries && queries.length > 0
 
   return (
     <div
@@ -124,56 +154,41 @@ export const Workspace = () => {
           <Tab label="Lists" />
         </Tabs>
 
-        {tab === 0 && (
-          <React.Fragment>
-            {query !== null ? (
-              <div style={{ padding: 20 }}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <TextField
-                    style={{ marginBottom: 20 }}
-                    label="Query Title"
-                    value={query.title || ''}
-                    fullWidth
-                  />
-                  <IconButton onClick={() => setQuery(null)}>
-                    <CloseIcon />
-                  </IconButton>
-                </div>
-                <div style={{ overflow: 'hidden', padding: 2 }}>
-                  <BasicSearch
-                    query={query}
-                    onSearch={query => {
-                      // setPageIndex(0)
-                      setQuery(query)
-                      onClear()
-                      onSearch(query)
-                    }}
-                  />
-                </div>
-                <QueryStatus
-                  sources={status}
-                  onRun={srcs => {
-                    //setPageIndex(0)
-                    onSearch({ ...query, srcs })
-                  }}
-                  onCancel={srcs => {
-                    srcs.forEach(src => {
-                      onCancel(src)
-                    })
-                  }}
-                />
-              </div>
-            ) : (
+        {tab === 0 &&
+          hasQueries && (
+            <React.Fragment>
+              {/* //TODO mutate cache on search so that the queries reflect edits made in queryEditor */}
               <QuerySelector
+                QueryEditor={QueryEditor}
                 queries={queries}
+                currentQuery={query}
                 onSelect={query => {
                   onClear()
                   setQuery(query)
+                  onSearch(
+                    //toFilterTree / fromFilterTree are needed because queries that have a location filter
+                    //do not have the correct structure to be processed with cql
+                    populateDefaultQuery(
+                      toFilterTree(fromFilterTree(query.filterTree))
+                    )
+                  )
                 }}
               />
-            )}
-          </React.Fragment>
-        )}
+
+              <QueryStatus
+                sources={status}
+                onRun={srcs => {
+                  //setPageIndex(0)
+                  onSearch({ ...query, srcs })
+                }}
+                onCancel={srcs => {
+                  srcs.forEach(src => {
+                    onCancel(src)
+                  })
+                }}
+              />
+            </React.Fragment>
+          )}
 
         {tab === 1 && (
           <Lists
