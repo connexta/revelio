@@ -1,6 +1,6 @@
 import * as React from 'react'
 const { useDrawInterface } = require('../react-hooks')
-import { shapes } from 'geospatialdraw'
+import { geometry, shapes } from 'geospatialdraw'
 import { BasicEditorProps } from './geo-editor'
 import SpacedLinearContainer from '../spaced-linear-container'
 import Button from '@material-ui/core/Button'
@@ -39,11 +39,16 @@ const withDrawButton = (
   }
   React.useEffect(
     () => {
-      const { geo, shape: drawnShape } = drawState
+      const geo = drawState.geo === null ? null : {
+        ...drawState.geo,
+        properties: {
+          ...drawState.geo.properties,
+          id: drawState.geo.properties.id || value.properties.id
+        }
+      }
       if (
         geo &&
-        geo.properties.id === value.id &&
-        shape === drawnShape &&
+        geo.properties.id === value.properties.id &&
         JSON.stringify(geo) !== JSON.stringify(value)
       ) {
         onChange(geo)
@@ -51,9 +56,17 @@ const withDrawButton = (
     },
     [drawState]
   )
+  const editorOnChange = (geo:geometry.GeometryJSON) => {
+    setDrawState({
+      geo,
+      active: true,
+      shape,
+    })
+    onChange(geo)
+  }
   return (
     <SpacedLinearContainer direction="column" spacing={1}>
-      <Editor value={value} onChange={onChange} />
+      <Editor value={value} onChange={editorOnChange} />
       <DrawButton onDraw={onDraw} active={drawState.active} />
     </SpacedLinearContainer>
   )

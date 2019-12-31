@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { featureCollection, centerOfMass, getCoord } from '@turf/turf'
 
 import Button from '@material-ui/core/Button'
@@ -190,10 +190,19 @@ const Visualizations = props => {
   const MapVis = () => {
     const PROJECTION = 'EPSG:4326'
     const [selection, onSelect] = useSelectionInterface()
+    const [originalGeo, setOriginalGeo] = useState(null)
     const [
       { geo: drawGeo, shape, active: isDrawing },
       setDrawState,
     ] = useDrawInterface()
+    useEffect(
+      () => {
+        if (isDrawing) {
+          setOriginalGeo(drawGeo)
+        }
+      },
+      [isDrawing]
+    )
     const geos = results
       .map(
         result =>
@@ -239,7 +248,7 @@ const Visualizations = props => {
         }}
         isDrawing={isDrawing}
         drawShape={shape}
-        drawGeo={drawGeo}
+        drawGeo={isDrawing ? drawGeo : null}
         onSetShape={update => {
           setDrawState({
             geo: null,
@@ -251,14 +260,14 @@ const Visualizations = props => {
           setDrawState({
             geo: update,
             active: true,
-            shape,
+            shape: update.properties.shape,
           })
         }}
         onCancel={() => {
           setDrawState({
-            geo: null,
+            geo: originalGeo,
             active: false,
-            shape,
+            shape: originalGeo.properties.shape,
           })
         }}
         onOk={() => {

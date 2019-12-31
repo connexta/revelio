@@ -8,6 +8,7 @@ import Polygon from './polygon'
 import PointRadius from './point-radius'
 import BBox from './bbox'
 import withCoordinateUnitTabs from './with-coordinate-unit-tabs'
+// import useDrawInterface from '../../react-hooks/use-draw-interface'
 import withDrawButton from './with-draw-button'
 import Keyword from './keyword'
 import { BasicEditorProps } from './geo-editor'
@@ -104,9 +105,10 @@ const Location: React.SFC<Props> = ({
   editorProps = {} as EditorPropsMap,
 }) => {
   const locationType = locationTypeFromGeo(value)
+  const locationTypeDescription = componentMap[locationType]
   const Component = enableDrawing
-    ? componentMap[locationType].ComponentWithDrawButton
-    : componentMap[locationType].Component
+    ? locationTypeDescription.ComponentWithDrawButton
+    : locationTypeDescription.Component
   const extendedComponentProps = editorProps.hasOwnProperty(locationType)
     ? editorProps[locationType]
     : {}
