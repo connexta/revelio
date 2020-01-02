@@ -146,10 +146,10 @@ const NearFilter = (props: QueryFilterProps) => {
   const errors = validateNear(props.value)
 
   return (
-    <Box style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+    <Box style={{ display: 'flex', alignItems: 'center' }}>
       <TextField
         variant="outlined"
-        style={{ width: '45%' }}
+        fullWidth
         error={errors.value !== undefined}
         helperText={errors.value}
         onChange={event => {

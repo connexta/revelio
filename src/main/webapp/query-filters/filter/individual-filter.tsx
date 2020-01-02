@@ -1,11 +1,6 @@
 import * as React from 'react'
 import Box from '@material-ui/core/Box'
-import {
-  withDivider,
-  withRemoveButton,
-  getDefaultValue,
-  filterComponentStyle,
-} from './filter-utils'
+import { getDefaultValue, filterComponentStyle } from './filter-utils'
 import { MetacardType } from './dummyDefinitions'
 import TextFilter, {
   comparatorOptions as textComparators,
@@ -30,17 +25,19 @@ import AttributeDropdown from './attribute-dropdown'
 import { useFilterContext } from '../filter-context'
 import { getIn } from 'immutable'
 import { serialize, deserialize } from './filter-serialization'
+// const FilterCard = require('../../basic-search').FilterCard
+// @ts-ignore require not working in storybook for some reason
+import { FilterCard } from '../../basic-search'
 
-//In this format to make querying easy
 export type QueryFilter = {
-  property: string
-  type: string
+  property: string //property name, ex: anyText
+  type: string // cql operator, ex: ILIKE
   value: any
-  editing?: boolean
 }
 export type QueryFilterProps = QueryFilter & {
   onChange: (value: QueryFilter) => void
   onRemove?: () => void
+  editing?: boolean
 }
 
 const Inputs = {
@@ -77,7 +74,7 @@ const Comparators = {
 }
 
 const withSerialization = (Component: any) => {
-  return (props: QueryFilterProps) => {
+  return (props: any) => {
     const { metacardTypes } = useFilterContext()
     return (
       <Component
@@ -90,34 +87,29 @@ const withSerialization = (Component: any) => {
   }
 }
 
-export default withRemoveButton(
-  withDivider(
-    withSerialization((props: QueryFilterProps) => {
-      const { metacardTypes } = useFilterContext()
-      const getType = (property: string) => {
-        return getIn(
-          metacardTypes,
-          [property, 'type'],
-          'STRING'
-        ) as MetacardType
-      }
-      const type = getType(props.property)
-      const Component = Inputs[type] || TextFilter
-      const comparators = Comparators[type]
+export default withSerialization((props: QueryFilterProps) => {
+  const { metacardTypes } = useFilterContext()
+  const getType = (property: string) => {
+    return getIn(metacardTypes, [property, 'type'], 'STRING') as MetacardType
+  }
+  const type = getType(props.property)
+  const Component = Inputs[type] || TextFilter
+  const comparators = Comparators[type]
 
-      const comparatorOptions =
-        props.property !== 'anyText' && props.property !== 'anyGeo'
-          ? comparators.options
-          : comparators.options.filter((option: string) => option !== 'IS NULL')
+  const comparatorOptions =
+    props.property !== 'anyText' && props.property !== 'anyGeo'
+      ? comparators.options
+      : comparators.options.filter((option: string) => option !== 'IS NULL')
 
-      const comparatorAliases = comparators.aliases
-      return (
+  const comparatorAliases = comparators.aliases
+  return (
+    <Box style={{ width: 'fit-content' }}>
+      <FilterCard label={props.property} onRemove={props.onRemove}>
         <Box
           style={{
             display: 'flex',
             flexDirection: 'column',
-            minWidth: '325px',
-            maxWidth: '400px',
+            width: '400px',
             overflow: 'visible',
           }}
         >
@@ -167,7 +159,7 @@ export default withRemoveButton(
             </Box>
           )}
         </Box>
-      )
-    })
+      </FilterCard>
+    </Box>
   )
-)
+})

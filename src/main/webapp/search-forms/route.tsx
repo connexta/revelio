@@ -16,6 +16,7 @@ import SearchFormEditor from './editor'
 import { SearchFormType } from '.'
 import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
+import Box from '@material-ui/core/Box'
 
 type SearchFormProps = SearchFormType & {
   onDelete: (form: SearchFormType) => void
@@ -33,13 +34,15 @@ const SearchForm = (props: SearchFormProps) => {
     <Fragment>
       {editing ? (
         <Dialog fullWidth maxWidth={false} open onClose={onCancel}>
-          <SearchFormEditor
-            title={props.title}
-            filterTree={props.filterTree}
-            id={props.id}
-            onCancel={onCancel}
-            onSave={onSave}
-          />
+          <Box height="calc(100vh - 128px)">
+            <SearchFormEditor
+              title={props.title}
+              filterTree={props.filterTree}
+              id={props.id}
+              onCancel={onCancel}
+              onSave={onSave}
+            />
+          </Box>
         </Dialog>
       ) : null}
       <IndexCardItem {...props} onClick={() => setEditing(true)}>
@@ -67,7 +70,9 @@ const AddSearchForm = (props: AddProps) => {
     <Fragment>
       {editing ? (
         <Dialog fullWidth maxWidth={false} open onClose={onCancel}>
-          <SearchFormEditor onCancel={onCancel} onSave={onSave} />
+          <Box height="calc(100vh - 128px)">
+            <SearchFormEditor onCancel={onCancel} onSave={onSave} />
+          </Box>
         </Dialog>
       ) : null}
       <AddCardItem onClick={() => setEditing(true)} />

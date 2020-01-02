@@ -70,7 +70,9 @@ stories.add('editor', () => {
   return (
     <DrawProvider>
       <SelectionProvider>
-        <SearchFormEditor />
+        <div style={{ height: '100vh' }}>
+          <SearchFormEditor />
+        </div>
       </SelectionProvider>
     </DrawProvider>
   )

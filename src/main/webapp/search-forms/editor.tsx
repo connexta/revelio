@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Filter from '../query-filters/filter'
+import Filter, { QueryFilter } from '../query-filters/filter/individual-filter'
 
 import Box from '@material-ui/core/Box'
 import Paper from '@material-ui/core/Paper'
@@ -12,7 +12,9 @@ import { memo } from 'react'
 import Button from '@material-ui/core/Button'
 import { SearchFormType } from '.'
 import { FilterGroupType } from '../query-filters/filter/filter-group'
+
 const { useQueryExecutor, useApolloFallback } = require('../react-hooks')
+const genResults = require('../gen-results').default
 
 let MemoizedVisualizations: any = () => null
 if (typeof window !== 'undefined') {
@@ -46,11 +48,31 @@ const getFilterTree = (props: QueryBuilderProps) => {
   }
   return { ...props.filterTree }
 }
+
+const Header = (props: any) => {
+  return (
+    <Box display="flex" style={{ padding: 8 }} alignItems="center">
+      <TextField
+        fullWidth
+        value={props.title}
+        variant="outlined"
+        label="Search Title"
+        onChange={event => {
+          props.setTitle(event.target.value)
+        }}
+      />
+      <Button style={{ marginLeft: 10 }} onClick={props.addFilter}>
+        Add Field
+      </Button>
+    </Box>
+  )
+}
+
 const QueryBuilder = (props: QueryBuilderProps) => {
   const [filterTree, setFilterTree] = useState<FilterGroupType>(
     getFilterTree(props)
   )
-  const [title, setTitle] = useState(props.title || '')
+  const [title, setTitle] = useState(props.title || 'New Search')
 
   return (
     <Box>
@@ -58,24 +80,51 @@ const QueryBuilder = (props: QueryBuilderProps) => {
         style={{
           width: 500,
           overflow: 'auto',
-          height: `calc(100% - 50px)`,
+          height: `calc(100% - 60px)`,
+          padding: '8px 0px',
         }}
         display="flex"
         flexDirection="column"
       >
-        <TextField
-          InputProps={{ style: { fontSize: 30 } }}
-          fullWidth
-          placeholder="Search Title"
-          value={title}
-          onChange={event => {
-            setTitle(event.target.value)
+        <Header
+          title={title}
+          setTitle={setTitle}
+          addFilter={() => {
+            setFilterTree({
+              ...filterTree,
+              filters: [
+                { property: 'anyText', type: 'ILIKE', value: '' },
+                ...filterTree.filters,
+              ],
+            })
           }}
         />
         <Divider />
-        <Filter {...filterTree} onChange={setFilterTree} limitDepth={0} />
+        {filterTree.filters.map((filter: QueryFilter, i) => (
+          <Box key={i} style={{ padding: '0px 16px' }}>
+            <Filter
+              {...filter}
+              onChange={(newFilter: any) => {
+                const filters = filterTree.filters.slice()
+                filters[i] = newFilter
+                setFilterTree({ ...filterTree, filters })
+              }}
+              onRemove={() => {
+                const filters = filterTree.filters.slice()
+                filters.splice(i, 1)
+                setFilterTree({ ...filterTree, filters })
+              }}
+            />
+          </Box>
+        ))}
       </Box>
-      <Box style={{ display: 'flex', justifyContent: 'flex-end', margin: 5 }}>
+      <Box
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          margin: 'auto 5px',
+        }}
+      >
         {props.onSearch && (
           <React.Fragment>
             <Button
@@ -127,12 +176,7 @@ type EditorProps = QueryBuilderProps & {
 
 export const SearchFormEditor = (props: EditorProps) => {
   return (
-    <Box
-      width="100%"
-      display="flex"
-      flexDirection="row"
-      height={`calc(100vh - 128px)`}
-    >
+    <Box width="100%" display="flex" flexDirection="row" height="100%">
       <QueryBuilder {...props} onSearch={props.onSearch} />
       <Paper style={{ width: `calc(100% - 500px)`, height: '100%' }}>
         <Box style={{ width: '100%', height: '100%' }}>
@@ -144,7 +188,7 @@ export const SearchFormEditor = (props: EditorProps) => {
 }
 
 const fallbackFn = () => ({
-  results: [],
+  results: genResults(),
   onSearch: () => {},
 })
 

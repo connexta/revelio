@@ -15,8 +15,8 @@ const { useApolloFallback } = require('../../react-hooks')
 
 export const isFilterGroup = (
   object: QueryFilter | FilterGroupType
-): object is FilterGroupType =>
-  (object as FilterGroupType).filters !== undefined
+): object is FilterGroupProps =>
+  (object as FilterGroupProps).filters !== undefined
 
 type FilterProps = FilterGroupProps | QueryFilterProps
 
