@@ -187,19 +187,37 @@ export const Workspace = () => {
                   })
                 }}
               />
+              {/* //TODO add paging */}
+              {results.map(({ metacard }) => (
+                <IndexCardItem
+                  key={metacard.properties.id}
+                  title={metacard.properties.title}
+                  subHeader={' '}
+                />
+              ))}
             </React.Fragment>
           )}
 
         {tab === 1 && (
-          <Lists
-            lists={lists}
-            onSelect={data => {
-              const results = data.metacardsById.reduce((acc, metacard) => {
-                return acc.concat(metacard.results)
-              }, [])
-              setListResults(results)
-            }}
-          />
+          <React.Fragment>
+            <Lists
+              lists={lists}
+              onSelect={data => {
+                const results = data.metacardsById.reduce((acc, metacard) => {
+                  return acc.concat(metacard.results)
+                }, [])
+                setListResults(results)
+              }}
+            />
+
+            {listResults.map(({ metacard }) => (
+              <IndexCardItem
+                key={metacard.properties.id}
+                title={metacard.properties.title}
+                subHeader={' '}
+              />
+            ))}
+          </React.Fragment>
         )}
       </div>
       <div style={{ flex: '1' }}>
