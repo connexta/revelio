@@ -147,7 +147,7 @@ const Visualizations = props => {
   }
 
   const HistogramVis = () => {
-    const [selected] = useSelectionInterface()
+    const [selected, onSelect] = useSelectionInterface()
 
     const selectedResults = results.filter(result => {
       return selected.has(result.metacard.properties.id)
@@ -155,7 +155,11 @@ const Visualizations = props => {
 
     return (
       <VisContainer>
-        <Histogram results={results} selected={selectedResults} />
+        <Histogram
+          results={results}
+          selected={selectedResults}
+          onSelect={onSelect}
+        />
       </VisContainer>
     )
   }
