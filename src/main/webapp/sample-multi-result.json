@@ -230,6 +230,127 @@
   {
     "actions": [
       {
+        "id": "catalog.data.metacard.preview",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/07a7153941344fee91c381e27e05dcf9?transform=preview",
+        "title": "Export as preview",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.view",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/07a7153941344fee91c381e27e05dcf9",
+        "title": "Export Metacard XML",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.propertyjson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/07a7153941344fee91c381e27e05dcf9?transform=propertyjson",
+        "title": "Export as propertyjson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csw:Record",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/07a7153941344fee91c381e27e05dcf9?transform=csw:Record",
+        "title": "Export as csw:Record",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.resource",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/07a7153941344fee91c381e27e05dcf9?transform=resource",
+        "title": "Export as resource",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/07a7153941344fee91c381e27e05dcf9?transform=metadata",
+        "title": "Export as metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.geojson",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/07a7153941344fee91c381e27e05dcf9?transform=geojson",
+        "title": "Export as geojson",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.gmd:MD_Metadata",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/07a7153941344fee91c381e27e05dcf9?transform=gmd:MD_Metadata",
+        "title": "Export as gmd:MD_Metadata",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.html",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/07a7153941344fee91c381e27e05dcf9?transform=html",
+        "title": "Export as html",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.thumbnail",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/07a7153941344fee91c381e27e05dcf9?transform=thumbnail",
+        "title": "Export as thumbnail",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.xml",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/07a7153941344fee91c381e27e05dcf9?transform=xml",
+        "title": "Export as xml",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.rtf",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/07a7153941344fee91c381e27e05dcf9?transform=rtf",
+        "title": "Export as rtf",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      },
+      {
+        "id": "catalog.data.metacard.csv",
+        "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/07a7153941344fee91c381e27e05dcf9?transform=csv",
+        "title": "Export as csv",
+        "displayName": null,
+        "__typename": "MetacardAction"
+      }
+    ],
+    "metacard": {
+      "properties": {
+        "created": "2020-01-06T09:23:25.036-0700",
+        "point-of-contact": "admin@localhost.local",
+        "resource-size": "512017",
+        "resource-uri": "content:07a7153941344fee91c381e27e05dcf9",
+        "checksum-algorithm": "Adler32",
+        "title": "sample-jpg-image-500kb.jpg",
+        "metacard.created": "2020-01-06T09:23:25.036-0700",
+        "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.DefaultParser\" />\n<meta name=\"X-Parsed-By\" content=\"org.apache.tika.parser.jpeg.JpegParser\" />\n<meta name=\"Resolution Units\" content=\"inch\" />\n<meta name=\"Number of Tables\" content=\"4 Huffman tables\" />\n<meta name=\"File Modified Date\" content=\"Mon Jan 06 09:23:24 -07:00 2020\" />\n<meta name=\"Compression Type\" content=\"Baseline\" />\n<meta name=\"Data Precision\" content=\"8 bits\" />\n<meta name=\"Number of Components\" content=\"3\" />\n<meta name=\"tiff:ImageLength\" content=\"1792\" />\n<meta name=\"Component 2\" content=\"Cb component: Quantization table 1, Sampling factors 1 horiz/1 vert\" />\n<meta name=\"Thumbnail Height Pixels\" content=\"0\" />\n<meta name=\"Component 1\" content=\"Y component: Quantization table 0, Sampling factors 2 horiz/2 vert\" />\n<meta name=\"Image Height\" content=\"1792 pixels\" />\n<meta name=\"Thumbnail Width Pixels\" content=\"0\" />\n<meta name=\"Orientation\" content=\"Top, left side (Horizontal / normal)\" />\n<meta name=\"tiff:Orientation\" content=\"1\" />\n<meta name=\"X Resolution\" content=\"300 dots\" />\n<meta name=\"Image Width\" content=\"1792 pixels\" />\n<meta name=\"File Size\" content=\"512017 bytes\" />\n<meta name=\"Component 3\" content=\"Cr component: Quantization table 1, Sampling factors 1 horiz/1 vert\" />\n<meta name=\"File Name\" content=\"apache-tika-6774546488101988428.tmp\" />\n<meta name=\"tiff:BitsPerSample\" content=\"8\" />\n<meta name=\"tiff:ImageWidth\" content=\"1792\" />\n<meta name=\"Content-Type\" content=\"image/jpeg\" />\n<meta name=\"Y Resolution\" content=\"300 dots\" />\n<title></title>\n</head>\n /></html>",
+        "media.height-pixels": 1792,
+        "datatype": ["Image"],
+        "checksum": "7a8aedce",
+        "metacard.modified": "2020-01-06T09:23:25.036-0700",
+        "resource-download-url": "https://localhost:8993/services/catalog/sources/ddf.distribution/07a7153941344fee91c381e27e05dcf9?transform=resource",
+        "media.compression": "Baseline",
+        "media.width-pixels": 1792,
+        "metacard-tags": ["resource", "VALID"],
+        "media.type": "image/jpeg",
+        "modified": "2020-01-06T09:23:25.036-0700",
+        "thumbnail": "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",
+        "id": "07a7153941344fee91c381e27e05dcf9",
+        "effective": "2020-01-06T09:23:25.036-0700"
+      }
+    },
+    "__typename": "QueryResponseResult"
+  },
+  {
+    "actions": [
+      {
         "id": "catalog.data.metacard.csv",
         "url": "https://localhost:8993/services/catalog/sources/ddf.distribution/fb7be8af54a9433aa63834d433f00721?transform=csv",
         "title": "Export as csv",
