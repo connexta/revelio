@@ -8,28 +8,54 @@ import Divider from '@material-ui/core/Divider'
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'
 
 import loadable from 'react-loadable'
-import { memo } from 'react'
 import Button from '@material-ui/core/Button'
 import { SearchFormType } from '.'
 import { FilterGroupType } from '../query-filters/filter/filter-group'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import Typography from '@material-ui/core/Typography'
+import useAttributeDefinitions from '../react-hooks/use-attribute-definitions'
+import {
+  AttributeDefinition,
+  sampleAttributeDefinitions,
+} from '../query-filters/filter/dummyDefinitions'
+import { defaultFilter } from '../query-filters/filter/filter-utils'
 
 const { useQueryExecutor, useApolloFallback } = require('../react-hooks')
 const genResults = require('../gen-results').default
 
-let MemoizedVisualizations: any = () => null
+const Loading = () => {
+  return (
+    <Paper>
+      <LinearProgress />
+    </Paper>
+  )
+}
+const Error = (props: any) => {
+  return (
+    <Paper>
+      <Typography>
+        {props.message ? props.message : 'Something went wrong'}
+      </Typography>
+    </Paper>
+  )
+}
+
+let Visualizations: any = () => null
+
 if (typeof window !== 'undefined') {
-  MemoizedVisualizations = loadable({
+  Visualizations = loadable({
     loader: () =>
       import(//prettier-ignore
       // @ts-ignore
       /* webpackChunkName: "visualizations" */ '../workspaces/visualizations').then(
-        module => memo(module.default)
+        module => module.default
       ),
-    loading: () => null,
+    loading: Loading,
   })
 }
 
 type QueryBuilderProps = SearchFormType & {
+  attributeDefinitions?: AttributeDefinition[]
   onCancel?: () => void
   onSave?: (form: SearchFormType) => void
   onSearch?: (query: any) => void
@@ -39,7 +65,7 @@ const getFilterTree = (props: QueryBuilderProps) => {
   if (!props.filterTree) {
     return {
       type: 'AND',
-      filters: [{ property: 'anyText', type: 'ILIKE', value: '' }],
+      filters: [{ ...defaultFilter }],
     }
   }
 
@@ -74,6 +100,8 @@ const QueryBuilder = (props: QueryBuilderProps) => {
   )
   const [title, setTitle] = useState(props.title || 'New Search')
 
+  const { attributeDefinitions = sampleAttributeDefinitions } = props
+
   return (
     <Box>
       <Box
@@ -101,7 +129,7 @@ const QueryBuilder = (props: QueryBuilderProps) => {
         />
         <Divider />
         {filterTree.filters.map((filter: QueryFilter, i) => (
-          <Box key={i} style={{ padding: '0px 16px' }}>
+          <Box key={i} style={{ padding: '0px 16px', width: 425 }}>
             <Filter
               {...filter}
               onChange={(newFilter: any) => {
@@ -114,6 +142,7 @@ const QueryBuilder = (props: QueryBuilderProps) => {
                 filters.splice(i, 1)
                 setFilterTree({ ...filterTree, filters })
               }}
+              attributeDefinitions={attributeDefinitions}
             />
           </Box>
         ))}
@@ -180,7 +209,7 @@ export const SearchFormEditor = (props: EditorProps) => {
       <QueryBuilder {...props} onSearch={props.onSearch} />
       <Paper style={{ width: `calc(100% - 500px)`, height: '100%' }}>
         <Box style={{ width: '100%', height: '100%' }}>
-          <MemoizedVisualizations results={props.results || []} />
+          <Visualizations results={props.results || []} />
         </Box>
       </Paper>
     </Box>
@@ -192,9 +221,24 @@ const fallbackFn = () => ({
   onSearch: () => {},
 })
 
+const MetacardTypesContainer = (props: EditorProps) => {
+  const { loading, error, attributeDefinitions } = useAttributeDefinitions()
+  if (loading) {
+    return <Loading />
+  }
+
+  if (error) {
+    return <Error message={error} />
+  }
+
+  return (
+    <SearchFormEditor {...props} attributeDefinitions={attributeDefinitions} />
+  )
+}
+
 export default (props: any) => {
   const fn = useApolloFallback(useQueryExecutor, fallbackFn)
   const { results, onSearch } = fn()
-
-  return <SearchFormEditor {...props} results={results} onSearch={onSearch} />
+  const Component = useApolloFallback(MetacardTypesContainer, SearchFormEditor)
+  return <Component {...props} results={results} onSearch={onSearch} />
 }

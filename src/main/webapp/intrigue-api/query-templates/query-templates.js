@@ -1,6 +1,6 @@
 const ROOT = '/search/catalog/internal'
 
-import { getIn } from 'immutable'
+import { getIn, setIn } from 'immutable'
 
 const inverseKeys = object => {
   return Object.keys(object).reduce((ret, key) => {
@@ -52,9 +52,9 @@ export const getQueryTemplates = async (parent, args, { fetch }) => {
 
 export const saveQueryTemplate = async (parent, args, { fetch }) => {
   const { id } = args
-  const attrs = { ...args.attrs }
+  let attrs = args.attrs
   if (getIn(attrs, ['filterTree', 'filters', 'length'], 0) === 1) {
-    attrs.filterTree = attrs.filterTree.filters[0]
+    attrs = setIn(attrs, ['filterTree'], attrs.filterTree.filters[0])
   }
 
   const res = await fetch(`${ROOT}/forms/query/${id}`, {
@@ -72,9 +72,9 @@ export const saveQueryTemplate = async (parent, args, { fetch }) => {
 }
 
 export const createQueryTemplate = async (parent, args, { fetch }) => {
-  const { attrs } = args
+  let attrs = args.attrs
   if (getIn(attrs, ['filterTree', 'filters', 'length'], 0) === 1) {
-    attrs.filterTree = attrs.filterTree.filters[0]
+    attrs = setIn(attrs, ['filterTree'], attrs.filterTree.filters[0])
   }
   const res = await fetch(`${ROOT}/forms/query`, {
     method: 'POST',

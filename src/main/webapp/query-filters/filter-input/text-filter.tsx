@@ -2,20 +2,15 @@ import * as React from 'react'
 import { QueryFilterProps } from '../filter/individual-filter'
 import TextField from '@material-ui/core/TextField'
 import Box from '@material-ui/core/Box'
-import { Map, getIn, List } from 'immutable'
-import { useFilterContext } from '../filter-context'
+import { getIn, List } from 'immutable'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
+import AttributeDropdown from '../filter/attribute-dropdown'
+import ComparatorDropdown from '../filter/comparator-dropdown'
+import { sampleAttributeDefinitions } from '../filter/dummyDefinitions'
 const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
   .default
-
-export const comparatorOptions = ['ILIKE', 'LIKE', '=', 'NEAR', 'IS NULL']
-export const comparatorAliases = Map({
-  ILIKE: 'CONTAINS',
-  LIKE: 'MATCHCASE',
-  'IS NULL': 'IS EMPTY',
-})
 
 const intRegex = /^(\d*$)|^$/
 
@@ -33,7 +28,7 @@ const FACETED_QUERY = gql`
   }
 `
 const FACET_WHITELIST = gql`
-  query {
+  query getAttributeSuggestionList {
     systemProperties {
       attributeSuggestionList
     }
@@ -76,11 +71,17 @@ const WithFacetedQuery = (props: QueryFilterProps) => {
 }
 
 const TextFilterContainer = (props: TextFilterProps) => {
-  const { metacardTypes } = useFilterContext()
+  const { attributeDefinitions = sampleAttributeDefinitions } = props
   let { enums = [] } = props
   enums = List(
     enums.concat(
-      getIn(metacardTypes, [props.property, 'enums'], undefined) || []
+      getIn(
+        attributeDefinitions.find(
+          definition => definition.id === props.property
+        ),
+        ['enums'],
+        undefined
+      ) || []
     )
   )
     .toSet()
@@ -187,15 +188,45 @@ const NearFilter = (props: QueryFilterProps) => {
   )
 }
 
-const Filter = (props: QueryFilterProps) => {
-  if (props.type === 'NEAR') {
-    return <NearFilter {...props} />
-  }
-
-  const Component = useApolloFallback(
-    WithFacetedSuggestions,
-    TextFilterContainer
-  )
-  return <Component {...props} />
+const FROM: any = {
+  NEAR: (value: any) => value.value,
+  'IS NULL': () => '',
 }
-export default Filter
+const TO: any = {
+  NEAR: (value: any) => ({ value, distance: 2 }),
+  'IS NULL': () => null,
+}
+
+export default (props: QueryFilterProps) => {
+  let Component
+  if (props.type === 'NEAR') {
+    Component = NearFilter
+  } else {
+    Component = useApolloFallback(WithFacetedSuggestions, TextFilterContainer)
+  }
+  return (
+    <React.Fragment>
+      <AttributeDropdown {...props} />
+      <ComparatorDropdown
+        {...props}
+        onChange={(newOperator: string) => {
+          const { property, type: oldOperator, value: oldValue } = props
+          if (oldOperator === newOperator) return
+          let newValue = oldValue
+          if (FROM[oldOperator] !== undefined) {
+            newValue = FROM[oldOperator](newValue)
+          }
+          if (TO[newOperator] !== undefined) {
+            newValue = TO[newOperator](newValue)
+          }
+          props.onChange({
+            type: newOperator,
+            value: newValue,
+            property,
+          })
+        }}
+      />
+      {props.type !== 'IS NULL' && <Component {...props} />}
+    </React.Fragment>
+  )
+}

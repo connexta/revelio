@@ -1,7 +1,7 @@
 import { getDefaultValue } from './filter-utils'
 import { getIn } from 'immutable'
 
-export const deserialize = (filter: any, metacardTypes: any) => {
+export const deserialize = (filter: any, attributeDefinitions: any) => {
   const deserializedFilter = { ...filter }
   if (typeof filter.property === 'object') {
     // if the filter is something like NEAR (which maps to a CQL filter function such as 'proximity'),
@@ -27,7 +27,13 @@ export const deserialize = (filter: any, metacardTypes: any) => {
   }
   if (filter.type === 'IS NULL' || filter.value == undefined) {
     deserializedFilter.value = getDefaultValue(
-      getIn(metacardTypes, [filter.property, 'type'], 'STRING')
+      getIn(
+        attributeDefinitions.find(
+          (metacardType: any) => metacardType.id === filter.property
+        ),
+        ['type'],
+        'STRING'
+      )
     )
   }
   return deserializedFilter
@@ -52,7 +58,7 @@ const generateIsEmptyFilter = (property: string) => {
   }
 }
 
-export const serialize = (filter: any, metacardTypes: any) => {
+export const serialize = (filter: any, attributeDefinitions: any) => {
   switch (filter.type) {
     case 'NEAR':
       return generateFilterFunction('proximity', [
@@ -64,19 +70,29 @@ export const serialize = (filter: any, metacardTypes: any) => {
       return generateIsEmptyFilter(filter.property)
   }
 
-  switch (getIn(metacardTypes, [filter.property, 'type'], undefined)) {
+  switch (
+    getIn(
+      attributeDefinitions.find(
+        (metacardType: any) => metacardType.id === filter.property
+      ),
+      ['type'],
+      undefined
+    )
+  ) {
     case 'FLOAT':
     case 'DOUBLE':
       if (filter.type === 'BETWEEN') {
         return {
           ...filter,
-          lowerBoundary: parseFloat(filter.value.lower),
-          upperBoundary: parseFloat(filter.value.upper),
+          lowerBoundary:
+            filter.value.lower === '' ? '' : parseFloat(filter.value.lower),
+          upperBoundary:
+            filter.value.upper === '' ? '' : parseFloat(filter.value.upper),
         }
       }
       return {
         ...filter,
-        value: parseFloat(filter.value),
+        value: filter.value === '' ? '' : parseFloat(filter.value),
       }
     case 'INTEGER':
     case 'LONG':
@@ -84,13 +100,15 @@ export const serialize = (filter: any, metacardTypes: any) => {
       if (filter.type === 'BETWEEN') {
         return {
           ...filter,
-          lowerBoundary: parseInt(filter.value.lower),
-          upperBoundary: parseInt(filter.value.upper),
+          lowerBoundary:
+            filter.value.lower === '' ? '' : parseInt(filter.value.lower),
+          upperBoundary:
+            filter.value.upper === '' ? '' : parseInt(filter.value.upper),
         }
       }
       return {
         ...filter,
-        value: parseInt(filter.value),
+        value: filter.value === '' ? '' : parseInt(filter.value),
       }
   }
   return { ...filter }

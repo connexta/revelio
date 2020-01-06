@@ -1,23 +1,11 @@
 import * as React from 'react'
 import { QueryFilterProps } from '../filter/individual-filter'
 import TextField from '@material-ui/core/TextField'
+import { getIn } from 'immutable'
 import Box from '@material-ui/core/Box'
-import { Map, getIn } from 'immutable'
-import { useFilterContext } from '../filter-context'
-
-export const comparatorOptions = [
-  '>',
-  '<',
-  '=',
-  '>=',
-  '<=',
-  'BETWEEN',
-  'IS NULL',
-]
-export const comparatorAliases = Map({
-  BETWEEN: 'RANGE',
-  'IS NULL': 'IS EMPTY',
-})
+import AttributeDropdown from '../filter/attribute-dropdown'
+import ComparatorDropdown from '../filter/comparator-dropdown'
+import { sampleAttributeDefinitions } from '../filter/dummyDefinitions'
 
 const intRegex = /^(-?\d*$)|^$/
 const floatRegex = /^-?\d*(\.\d*)?$|^$/
@@ -79,10 +67,16 @@ const NumberInput = (props: any) => {
 }
 
 const NumberFilter = (props: QueryFilterProps) => {
-  const { metacardTypes } = useFilterContext()
-  const isInt = isInteger(
-    getIn(metacardTypes, [props.property, 'type'], 'INTEGER')
-  )
+  const { attributeDefinitions = sampleAttributeDefinitions } = props
+
+  const getType = (property: string) => {
+    return getIn(
+      attributeDefinitions.find(definition => definition.id === property),
+      ['type'],
+      'INTEGER'
+    )
+  }
+  const isInt = isInteger(getType(props.property))
   if (props.type !== 'BETWEEN') {
     return (
       <NumberInput
@@ -129,4 +123,44 @@ const NumberFilter = (props: QueryFilterProps) => {
   }
 }
 
-export default NumberFilter
+const FROM: any = {
+  BETWEEN: (value: any) => value.lower,
+  'IS NULL': () => '',
+}
+
+const TO: any = {
+  BETWEEN: (value: any) => ({ lower: value, upper: value }),
+  'IS NULL': () => null,
+}
+
+export default (props: QueryFilterProps) => {
+  return (
+    <React.Fragment>
+      <AttributeDropdown {...props} />
+      <ComparatorDropdown
+        {...props}
+        onChange={(newOperator: string) => {
+          const { property, type: oldOperator, value: oldValue } = props
+          if (oldOperator === newOperator) return
+          let newValue = oldValue
+          if (FROM[oldOperator] !== undefined) {
+            newValue = FROM[oldOperator](newValue)
+          }
+          if (TO[newOperator] !== undefined) {
+            newValue = TO[newOperator](newValue)
+          }
+          props.onChange({
+            type: newOperator,
+            value: newValue,
+            property,
+          })
+        }}
+      />
+      {props.type !== 'IS NULL' && (
+        <Box>
+          <NumberFilter {...props} />
+        </Box>
+      )}
+    </React.Fragment>
+  )
+}

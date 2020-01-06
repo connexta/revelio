@@ -4,14 +4,13 @@ import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import Add from '@material-ui/icons/Add'
-import {
-  defaultFilter,
-  filterHeaderButtonStyle,
-  withDivider,
-  withRemoveButton,
-} from './filter-utils'
+import { defaultFilter, filterHeaderButtonStyle } from './filter-utils'
 import Operator from './operator'
 import { isFilterGroup } from '../filter'
+import { AttributeDefinition } from './dummyDefinitions'
+import Fab from '@material-ui/core/Fab'
+
+import Remove from '@material-ui/icons/Remove'
 
 export type FilterGroupType = {
   type: string
@@ -23,7 +22,50 @@ export type FilterGroupProps = FilterGroupType & {
   editing?: boolean
   onChange: (value: FilterGroupType) => void
   onRemove?: () => void
+  attributeDefinitions?: AttributeDefinition[]
 }
+
+//TODO: Remove this once we know how we want groups to look
+const withRemoveButton = (Component: any) => {
+  return (props: any) => {
+    return typeof props.onRemove === 'function' ? (
+      <Box style={{ display: 'flex', alignItems: 'center' }}>
+        <Box style={{ margin: 10 }}>
+          <Fab onClick={() => props.onRemove()} size="small" color="secondary">
+            <Remove />
+          </Fab>
+        </Box>
+        <Component {...props} />
+      </Box>
+    ) : (
+      <Component {...props} />
+    )
+  }
+}
+
+const withDivider = (Component: any) => {
+  return (props: any) => (
+    <Box style={{ display: 'flex' }}>
+      <Box>
+        <Divider />
+      </Box>
+      <Component {...props} />
+    </Box>
+  )
+}
+
+const Divider = () => (
+  <Box
+    style={{
+      height: '100%',
+      width: 12,
+      backgroundColor: 'rgba(255, 0, 0, 0.2)',
+      float: 'left',
+      borderRadius: '14px',
+      marginRight: 10,
+    }}
+  />
+)
 
 const getValue = (props: FilterGroupProps) => {
   const { type, filters } = props
@@ -48,7 +90,7 @@ const Header = (props: FilterGroupProps) => {
         onChange={(value: string) => {
           props.onChange({ ...getValue(props), type: value })
         }}
-        selected={props.type}
+        value={props.type}
       />
       <Button
         onClick={() => {
@@ -110,6 +152,7 @@ const FilterList = (props: FilterGroupProps) => {
                 editing={props.editing}
                 onChange={onChange}
                 onRemove={onRemove}
+                attributeDefinitions={props.attributeDefinitions}
               />
             </Box>
           )
@@ -121,6 +164,7 @@ const FilterList = (props: FilterGroupProps) => {
                 editing={props.editing}
                 onChange={onChange}
                 onRemove={onRemove}
+                attributeDefinitions={props.attributeDefinitions}
               />
             </Box>
           )
