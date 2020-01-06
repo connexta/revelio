@@ -40,23 +40,23 @@ const withDrawButton = (
   const memo = geometry.useGeometryJSONMemo(drawState.geo)
   React.useEffect(
     () => {
-      const geo = drawState.geo === null ? null : {
-        ...drawState.geo,
-        properties: {
-          ...drawState.geo.properties,
-          id: drawState.geo.properties.id || value.properties.id
-        }
-      }
-      if (
-        geo &&
-        geo.properties.id === value.properties.id
-      ) {
+      const geo =
+        drawState.geo === null
+          ? null
+          : {
+              ...drawState.geo,
+              properties: {
+                ...drawState.geo.properties,
+                id: drawState.geo.properties.id || value.properties.id,
+              },
+            }
+      if (geo && geo.properties.id === value.properties.id) {
         onChange(geo)
       }
     },
     [memo]
   )
-  const editorOnChange = (geo:geometry.GeometryJSON) => {
+  const editorOnChange = (geo: geometry.GeometryJSON) => {
     setDrawState({
       geo,
       active: true,

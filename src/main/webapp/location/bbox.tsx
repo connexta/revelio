@@ -8,7 +8,7 @@ import SpacedLinearContainer from '../spaced-linear-container'
 
 const BBox: React.SFC<Props> = ({ value, onChange, coordinateUnit }) => {
   const { id, bbox, properties } = coordinateEditor.geoToBBoxProps(value)
-  const [lowerRight, upperLeft] = coordinateEditor.bboxToCoordinatePair(bbox)
+  const [upperLeft, lowerRight] = coordinateEditor.bboxToCoordinatePair(bbox)
   const containerDirection =
     coordinateUnit === coordinateEditor.UTM ? 'row' : 'column'
   const formControlStyle: any = {

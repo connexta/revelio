@@ -227,9 +227,11 @@ const Visualizations = props => {
       .reduce((list, value) => list.concat(value), [])
     const selectedGeos = geos.filter(g => g.properties.selected)
     const center =
-      selectedGeos.length > 0
-        ? getCoord(centerOfMass(featureCollection(selectedGeos)))
-        : null
+      isDrawing && originalGeo
+        ? getCoord(centerOfMass(originalGeo))
+        : selectedGeos.length > 0
+          ? getCoord(centerOfMass(featureCollection(selectedGeos)))
+          : null
     return (
       <MapComponent
         projection={PROJECTION}
