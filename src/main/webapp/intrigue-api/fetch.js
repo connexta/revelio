@@ -17,9 +17,12 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 const url = require('url')
 const qs = require('querystring')
 const fetch = require('isomorphic-fetch')
+const logger = require('../../graphql-server/logger')
+const performance = require('performance-now')
 const ddfLocation = url.parse(
   process.env.DDF_LOCATION || 'https://localhost:8993'
 )
+const { fancy } = logger
 const Origin = process.env.DDF_ORIGIN || ddfLocation.href
 
 const cacheBust = urlString => {
@@ -37,7 +40,10 @@ const cacheBust = urlString => {
 }
 
 module.exports = (url, { headers, ...opts } = {}) => {
-  return fetch(cacheBust(url), {
+  logger.info(`Executing query against: ${url}`)
+  logger.debug(`Associated req headers for ${url}: \n${fancy(headers)}`)
+  const start = performance()
+  const queryResponse = fetch(cacheBust(url), {
     credentials: 'same-origin',
     cache: 'no-cache',
     ...opts,
@@ -49,4 +55,10 @@ module.exports = (url, { headers, ...opts } = {}) => {
       ...headers,
     },
   })
+  logger.info(
+    `Query execution against ${url} took approx: ${(
+      performance() - start
+    ).toFixed(3)} ms`
+  )
+  return queryResponse
 }

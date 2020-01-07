@@ -4,7 +4,7 @@
   "main": "src/main/webapp/app.js",
   "license": "MIT",
   "devDependencies": {
-    "@connexta/ace": "https://github.com/connexta/ace.git#81e7b8b22b3f7e43b356ba5dfbc065ffdb694892",
+    "@connexta/ace": "https://github.com/schachte/ace.git#8139754ab463eed0fbf18da3f8cb317dd18e7ee6",
     "@types/ol": "^5.3.6",
     "@types/react": "^16.9.5",
     "@types/react-loadable": "^5.5.3",
@@ -39,6 +39,7 @@
     "compression": "^1.7.4",
     "date-fns": "^2.0.0-beta.5",
     "express": "4.17.1",
+    "express-http-context": "^1.2.3",
     "geospatialdraw": "https://github.com/connexta/geospatialdraw.git#c330407bda2442a983b42e9f1afbb4575c1e21fc",
     "golden-layout": "^1.5.9",
     "graphql": "^14.5.8",
@@ -48,6 +49,7 @@
     "lodash.throttle": "^4.1.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.16",
+    "node-uuid": "^1.4.8",
     "polished": "^3.4.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
@@ -57,7 +59,8 @@
     "react-router-dom": "^5.1.2",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
-    "styled-components": "^4.3.2"
+    "styled-components": "^4.3.2",
+    "winston": "^3.2.1"
   },
   "scripts": {
     "start": "cross-env NODE_OPTIONS=\"--inspect --max_old_space_size=8192\" ace start --middleware src/main/graphql-server/middleware.js",

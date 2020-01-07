@@ -8,8 +8,10 @@ import { createServerApollo } from '../../webapp/intrigue-api/graphql'
 import { ApolloProvider } from '@apollo/react-hooks'
 import Loadable from '@connexta/ace/react-loadable'
 import { getBundles } from '@connexta/ace/react-loadable/webpack'
+import logger from '../logger'
 
 const ROOT_PATH = '/search/catalog'
+const { fancy } = logger
 
 module.exports = async (req, res, next) => {
   const path = req.originalUrl.replace(ROOT_PATH, '')
@@ -53,6 +55,7 @@ const Html = ({ content, state, css, scripts = [] }) => {
 
 const executeSSR = async req => {
   const { originalUrl, clientBundles } = req
+  logger.info(`Executing SSR against: ${originalUrl}`)
 
   const sheets = new ServerStyleSheets()
   const client = createServerApollo({ req })
@@ -82,6 +85,12 @@ const executeSSR = async req => {
       ...Array.from(modules),
     ]
 
+    logger.debug(
+      `Loaded modules for rendering ${originalUrl} yields: \n${fancy(
+        modulesToBeLoaded
+      )}`
+    )
+
     // Reversing to ensure the main bundle is loaded last
     const bundles = getBundles(clientBundles, modulesToBeLoaded).js.reverse()
 
@@ -106,6 +115,10 @@ const executeSSR = async req => {
       clientBundles,
       clientBundles.entrypoints
     ).js.reverse()
+
+    logger.debug(
+      `Injecting the following bundles into rendered HTML: \n${fancy(bundles)}`
+    )
 
     const html = <Html content="" state={{}} scripts={bundles} />
     return `<!DOCTYPE html>\n${renderToStaticMarkup(html)}`
