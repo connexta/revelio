@@ -37,7 +37,7 @@ then be reflected in Revelio.
     yarn install
     yarn start
 
-## Logging
+### Logging
 
 In order to change the log level, be sure to pass in an environment variable into the node process. For example, the current start command in the `package.json` is as follows:
 
