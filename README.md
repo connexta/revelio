@@ -37,6 +37,20 @@ then be reflected in Revelio.
     yarn install
     yarn start
 
+## Logging
+
+In order to change the log level, be sure to pass in an environment variable into the node process. For example, the current start command in the `package.json` is as follows:
+
+```
+cross-env NODE_OPTIONS=\"--inspect --max_old_space_size=8192\" ace start --middleware src/main/graphql-server/middleware.js
+```
+
+The default logging level is `info`, but in order to increase this to `debug` you would modify the start command to look like the following:
+
+```
+cross-env LOG_LEVEL=\"debug\" NODE_OPTIONS=\"--inspect --max_old_space_size=8192\" ace start --middleware src/main/graphql-server/middleware.js
+```
+
 ### Production
 
 To run the production JavaScript code, do:

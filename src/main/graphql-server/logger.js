@@ -18,11 +18,13 @@ const prettyJson = format.printf(info => {
 })
 
 const logger = createLogger({
-  level: process.env.LOG_LEVEL || 'debug',
+  level: process.env.LOG_LEVEL || 'info',
   format: format.combine(
     format(info => {
       info.level = '[' + info.level.toUpperCase() + ']'
-      info.reqId = `- Request ID: ${httpContext.get('reqId')}` || ''
+      info.reqId = httpContext.get('reqId')
+        ? `- Request ID: ${httpContext.get('reqId')}`
+        : ''
       info.time = new Date().toISOString()
       return info
     })(),
