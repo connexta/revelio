@@ -3,6 +3,7 @@ import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
 import Cookies from 'universal-cookie'
 import LogIn from './login'
+import { useApolloFallback } from '../react-hooks'
 
 const cookies = new Cookies()
 const useLogin = () => {
@@ -20,7 +21,7 @@ const setCookie = cookie => {
   cookies.set(parsedCookie[0], parsedCookie[1], { path: '/' })
 }
 
-export default props => {
+const Container = props => {
   const [login] = useLogin()
   const executeLogin = async (username, password) => {
     const { data } = await login({ variables: { username, password } })
@@ -33,4 +34,9 @@ export default props => {
       handleClose={props.handleClose}
     />
   )
+}
+
+export default props => {
+  const Component = useApolloFallback(Container, LogIn)
+  return <Component {...props} />
 }
