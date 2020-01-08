@@ -12,6 +12,7 @@ import { Layout, Provider, AddConfig, DragSource } from '../react-golden-layout'
 import Histogram from '../histogram'
 import Inspector from '../inspector/inspector'
 import ResultTable from '../results/results'
+import Gallery from '../gallery'
 
 import { ClusterMap, RENDERER_STYLE } from '../maps'
 import WKT from 'ol/format/WKT'
@@ -50,6 +51,11 @@ const AddVisualization = () => {
       type: 'component',
       title: 'Histogram',
       componentName: 'histogram',
+    },
+    Gallery: {
+      type: 'component',
+      title: 'Gallery',
+      componentName: 'gallery',
     },
   }
 
@@ -146,6 +152,14 @@ const Visualizations = props => {
     )
   }
 
+  const GalleryVis = () => {
+    return (
+      <VisContainer>
+        <Gallery results={results} />
+      </VisContainer>
+    )
+  }
+
   const HistogramVis = () => {
     const [selected, onSelect] = useSelectionInterface()
 
@@ -218,6 +232,7 @@ const Visualizations = props => {
     table: TableVis,
     '2d-map': MapVis,
     histogram: HistogramVis,
+    gallery: GalleryVis,
   }
   return (
     <Provider>
