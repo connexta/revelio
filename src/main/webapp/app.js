@@ -12,12 +12,8 @@ const App = () => {
   const client = createClientApollo({
     onAuthentication: async done => {
       setShowLogIn(true)
-      // eslint-disable-next-line no-constant-condition
-      while (true) {
+      while (showLogin) {
         await sleep(100)
-        if (!showLogin) {
-          break
-        }
       }
       done()
     },
