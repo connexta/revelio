@@ -6,7 +6,6 @@ const context = args => {
   const { req } = args
   const cookie =
     req.headers.cookie !== undefined ? { cookie: req.headers.cookie } : {}
-  const { authorization = '' } = req.headers
   const universalFetch = async (url, opts = {}) => {
     const res = await fetch(url, {
       ...opts,

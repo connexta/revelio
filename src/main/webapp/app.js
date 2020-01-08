@@ -43,7 +43,11 @@ const App = () => {
         <div>
           <Routes />
           {showLogin ? (
-            <LogInModal open={true} handleClose={() => setShowLogIn(false)} />
+            <LogInModal
+              label="Log In"
+              open={true}
+              handleClose={() => setShowLogIn(false)}
+            />
           ) : null}
         </div>
       </BrowserRouter>
