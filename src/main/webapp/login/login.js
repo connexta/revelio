@@ -84,7 +84,7 @@ export const LogIn = props => {
         disabled={values.buttonDisabled ? true : false}
         onClick={async () => {
           setValues({ ...values, buttonDisabled: true })
-          const data = await props.login(values.username, values.password)
+          await props.login(values.username, values.password)
           props.handleClose()
         }}
       >
