@@ -33,6 +33,7 @@ import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 
 import { SelectionProvider } from './react-hooks/use-selection-interface'
+import { DrawProvider } from './react-hooks/use-draw-interface'
 import { Link as ReactLink, Route, matchPath } from 'react-router-dom'
 
 import User from './user'
@@ -264,38 +265,40 @@ const AppRouter = () => {
   }
 
   return (
-    <SelectionProvider>
-      <div
-        style={{
-          color: palette.text.primary,
-          background: palette.background.default,
-          minHeight: '100vh',
-        }}
-      >
-        <Drawer anchor="left" open={open} onClose={handleDrawerClose}>
-          <NavMenu routes={routes} onClose={handleDrawerClose} />
-        </Drawer>
-        {routes.concat(otherRoutes).map(route => {
-          const { title, path, component: Component } = route
-          const render = () => {
-            return (
-              <React.Fragment>
-                <NavBar title={title} onMenuOpen={handleDrawerOpen} />
-                <div
-                  style={{
-                    overflow: 'auto',
-                    height: 'calc(100vh - 64px)',
-                  }}
-                >
-                  <Component />
-                </div>
-              </React.Fragment>
-            )
-          }
-          return <Route key={path} exact path={path} render={render} />
-        })}
-      </div>
-    </SelectionProvider>
+    <DrawProvider>
+      <SelectionProvider>
+        <div
+          style={{
+            color: palette.text.primary,
+            background: palette.background.default,
+            minHeight: '100vh',
+          }}
+        >
+          <Drawer anchor="left" open={open} onClose={handleDrawerClose}>
+            <NavMenu routes={routes} onClose={handleDrawerClose} />
+          </Drawer>
+          {routes.concat(otherRoutes).map(route => {
+            const { title, path, component: Component } = route
+            const render = () => {
+              return (
+                <React.Fragment>
+                  <NavBar title={title} onMenuOpen={handleDrawerOpen} />
+                  <div
+                    style={{
+                      overflow: 'auto',
+                      height: 'calc(100vh - 64px)',
+                    }}
+                  >
+                    <Component />
+                  </div>
+                </React.Fragment>
+              )
+            }
+            return <Route key={path} exact path={path} render={render} />
+          })}
+        </div>
+      </SelectionProvider>
+    </DrawProvider>
   )
 }
 

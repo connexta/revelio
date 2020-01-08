@@ -3,7 +3,10 @@ import { select } from '@connexta/ace/@storybook/addon-knobs'
 import React from 'react'
 import WorldMap from './world-map'
 import { geometry, coordinates } from 'geospatialdraw'
-import { Style, Fill, Circle, Stroke } from 'ol/style'
+import Style from 'ol/style/Style'
+import Fill from 'ol/style/Fill'
+import Circle from 'ol/style/Circle'
+import Stroke from 'ol/style/Stroke'
 const { BUFFER_CLASSNAME, HIDDEN_CLASSNAME, POINT_RADIUS } = geometry
 
 const featureHasClass = (feature, className) =>

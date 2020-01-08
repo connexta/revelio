@@ -8,6 +8,7 @@ import Polygon from './polygon'
 import PointRadius from './point-radius'
 import BBox from './bbox'
 import withCoordinateUnitTabs from './with-coordinate-unit-tabs'
+import withDrawButton from './with-draw-button'
 import Keyword from './keyword'
 import { BasicEditorProps } from './geo-editor'
 import { geometry, shapes } from 'geospatialdraw'
@@ -18,6 +19,7 @@ type LocationTypeComponentMap = {
   [type in LocationType]: {
     label: string
     Component: React.ComponentType<BasicEditorProps>
+    ComponentWithDrawButton: React.ComponentType<BasicEditorProps>
     shape: shapes.Shape
   }
 }
@@ -25,6 +27,7 @@ type LocationTypeComponentMap = {
 type EditorPropsMap = { [editorType in LocationType]: any }
 
 type Props = BasicEditorProps & {
+  enableDrawing?: boolean
   editorProps?: EditorPropsMap
 }
 
@@ -32,26 +35,43 @@ const componentMap: LocationTypeComponentMap = {
   line: {
     label: 'Line',
     Component: withCoordinateUnitTabs(Line),
+    ComponentWithDrawButton: withDrawButton(
+      withCoordinateUnitTabs(Line),
+      shapes.LINE
+    ),
     shape: shapes.LINE,
   },
   polygon: {
     label: 'Polygon',
     Component: withCoordinateUnitTabs(Polygon),
+    ComponentWithDrawButton: withDrawButton(
+      withCoordinateUnitTabs(Polygon),
+      shapes.POLYGON
+    ),
     shape: shapes.POLYGON,
   },
   pointRadius: {
     label: 'Point-Radius',
     Component: withCoordinateUnitTabs(PointRadius),
+    ComponentWithDrawButton: withDrawButton(
+      withCoordinateUnitTabs(PointRadius),
+      shapes.POINT_RADIUS
+    ),
     shape: shapes.POINT_RADIUS,
   },
   bbox: {
     label: 'Bounding Box',
     Component: withCoordinateUnitTabs(BBox),
+    ComponentWithDrawButton: withDrawButton(
+      withCoordinateUnitTabs(BBox),
+      shapes.BBOX
+    ),
     shape: shapes.BOUNDING_BOX,
   },
   keyword: {
     label: 'Keyword',
     Component: Keyword,
+    ComponentWithDrawButton: Keyword,
     shape: shapes.POLYGON,
   },
 }
@@ -80,10 +100,14 @@ const locationTypeFromGeo = (geo: geometry.GeometryJSON): LocationType => {
 const Location: React.SFC<Props> = ({
   value,
   onChange,
+  enableDrawing = true,
   editorProps = {} as EditorPropsMap,
 }) => {
   const locationType = locationTypeFromGeo(value)
-  const Component = componentMap[locationType].Component
+  const locationTypeDescription = componentMap[locationType]
+  const Component = enableDrawing
+    ? locationTypeDescription.ComponentWithDrawButton
+    : locationTypeDescription.Component
   const extendedComponentProps = editorProps.hasOwnProperty(locationType)
     ? editorProps[locationType]
     : {}

@@ -1,6 +1,11 @@
-import { Style, Fill, Circle, Stroke, Icon, Text } from 'ol/style'
 import { transparentize } from 'polished'
 import MultiPoint from 'ol/geom/MultiPoint'
+import Style from 'ol/style/Style'
+import Fill from 'ol/style/Fill'
+import Circle from 'ol/style/Circle'
+import Stroke from 'ol/style/Stroke'
+import Icon from 'ol/style/Icon'
+import Text from 'ol/style/Text'
 import { geometry } from 'geospatialdraw'
 const { BUFFER_CLASSNAME, HIDDEN_CLASSNAME, POINT_RADIUS, POLYGON } = geometry
 import { getIconText } from '../icons/map-pin'

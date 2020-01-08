@@ -5,6 +5,7 @@ import { useState } from 'react'
 import SearchFormRoute from './route'
 import SearchFormEditor from './editor'
 const { SelectionProvider } = require('../react-hooks/use-selection-interface')
+const { DrawProvider } = require('../react-hooks/use-draw-interface')
 
 const stories = storiesOf('Search Forms', module)
 
@@ -30,19 +31,23 @@ stories.add('route', () => {
     )
   }
   return (
-    <SelectionProvider>
-      <SearchFormRoute
-        forms={searchForms}
-        onDelete={onDelete}
-        loading={loading}
-      />
-    </SelectionProvider>
+    <DrawProvider>
+      <SelectionProvider>
+        <SearchFormRoute
+          forms={searchForms}
+          onDelete={onDelete}
+          loading={loading}
+        />
+      </SelectionProvider>
+    </DrawProvider>
   )
 })
 stories.add('editor', () => {
   return (
-    <SelectionProvider>
-      <SearchFormEditor />
-    </SelectionProvider>
+    <DrawProvider>
+      <SelectionProvider>
+        <SearchFormEditor />
+      </SelectionProvider>
+    </DrawProvider>
   )
 })

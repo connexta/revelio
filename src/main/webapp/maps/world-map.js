@@ -5,7 +5,8 @@ import React, {
   useRef,
   memo,
 } from 'react'
-import { Map as OpenLayersMap, View } from 'ol'
+import OpenLayersMap from 'ol/Map'
+import View from 'ol/View'
 import Tile from 'ol/layer/Tile'
 import OSM from 'ol/source/OSM'
 import Box from '@material-ui/core/Box'
