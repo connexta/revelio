@@ -1,0 +1,14 @@
+import React from 'react'
+import Dialog from '@material-ui/core/Dialog'
+import Container from './container'
+
+export const LogInModal = props => {
+  const { handleClose, open, label } = props
+  return (
+    <Dialog open={open} onClose={handleClose}>
+      <Container handleClose={handleClose} label={label} />
+    </Dialog>
+  )
+}
+
+export default LogInModal

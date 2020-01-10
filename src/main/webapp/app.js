@@ -1,22 +1,23 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { AppContainer } from '@connexta/ace/react-hot-loader'
 import Routes from './routes'
 import { BrowserRouter } from 'react-router-dom'
 import { createClientApollo } from './intrigue-api/graphql'
 import { ApolloProvider } from '@apollo/react-hooks'
-import Loadable from 'react-loadable'
+import { LogInModal } from './login/loginModal'
 
-const render = async (Routes, client) => {
-  // TODO: Update render to be hydrate to improve performance
-  await Loadable.preloadReady()
-  ReactDOM.render(
-    <Application Routes={Routes} client={client} />,
-    document.getElementById('root')
-  )
-}
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const Application = ({ Routes, client }) => {
+const App = () => {
+  const [showLogin, setShowLogIn] = React.useState(false)
+  const client = createClientApollo({
+    onAuthentication: async done => {
+      setShowLogIn(true)
+      while (showLogin) {
+        await sleep(100)
+      }
+      done()
+    },
+  })
   React.useEffect(() => {
     const ssrStyles = document.querySelector('#css-server-side')
     if (ssrStyles) {
@@ -24,24 +25,21 @@ const Application = ({ Routes, client }) => {
     }
   }, [])
   return (
-    <AppContainer>
-      <ApolloProvider client={client}>
-        <BrowserRouter basename="/search/catalog">
+    <ApolloProvider client={client}>
+      <BrowserRouter basename="/search/catalog">
+        <div>
           <Routes />
-        </BrowserRouter>
-      </ApolloProvider>
-    </AppContainer>
+          {showLogin ? (
+            <LogInModal
+              label="Log In"
+              open={true}
+              handleClose={() => setShowLogIn(false)}
+            />
+          ) : null}
+        </div>
+      </BrowserRouter>
+    </ApolloProvider>
   )
 }
 
-render(Routes, createClientApollo())
-
-if (process.env.NODE_ENV !== 'production') {
-  module.hot.accept('./routes', () => {
-    render(require('./routes').default, createClientApollo())
-  })
-  module.hot.accept('./intrigue-api/graphql', () => {
-    const { createClientApollo } = require('./intrigue-api/graphql')
-    render(require('./routes').default, createClientApollo())
-  })
-}
+export default App

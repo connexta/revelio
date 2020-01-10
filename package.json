@@ -1,7 +1,7 @@
 {
   "name": "revelio",
   "version": "1.0.0",
-  "main": "src/main/webapp/app.js",
+  "main": "src/main/webapp/main.js",
   "license": "MIT",
   "devDependencies": {
     "@connexta/ace": "https://github.com/connexta/ace.git#81e7b8b22b3f7e43b356ba5dfbc065ffdb694892",
@@ -32,7 +32,9 @@
     "@material-ui/pickers": "^3.2.5",
     "apollo-cache-inmemory": "^1.6.3",
     "apollo-client": "^2.6.4",
+    "apollo-link": "^1.2.13",
     "apollo-link-batch-http": "^1.2.13",
+    "apollo-link-error": "^1.1.12",
     "apollo-link-http": "^1.5.16",
     "apollo-link-schema": "^1.2.4",
     "apollo-server-express": "^2.9.7",
@@ -57,7 +59,8 @@
     "react-router-dom": "^5.1.2",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
-    "styled-components": "^4.3.2"
+    "styled-components": "^4.3.2",
+    "universal-cookie": "^4.0.2"
   },
   "scripts": {
     "start": "cross-env NODE_OPTIONS=\"--inspect --max_old_space_size=8192\" ace start --middleware src/main/graphql-server/middleware.js",
