@@ -1,51 +1,69 @@
-export type MetacardType =
-  | 'STRING'
-  | 'XML'
-  | 'DATE'
-  | 'LOCATION'
-  | 'GEOMETRY'
-  | 'BOOLEAN'
-  | 'INTEGER'
-  | 'SHORT'
-  | 'LONG'
-  | 'FLOAT'
-  | 'DOUBLE'
+export type AttributeDefinition = {
+  id: string
+  enums: string[]
+  type:
+    | 'STRING'
+    | 'XML'
+    | 'DATE'
+    | 'LOCATION'
+    | 'GEOMETRY'
+    | 'BOOLEAN'
+    | 'INTEGER'
+    | 'SHORT'
+    | 'LONG'
+    | 'FLOAT'
+    | 'DOUBLE'
+}
 
-export const sampleMetacardTypes = {
-  metadata: {
+export const sampleAttributeDefinitions = [
+  {
     type: 'XML',
     enums: [],
+    id: 'metadata',
   },
-  thumbnail: {
+  {
     type: 'BINARY',
     enums: [],
+    id: 'thumbnail',
   },
-  phonetics: {
+  {
     type: 'BOOLEAN',
     enums: [],
+    id: 'phonetics',
   },
-  created: {
+  {
     type: 'DATE',
     enums: [],
+    id: 'created',
   },
-  'media.bit.rate': {
+  {
     type: 'DOUBLE',
     enums: [],
+    id: 'media.bit.rate',
   },
-  'media.width-pixels': {
+  {
     type: 'INTEGER',
     enums: [],
+    id: 'media.width-pixels',
   },
-  'ext.population': {
+  {
     type: 'LONG',
     enums: [],
+    id: 'ext.population',
   },
-  anyGeo: {
+  {
     type: 'GEOMETRY',
     enums: [],
+    id: 'anyGeo',
   },
-  'topic.vocabulary': {
+  {
+    type: 'GEOMETRY',
+    enums: [],
+    id: 'location',
+  },
+  {
     type: 'STRING',
     enums: ['cat', 'dog', 'catdog'],
+    id: 'topic.vocabulary',
   },
-}
+]

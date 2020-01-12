@@ -1,6 +1,6 @@
 const assert = require('assert')
 import { serialize, deserialize } from './filter-serialization'
-import { sampleMetacardTypes } from './dummyDefinitions'
+import { sampleAttributeDefinitions } from './dummyDefinitions'
 // Data stored by server
 const serverIsNull = {
   property: 'topic.vocabulary',
@@ -59,30 +59,42 @@ const queryNear = {
 
 describe('serialization', () => {
   it('converts IS EMPTY', () => {
-    assert.deepEqual(serialize(queryIsNull, sampleMetacardTypes), serverIsNull)
+    assert.deepEqual(
+      serialize(queryIsNull, sampleAttributeDefinitions),
+      serverIsNull
+    )
   })
   it('converts > to integer', () => {
     assert.deepEqual(
-      serialize(queryIsGreater, sampleMetacardTypes),
+      serialize(queryIsGreater, sampleAttributeDefinitions),
       serverIsGreater
     )
   })
   it('converts range to floats', () => {
-    assert.deepEqual(serialize(queryRange, sampleMetacardTypes), serverRange)
+    assert.deepEqual(
+      serialize(queryRange, sampleAttributeDefinitions),
+      serverRange
+    )
   })
   it('converts NEAR ', () => {
-    assert.deepEqual(serialize(queryNear, sampleMetacardTypes), serverNear)
+    assert.deepEqual(
+      serialize(queryNear, sampleAttributeDefinitions),
+      serverNear
+    )
   })
 })
 
 describe('deserialization', () => {
   it('converts IS EMPTY', () => {
     assert.deepEqual(
-      deserialize(serverIsNull, sampleMetacardTypes),
+      deserialize(serverIsNull, sampleAttributeDefinitions),
       queryIsNull
     )
   })
   it('converts NEAR', () => {
-    assert.deepEqual(deserialize(serverNear, sampleMetacardTypes), queryNear)
+    assert.deepEqual(
+      deserialize(serverNear, sampleAttributeDefinitions),
+      queryNear
+    )
   })
 })

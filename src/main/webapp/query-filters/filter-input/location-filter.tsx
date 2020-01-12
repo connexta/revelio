@@ -1,18 +1,21 @@
 import * as React from 'react'
 import { QueryFilterProps } from '../filter/individual-filter'
-import Box from '@material-ui/core/Box'
 import { makeDefaultSearchGeo } from '../filter'
-import { filterComponentStyle } from '../filter/filter-utils'
 import { Location, geoToFilter } from '../../location'
+import AttributeDropdown from '../filter/attribute-dropdown'
 
-const LocationFilter = ({ onChange }: QueryFilterProps) => (
+const LocationFilter = (props: QueryFilterProps) => (
   <React.Fragment>
-    <Box style={filterComponentStyle}>
-      <Location
-        value={makeDefaultSearchGeo()}
-        onChange={value => onChange(geoToFilter(value))}
-      />
-    </Box>
+    <AttributeDropdown {...props} />
+    <Location
+      //TODO: re-type QueryFilter to allow for more complex filters than
+      //      just {property, type, value} ex. location (geojson) and
+      //      filter functions such as NEAR (currently be serialized)
+      value={props.geojson || makeDefaultSearchGeo()}
+      onChange={value => {
+        props.onChange(geoToFilter(value, props.property))
+      }}
+    />
   </React.Fragment>
 )
 

@@ -85,8 +85,10 @@ const loadDynamicRoute = route => {
       loading: LoadingComponent,
     }),
     'search-forms': loadable({
-      loader: () =>
-        import(/* webpackChunkName: "search-forms" */ './search-forms/index.tsx'),
+      loader: async () => {
+        return (await import(/* webpackChunkName: "search-forms" */ './search-forms'))
+          .default
+      },
       loading: LoadingComponent,
     }),
     about: loadable({

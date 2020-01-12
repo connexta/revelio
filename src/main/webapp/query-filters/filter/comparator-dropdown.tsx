@@ -5,27 +5,89 @@ import Box from '@material-ui/core/Box'
 import Popover from '@material-ui/core/Popover'
 import MenuItem from '@material-ui/core/MenuItem'
 import DropDownIcon from '@material-ui/icons/ArrowDropDown'
-import { Map } from 'immutable'
-import { useFilterContext } from '../filter-context'
+import { Map, getIn } from 'immutable'
+import { QueryFilter } from './individual-filter'
+import {
+  AttributeDefinition,
+  sampleAttributeDefinitions,
+} from './dummyDefinitions'
 
-type Props = {
-  selected: string
-  options: Array<string>
-  aliases?: Map<string, string>
-  onChange: (value: string) => void
-  style?: React.CSSProperties
+const booleanComparators = ['=', 'IS NULL']
+const booleanAliases = Map({ '=': 'IS', 'IS NULL': 'IS EMPTY' })
+
+const dateComparators = ['BEFORE', 'AFTER', 'DURING', '=', 'IS NULL']
+const dateAliases = Map({
+  BEFORE: 'Before',
+  AFTER: 'After',
+  DURING: 'Between',
+  '=': 'Relative',
+  'IS NULL': 'IS EMPTY',
+})
+
+const textComparators = ['ILIKE', 'LIKE', '=', 'NEAR', 'IS NULL']
+const textAliases = Map({
+  ILIKE: 'CONTAINS',
+  LIKE: 'MATCHCASE',
+  'IS NULL': 'IS EMPTY',
+})
+
+export const numberComparators = [
+  '>',
+  '<',
+  '=',
+  '>=',
+  '<=',
+  'BETWEEN',
+  'IS NULL',
+]
+export const numberAliases = Map({
+  BETWEEN: 'RANGE',
+  'IS NULL': 'IS EMPTY',
+})
+
+export const Comparators = {
+  BOOLEAN: { options: booleanComparators, aliases: booleanAliases },
+  DATE: { options: dateComparators, aliases: dateAliases },
+  LOCATION: { options: textComparators, aliases: textAliases },
+  GEOMETRY: { options: textComparators, aliases: textAliases },
+  //Strings
+  STRING: { options: textComparators, aliases: textAliases },
+  XML: { options: textComparators, aliases: textAliases },
+  BINARY: { options: textComparators, aliases: textAliases },
+  //Numbers
+  FLOAT: { options: numberComparators, aliases: numberAliases },
+  DOUBLE: { options: numberComparators, aliases: numberAliases },
+  INTEGER: { options: numberComparators, aliases: numberAliases },
+  SHORT: { options: numberComparators, aliases: numberAliases },
+  LONG: { options: numberComparators, aliases: numberAliases },
 }
 
-const ComparatorMenu = (props: Props) => {
+type ComparatorDropdownProps = QueryFilter & {
+  onChange: (value: string) => void
+  editing?: boolean
+  attributeDefinitions?: AttributeDefinition[]
+}
+
+const ComparatorDropdown = (props: ComparatorDropdownProps) => {
   const [anchorEl, open, close] = useAnchorEl()
-  const context = useFilterContext()
+  const { attributeDefinitions = sampleAttributeDefinitions } = props
+  const type = getIn(
+    attributeDefinitions.find(definition => definition.id === props.property),
+    ['type'],
+    'STRING'
+  ) as AttributeDefinition['type']
+  let options = Comparators[type].options
+  const aliases = Comparators[type].aliases
+  if (props.property === 'anyText' || props.property === 'anyGeo') {
+    options = options.filter(option => option !== 'IS NULL')
+  }
   return (
     <React.Fragment>
       <Button
-        style={{ width: 'fit-content', margin: 5 }}
+        style={{ width: 'fit-content' }}
         variant="outlined"
         onClick={open as any}
-        disabled={!context.editing}
+        disabled={props.editing === false}
       >
         <Box>
           <Box
@@ -36,9 +98,7 @@ const ComparatorMenu = (props: Props) => {
             maxWidth="calc(100% - 24px)"
             component="span"
           >
-            {props.aliases
-              ? props.aliases.get(props.selected) || props.selected
-              : props.selected}
+            {aliases ? aliases.get(props.type) || props.type : props.type}
           </Box>
           <DropDownIcon style={{ float: 'right' }} />
         </Box>
@@ -50,7 +110,7 @@ const ComparatorMenu = (props: Props) => {
         open={Boolean(anchorEl)}
         anchorEl={anchorEl as any}
       >
-        {props.options.map(option => {
+        {options.map(option => {
           return (
             <MenuItem
               onClick={() => {
@@ -60,7 +120,7 @@ const ComparatorMenu = (props: Props) => {
               key={option}
               value={option}
             >
-              {props.aliases ? props.aliases.get(option) || option : option}
+              {aliases ? aliases.get(option) || option : option}
             </MenuItem>
           )
         })}
@@ -69,4 +129,4 @@ const ComparatorMenu = (props: Props) => {
   )
 }
 
-export default ComparatorMenu
+export default ComparatorDropdown

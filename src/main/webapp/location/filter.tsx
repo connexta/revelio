@@ -13,7 +13,7 @@ const GEOMETRY: ValueType = 'GEOMETRY'
 
 export type Filter = {
   type: FilterType
-  property: Property
+  property: string
   value: {
     type: ValueType
     value: string
@@ -21,12 +21,15 @@ export type Filter = {
   geojson: geometry.GeometryJSON
 }
 
-export const geoToFilter = (geo: geometry.GeometryJSON): Filter => ({
+export const geoToFilter = (
+  geo: geometry.GeometryJSON,
+  property: string = ANY_GEO
+): Filter => ({
   type:
     geo.properties.buffer && geo.properties.buffer.width > 0
       ? DWITHIN
       : INTERSECTS,
-  property: ANY_GEO,
+  property,
   value: {
     type: GEOMETRY,
     value: geoToWKT(geo),

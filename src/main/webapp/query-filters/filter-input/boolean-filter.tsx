@@ -5,29 +5,43 @@ import Box from '@material-ui/core/Box'
 import Switch from '@material-ui/core/Switch'
 import Button from '@material-ui/core/Button'
 
-import { Map } from 'immutable'
-
-export const comparatorOptions = ['=', 'IS NULL']
-export const comparatorAliases = Map({ '=': 'IS', 'IS NULL': 'IS EMPTY' })
+import AttributeDropdown from '../filter/attribute-dropdown'
+import ComparatorDropdown from '../filter/comparator-dropdown'
 
 const BooleanFilter = (props: QueryFilterProps) => {
   return (
     <React.Fragment>
-      <Box
-        onClick={() => {
-          props.onChange({
-            value: !props.value,
-            type: props.type,
-            property: props.property,
-          })
+      <AttributeDropdown {...props} />
+      <ComparatorDropdown
+        {...props}
+        onChange={(newOperator: string) => {
+          const { property, type: oldOperator } = props
+          if (newOperator !== oldOperator) {
+            if (newOperator === 'IS NULL') {
+              props.onChange({ property, type: newOperator, value: null })
+            } else {
+              props.onChange({ property, type: newOperator, value: false })
+            }
+          }
         }}
-        style={{ width: 'fit-content' }}
-      >
-        <Button variant="outlined">
-          <Switch checked={props.value !== false} />
-          {String(props.value !== false)}
-        </Button>
-      </Box>
+      />
+      {props.type !== 'IS NULL' && (
+        <Box>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              props.onChange({
+                value: !props.value,
+                type: props.type,
+                property: props.property,
+              })
+            }}
+          >
+            <Switch checked={props.value !== false} />
+            {String(props.value !== false)}
+          </Button>
+        </Box>
+      )}
     </React.Fragment>
   )
 }

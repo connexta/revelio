@@ -1,7 +1,7 @@
 const { storiesOf } = require('../@storybook/react')
 import * as React from 'react'
 import { action } from '@storybook/addon-actions'
-import { number } from '@storybook/addon-knobs'
+import { number, boolean } from '@storybook/addon-knobs'
 import { useState } from 'react'
 import Filter from './filter'
 
@@ -43,7 +43,7 @@ const deserializedFilters = {
 
 stories.add('basic', () => {
   const [filter, setFilter]: any = useState(baseFilterGroup)
-
+  const editing = boolean('Editing', true)
   return (
     <Filter
       limitDepth={number('Nesting Depth', 1)}
@@ -52,12 +52,14 @@ stories.add('basic', () => {
         setFilter(value)
         action('onChange')(value)
       }}
+      editing={editing}
     />
   )
 })
 
 stories.add('with deserialized filters', () => {
   const [filter, setFilter]: any = useState(deserializedFilters)
+  const editing = boolean('Editing', true)
   return (
     <Filter
       limitDepth={number('Nesting Depth', 1)}
@@ -66,32 +68,14 @@ stories.add('with deserialized filters', () => {
         setFilter(value)
         action('onChange')(value)
       }}
-    />
-  )
-})
-
-const searchFormFilter = {
-  type: 'AND',
-  filters: [deserializedFilters, baseFilter],
-}
-
-stories.add('as search form', () => {
-  const [filter, setFilter]: any = useState(searchFormFilter)
-  return (
-    <Filter
-      {...filter}
-      limitDepth={number('Nesting Depth', 1)}
-      onChange={(value: any) => {
-        setFilter(value)
-        action('onChange')(value)
-      }}
-      editing={false}
+      editing={editing}
     />
   )
 })
 
 stories.add('single filter', () => {
   const [filter, setFilter]: any = useState(nearFilter)
+  const editing = boolean('Editing', true)
   return (
     <Filter
       {...filter}
@@ -99,6 +83,7 @@ stories.add('single filter', () => {
         setFilter(value)
         action('onChange')(value)
       }}
+      editing={editing}
     />
   )
 })

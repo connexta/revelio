@@ -9,19 +9,12 @@ import { filterHeaderButtonStyle } from './filter-utils'
 
 const operators = ['AND', 'OR', 'NOT AND', 'NOT OR']
 
-const withOperators = (Component: any) => {
-  return (props: any) => {
-    return <Component operators={operators} {...props} />
-  }
-}
-
 type OperatorProps = {
-  operators: Array<string>
-  selected: string
+  value: string
   onChange: (value: string) => void
 }
 
-const Operator = withOperators((props: OperatorProps) => {
+const Operator = (props: OperatorProps) => {
   const [anchorEl, open, close] = useAnchorEl()
   return (
     <React.Fragment>
@@ -31,7 +24,7 @@ const Operator = withOperators((props: OperatorProps) => {
         onClick={open as any}
         endIcon={<ArrowDropDown />}
       >
-        <Typography noWrap>{props.selected}</Typography>
+        <Typography noWrap>{props.value}</Typography>
       </Button>
       <Popover
         transformOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -40,7 +33,7 @@ const Operator = withOperators((props: OperatorProps) => {
         open={Boolean(anchorEl)}
         anchorEl={anchorEl as any}
       >
-        {props.operators.map(operator => {
+        {operators.map(operator => {
           return (
             <MenuItem
               onClick={() => {
@@ -56,6 +49,6 @@ const Operator = withOperators((props: OperatorProps) => {
       </Popover>
     </React.Fragment>
   )
-})
+}
 
 export default Operator

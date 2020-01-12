@@ -8,17 +8,10 @@ const {
   validate,
 } = require('../../time-range')
 const { uglyMap, parseRelative } = require('../../basic-search-helper')
-import { Map } from 'immutable'
+import AttributeDropdown from '../filter/attribute-dropdown'
 
-export const comparatorOptions = ['BEFORE', 'AFTER', 'DURING', '=', 'IS NULL']
-
-export const comparatorAliases = Map({
-  BEFORE: 'Before',
-  AFTER: 'After',
-  DURING: 'Between',
-  '=': 'Relative',
-  'IS NULL': 'IS EMPTY',
-})
+import ComparatorDropdown from '../filter/comparator-dropdown'
+import { Box } from '@material-ui/core'
 
 const getDate = (value: any) => {
   if (value == null) return null
@@ -43,6 +36,7 @@ const comparatorsToComponents: any = {
   AFTER: TimeRangeAfter,
   '=': TimeRangeRelative,
   DURING: TimeRangeDuring,
+  'IS NULL': null,
 }
 
 const fromFilter = (filter: any) => {
@@ -67,10 +61,49 @@ const fromFilter = (filter: any) => {
   return timeRange
 }
 
+const toDuringValue = (value: any) => {
+  if (value == null) return ''
+  const date = new Date(value)
+  if (!isNaN(date.valueOf())) {
+    return `${date.toISOString()}/${date.toISOString()}`
+  }
+  return ''
+}
+
+const fromDuringValue = (value: string) => {
+  const dates = value.split('/')
+  const from = new Date(dates[0])
+  if (!isNaN(from.valueOf())) {
+    return from.toISOString()
+  }
+
+  return ''
+}
+const default_relative_value = 'RELATIVE(PT1M)'
+
+const FROM: any = {
+  DURING: (value: any) => fromDuringValue(value),
+  '=': () => '',
+  'IS NULL': () => '',
+}
+
+const TO: any = {
+  DURING: (value: any) => toDuringValue(value),
+  '=': () => default_relative_value,
+  'IS NULL': () => null,
+}
+
 const DateFilter = (props: QueryFilterProps) => {
   const toFilter = (timeRange: any) => {
     if (props.type === '=') {
       const { last, unit } = timeRange
+      if (!uglyMap[unit] || !last.match(/^(-?\d*$)|^$/)) {
+        return {
+          property: props.property,
+          value: props.value,
+          type: props.type,
+        }
+      }
       return {
         property: props.property,
         value: uglyMap[unit](last),
@@ -95,19 +128,39 @@ const DateFilter = (props: QueryFilterProps) => {
   const value = fromFilter(props)
   const Component = comparatorsToComponents[props.type]
 
-  if (Component === undefined) {
-    return null
-  }
-
   return (
     <React.Fragment>
-      <Component
-        errors={validate({ ...value, type: props.type })}
-        timeRange={value}
-        setTimeRange={(value: any) => {
-          props.onChange(toFilter(value))
+      <AttributeDropdown {...props} />
+      <ComparatorDropdown
+        {...props}
+        onChange={(newOperator: string) => {
+          const { property, type: oldOperator, value: oldValue } = props
+          if (oldOperator === newOperator) return
+          let newValue = oldValue
+          if (FROM[oldOperator] !== undefined) {
+            newValue = FROM[oldOperator](newValue)
+          }
+          if (TO[newOperator] !== undefined) {
+            newValue = TO[newOperator](newValue)
+          }
+          props.onChange({
+            type: newOperator,
+            value: newValue,
+            property,
+          })
         }}
       />
+      {props.type !== 'IS NULL' && (
+        <Box style={{ margin: 5 }}>
+          <Component
+            errors={validate({ ...value, type: props.type })}
+            timeRange={value}
+            setTimeRange={(value: any) => {
+              props.onChange(toFilter(value))
+            }}
+          />
+        </Box>
+      )}
     </React.Fragment>
   )
 }

@@ -296,7 +296,7 @@ const getFilterTree = props => {
   return Map({ text: '*' })
 }
 
-const FilterCard = props => {
+export const FilterCard = props => {
   const [state, setState] = useState(true)
   const { children, label, onRemove } = props
 
@@ -319,9 +319,11 @@ const FilterCard = props => {
           <IconButton onClick={() => setState(!state)}>
             <Arrow />
           </IconButton>
-          <IconButton style={{ color: red[500] }} onClick={onRemove}>
-            <CloseIcon />
-          </IconButton>
+          {onRemove && (
+            <IconButton style={{ color: red[500] }} onClick={onRemove}>
+              <CloseIcon />
+            </IconButton>
+          )}
         </div>
       </div>
       <Collapse in={state}>

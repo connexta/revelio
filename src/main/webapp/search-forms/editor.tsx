@@ -1,40 +1,71 @@
 import React, { useState } from 'react'
-import Filter from '../query-filters/filter'
+import Filter, { QueryFilter } from '../query-filters/filter/individual-filter'
 
 import Box from '@material-ui/core/Box'
 import Paper from '@material-ui/core/Paper'
 import TextField from '@material-ui/core/TextField'
 import Divider from '@material-ui/core/Divider'
+import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'
 
-//@ts-ignore
 import loadable from 'react-loadable'
-import { memo } from 'react'
+import Button from '@material-ui/core/Button'
+import { SearchFormType } from '.'
+import { FilterGroupType } from '../query-filters/filter/filter-group'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import Typography from '@material-ui/core/Typography'
+import useAttributeDefinitions from '../react-hooks/use-attribute-definitions'
+import {
+  AttributeDefinition,
+  sampleAttributeDefinitions,
+} from '../query-filters/filter/dummyDefinitions'
+import { defaultFilter } from '../query-filters/filter/filter-utils'
 
-let MemoizedVisualizations: any = () => null
+const { useQueryExecutor, useApolloFallback } = require('../react-hooks')
+const genResults = require('../gen-results').default
+
+const Loading = () => {
+  return (
+    <Paper>
+      <LinearProgress />
+    </Paper>
+  )
+}
+const Error = (props: any) => {
+  return (
+    <Paper>
+      <Typography>
+        {props.message ? props.message : 'Something went wrong'}
+      </Typography>
+    </Paper>
+  )
+}
+
+let Visualizations: any = () => null
+
 if (typeof window !== 'undefined') {
-  MemoizedVisualizations = loadable({
+  Visualizations = loadable({
     loader: () =>
       import(//prettier-ignore
       // @ts-ignore
       /* webpackChunkName: "visualizations" */ '../workspaces/visualizations').then(
-        module => memo(module.default)
+        module => module.default
       ),
-    loading: () => null,
+    loading: Loading,
   })
 }
 
-type EditorProps = {
-  title?: string
-  filterTree?: any
+type QueryBuilderProps = SearchFormType & {
+  attributeDefinitions?: AttributeDefinition[]
   onCancel?: () => void
-  onSave?: () => void
+  onSave?: (form: SearchFormType) => void
+  onSearch?: (query: any) => void
 }
 
-const getFilterTree = (props: EditorProps) => {
+const getFilterTree = (props: QueryBuilderProps) => {
   if (!props.filterTree) {
     return {
       type: 'AND',
-      filters: [{ property: 'anyText', type: 'ILIKE', value: '' }],
+      filters: [{ ...defaultFilter }],
     }
   }
 
@@ -43,43 +74,171 @@ const getFilterTree = (props: EditorProps) => {
   }
   return { ...props.filterTree }
 }
-const Editor = (props: EditorProps) => {
-  const [filterTree, setFilterTree]: any = useState(getFilterTree(props))
+
+const Header = (props: any) => {
   return (
-    <Box
-      style={{
-        width: 500,
-        overflow: 'auto',
-        minHeight: 300,
-      }}
-      display="flex"
-      flexDirection="column"
-    >
+    <Box display="flex" style={{ padding: 8 }} alignItems="center">
       <TextField
-        InputProps={{ style: { fontSize: 30 } }}
         fullWidth
         value={props.title}
+        variant="outlined"
+        label="Search Title"
+        onChange={event => {
+          props.setTitle(event.target.value)
+        }}
       />
-      <Divider />
-      <Filter {...filterTree} onChange={setFilterTree} limitDepth={0} />
+      <Button style={{ marginLeft: 10 }} onClick={props.addFilter}>
+        Add Field
+      </Button>
     </Box>
   )
 }
 
-export default (props: EditorProps) => {
+const QueryBuilder = (props: QueryBuilderProps) => {
+  const [filterTree, setFilterTree] = useState<FilterGroupType>(
+    getFilterTree(props)
+  )
+  const [title, setTitle] = useState(props.title || 'New Search')
+
+  const { attributeDefinitions = sampleAttributeDefinitions } = props
+
   return (
-    <Box
-      width="100%"
-      display="flex"
-      flexDirection="row"
-      height={`calc(100vh - 128px)`}
-    >
-      <Editor {...props} />
+    <Box>
+      <Box
+        style={{
+          width: 500,
+          overflow: 'auto',
+          height: `calc(100% - 60px)`,
+          padding: '8px 0px',
+        }}
+        display="flex"
+        flexDirection="column"
+      >
+        <Header
+          title={title}
+          setTitle={setTitle}
+          addFilter={() => {
+            setFilterTree({
+              ...filterTree,
+              filters: [
+                { property: 'anyText', type: 'ILIKE', value: '' },
+                ...filterTree.filters,
+              ],
+            })
+          }}
+        />
+        <Divider />
+        {filterTree.filters.map((filter: QueryFilter, i) => (
+          <Box key={i} style={{ padding: '0px 16px', width: 425 }}>
+            <Filter
+              {...filter}
+              onChange={(newFilter: any) => {
+                const filters = filterTree.filters.slice()
+                filters[i] = newFilter
+                setFilterTree({ ...filterTree, filters })
+              }}
+              onRemove={() => {
+                const filters = filterTree.filters.slice()
+                filters.splice(i, 1)
+                setFilterTree({ ...filterTree, filters })
+              }}
+              attributeDefinitions={attributeDefinitions}
+            />
+          </Box>
+        ))}
+      </Box>
+      <Box
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          margin: 'auto 5px',
+        }}
+      >
+        {props.onSearch && (
+          <React.Fragment>
+            <Button
+              variant="outlined"
+              color="secondary"
+              endIcon={<PlayCircleFilledIcon />}
+              onClick={() => {
+                if (props.onSearch) {
+                  props.onSearch({ filterTree, srcs: ['ddf.distribution'] })
+                }
+              }}
+            >
+              Test Search
+            </Button>
+            <Box style={{ width: 10, display: 'inline-block' }} />
+          </React.Fragment>
+        )}
+        <Button
+          onClick={() => {
+            if (props.onCancel) {
+              props.onCancel()
+            }
+          }}
+          variant="outlined"
+          color="secondary"
+        >
+          Cancel
+        </Button>
+        <Box style={{ width: 10, display: 'inline-block' }} />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            if (props.onSave) {
+              props.onSave({ filterTree, title, id: props.id })
+            }
+          }}
+        >
+          Save
+        </Button>
+      </Box>
+    </Box>
+  )
+}
+
+type EditorProps = QueryBuilderProps & {
+  results?: Array<any>
+}
+
+export const SearchFormEditor = (props: EditorProps) => {
+  return (
+    <Box width="100%" display="flex" flexDirection="row" height="100%">
+      <QueryBuilder {...props} onSearch={props.onSearch} />
       <Paper style={{ width: `calc(100% - 500px)`, height: '100%' }}>
         <Box style={{ width: '100%', height: '100%' }}>
-          <MemoizedVisualizations results={[]} />
+          <Visualizations results={props.results || []} />
         </Box>
       </Paper>
     </Box>
   )
+}
+
+const fallbackFn = () => ({
+  results: genResults(),
+  onSearch: () => {},
+})
+
+const MetacardTypesContainer = (props: EditorProps) => {
+  const { loading, error, attributeDefinitions } = useAttributeDefinitions()
+  if (loading) {
+    return <Loading />
+  }
+
+  if (error) {
+    return <Error message={error} />
+  }
+
+  return (
+    <SearchFormEditor {...props} attributeDefinitions={attributeDefinitions} />
+  )
+}
+
+export default (props: any) => {
+  const fn = useApolloFallback(useQueryExecutor, fallbackFn)
+  const { results, onSearch } = fn()
+  const Component = useApolloFallback(MetacardTypesContainer, SearchFormEditor)
+  return <Component {...props} results={results} onSearch={onSearch} />
 }
