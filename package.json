@@ -18,6 +18,7 @@
     "eslint-plugin-react-hooks": "^2.1.2",
     "json-diff": "^0.5.4",
     "mocha": "^5.2.0",
+    "ndjson": "^1.5.0",
     "node-fetch": "^2.6.0",
     "tempfile": "^3.0.0",
     "typescript": "^3.6.4"
@@ -50,6 +51,7 @@
     "lodash.throttle": "^4.1.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.16",
+    "on-finished": "^2.3.0",
     "polished": "^3.4.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
@@ -60,7 +62,9 @@
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "styled-components": "^4.3.2",
-    "universal-cookie": "^4.0.2"
+    "universal-cookie": "^4.0.2",
+    "uuid": "^3.3.3",
+    "winston": "^3.2.1"
   },
   "scripts": {
     "start": "cross-env NODE_OPTIONS=\"--inspect --max_old_space_size=8192\" ace start --middleware src/main/graphql-server/middleware.js",

@@ -1,6 +1,9 @@
 const { ApolloServer } = require('apollo-server-express')
 const express = require('express')
 const renderer = require('./helpers/renderer')
+const { createLogger, format, transports } = require('winston')
+const { v4 } = require('uuid')
+const onFinished = require('on-finished')
 
 const {
   resolvers,
@@ -15,6 +18,51 @@ const btoa = arg => {
 const Authorization = 'Basic ' + btoa('admin:admin')
 
 const router = express.Router()
+
+const LOG_LEVEL = process.env.LOG_LEVEL || 'info'
+const rootLogger = createLogger({
+  level: LOG_LEVEL,
+  format: format.combine(
+    format.timestamp(),
+    format.errors({ stack: true }),
+    format.json()
+  ),
+  defaultMeta: { service: 'revelio' },
+  transports: [
+    process.env.NODE_ENV === 'production'
+      ? new transports.Console()
+      : new transports.File({ filename: 'target/server.log' }),
+  ],
+})
+
+router.use((req, res, next) => {
+  const correlationId = v4()
+  req.logger = rootLogger.child({ correlationId })
+  res.header({ 'Revelio-Correlation-Id': correlationId })
+  next()
+})
+
+router.use((req, res, next) => {
+  const { url, method, connection } = req
+  const { remoteAddress } = connection
+  const profiler = req.logger.startTimer()
+
+  onFinished(res, (err, res) => {
+    const { statusCode: status, statusMessage: message } = res
+
+    profiler.done({
+      type: 'http-server-request',
+      remoteAddress,
+      url,
+      method,
+      message,
+      status,
+    })
+  })
+
+  next()
+})
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -29,8 +77,7 @@ const server = new ApolloServer({
 // Useful for getting example request/responses from the graphql endpoint.
 // Off by default.
 const captureGraphql = () => {
-  // eslint-disable-next-line no-console
-  console.log('GraphQL capturing enabled.')
+  rootLogger.info({ message: 'GraphQL capturing enabled.' })
   const captures = []
 
   return (req, res, next) => {
