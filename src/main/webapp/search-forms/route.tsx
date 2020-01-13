@@ -18,9 +18,10 @@ import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 import Box from '@material-ui/core/Box'
 
-type SearchFormProps = SearchFormType & {
+type SearchFormProps = {
   onDelete: (form: SearchFormType) => void
   onSave: (form: SearchFormType) => void
+  form?: SearchFormType
 }
 
 const SearchForm = (props: SearchFormProps) => {
@@ -36,16 +37,14 @@ const SearchForm = (props: SearchFormProps) => {
         <Dialog fullWidth maxWidth={false} open onClose={onCancel}>
           <Box height="calc(100vh - 128px)">
             <SearchFormEditor
-              title={props.title}
-              filterTree={props.filterTree}
-              id={props.id}
+              form={props.form}
               onCancel={onCancel}
               onSave={onSave}
             />
           </Box>
         </Dialog>
       ) : null}
-      <IndexCardItem {...props} onClick={() => setEditing(true)}>
+      <IndexCardItem {...props.form} onClick={() => setEditing(true)}>
         <Actions>
           <ShareAction />
           <DeleteAction onDelete={props.onDelete} />
@@ -114,11 +113,7 @@ const Route = (props: RouteProps) => {
           return (
             <SearchForm
               key={i}
-              title={form.title}
-              id={form.id}
-              owner={form.owner}
-              modified={form.modified}
-              filterTree={form.filterTree}
+              form={form}
               onDelete={() => {
                 onDelete(form)
                 setMessage('Search Form Deleted')

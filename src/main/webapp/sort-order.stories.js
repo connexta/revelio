@@ -3,9 +3,9 @@ import React, { useState } from 'react'
 import { action } from '@connexta/ace/@storybook/addon-actions'
 import { storiesOf } from './@storybook/react'
 
-import SortOrder from './search-settings'
+import SortOrder from './sort-order'
 
-const stories = storiesOf('Search Settings', module)
+const stories = storiesOf('Sort Order', module)
 
 const useSortState = (sorts = []) => {
   const [value, setState] = useState(sorts)

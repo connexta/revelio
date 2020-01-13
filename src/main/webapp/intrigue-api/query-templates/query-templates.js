@@ -2,6 +2,12 @@ const ROOT = '/search/catalog/internal'
 
 import { getIn, setIn } from 'immutable'
 
+/*
+ * Query Templates have their own endpoint in DDF which returns
+ * results in its own format. The logic here transforms the response
+ * to return in standard metacard format.
+ */
+
 const inverseKeys = object => {
   return Object.keys(object).reduce((ret, key) => {
     ret[object[key]] = key
@@ -35,6 +41,23 @@ const renameKeys = (f, map) => {
   }, {})
 }
 
+const transformQuerySettings = attrs => {
+  const { query_settings = {} } = attrs
+
+  let ret = setIn(attrs, ['sorts'], query_settings.sorts)
+  ret = setIn(ret, ['sources'], query_settings.src)
+  delete ret.query_settings
+  return ret
+}
+
+const untransformQuerySettings = attrs => {
+  const { sorts, sources } = attrs
+  let ret = setIn(attrs, ['query_settings'], { sorts, src: sources })
+  delete ret.sorts
+  delete ret.sources
+  return ret
+}
+
 export const getQueryTemplates = async (parent, args, { fetch }) => {
   const res = await fetch(`${ROOT}/forms/query`)
   const json = await res.json()
@@ -47,6 +70,7 @@ export const getQueryTemplates = async (parent, args, { fetch }) => {
         modified: new Date(modified).toISOString(),
       }
     })
+    .map(transformQuerySettings)
   return { attributes }
 }
 
@@ -56,7 +80,7 @@ export const saveQueryTemplate = async (parent, args, { fetch }) => {
   if (getIn(attrs, ['filterTree', 'filters', 'length'], 0) === 1) {
     attrs = setIn(attrs, ['filterTree'], attrs.filterTree.filters[0])
   }
-
+  attrs = untransformQuerySettings(attrs)
   const res = await fetch(`${ROOT}/forms/query/${id}`, {
     method: 'PUT',
     headers: {
@@ -67,7 +91,11 @@ export const saveQueryTemplate = async (parent, args, { fetch }) => {
     ),
   })
   if (res.ok) {
-    return { ...attrs, id, modified: new Date().toISOString() }
+    return {
+      ...transformQuerySettings(attrs),
+      id,
+      modified: new Date().toISOString(),
+    }
   }
 }
 
@@ -76,6 +104,7 @@ export const createQueryTemplate = async (parent, args, { fetch }) => {
   if (getIn(attrs, ['filterTree', 'filters', 'length'], 0) === 1) {
     attrs = setIn(attrs, ['filterTree'], attrs.filterTree.filters[0])
   }
+  attrs = untransformQuerySettings(attrs)
   const res = await fetch(`${ROOT}/forms/query`, {
     method: 'POST',
     headers: {
@@ -83,8 +112,13 @@ export const createQueryTemplate = async (parent, args, { fetch }) => {
     },
     body: JSON.stringify(renameKeys(k => untransformAttrs[k], { ...attrs })),
   })
+
   if (res.ok) {
     const id = (await res.json()).id
-    return { ...attrs, id, modified: new Date().toISOString() }
+    return {
+      ...transformQuerySettings(attrs),
+      id,
+      modified: new Date().toISOString(),
+    }
   }
 }

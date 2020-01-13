@@ -67,7 +67,7 @@ const NumberInput = (props: any) => {
 }
 
 const NumberFilter = (props: QueryFilterProps) => {
-  const { attributeDefinitions = sampleAttributeDefinitions } = props
+  const { attributeDefinitions = sampleAttributeDefinitions, filter } = props
 
   const getType = (property: string) => {
     return getIn(
@@ -76,16 +76,15 @@ const NumberFilter = (props: QueryFilterProps) => {
       'INTEGER'
     )
   }
-  const isInt = isInteger(getType(props.property))
-  if (props.type !== 'BETWEEN') {
+  const isInt = isInteger(getType(filter.property))
+  if (filter.type !== 'BETWEEN') {
     return (
       <NumberInput
         isInt={isInt}
         onChange={(value: string) => {
-          const { property, type } = props
-          props.onChange({ property, type, value })
+          props.onChange({ ...filter, value })
         }}
-        value={props.value}
+        value={filter.value}
       />
     )
   } else {
@@ -94,14 +93,12 @@ const NumberFilter = (props: QueryFilterProps) => {
         <NumberInput
           isInt={isInt}
           onChange={(value: string) => {
-            const { property, type } = props
             props.onChange({
-              property,
-              type,
-              value: { ...props.value, lower: value },
+              ...filter,
+              value: { ...filter.value, lower: value },
             })
           }}
-          value={props.value.lower}
+          value={filter.value.lower}
         />
         <Box style={{ margin: 10 }} component="span">
           TO
@@ -109,14 +106,12 @@ const NumberFilter = (props: QueryFilterProps) => {
         <NumberInput
           isInt={isInt}
           onChange={(value: string) => {
-            const { property, type } = props
             props.onChange({
-              property,
-              type,
-              value: { ...props.value, upper: value },
+              ...filter,
+              value: { ...filter.value, upper: value },
             })
           }}
-          value={props.value.upper}
+          value={filter.value.upper}
         />
       </Box>
     )
@@ -134,13 +129,14 @@ const TO: any = {
 }
 
 export default (props: QueryFilterProps) => {
+  const { filter } = props
   return (
     <React.Fragment>
       <AttributeDropdown {...props} />
       <ComparatorDropdown
         {...props}
         onChange={(newOperator: string) => {
-          const { property, type: oldOperator, value: oldValue } = props
+          const { property, type: oldOperator, value: oldValue } = filter
           if (oldOperator === newOperator) return
           let newValue = oldValue
           if (FROM[oldOperator] !== undefined) {
@@ -156,7 +152,7 @@ export default (props: QueryFilterProps) => {
           })
         }}
       />
-      {props.type !== 'IS NULL' && (
+      {filter.type !== 'IS NULL' && (
         <Box>
           <NumberFilter {...props} />
         </Box>
