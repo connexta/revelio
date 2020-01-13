@@ -1240,6 +1240,7 @@
 "@openlayers/pepjs@^0.5.3":
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/@openlayers/pepjs/-/pepjs-0.5.3.tgz#298c5994cc12de5f149f841affdd8a3e506228b5"
+  integrity sha512-Bgvi5c14BS0FJWyYWWFstNEnXsB30nK8Jt8hkAAdqr7E0gDdBBWVDglF3Ub19wTxvgJ/CVHyTY6VuCtnyRzglg==
 
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
@@ -7980,17 +7981,13 @@ geojson-rbush@2.1.0:
     "@turf/meta" "*"
     rbush "*"
 
-"geospatialdraw@https://github.com/connexta/geospatialdraw.git#f5841213db1a3b4b2a22bc1c274f5cd8ba5675be":
-  version "0.4.0"
-  resolved "https://github.com/connexta/geospatialdraw.git#f5841213db1a3b4b2a22bc1c274f5cd8ba5675be"
+geospatialdraw@0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/geospatialdraw/-/geospatialdraw-0.5.2.tgz#0f5ea5b78fd094b12cf8efd601a18fee537375f8"
+  integrity sha512-QvHJpgwbI9RP2rSoznCUz6ZBF7gA3QOaEB0bCeQocbLjGLgO5QriqTcZQLtipRZKDWnhIHMbcvaWF9PrMqW7jw==
   dependencies:
     "@turf/turf" "5.1.6"
-    lodash.clonedeep "4.5.0"
-    lodash.isequal "4.5.0"
-    ol "6.0.1"
-    polished "3.4.2"
     react "16.9.0"
-    react-dom "16.9.0"
     usng.js "0.4.2"
 
 get-caller-file@^1.0.1:
@@ -8686,6 +8683,7 @@ icss-utils@^4.0.0, icss-utils@^4.1.1:
 ieee754@^1.1.12, ieee754@^1.1.4:
   version "1.1.13"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.13.tgz#ec168558e95aa181fd87d37f55c32bbcb6708b84"
+  integrity sha512-4vf7I2LYV/HaWerSo3XmlMkp5eZ83i+/CDluXi/IGTs/O1sejBNhTtnxzmRZfvOUqj7lZjqHkeTvpgSFDlWZTg==
 
 iferr@^0.1.5:
   version "0.1.5"
@@ -9740,11 +9738,6 @@ lodash.camelcase@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
 
-lodash.clonedeep@4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
-  integrity sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=
-
 lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
@@ -9775,7 +9768,7 @@ lodash.foreach@^4.3.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.foreach/-/lodash.foreach-4.5.0.tgz#1a6a35eace401280c7f06dddec35165ab27e3e53"
 
-lodash.isequal@4.5.0, lodash.isequal@^4.5.0:
+lodash.isequal@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
   integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
@@ -10790,14 +10783,15 @@ obuf@^1.0.0, obuf@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/obuf/-/obuf-1.1.2.tgz#09bea3343d41859ebd446292d11c9d4db619084e"
 
-ol@6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/ol/-/ol-6.0.1.tgz#acef0f29dfbe079637eac85568efbb6394ff2bf2"
+ol@^6.0.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/ol/-/ol-6.1.1.tgz#7f8ada284344a5872d552205de558ed4a904cd27"
+  integrity sha512-0dL3i3eJqgOpqIjDKEY3grkeQnjAYfV5L/JCxhOu4SxiaizRwFrFgeas6LILRoxKa03jhQFbut2r2bbgcLGQeA==
   dependencies:
     "@openlayers/pepjs" "^0.5.3"
-    pbf "3.2.0"
+    pbf "3.2.1"
     pixelworks "1.1.0"
-    rbush "^3.0.0"
+    rbush "^3.0.1"
 
 on-finished@^2.3.0, on-finished@~2.3.0:
   version "2.3.0"
@@ -11136,9 +11130,10 @@ pathval@^1.1.0:
   resolved "https://registry.yarnpkg.com/pathval/-/pathval-1.1.0.tgz#b942e6d4bde653005ef6b71361def8727d0645e0"
   integrity sha1-uULm1L3mUwBe9rcTYd74cn0GReA=
 
-pbf@3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/pbf/-/pbf-3.2.0.tgz#e76f9f5114e395c25077ad6fe463b3507d6877fc"
+pbf@3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/pbf/-/pbf-3.2.1.tgz#b4c1b9e72af966cd82c6531691115cc0409ffe2a"
+  integrity sha512-ClrV7pNOn7rtmoQVF4TS1vyU0WhYRnP92fzbfF75jAIwpnzdJXf8iTd4CMEqO4yUenH6NDqLiwjqlh6QgZzgLQ==
   dependencies:
     ieee754 "^1.1.12"
     resolve-protobuf-schema "^2.1.0"
@@ -11195,6 +11190,7 @@ pinkie@^2.0.0:
 pixelworks@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/pixelworks/-/pixelworks-1.1.0.tgz#1f095ad48dca8bf8a1c8258e0092031a44f22ca5"
+  integrity sha1-Hwla1I3Ki/ihyCWOAJIDGkTyLKU=
 
 pkg-dir@^2.0.0:
   version "2.0.0"
@@ -11233,13 +11229,6 @@ pnp-webpack-plugin@1.4.3:
 point-in-polygon@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/point-in-polygon/-/point-in-polygon-1.0.1.tgz#d59b64e8fee41c49458aac82b56718c5957b2af7"
-
-polished@3.4.2:
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/polished/-/polished-3.4.2.tgz#b4780dad81d64df55615fbfc77acb52fd17d88cd"
-  integrity sha512-9Rch6iMZckABr6EFCLPZsxodeBpXMo9H4fRlfR/9VjMEyy5xpo1/WgXlJGgSjPyVhEZNycbW7UmYMNyWS5MI0g==
-  dependencies:
-    "@babel/runtime" "^7.6.3"
 
 polished@^3.3.1, polished@^3.4.1:
   version "3.4.1"
@@ -11792,6 +11781,7 @@ protobufjs@^6.8.6:
 protocol-buffers-schema@^3.3.1:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/protocol-buffers-schema/-/protocol-buffers-schema-3.3.2.tgz#00434f608b4e8df54c59e070efeefc37fb4bb859"
+  integrity sha512-Xdayp8sB/mU+sUV4G7ws8xtYMGdQnxbeIfLjyO9TZZRJdztBGhlmbI5x1qcY4TG5hBkIKGnc28i7nXxaugu88w==
 
 proxy-addr@~2.0.5:
   version "2.0.5"
@@ -11986,7 +11976,7 @@ raw-loader@^2.0.0:
     loader-utils "^1.1.0"
     schema-utils "^1.0.0"
 
-rbush@*, rbush@^3.0.0:
+rbush@*, rbush@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/rbush/-/rbush-3.0.1.tgz#5fafa8a79b3b9afdfe5008403a720cc1de882ecf"
   dependencies:
@@ -12109,7 +12099,7 @@ react-docgen@^4.1.0:
     node-dir "^0.1.10"
     recast "^0.17.3"
 
-react-dom@16.9.0, react-dom@^16.8.3, react-dom@^16.9.0:
+react-dom@^16.8.3, react-dom@^16.9.0:
   version "16.9.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.9.0.tgz#5e65527a5e26f22ae3701131bcccaee9fb0d3962"
   integrity sha512-YFT2rxO9hM70ewk9jq0y6sQk8cL02xm4+IzYBz75CQGlClQQ1Bxq0nhHF6OtSbit+AIahujJgb/CPRibFkMNJQ==
@@ -12832,6 +12822,7 @@ resolve-pathname@^2.2.0:
 resolve-protobuf-schema@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/resolve-protobuf-schema/-/resolve-protobuf-schema-2.1.0.tgz#9ca9a9e69cf192bbdaf1006ec1973948aa4a3758"
+  integrity sha512-kI5ffTiZWmJaS/huM8wZfEMer1eRd7oJQhDuxeCLe3t7N7mX3z94CN0xPxBQxFYQTSNz9T0i+v6inKqSdK8xrQ==
   dependencies:
     protocol-buffers-schema "^3.3.1"
 

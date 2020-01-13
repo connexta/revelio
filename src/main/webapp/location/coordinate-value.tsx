@@ -6,7 +6,7 @@ const Row: React.SFC<any> = props => (
   <Box display="flex" margin={0} padding={0} {...props} />
 )
 
-const Cell: React.SFC<any> = props => (
+const Column: React.SFC<any> = props => (
   <Box
     display="flex"
     flexGrow={1}
@@ -18,4 +18,19 @@ const Cell: React.SFC<any> = props => (
   />
 )
 
-export default coordinateEditor.divToCoordinateValue(Row, Cell)
+const CoordinateValue: React.SFC<coordinateEditor.CoordinateUnitProps> = ({
+  lat,
+  lon,
+  unit,
+}) => {
+  const coordinates = coordinateEditor.useCoordinateUnit({ lat, lon, unit })
+  return (
+    <Row>
+      {coordinates.map(text => (
+        <Column>{text}</Column>
+      ))}
+    </Row>
+  )
+}
+
+export default CoordinateValue

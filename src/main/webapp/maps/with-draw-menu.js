@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Box from '@material-ui/core/Box'
-import { menu, drawing } from 'geospatialdraw'
+import Menu from './draw-menu'
+import { drawing } from 'geospatialdraw'
 
 const Root = props => (
   <Box
@@ -15,7 +16,6 @@ const Root = props => (
   />
 )
 const MenuContainer = props => <Box bgcolor="rgb(52, 172, 247)" {...props} />
-const Menu = menu.MaterialDrawMenu
 
 const withDrawMenu = WorldMap => ({
   drawGeo,
