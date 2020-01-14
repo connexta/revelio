@@ -20,7 +20,8 @@ const logIn = async (parent, args, { fetch }) => {
       authorization,
     },
   })
-  return res.headers.get('set-cookie')
+  const cookie = res.headers.get('set-cookie').split(';')[0]
+  return btoa(cookie)
 }
 
 const resolvers = {
