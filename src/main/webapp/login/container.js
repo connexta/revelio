@@ -16,9 +16,8 @@ const useLogin = () => {
 }
 
 const setCookie = cookie => {
-  let parsedCookie = cookie.split(';')
-  parsedCookie = parsedCookie[0].split('=')
-  cookies.set(parsedCookie[0], parsedCookie[1], { path: '/' })
+  const parsedCookie = cookie.split(';')
+  cookies.set('RSESSION', window.btoa(parsedCookie[0]), { path: '/' })
 }
 
 const Container = props => {
