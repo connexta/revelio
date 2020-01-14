@@ -70,11 +70,19 @@ const metacardTypes = async (parent, args, { fetch, enumerations }) => {
   const types = Object.keys(json).reduce((types, group) => {
     return Object.assign(types, json[group])
   }, {})
+
   const enums = await getEnumerations(parent, args, { fetch, enumerations })
+
   Object.keys(enums).forEach(attribute => {
     types[attribute].enums = enums[attribute]
   })
-  return metacardStartingTypes.concat(Object.keys(types).map(k => types[k]))
+
+  return (
+    metacardStartingTypes
+      // don't inject default types for ones that already exist
+      .filter(({ id }) => types[id] === undefined)
+      .concat(Object.keys(types).map(k => types[k]))
+  )
 }
 
 const resolvers = {
