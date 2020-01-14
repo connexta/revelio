@@ -46,12 +46,15 @@ const withFetchLogger = (fetch, logger) => async (url, opts = {}) => {
 }
 
 const withAuth = (fetch, req) => async (url, opts = {}) => {
+  const { authorization = '' } = req.headers
+  const playgroundHeaders = authorization === '' ? {} : { authorization }
+
   const cookie =
     req.headers.cookie !== undefined ? { cookie: req.headers.cookie } : {}
 
   const res = await fetch(url, {
     ...opts,
-    headers: { ...opts.headers, ...cookie },
+    headers: { ...opts.headers, ...cookie, ...playgroundHeaders },
   })
 
   if (res.status === 401) {
