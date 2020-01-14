@@ -1,7 +1,7 @@
 import * as React from 'react'
 import TextField from '@material-ui/core/TextField'
 import Props from './props'
-import { coordinates as coordinateEditor } from 'geospatialdraw'
+import useUSNGCoordinates from 'geospatialdraw/bin/coordinates/react-hooks/usng'
 
 type ChangeEvent = React.ChangeEvent<HTMLInputElement>
 
@@ -12,7 +12,7 @@ const PointUSNG: React.SFC<Props> = ({ value, onChange }) => {
     setUSNG,
     isValid,
     formattedUSNG,
-  ] = coordinateEditor.useUSNGCoordinates(value)
+  ] = useUSNGCoordinates(value)
   React.useEffect(
     () => {
       if (value.lat !== coordinates.lat || value.lon !== coordinates.lon) {

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { geometry } from 'geospatialdraw'
+import { geoJSONToGeometryJSON } from 'geospatialdraw/bin/geometry/utilities'
 import {
   KeywordGeoProperties,
   ContainerProps as Props,
@@ -41,7 +41,7 @@ const Container: React.SFC<Props> = ({
   React.useEffect(
     () => {
       if (selectedSuggestion.id && !featureLoading) {
-        const geo = geometry.geoJSONToGeometryJSON(value.properties.id, {
+        const geo = geoJSONToGeometryJSON(value.properties.id, {
           ...geofeature,
           properties: {
             ...value.properties,

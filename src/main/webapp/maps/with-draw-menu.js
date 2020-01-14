@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Box from '@material-ui/core/Box'
 import Menu from './draw-menu'
-import { drawing } from 'geospatialdraw'
+import DrawingToolbox from 'geospatialdraw/bin/drawing/openlayers/drawing-toolbox'
 
 const Root = props => (
   <Box
@@ -38,7 +38,7 @@ const withDrawMenu = WorldMap => ({
     () => {
       if (map && !drawToolbox) {
         setToolbox(
-          new drawing.openlayers.DrawingToolbox({
+          new DrawingToolbox({
             map,
             drawingStyle: drawStyle,
           })

@@ -4,7 +4,9 @@ import { configure, shallow, mount } from 'enzyme'
 configure({ adapter: new Adapter() })
 
 import { expect } from 'chai'
-import { geometry, shapes } from 'geospatialdraw'
+import { makeEmptyGeometry } from 'geospatialdraw/bin/geometry/utilities'
+import { MILES, METERS } from 'geospatialdraw/bin/geometry/units'
+import { POLYGON } from 'geospatialdraw/bin/shapes/shape'
 import React, { useState } from 'react'
 import Keyword from '.'
 
@@ -109,7 +111,7 @@ describe('<Keyword />', () => {
   it('render', () => {
     const wrapper = shallow(
       <Keyword
-        value={geometry.makeEmptyGeometry('keyword', shapes.POLYGON)}
+        value={makeEmptyGeometry('keyword', POLYGON)}
         onChange={() => {}}
       />
     )
@@ -129,7 +131,7 @@ describe('<Keyword />', () => {
     }
     beforeEach(() => {
       changes = []
-      const value = geometry.makeEmptyGeometry('keyword', shapes.POLYGON)
+      const value = makeEmptyGeometry('keyword', POLYGON)
       const KeywordWithMockQueries = makeKeywordWithMockQueries(inspector)
       wrapper = mount(
         <KeywordWithMockQueries
@@ -222,7 +224,7 @@ describe('<Keyword />', () => {
             ...value.properties,
             buffer: {
               width: 50,
-              unit: geometry.MILES,
+              unit: MILES,
             },
           },
         })
@@ -230,11 +232,11 @@ describe('<Keyword />', () => {
         expect(changes[0].properties.keyword).to.equal('test')
         expect(changes[0].properties.keywordId).to.equal('test-id')
         expect(changes[0].properties.buffer.width).to.equal(0)
-        expect(changes[0].properties.buffer.unit).to.equal(geometry.METERS)
+        expect(changes[0].properties.buffer.unit).to.equal(METERS)
         expect(changes[1].properties.keyword).to.equal('test')
         expect(changes[1].properties.keywordId).to.equal('test-id')
         expect(changes[1].properties.buffer.width).to.equal(50)
-        expect(changes[1].properties.buffer.unit).to.equal(geometry.MILES)
+        expect(changes[1].properties.buffer.unit).to.equal(MILES)
       })
     })
   })

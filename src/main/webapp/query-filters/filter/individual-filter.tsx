@@ -13,13 +13,13 @@ import {
   sampleAttributeDefinitions,
 } from './dummyDefinitions'
 import { deserialize, serialize } from './filter-serialization'
-import { geometry } from 'geospatialdraw'
+import { GeometryJSON } from 'geospatialdraw/bin/geometry/geometry'
 
 export type QueryFilter = {
   property: string //property name, ex: anyText
   type: string // cql operator, ex: ILIKE
   value: any
-  geojson?: geometry.GeometryJSON
+  geojson?: GeometryJSON
 }
 export type QueryFilterProps = {
   onChange: (value: QueryFilter) => void

@@ -8,7 +8,10 @@ import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
 import Props from './props'
-import { coordinates as coordinateEditor } from 'geospatialdraw'
+import {
+  useUTMCoordinates,
+  UTM_BOUNDS,
+} from 'geospatialdraw/bin/coordinates/react-hooks/utm'
 import NumberInput from '../number'
 
 const {
@@ -17,17 +20,12 @@ const {
   MAX_NORTHING,
   MIN_NORTHING,
   MAX_ZONE,
-} = coordinateEditor.UTM_BOUNDS
+} = UTM_BOUNDS
 
 type SelectEvent = React.ChangeEvent<HTMLSelectElement>
 
 const PointUTM: React.SFC<Props> = ({ value, onChange }) => {
-  const [
-    coordinates,
-    utm,
-    setUTM,
-    isValid,
-  ] = coordinateEditor.useUTMCoordinates(value)
+  const [coordinates, utm, setUTM, isValid] = useUTMCoordinates(value)
   const { northing, easting, zone, hemisphere } = utm
   React.useEffect(
     () => {

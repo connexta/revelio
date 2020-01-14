@@ -1,8 +1,8 @@
-import { coordinates } from 'geospatialdraw'
+import { LatLonDD } from 'geospatialdraw/bin/coordinates/coordinate-converter'
 
 type Props = {
-  value: coordinates.LatLonDD
-  onChange: (value: coordinates.LatLonDD) => void
+  value: LatLonDD
+  onChange: (value: LatLonDD) => void
 }
 
 export default Props

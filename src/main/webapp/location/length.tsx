@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { geometry } from 'geospatialdraw'
+import { LengthUnit } from 'geospatialdraw/bin/geometry/units'
 import NumberInput, { MaterialUIInputProps } from './number'
 import Units from './units'
 import SpacedLinearContainer from '../spaced-linear-container'
@@ -8,7 +8,7 @@ const LENGTH_PRECISION = 3
 
 type Measurement = {
   length: number
-  unit: geometry.LengthUnit
+  unit: LengthUnit
 }
 
 type Props = MaterialUIInputProps & {

@@ -1,5 +1,11 @@
 import * as React from 'react'
-import { coordinates as coordinateEditor } from 'geospatialdraw'
+import {
+  bboxPropsToGeo,
+  bboxToCoordinatePair,
+  coordinatePairToBBox,
+  geoToBBoxProps,
+} from 'geospatialdraw/bin/coordinates/geometry/bbox'
+import { UTM } from 'geospatialdraw/bin/coordinates/units'
 import FormControl from '@material-ui/core/FormControl'
 import FormLabel from '@material-ui/core/FormLabel'
 import Point from './point'
@@ -7,16 +13,15 @@ import Props from './geo-editor'
 import SpacedLinearContainer from '../spaced-linear-container'
 
 const BBox: React.SFC<Props> = ({ value, onChange, coordinateUnit }) => {
-  const { id, bbox, properties } = coordinateEditor.geoToBBoxProps(value)
-  const [upperLeft, lowerRight] = coordinateEditor.bboxToCoordinatePair(bbox)
-  const containerDirection =
-    coordinateUnit === coordinateEditor.UTM ? 'row' : 'column'
+  const { id, bbox, properties } = geoToBBoxProps(value)
+  const [upperLeft, lowerRight] = bboxToCoordinatePair(bbox)
+  const containerDirection = coordinateUnit === UTM ? 'row' : 'column'
   const formControlStyle: any = {
     display: 'flex',
     flexDirection: containerDirection,
   }
   const formLabelStyle: any =
-    coordinateUnit === coordinateEditor.UTM
+    coordinateUnit === UTM
       ? {
           display: 'flex',
           justifyContent: 'center',
@@ -33,12 +38,9 @@ const BBox: React.SFC<Props> = ({ value, onChange, coordinateUnit }) => {
           value={upperLeft}
           onChange={update =>
             onChange(
-              coordinateEditor.bboxPropsToGeo({
+              bboxPropsToGeo({
                 id,
-                bbox: coordinateEditor.coordinatePairToBBox([
-                  update,
-                  lowerRight,
-                ]),
+                bbox: coordinatePairToBBox([update, lowerRight]),
                 properties,
               })
             )
@@ -52,12 +54,9 @@ const BBox: React.SFC<Props> = ({ value, onChange, coordinateUnit }) => {
           value={lowerRight}
           onChange={update =>
             onChange(
-              coordinateEditor.bboxPropsToGeo({
+              bboxPropsToGeo({
                 id,
-                bbox: coordinateEditor.coordinatePairToBBox([
-                  update,
-                  upperLeft,
-                ]),
+                bbox: coordinatePairToBBox([update, upperLeft]),
                 properties,
               })
             )

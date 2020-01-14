@@ -1,4 +1,4 @@
-import { geometry } from 'geospatialdraw'
+import { GeometryJSON } from 'geospatialdraw/bin/geometry/geometry'
 import { geoToWKT } from './geo-to-wkt'
 
 type FilterType = 'DWITHIN' | 'INTERSECTS'
@@ -18,11 +18,11 @@ export type Filter = {
     type: ValueType
     value: string
   }
-  geojson: geometry.GeometryJSON
+  geojson: GeometryJSON
 }
 
 export const geoToFilter = (
-  geo: geometry.GeometryJSON,
+  geo: GeometryJSON,
   property: string = ANY_GEO
 ): Filter => ({
   type:

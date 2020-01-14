@@ -9,22 +9,32 @@ import {
   PointIcon,
   EditCoordinatesIcon,
 } from './icons'
-import { shapes, geometry, menu, drawing } from 'geospatialdraw'
+import {
+  Shape,
+  LINE,
+  POLYGON,
+  POINT,
+  POINT_RADIUS,
+  BOUNDING_BOX,
+} from 'geospatialdraw/bin/shapes/shape'
+import { GeometryJSON } from 'geospatialdraw/bin/geometry/geometry'
+import DrawingToolbox from 'geospatialdraw/bin/drawing/drawing-toolbox'
+import useDrawingMenu from 'geospatialdraw/bin/menu/react-hooks'
 
 type Props = React.HTMLProps<HTMLDivElement> & {
-  toolbox: drawing.DrawingToolbox
-  shape: shapes.Shape | null
+  toolbox: DrawingToolbox
+  shape: Shape | null
   isActive: boolean
   showCoordinateEditor?: boolean
   saveAndContinue?: boolean
   title?: string
-  geometry: geometry.GeometryJSON | null
+  geometry: GeometryJSON | null
   toggleCoordinateEditor?: () => void
   onCancel: () => void
   onOk: () => void
-  onSetShape: (shape: shapes.Shape) => void
-  onUpdate: (geo: geometry.GeometryJSON) => void
-  disabledShapes?: shapes.Shape[]
+  onSetShape: (shape: Shape) => void
+  onUpdate: (geo: GeometryJSON) => void
+  disabledShapes?: Shape[]
   defaultGeoProperties?: object
   iconColor?: string
 }
@@ -109,7 +119,7 @@ const DrawingMenu: React.SFC<Props> = ({
   iconColor = '#FFFFFF',
   ...rest
 }) => {
-  menu.useDrawingMenu({
+  useDrawingMenu({
     toolbox,
     shape,
     isActive,
@@ -118,7 +128,7 @@ const DrawingMenu: React.SFC<Props> = ({
     showCoordinateEditor,
     defaultGeoProperties,
   })
-  const renderShapeButton = (renderedShape: shapes.Shape, icon: any) => {
+  const renderShapeButton = (renderedShape: Shape, icon: any) => {
     return disabledShapes && disabledShapes.includes(renderedShape) ? null : (
       <ToggleButton
         radioGroup="shape"
@@ -148,17 +158,11 @@ const DrawingMenu: React.SFC<Props> = ({
       </TitleContainer>
       <ControlsGroup>
         <Box style={shapeContainer}>
-          {renderShapeButton(shapes.LINE, <LineIcon color={iconColor} />)}
-          {renderShapeButton(shapes.POLYGON, <PolygonIcon color={iconColor} />)}
-          {renderShapeButton(
-            shapes.BOUNDING_BOX,
-            <BboxIcon color={iconColor} />
-          )}
-          {renderShapeButton(
-            shapes.POINT_RADIUS,
-            <CircleIcon color={iconColor} />
-          )}
-          {renderShapeButton(shapes.POINT, <PointIcon color={iconColor} />)}
+          {renderShapeButton(LINE, <LineIcon color={iconColor} />)}
+          {renderShapeButton(POLYGON, <PolygonIcon color={iconColor} />)}
+          {renderShapeButton(BOUNDING_BOX, <BboxIcon color={iconColor} />)}
+          {renderShapeButton(POINT_RADIUS, <CircleIcon color={iconColor} />)}
+          {renderShapeButton(POINT, <PointIcon color={iconColor} />)}
         </Box>
         {showCoordinateEditor === undefined ||
         toggleCoordinateEditor === undefined ? null : (

@@ -1,6 +1,8 @@
 import * as React from 'react'
 import TextField from '@material-ui/core/TextField'
-import { coordinates as coordinateEditor } from 'geospatialdraw'
+import useNumberInput, {
+  NumericConstraints,
+} from 'geospatialdraw/bin/coordinates/react-hooks/number'
 
 export type MaterialUIInputProps = {
   autoComplete?: string
@@ -32,7 +34,7 @@ export type MaterialUIInputProps = {
 }
 
 type Props = MaterialUIInputProps &
-  coordinateEditor.NumericConstraints & {
+  NumericConstraints & {
     /** Numeric value */
     value: number
     /** Called on change */
@@ -49,12 +51,7 @@ const NumberInput: React.SFC<Props> = ({
   decimalPlaces,
   ...rest
 }) => {
-  const [
-    number,
-    text,
-    setText,
-    formattedText,
-  ] = coordinateEditor.useNumberInput(value, {
+  const [number, text, setText, formattedText] = useNumberInput(value, {
     maxValue,
     minValue,
     decimalPlaces,

@@ -1,5 +1,7 @@
 import * as React from 'react'
-import { coordinates as coordinateEditor } from 'geospatialdraw'
+import useCoordinateUnit, {
+  CoordinateUnitProps,
+} from 'geospatialdraw/bin/coordinates/react-hooks/coordinate-unit'
 import Box from '@material-ui/core/Box'
 
 const Row: React.SFC<any> = props => (
@@ -18,12 +20,12 @@ const Column: React.SFC<any> = props => (
   />
 )
 
-const CoordinateValue: React.SFC<coordinateEditor.CoordinateUnitProps> = ({
+const CoordinateValue: React.SFC<CoordinateUnitProps> = ({
   lat,
   lon,
   unit,
 }) => {
-  const coordinates = coordinateEditor.useCoordinateUnit({ lat, lon, unit })
+  const coordinates = useCoordinateUnit({ lat, lon, unit })
   return (
     <Row>
       {coordinates.map(text => (

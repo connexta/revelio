@@ -6,7 +6,8 @@ import Vector from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import Cluster from 'ol/source/Cluster'
 import GeoJSON from 'ol/format/GeoJSON'
-import { geometry, shapes } from 'geospatialdraw'
+import { POINT } from 'geospatialdraw/bin/shapes/shape'
+import { makeBufferedGeo } from 'geospatialdraw/bin/geometry/utilities'
 
 const ClusterMap = ({
   distance,
@@ -19,7 +20,7 @@ const ClusterMap = ({
   const [map, setMap] = useState(null)
   const [sourceVector, setSourceVector] = useState(null)
   const geoFormat = new GeoJSON()
-  const nonPointGeos = geos.filter(g => g.properties.shape !== shapes.POINT)
+  const nonPointGeos = geos.filter(g => g.properties.shape !== POINT)
   useEffect(
     () => {
       if (map && !sourceVector) {
@@ -86,7 +87,7 @@ const ClusterMap = ({
       if (sourceVector) {
         sourceVector.clear()
         geos.forEach(json => {
-          const buffered = geometry.makeBufferedGeo(json)
+          const buffered = makeBufferedGeo(json)
           const point = turf.center(buffered)
           const feature = geoFormat.readFeature(point)
           const props = {

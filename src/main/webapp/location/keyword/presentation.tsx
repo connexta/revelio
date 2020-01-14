@@ -1,5 +1,8 @@
 import * as React from 'react'
-import { coordinates as coordinateEditor } from 'geospatialdraw'
+import {
+  geoToPolygonProps,
+  polygonPropsToGeo,
+} from 'geospatialdraw/bin/coordinates/geometry/polygon-line'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -25,13 +28,9 @@ const Keyword: React.SFC<Props> = ({
   onOpen,
   onClose,
 }) => {
-  const {
-    id,
-    properties,
-    coordinates,
-    buffer,
-    bufferUnit,
-  } = coordinateEditor.geoToPolygonProps(value)
+  const { id, properties, coordinates, buffer, bufferUnit } = geoToPolygonProps(
+    value
+  )
   const { keyword = '', keywordId } = properties as KeywordGeoProperties
   const hasSelection = keyword && keywordId ? true : false
   return (
@@ -83,7 +82,7 @@ const Keyword: React.SFC<Props> = ({
           value={{ length: buffer, unit: bufferUnit }}
           onChange={({ length, unit }) =>
             onChange(
-              coordinateEditor.polygonPropsToGeo({
+              polygonPropsToGeo({
                 id,
                 coordinates,
                 buffer: length,
