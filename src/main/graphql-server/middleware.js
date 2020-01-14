@@ -15,7 +15,7 @@ const btoa = arg => {
   return Buffer.from(arg).toString('base64')
 }
 
-const playgroundAuth = 'Basic ' + btoa('admin:admin')
+const Authorization = 'Basic ' + btoa('admin:admin')
 
 const router = express.Router()
 
@@ -68,7 +68,7 @@ const server = new ApolloServer({
   resolvers,
   playground: {
     headers: {
-      playgroundAuth,
+      Authorization,
     },
   },
   context,

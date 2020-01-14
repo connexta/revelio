@@ -46,9 +46,9 @@ const withFetchLogger = (fetch, logger) => async (url, opts = {}) => {
 }
 
 const withAuth = (fetch, req) => async (url, opts = {}) => {
-  const authorization = req.headers.playgroundauth
-  const playgroundHeaders =
-    typeof authorization === 'undefined' ? {} : { authorization }
+  const { authorization = '' } = req.headers
+  const playgroundHeaders = authorization === '' ? {} : { authorization }
+
   const cookie =
     req.headers.cookie !== undefined ? { cookie: req.headers.cookie } : {}
 
