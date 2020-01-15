@@ -3,6 +3,7 @@ import { AuthenticationError } from 'apollo-server-errors'
 import createRpcClient from './rpc'
 import fetch from './fetch'
 import withChaos from './chaos'
+import Cookies from 'universal-cookie'
 
 const withExceptionLogger = (fn, logger) => async (...args) => {
   try {
@@ -49,8 +50,12 @@ const withAuth = (fetch, req) => async (url, opts = {}) => {
   const { authorization = '' } = req.headers
   const playgroundHeaders = authorization === '' ? {} : { authorization }
 
+  const reqCookies = new Cookies(req.headers.cookie)
+  const cookieVal = reqCookies.get('RSESSION')
   const cookie =
-    req.headers.cookie !== undefined ? { cookie: req.headers.cookie } : {}
+    cookieVal !== undefined
+      ? { cookie: `${Buffer.from(cookieVal, 'base64').toString('ascii')}` }
+      : {}
 
   const res = await fetch(url, {
     ...opts,
