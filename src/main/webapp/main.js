@@ -19,7 +19,7 @@ const render = async App => {
 render(App)
 
 if (process.env.NODE_ENV !== 'production') {
-  module.hot.accept('./intrigue-api/graphql', () => {
+  module.hot.accept('./app', () => {
     render(require('./app').default)
   })
 }

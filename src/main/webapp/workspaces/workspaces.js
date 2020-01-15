@@ -16,7 +16,7 @@ import {
   Actions,
 } from '../index-cards'
 
-import RetryNotification from '../retry'
+import RetryNotification from '../retry/retry'
 
 import { Link, useParams } from 'react-router-dom'
 
@@ -253,7 +253,7 @@ export default () => {
     return (
       <RetryNotification
         message={'Issue retrieving workspaces, would you like to retry?'}
-        refetch={refetch}
+        onRetry={refetch}
       />
     )
   }
