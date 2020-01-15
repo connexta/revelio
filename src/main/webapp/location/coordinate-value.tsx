@@ -28,8 +28,8 @@ const CoordinateValue: React.SFC<CoordinateUnitProps> = ({
   const coordinates = useCoordinateUnit({ lat, lon, unit })
   return (
     <Row>
-      {coordinates.map(text => (
-        <Column>{text}</Column>
+      {coordinates.map((text, index) => (
+        <Column key={index}>{text}</Column>
       ))}
     </Row>
   )
