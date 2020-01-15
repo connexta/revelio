@@ -13,6 +13,7 @@ const fragment = gql`
     owner: metacard_owner
     sorts
     sources
+    detail_level
   }
 `
 

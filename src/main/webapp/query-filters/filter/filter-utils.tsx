@@ -1,4 +1,3 @@
-import { makeDefaultSearchGeo } from './search-geo-factory'
 import { AttributeDefinition } from './dummyDefinitions'
 
 export const defaultFilter = {
@@ -18,7 +17,7 @@ export const getDefaultValue = (
 ) => {
   switch (type) {
     case 'LOCATION':
-      return makeDefaultSearchGeo()
+      return null
     case 'DATE':
       return ''
     case 'BOOLEAN':

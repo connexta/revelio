@@ -23,7 +23,6 @@ const AttributeDropdown = (props: QueryFilterProps) => {
   return (
     <Box>
       <Autocomplete
-        autoSelect
         disableClearable
         options={attributeDefinitions.map(definition => definition.id)}
         value={filter.property}

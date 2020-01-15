@@ -3,17 +3,33 @@ import { QueryFilterProps } from '../filter/individual-filter'
 import { makeDefaultSearchGeo } from '../filter'
 import { Location, geoToFilter } from '../../location'
 import AttributeDropdown from '../filter/attribute-dropdown'
+import { makeSearchGeoId } from '../filter/search-geo-factory'
+import { wktToGeo } from '../../location/geo-to-wkt'
+
+const getGeojson = (filter: QueryFilterProps['filter']) => {
+  if (filter.geojson) return filter.geojson
+
+  if (filter.value) {
+    return wktToGeo({
+      wkt: filter.value,
+      id: makeSearchGeoId(),
+      buffer: filter.distance || 0,
+      bufferUnit: 'meters',
+    })
+  }
+
+  return makeDefaultSearchGeo()
+}
 
 const LocationFilter = (props: QueryFilterProps) => {
   const { filter } = props
+  const geojson = getGeojson(filter)
+
   return (
     <React.Fragment>
       <AttributeDropdown {...props} />
       <Location
-        //TODO: re-type QueryFilter to allow for more complex filters than
-        //      just {property, type, value} ex. location (geojson) and
-        //      filter functions such as NEAR (currently be serialized)
-        value={filter.geojson || makeDefaultSearchGeo()}
+        value={geojson}
         onChange={value => {
           props.onChange(geoToFilter(value, filter.property))
         }}

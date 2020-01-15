@@ -43,16 +43,22 @@ const renameKeys = (f, map) => {
 
 const transformQuerySettings = attrs => {
   const { query_settings = {} } = attrs
-
   let ret = setIn(attrs, ['sorts'], query_settings.sorts)
   ret = setIn(ret, ['sources'], query_settings.src)
+  ret = setIn(ret, ['detail_level'], query_settings['detail-level'])
   delete ret.query_settings
   return ret
 }
 
 const untransformQuerySettings = attrs => {
-  const { sorts, sources } = attrs
-  let ret = setIn(attrs, ['query_settings'], { sorts, src: sources })
+  const { sorts, sources, detail_level } = attrs
+  let ret = setIn(attrs, ['query_settings'], {
+    sorts,
+    src: sources,
+    'detail-level': detail_level,
+  })
+
+  delete ret.detail_level
   delete ret.sorts
   delete ret.sources
   return ret
