@@ -62,23 +62,24 @@ export const Comparators = {
   LONG: { options: numberComparators, aliases: numberAliases },
 }
 
-type ComparatorDropdownProps = QueryFilter & {
+type ComparatorDropdownProps = {
   onChange: (value: string) => void
   editing?: boolean
   attributeDefinitions?: AttributeDefinition[]
+  filter: QueryFilter
 }
 
 const ComparatorDropdown = (props: ComparatorDropdownProps) => {
   const [anchorEl, open, close] = useAnchorEl()
-  const { attributeDefinitions = sampleAttributeDefinitions } = props
+  const { attributeDefinitions = sampleAttributeDefinitions, filter } = props
   const type = getIn(
-    attributeDefinitions.find(definition => definition.id === props.property),
+    attributeDefinitions.find(definition => definition.id === filter.property),
     ['type'],
     'STRING'
   ) as AttributeDefinition['type']
   let options = Comparators[type].options
   const aliases = Comparators[type].aliases
-  if (props.property === 'anyText' || props.property === 'anyGeo') {
+  if (filter.property === 'anyText' || filter.property === 'anyGeo') {
     options = options.filter(option => option !== 'IS NULL')
   }
   return (
@@ -98,7 +99,7 @@ const ComparatorDropdown = (props: ComparatorDropdownProps) => {
             maxWidth="calc(100% - 24px)"
             component="span"
           >
-            {aliases ? aliases.get(props.type) || props.type : props.type}
+            {aliases ? aliases.get(filter.type) || filter.type : filter.type}
           </Box>
           <DropDownIcon style={{ float: 'right' }} />
         </Box>

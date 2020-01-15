@@ -14,7 +14,7 @@ export const isFilterGroup = (
 type FilterProps = FilterGroupProps | QueryFilterProps
 
 const Filter = (props: FilterProps) => {
-  const Component = isFilterGroup(props) ? FilterGroup : IndividualFilter
+  const Component = isFilterGroup(props.filter) ? FilterGroup : IndividualFilter
   return <Component {...props} />
 }
 

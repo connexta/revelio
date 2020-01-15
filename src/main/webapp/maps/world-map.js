@@ -123,14 +123,15 @@ const WorldMap = ({
     [mapControls, container.width, container.height]
   )
   return (
-    <Box width={width} height={height} bgcolor="black" position="relative">
+    <Box width={width} height={height} position="relative">
       <Box width="100%" height="100%" ref={mapDiv} className="map" />
       <Box
         position="absolute"
         left="0"
         bottom="0"
-        bgcolor="black"
+        bgcolor="rgba(0,0,0, 0.5)"
         color="white"
+        borderRadius="0 10px 0 0"
         p={1}
       >
         <CoordinateValue lat={lat} lon={lon} unit={coordinateType} />

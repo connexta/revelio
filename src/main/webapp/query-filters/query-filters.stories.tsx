@@ -47,7 +47,7 @@ stories.add('basic', () => {
   return (
     <Filter
       limitDepth={number('Nesting Depth', 1)}
-      {...filter}
+      filter={filter}
       onChange={(value: any) => {
         setFilter(value)
         action('onChange')(value)
@@ -63,7 +63,7 @@ stories.add('with deserialized filters', () => {
   return (
     <Filter
       limitDepth={number('Nesting Depth', 1)}
-      {...filter}
+      filter={filter}
       onChange={(value: any) => {
         setFilter(value)
         action('onChange')(value)
@@ -78,7 +78,7 @@ stories.add('single filter', () => {
   const editing = boolean('Editing', true)
   return (
     <Filter
-      {...filter}
+      filter={filter}
       onChange={(value: any) => {
         setFilter(value)
         action('onChange')(value)

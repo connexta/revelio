@@ -4,19 +4,22 @@ import { makeDefaultSearchGeo } from '../filter'
 import { Location, geoToFilter } from '../../location'
 import AttributeDropdown from '../filter/attribute-dropdown'
 
-const LocationFilter = (props: QueryFilterProps) => (
-  <React.Fragment>
-    <AttributeDropdown {...props} />
-    <Location
-      //TODO: re-type QueryFilter to allow for more complex filters than
-      //      just {property, type, value} ex. location (geojson) and
-      //      filter functions such as NEAR (currently be serialized)
-      value={props.geojson || makeDefaultSearchGeo()}
-      onChange={value => {
-        props.onChange(geoToFilter(value, props.property))
-      }}
-    />
-  </React.Fragment>
-)
+const LocationFilter = (props: QueryFilterProps) => {
+  const { filter } = props
+  return (
+    <React.Fragment>
+      <AttributeDropdown {...props} />
+      <Location
+        //TODO: re-type QueryFilter to allow for more complex filters than
+        //      just {property, type, value} ex. location (geojson) and
+        //      filter functions such as NEAR (currently be serialized)
+        value={filter.geojson || makeDefaultSearchGeo()}
+        onChange={value => {
+          props.onChange(geoToFilter(value, filter.property))
+        }}
+      />
+    </React.Fragment>
+  )
+}
 
 export default LocationFilter

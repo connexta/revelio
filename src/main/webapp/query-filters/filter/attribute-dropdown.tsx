@@ -11,7 +11,7 @@ import {
 } from './dummyDefinitions'
 import { Comparators } from './comparator-dropdown'
 const AttributeDropdown = (props: QueryFilterProps) => {
-  const { attributeDefinitions = sampleAttributeDefinitions } = props
+  const { attributeDefinitions = sampleAttributeDefinitions, filter } = props
 
   const getType = (property: string) => {
     return getIn(
@@ -26,9 +26,9 @@ const AttributeDropdown = (props: QueryFilterProps) => {
         autoSelect
         disableClearable
         options={attributeDefinitions.map(definition => definition.id)}
-        value={props.property}
+        value={filter.property}
         onChange={(_, newProperty: string) => {
-          const prevType = getType(props.property)
+          const prevType = getType(filter.property)
           const newType = getType(newProperty)
           if (prevType !== newType) {
             props.onChange({
@@ -38,9 +38,8 @@ const AttributeDropdown = (props: QueryFilterProps) => {
             })
           } else {
             props.onChange({
-              type: props.type,
+              ...filter,
               property: newProperty,
-              value: props.value,
             })
           }
         }}

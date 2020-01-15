@@ -22,6 +22,9 @@ import { defaultFilter } from '../query-filters/filter/filter-utils'
 
 const { useQueryExecutor, useApolloFallback } = require('../react-hooks')
 const genResults = require('../gen-results').default
+const { SourcesSelect } = require('../sources')
+const { FilterCard } = require('../basic-search')
+const SortOrder = require('../sort-order').default
 
 const Loading = () => {
   return (
@@ -54,53 +57,60 @@ if (typeof window !== 'undefined') {
   })
 }
 
-type QueryBuilderProps = SearchFormType & {
+type QueryBuilderProps = {
   attributeDefinitions?: AttributeDefinition[]
   onCancel?: () => void
   onSave?: (form: SearchFormType) => void
   onSearch?: (query: any) => void
+  form?: SearchFormType
 }
 
-const getFilterTree = (props: QueryBuilderProps) => {
-  if (!props.filterTree) {
+const getFilterTree = (form: SearchFormType) => {
+  if (!form.filterTree) {
     return {
       type: 'AND',
       filters: [{ ...defaultFilter }],
     }
   }
 
-  if (!props.filterTree.filters) {
-    return { type: 'AND', filters: [{ ...props.filterTree }] }
+  if (!form.filterTree.filters) {
+    return { type: 'AND', filters: [{ ...form.filterTree }] }
   }
-  return { ...props.filterTree }
+  return { ...form.filterTree }
 }
 
-const Header = (props: any) => {
-  return (
-    <Box display="flex" style={{ padding: 8 }} alignItems="center">
-      <TextField
-        fullWidth
-        value={props.title}
-        variant="outlined"
-        label="Search Title"
-        onChange={event => {
-          props.setTitle(event.target.value)
-        }}
-      />
-      <Button style={{ marginLeft: 10 }} onClick={props.addFilter}>
-        Add Field
-      </Button>
-    </Box>
-  )
+const getSorts = (sorts: string[]) => {
+  return sorts.map(sort => {
+    const splitIndex = sort.lastIndexOf(',')
+    return {
+      attribute: sort.substring(0, splitIndex),
+      direction: sort.substring(splitIndex + 1, sort.length),
+    }
+  })
 }
 
 const QueryBuilder = (props: QueryBuilderProps) => {
+  const { form = {} } = props
   const [filterTree, setFilterTree] = useState<FilterGroupType>(
-    getFilterTree(props)
+    getFilterTree(form)
   )
-  const [title, setTitle] = useState(props.title || 'New Search')
+  const [title, setTitle] = useState(form.title || 'New Search')
+
+  const [sources, setSources] = useState(form.sources || ['ddf.distribution'])
+
+  const [sorts, setSorts] = useState(getSorts(form.sorts || []))
 
   const { attributeDefinitions = sampleAttributeDefinitions } = props
+
+  const addFilter = () => {
+    setFilterTree({
+      ...filterTree,
+      filters: [
+        { property: 'anyText', type: 'ILIKE', value: '' },
+        ...filterTree.filters,
+      ],
+    })
+  }
 
   return (
     <Box>
@@ -114,24 +124,43 @@ const QueryBuilder = (props: QueryBuilderProps) => {
         display="flex"
         flexDirection="column"
       >
-        <Header
-          title={title}
-          setTitle={setTitle}
-          addFilter={() => {
-            setFilterTree({
-              ...filterTree,
-              filters: [
-                { property: 'anyText', type: 'ILIKE', value: '' },
-                ...filterTree.filters,
-              ],
-            })
-          }}
-        />
+        <Box display="flex" style={{ padding: 8 }} alignItems="center">
+          <TextField
+            fullWidth
+            value={form.title}
+            variant="outlined"
+            label="Search Title"
+            onChange={event => {
+              setTitle(event.target.value)
+            }}
+            autoFocus
+          />
+          <Button
+            variant="outlined"
+            style={{ marginLeft: 10 }}
+            onClick={addFilter}
+          >
+            Add Field
+          </Button>
+        </Box>
         <Divider />
+        <Typography
+          variant="h6"
+          component="h1"
+          style={{
+            padding: 5,
+            margin: '0px auto',
+            height: 'fit-content',
+            paddingBottom: 0,
+          }}
+          color="textPrimary"
+        >
+          Search Criteria
+        </Typography>
         {filterTree.filters.map((filter: QueryFilter, i) => (
-          <Box key={i} style={{ padding: '0px 16px', width: 425 }}>
+          <Box key={i} style={{ padding: '0px 16px' }}>
             <Filter
-              {...filter}
+              filter={filter}
               onChange={(newFilter: any) => {
                 const filters = filterTree.filters.slice()
                 filters[i] = newFilter
@@ -146,6 +175,29 @@ const QueryBuilder = (props: QueryBuilderProps) => {
             />
           </Box>
         ))}
+        <Divider style={{ margin: '10px 0px' }} />
+        <Typography
+          variant="h6"
+          component="h1"
+          style={{ padding: 5, margin: '0px auto', height: 'fit-content' }}
+          color="textPrimary"
+        >
+          Search Settings
+        </Typography>
+        <Box style={{ padding: '0px 16px' }}>
+          <FilterCard label="Sources">
+            <SourcesSelect
+              value={sources}
+              sources={['ddf.distribution']}
+              onChange={setSources}
+            />
+          </FilterCard>
+        </Box>
+        <Box style={{ padding: '0px 16px' }}>
+          <FilterCard label="Sorts">
+            <SortOrder value={sorts} onChange={setSorts} />
+          </FilterCard>
+        </Box>
       </Box>
       <Box
         style={{
@@ -188,7 +240,13 @@ const QueryBuilder = (props: QueryBuilderProps) => {
           color="primary"
           onClick={() => {
             if (props.onSave) {
-              props.onSave({ filterTree, title, id: props.id })
+              props.onSave({
+                filterTree,
+                title,
+                id: form.id,
+                sorts: sorts.map(sort => `${sort.attribute},${sort.direction}`),
+                sources,
+              })
             }
           }}
         >
@@ -205,21 +263,27 @@ type EditorProps = QueryBuilderProps & {
 
 export const SearchFormEditor = (props: EditorProps) => {
   return (
-    <Box width="100%" display="flex" flexDirection="row" height="100%">
-      <QueryBuilder {...props} onSearch={props.onSearch} />
-      <Paper style={{ width: `calc(100% - 500px)`, height: '100%' }}>
-        <Box style={{ width: '100%', height: '100%' }}>
-          <Visualizations results={props.results || []} />
-        </Box>
-      </Paper>
+    <Box width="100%" display="flex" flexDirection="column" height="100%">
+      <Typography
+        variant="h4"
+        component="h1"
+        style={{ padding: 20 }}
+        color="textPrimary"
+      >
+        Search Form Editor
+      </Typography>
+      <Divider />
+      <Box width="100%" display="flex" flexDirection="row" height="100%">
+        <QueryBuilder {...props} onSearch={props.onSearch} />
+        <Paper style={{ width: `calc(100% - 500px)`, height: '100%' }}>
+          <Box style={{ width: '100%', height: '100%' }}>
+            <Visualizations results={props.results || []} />
+          </Box>
+        </Paper>
+      </Box>
     </Box>
   )
 }
-
-const fallbackFn = () => ({
-  results: genResults(),
-  onSearch: () => {},
-})
 
 const MetacardTypesContainer = (props: EditorProps) => {
   const { loading, error, attributeDefinitions } = useAttributeDefinitions()
@@ -236,8 +300,16 @@ const MetacardTypesContainer = (props: EditorProps) => {
   )
 }
 
+const useDummyExecutor = () => {
+  const [results, setResults] = useState([])
+  const onSearch = () => {
+    setResults(genResults())
+  }
+  return { results, onSearch }
+}
+
 export default (props: any) => {
-  const fn = useApolloFallback(useQueryExecutor, fallbackFn)
+  const fn = useApolloFallback(useQueryExecutor, useDummyExecutor)
   const { results, onSearch } = fn()
   const Component = useApolloFallback(MetacardTypesContainer, SearchFormEditor)
   return <Component {...props} results={results} onSearch={onSearch} />

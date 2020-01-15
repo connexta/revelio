@@ -9,13 +9,14 @@ import AttributeDropdown from '../filter/attribute-dropdown'
 import ComparatorDropdown from '../filter/comparator-dropdown'
 
 const BooleanFilter = (props: QueryFilterProps) => {
+  const { filter } = props
   return (
     <React.Fragment>
       <AttributeDropdown {...props} />
       <ComparatorDropdown
         {...props}
         onChange={(newOperator: string) => {
-          const { property, type: oldOperator } = props
+          const { property, type: oldOperator } = filter
           if (newOperator !== oldOperator) {
             if (newOperator === 'IS NULL') {
               props.onChange({ property, type: newOperator, value: null })
@@ -25,20 +26,19 @@ const BooleanFilter = (props: QueryFilterProps) => {
           }
         }}
       />
-      {props.type !== 'IS NULL' && (
+      {filter.type !== 'IS NULL' && (
         <Box>
           <Button
             variant="outlined"
             onClick={() => {
               props.onChange({
-                value: !props.value,
-                type: props.type,
-                property: props.property,
+                ...filter,
+                value: !filter.value,
               })
             }}
           >
-            <Switch checked={props.value !== false} />
-            {String(props.value !== false)}
+            <Switch checked={filter.value !== false} />
+            {String(filter.value !== false)}
           </Button>
         </Box>
       )}
