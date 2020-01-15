@@ -18,8 +18,13 @@ const useLogin = () => {
 const Container = props => {
   const [login] = useLogin()
   const executeLogin = async (username, password) => {
-    const { data } = await login({ variables: { username, password } })
-    cookies.set('RSESSION', data.logIn, { path: '/' })
+    try {
+      const { data } = await login({ variables: { username, password } })
+      cookies.set('RSESSION', data.logIn, { path: '/' })
+      return true
+    } catch (error) {
+      return false
+    }
   }
   return (
     <LogIn
