@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { Set } from 'immutable'
 
-const SelectionContext = React.createContext()
+const SelectionContext = React.createContext([{}, function() {}])
 
 export const SelectionProvider = ({ children }) => {
   const value = useState(Set())

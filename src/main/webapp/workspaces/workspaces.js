@@ -16,6 +16,8 @@ import {
   Actions,
 } from '../index-cards'
 
+import RetryNotification from '../retry'
+
 import { Link, useParams } from 'react-router-dom'
 
 import { useQueryExecutor } from '../react-hooks'
@@ -241,14 +243,19 @@ const workspaces = gql`
 `
 
 export default () => {
-  const { loading, error, data } = useQuery(workspaces)
+  const { refetch, loading, error, data } = useQuery(workspaces)
 
   if (loading) {
     return <LoadingComponent />
   }
 
   if (error) {
-    return <div>Error</div>
+    return (
+      <RetryNotification
+        message={'Issue retrieving workspaces, would you like to retry?'}
+        refetch={refetch}
+      />
+    )
   }
 
   const attributes = data.metacardsByTag.attributes
