@@ -74,13 +74,5 @@ const fetchRequest = (url, timeout, { headers, ...opts } = {}) => {
 }
 
 module.exports = (url, { headers, ...opts } = {}) => {
-  let val = Math.random().toFixed(2)
-  if (val > 0.8) {
-    timeout = 100000
-  } else {
-    timeout = 10
-  }
-
-  console.log(`The timeout value is ${timeout}`)
   return fetchRequest(url, timeout, { headers, ...opts })
 }
