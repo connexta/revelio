@@ -15,17 +15,16 @@ const useLogin = () => {
   return useMutation(LOGIN_MUTATION)
 }
 
-const setCookie = cookie => {
-  let parsedCookie = cookie.split(';')
-  parsedCookie = parsedCookie[0].split('=')
-  cookies.set(parsedCookie[0], parsedCookie[1], { path: '/' })
-}
-
 const Container = props => {
   const [login] = useLogin()
   const executeLogin = async (username, password) => {
-    const { data } = await login({ variables: { username, password } })
-    setCookie(data.logIn)
+    try {
+      const { data } = await login({ variables: { username, password } })
+      cookies.set('RSESSION', data.logIn, { path: '/' })
+      return true
+    } catch (error) {
+      return false
+    }
   }
   return (
     <LogIn

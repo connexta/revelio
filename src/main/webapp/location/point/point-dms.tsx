@@ -5,12 +5,17 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import FormControl from '@material-ui/core/FormControl'
 import FormLabel from '@material-ui/core/FormLabel'
 import Props from './props'
-import { coordinates as coordinateEditor } from 'geospatialdraw'
+import useDMSCoordinates from 'geospatialdraw/bin/coordinates/react-hooks/dms'
+import {
+  DMS,
+  dmsSign,
+  dmsSetSign,
+} from 'geospatialdraw/bin/coordinates/dms-formatting'
 import NumberInput from '../number'
 
 type DMSComponentProps = {
-  value: coordinateEditor.DMS
-  onChange: (value: coordinateEditor.DMS) => void
+  value: DMS
+  onChange: (value: DMS) => void
   isValid: boolean
 }
 
@@ -34,8 +39,8 @@ const DMSValue: React.SFC<DMSValueProps> = ({
   negativeHeadingName,
   positiveHeadingName,
 }) => {
-  const display = coordinateEditor.dmsSetSign(value, 1)
-  const sign = coordinateEditor.dmsSign(value)
+  const display = dmsSetSign(value, 1)
+  const sign = dmsSign(value)
   return (
     <SpacedLinearContainer direction="row" spacing={1}>
       <NumberInput
@@ -119,7 +124,7 @@ const DMSValue: React.SFC<DMSValueProps> = ({
         size="small"
         value={sign}
         onChange={(_e, sign) => {
-          onChange(coordinateEditor.dmsSetSign(value, sign))
+          onChange(dmsSetSign(value, sign))
         }}
       >
         <ToggleButton title={positiveHeadingTooltip} value={1}>
@@ -161,7 +166,7 @@ const PointDMS: React.SFC<Props> = ({ value, onChange }) => {
     { lat: dmsLat, lon: dmsLon },
     setDMS,
     isValid,
-  ] = coordinateEditor.useDMSCoordinates(value)
+  ] = useDMSCoordinates(value)
   React.useEffect(
     () => {
       if (value.lat !== coordinates.lat || value.lon !== coordinates.lon) {

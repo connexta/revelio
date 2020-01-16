@@ -7,11 +7,13 @@ import Switch from '@material-ui/core/Switch'
 const path = ['theme', 'theme']
 
 export default props => {
-  const { value, onChange } = props
+  const { value, onChange, onSave } = props
   const darkMode = value.getIn(path) === 'dark'
 
   const setTheme = theme => {
-    onChange(value.setIn(path, theme))
+    const preferences = value.setIn(path, theme)
+    onChange(preferences)
+    onSave(preferences)
   }
 
   return (

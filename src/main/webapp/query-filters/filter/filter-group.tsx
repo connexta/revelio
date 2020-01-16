@@ -17,12 +17,13 @@ export type FilterGroupType = {
   filters: Array<FilterGroupType | QueryFilter>
 }
 
-export type FilterGroupProps = FilterGroupType & {
+export type FilterGroupProps = {
   limitDepth?: number // Used to limit number of nested groups
   editing?: boolean
   onChange: (value: FilterGroupType) => void
   onRemove?: () => void
   attributeDefinitions?: AttributeDefinition[]
+  filter: FilterGroupType
 }
 
 //TODO: Remove this once we know how we want groups to look
@@ -67,11 +68,6 @@ const Divider = () => (
   />
 )
 
-const getValue = (props: FilterGroupProps) => {
-  const { type, filters } = props
-  return { type, filters }
-}
-
 const FilterGroup = withRemoveButton(
   withDivider((props: FilterGroupProps) => {
     return (
@@ -84,19 +80,20 @@ const FilterGroup = withRemoveButton(
 )
 
 const Header = (props: FilterGroupProps) => {
+  const { filter } = props
   return (
     <Box display="flex">
       <Operator
         onChange={(value: string) => {
-          props.onChange({ ...getValue(props), type: value })
+          props.onChange({ ...filter, type: value })
         }}
-        value={props.type}
+        value={filter.type}
       />
       <Button
         onClick={() => {
-          const filters = props.filters.slice()
+          const filters = filter.filters.slice()
           filters.push({ ...defaultFilter })
-          props.onChange({ ...getValue(props), filters })
+          props.onChange({ ...filter, filters })
         }}
         style={filterHeaderButtonStyle}
         variant="outlined"
@@ -108,9 +105,9 @@ const Header = (props: FilterGroupProps) => {
         <Button
           style={filterHeaderButtonStyle}
           onClick={() => {
-            const filters = props.filters.slice()
+            const filters = filter.filters.slice()
             filters.push({ type: 'AND', filters: [{ ...defaultFilter }] })
-            props.onChange({ ...getValue(props), filters })
+            props.onChange({ ...filter, filters })
           }}
           variant="outlined"
           startIcon={<Add fontSize="small" />}
@@ -123,23 +120,24 @@ const Header = (props: FilterGroupProps) => {
 }
 
 const FilterList = (props: FilterGroupProps) => {
+  const { filter } = props
   return (
     <Box>
-      {props.filters.map((filter, i) => {
+      {filter.filters.map((subfilter, i) => {
         const onChange = (value: FilterGroupType | QueryFilter) => {
-          const filters = props.filters.slice()
+          const filters = filter.filters.slice()
           filters[i] = value
-          props.onChange({ ...getValue(props), filters })
+          props.onChange({ ...filter, filters })
         }
         const onRemove = () => {
-          const filters = props.filters.slice()
+          const filters = filter.filters.slice()
           filters.splice(i, 1)
           props.onChange({
-            ...getValue(props),
+            ...filter,
             filters,
           })
         }
-        if (isFilterGroup(filter)) {
+        if (isFilterGroup(subfilter)) {
           return (
             <Box key={i} style={{ margin: 10, marginLeft: 0 }}>
               <FilterGroup
@@ -148,7 +146,7 @@ const FilterList = (props: FilterGroupProps) => {
                     ? props.limitDepth - 1
                     : undefined
                 }
-                {...filter}
+                filter={subfilter}
                 editing={props.editing}
                 onChange={onChange}
                 onRemove={onRemove}
@@ -160,7 +158,7 @@ const FilterList = (props: FilterGroupProps) => {
           return (
             <Box key={i} style={{ margin: 10, marginLeft: 0 }}>
               <IndividualFilter
-                {...filter}
+                filter={subfilter}
                 editing={props.editing}
                 onChange={onChange}
                 onRemove={onRemove}

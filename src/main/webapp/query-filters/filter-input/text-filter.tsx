@@ -36,6 +36,7 @@ const FACET_WHITELIST = gql`
 `
 
 const WithFacetedSuggestions = (props: QueryFilterProps) => {
+  const { filter } = props
   const { data, loading, error } = useQuery(FACET_WHITELIST)
   if (loading) {
     return <TextFilterContainer {...props} loading={true} />
@@ -47,15 +48,16 @@ const WithFacetedSuggestions = (props: QueryFilterProps) => {
   const attributeSuggestionList =
     getIn(data, ['systemProperties', 'attributeSuggestionList'], undefined) ||
     []
-  if (!attributeSuggestionList.includes(props.property)) {
+  if (!attributeSuggestionList.includes(filter.property)) {
     return <TextFilterContainer {...props} />
   }
   return <WithFacetedQuery {...props} />
 }
 
 const WithFacetedQuery = (props: QueryFilterProps) => {
+  const { filter } = props
   const { data, loading, error } = useQuery(FACETED_QUERY, {
-    variables: { attribute: props.property },
+    variables: { attribute: filter.property },
   })
 
   if (loading) {
@@ -71,13 +73,13 @@ const WithFacetedQuery = (props: QueryFilterProps) => {
 }
 
 const TextFilterContainer = (props: TextFilterProps) => {
-  const { attributeDefinitions = sampleAttributeDefinitions } = props
+  const { attributeDefinitions = sampleAttributeDefinitions, filter } = props
   let { enums = [] } = props
   enums = List(
     enums.concat(
       getIn(
         attributeDefinitions.find(
-          definition => definition.id === props.property
+          definition => definition.id === filter.property
         ),
         ['enums'],
         undefined
@@ -96,18 +98,17 @@ type TextFilterProps = QueryFilterProps & {
 }
 
 const TextFilter = (props: TextFilterProps) => {
-  const { enums = [] } = props
-  const errors = validateText(props.value)
+  const { enums = [], filter } = props
+  const errors = validateText(filter.value)
   return (
     <Autocomplete
       freeSolo
       disableClearable
       autoSelect
       options={enums}
-      value={props.value}
+      value={filter.value}
       onChange={(_, value: any) => {
-        const { property, type } = props
-        props.onChange({ property, type, value })
+        props.onChange({ ...filter, value })
       }}
       loading={props.loading}
       renderInput={params => {
@@ -119,8 +120,7 @@ const TextFilter = (props: TextFilterProps) => {
             placeholder="Use * for wildcard"
             variant="outlined"
             onChange={event => {
-              const { property, type } = props
-              props.onChange({ property, type, value: event.target.value })
+              props.onChange({ ...filter, value: event.target.value })
             }}
             fullWidth
           />
@@ -144,7 +144,8 @@ const validateNear = (value: any) => {
 }
 
 const NearFilter = (props: QueryFilterProps) => {
-  const errors = validateNear(props.value)
+  const { filter } = props
+  const errors = validateNear(filter.value)
 
   return (
     <Box style={{ display: 'flex', alignItems: 'center' }}>
@@ -154,15 +155,13 @@ const NearFilter = (props: QueryFilterProps) => {
         error={errors.value !== undefined}
         helperText={errors.value}
         onChange={event => {
-          const { property, type } = props
           const value = event.target.value
           props.onChange({
-            property,
-            type,
-            value: { ...props.value, value },
+            ...filter,
+            value: { ...filter.value, value },
           })
         }}
-        value={props.value.value}
+        value={filter.value.value}
       />
       <Box style={{ margin: 10 }} component="span">
         within
@@ -173,16 +172,15 @@ const NearFilter = (props: QueryFilterProps) => {
         helperText={errors.distance}
         style={{ width: 100 }}
         onChange={event => {
-          const { property, type } = props
           const value = event.target.value
           if (!value.match(intRegex)) return
+
           props.onChange({
-            property,
-            type,
-            value: { ...props.value, distance: value },
+            ...filter,
+            value: { ...filter.value, distance: value },
           })
         }}
-        value={props.value.distance}
+        value={filter.value.distance}
       />
     </Box>
   )
@@ -198,8 +196,9 @@ const TO: any = {
 }
 
 export default (props: QueryFilterProps) => {
+  const { filter } = props
   let Component
-  if (props.type === 'NEAR') {
+  if (filter.type === 'NEAR') {
     Component = NearFilter
   } else {
     Component = useApolloFallback(WithFacetedSuggestions, TextFilterContainer)
@@ -210,7 +209,7 @@ export default (props: QueryFilterProps) => {
       <ComparatorDropdown
         {...props}
         onChange={(newOperator: string) => {
-          const { property, type: oldOperator, value: oldValue } = props
+          const { property, type: oldOperator, value: oldValue } = filter
           if (oldOperator === newOperator) return
           let newValue = oldValue
           if (FROM[oldOperator] !== undefined) {
@@ -226,7 +225,7 @@ export default (props: QueryFilterProps) => {
           })
         }}
       />
-      {props.type !== 'IS NULL' && <Component {...props} />}
+      {filter.type !== 'IS NULL' && <Component {...props} />}
     </React.Fragment>
   )
 }

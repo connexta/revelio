@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { geometry } from 'geospatialdraw'
+import { GeometryJSON } from 'geospatialdraw/bin/geometry/geometry'
 import { useLazyQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import {
@@ -34,7 +34,7 @@ type suggestionResult = {
 }
 
 type geofeatureResult = {
-  geofeature: geometry.GeometryJSON
+  geofeature: GeometryJSON
 }
 
 const withRemoteQueries = (
@@ -56,7 +56,7 @@ const withRemoteQueries = (
       error: suggestionError,
     },
   ] = useLazyQuery<suggestionResult>(SuggestionsQuery)
-  const useFeatureQuery: queryHook<geometry.GeometryJSON, string> = () => ({
+  const useFeatureQuery: queryHook<GeometryJSON, string> = () => ({
     fetch: id =>
       getFeature({
         variables: {

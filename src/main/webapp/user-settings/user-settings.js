@@ -137,10 +137,14 @@ const UserSettings = props => {
     setOpen(true)
   }
 
+  const onSave = preferences => {
+    props.onSave(preferences.toJSON())
+  }
+
   const handleDrawerClose = () => {
     setOpen(false)
     setSelected({})
-    props.onSave(preferences.toJSON())
+    onSave(preferences)
   }
 
   const Component = selected.component ? selected.component : null
@@ -167,6 +171,7 @@ const UserSettings = props => {
               onChange={newPreferences => {
                 setPreferences(newPreferences)
               }}
+              onSave={onSave}
               systemProperties={props.systemProperties}
             />
           )}
@@ -248,8 +253,12 @@ const Container = () => {
         )
 
         if (!fromJS(data.user.preferences).equals(newPreferences)) {
+          const userPreferences = newPreferences.toJS()
           updateUserPreferences({
-            variables: { userPreferences: newPreferences.toJS() },
+            variables: { userPreferences },
+            optimisticResponse: {
+              updateUserPreferences: userPreferences,
+            },
           })
         }
       }}

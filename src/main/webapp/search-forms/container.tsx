@@ -11,6 +11,8 @@ const fragment = gql`
     filterTree
     modified
     owner: metacard_owner
+    sorts
+    sources
   }
 `
 
@@ -116,8 +118,7 @@ export default () => {
       variables: {
         id: form.id,
         attrs: {
-          title: form.title,
-          filterTree: form.filterTree,
+          ...form,
           metacard_tags: ['query-template', 'VALID'],
         },
       },
@@ -129,8 +130,7 @@ export default () => {
     create({
       variables: {
         attrs: {
-          title: form.title,
-          filterTree: form.filterTree,
+          ...form,
           metacard_tags: ['query-template', 'VALID'],
         },
       },

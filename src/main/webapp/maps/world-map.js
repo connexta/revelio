@@ -10,13 +10,15 @@ import View from 'ol/View'
 import Tile from 'ol/layer/Tile'
 import OSM from 'ol/source/OSM'
 import Box from '@material-ui/core/Box'
-import { renderer, geometry, coordinates } from 'geospatialdraw'
+import Renderer from 'geospatialdraw/bin/renderer'
+import { combineExtents } from 'geospatialdraw/bin/geometry/utilities'
+import { LAT_LON } from 'geospatialdraw/bin/coordinates/units'
 import { useCursorPosition } from './effects'
 import CoordinateValue from '../location/coordinate-value'
 
 export const geometryListToViewport = geometryList =>
   geometryList.length > 0
-    ? geometry.combineExtents(geometryList.map(geometry => geometry.bbox))
+    ? combineExtents(geometryList.map(geometry => geometry.bbox))
     : null
 
 const WorldMap = ({
@@ -28,7 +30,7 @@ const WorldMap = ({
   maxZoom,
   minZoom,
   zoom,
-  coordinateType = coordinates.LAT_LON,
+  coordinateType = LAT_LON,
   onMapLoaded = () => {},
   width = '100%',
   height = '100%',
@@ -64,7 +66,7 @@ const WorldMap = ({
             '.ol-overlaycontainer-stopevent, .ol-overlaycontainer'
           )
           .forEach(el => (el.style.display = 'none'))
-        const geoRenderer = new renderer.Renderer(map, style, maxZoom)
+        const geoRenderer = new Renderer(map, style, maxZoom)
         map.once('rendercomplete', () => {
           createMapControls({ map, geoRenderer })
         })
@@ -123,14 +125,15 @@ const WorldMap = ({
     [mapControls, container.width, container.height]
   )
   return (
-    <Box width={width} height={height} bgcolor="black" position="relative">
+    <Box width={width} height={height} position="relative">
       <Box width="100%" height="100%" ref={mapDiv} className="map" />
       <Box
         position="absolute"
         left="0"
         bottom="0"
-        bgcolor="black"
+        bgcolor="rgba(0,0,0, 0.5)"
         color="white"
+        borderRadius="0 10px 0 0"
         p={1}
       >
         <CoordinateValue lat={lat} lon={lon} unit={coordinateType} />

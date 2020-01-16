@@ -1,6 +1,8 @@
 import * as React from 'react'
 const { useDrawInterface } = require('../react-hooks')
-import { geometry, shapes } from 'geospatialdraw'
+import { Shape } from 'geospatialdraw/bin/shapes/shape'
+import useGeometryJSONMemo from 'geospatialdraw/bin/geometry/memo'
+import { GeometryJSON } from 'geospatialdraw/bin/geometry/geometry'
 import { BasicEditorProps } from './geo-editor'
 import SpacedLinearContainer from '../spaced-linear-container'
 import Button from '@material-ui/core/Button'
@@ -27,7 +29,7 @@ const DrawButton: React.SFC<DrawButtonProps> = ({ onDraw, active }) => (
 
 const withDrawButton = (
   Editor: EditorComponent,
-  shape: shapes.Shape
+  shape: Shape
 ): OutputComponent => ({ value, onChange }) => {
   const [drawState, setDrawState] = useDrawInterface()
   const onDraw = () => {
@@ -37,7 +39,7 @@ const withDrawButton = (
       shape,
     })
   }
-  const memo = geometry.useGeometryJSONMemo(drawState.geo)
+  const memo = useGeometryJSONMemo(drawState.geo)
   React.useEffect(
     () => {
       const geo =
@@ -56,7 +58,7 @@ const withDrawButton = (
     },
     [memo]
   )
-  const editorOnChange = (geo: geometry.GeometryJSON) => {
+  const editorOnChange = (geo: GeometryJSON) => {
     setDrawState({
       geo,
       active: true,

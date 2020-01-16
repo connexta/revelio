@@ -94,39 +94,33 @@ const TO: any = {
 }
 
 const DateFilter = (props: QueryFilterProps) => {
+  const { filter } = props
   const toFilter = (timeRange: any) => {
-    if (props.type === '=') {
+    if (filter.type === '=') {
       const { last, unit } = timeRange
       if (!uglyMap[unit] || !last.match(/^(-?\d*$)|^$/)) {
-        return {
-          property: props.property,
-          value: props.value,
-          type: props.type,
-        }
+        return { ...filter }
       }
       return {
-        property: props.property,
+        ...filter,
         value: uglyMap[unit](last),
-        type: props.type,
       }
     }
-    if (props.type === 'DURING') {
+    if (filter.type === 'DURING') {
       const { from, to } = timeRange
 
       return {
-        property: props.property,
+        ...filter,
         value: `${toISOString(from)}/${toISOString(to)}`,
-        type: props.type,
       }
     }
     return {
-      property: props.property,
+      ...filter,
       value: toISOString(timeRange.value),
-      type: props.type,
     }
   }
-  const value = fromFilter(props)
-  const Component = comparatorsToComponents[props.type]
+  const value = fromFilter(filter)
+  const Component = comparatorsToComponents[filter.type]
 
   return (
     <React.Fragment>
@@ -134,7 +128,7 @@ const DateFilter = (props: QueryFilterProps) => {
       <ComparatorDropdown
         {...props}
         onChange={(newOperator: string) => {
-          const { property, type: oldOperator, value: oldValue } = props
+          const { type: oldOperator, value: oldValue } = filter
           if (oldOperator === newOperator) return
           let newValue = oldValue
           if (FROM[oldOperator] !== undefined) {
@@ -146,14 +140,14 @@ const DateFilter = (props: QueryFilterProps) => {
           props.onChange({
             type: newOperator,
             value: newValue,
-            property,
+            property: filter.property,
           })
         }}
       />
-      {props.type !== 'IS NULL' && (
+      {filter.type !== 'IS NULL' && (
         <Box style={{ margin: 5 }}>
           <Component
-            errors={validate({ ...value, type: props.type })}
+            errors={validate({ ...value, type: filter.type })}
             timeRange={value}
             setTimeRange={(value: any) => {
               props.onChange(toFilter(value))

@@ -13,19 +13,20 @@ import {
   sampleAttributeDefinitions,
 } from './dummyDefinitions'
 import { deserialize, serialize } from './filter-serialization'
-import { geometry } from 'geospatialdraw'
+import { GeometryJSON } from 'geospatialdraw/bin/geometry/geometry'
 
 export type QueryFilter = {
   property: string //property name, ex: anyText
   type: string // cql operator, ex: ILIKE
   value: any
-  geojson?: geometry.GeometryJSON
+  geojson?: GeometryJSON
 }
-export type QueryFilterProps = QueryFilter & {
+export type QueryFilterProps = {
   onChange: (value: QueryFilter) => void
   onRemove?: () => void
   editing?: boolean
   attributeDefinitions?: AttributeDefinition[]
+  filter: QueryFilter
 }
 
 const Inputs: any = {
@@ -49,7 +50,8 @@ const withSerialization = (Component: any) => {
     const { attributeDefinitions = sampleAttributeDefinitions } = props
     return (
       <Component
-        {...deserialize(props, attributeDefinitions)}
+        {...props}
+        filter={deserialize(props.filter, attributeDefinitions)}
         onChange={(value: any) => {
           props.onChange(serialize(value, attributeDefinitions))
         }}
@@ -59,7 +61,7 @@ const withSerialization = (Component: any) => {
 }
 
 export default withSerialization((props: QueryFilterProps) => {
-  const { attributeDefinitions = sampleAttributeDefinitions } = props
+  const { attributeDefinitions = sampleAttributeDefinitions, filter } = props
 
   const getType = (property: string) => {
     return getIn(
@@ -68,10 +70,10 @@ export default withSerialization((props: QueryFilterProps) => {
       'STRING'
     )
   }
-  const type = getType(props.property)
+  const type = getType(filter.property)
   const Component = Inputs[type] || TextFilter
   return (
-    <FilterCard label={props.property} onRemove={props.onRemove}>
+    <FilterCard label={filter.property} onRemove={props.onRemove}>
       <Component {...props} />
     </FilterCard>
   )

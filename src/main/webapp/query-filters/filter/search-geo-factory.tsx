@@ -1,5 +1,6 @@
-import { geometry, shapes } from 'geospatialdraw'
+import { makeEmptyGeometry } from 'geospatialdraw/bin/geometry/utilities'
+import { LINE } from 'geospatialdraw/bin/shapes/shape'
 
 export const makeSearchGeoId = (): string => `search-geo-${Math.random()}`
 export const makeDefaultSearchGeo = () =>
-  geometry.makeEmptyGeometry(makeSearchGeoId(), shapes.LINE)
+  makeEmptyGeometry(makeSearchGeoId(), LINE)
