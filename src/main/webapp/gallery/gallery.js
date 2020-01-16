@@ -8,24 +8,33 @@ import { Inspector } from '../inspector'
 const GalleryItem = props => {
   const { title, thumbnail } = props
   return (
-    <Card
-      style={{
-        margin: 20,
-        cursor: 'pointer',
-      }}
-    >
-      <CardActionArea onClick={props.onClick}>
+    <Card>
+      <CardActionArea
+        onClick={props.onClick}
+        style={{ height: '100%', padding: 10 }}
+      >
         <div
           style={{
-            padding: 20,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
+            textAlign: 'center',
+            height: '100%'
           }}
         >
-          <img src={`data:image/jpeg;base64,${thumbnail}`} />
-          <Typography>{title}</Typography>
+          <div
+            style={{
+              flex: 1,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <img
+              src={`data:image/jpeg;base64,${thumbnail}`}
+              style={{ maxWidth: '100%', maxHeight: '300px' }}
+            />
+          </div>
+          <Typography style={{ fontSize: 14, marginTop: 10 }}>{title}</Typography>
         </div>
       </CardActionArea>
     </Card>
@@ -51,19 +60,32 @@ export default props => {
         </Dialog>
       )}
 
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {results.map(result => {
-          const { id, title, thumbnail } = result.metacard.properties
+      <div
+        style={{
+          padding: 20
+        }}
+      >
+        <div
+          style={{
+            display: 'grid',
+            gridGap: '20px',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', // 'auto-fit' not IE11 compatible
+            msGridColumns: 'repeat(3, 1fr)'
+          }}
+        >
+          {results.map(result => {
+            const { id, title, thumbnail } = result.metacard.properties
 
-          return (
-            <GalleryItem
-              key={id}
-              title={title}
-              thumbnail={thumbnail}
-              onClick={() => setSelected(id)}
-            />
-          )
-        })}
+            return (
+              <GalleryItem
+                key={id}
+                title={title}
+                thumbnail={thumbnail}
+                onClick={() => setSelected(id)}
+              />
+            )
+          })}
+        </div>
       </div>
     </React.Fragment>
   )
