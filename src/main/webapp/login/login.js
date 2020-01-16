@@ -14,13 +14,26 @@ export const LogIn = props => {
     showPassword: false,
     buttonDisabled: false,
   })
+  const [errors, hasErrors] = React.useState(false)
   const handleChange = prop => event => {
     setValues({ ...values, [prop]: event.target.value })
   }
+
   const changePasswordVisibility = () => {
     let flip = !values['showPassword']
     setValues({ ...values, showPassword: flip })
   }
+  const checkCredentials = async () => {
+    setValues({ ...values, buttonDisabled: true })
+    const success = await props.login(values.username, values.password)
+    if (success) {
+      props.handleClose()
+    } else {
+      hasErrors(true)
+      setValues({ ...values, buttonDisabled: false })
+    }
+  }
+
   return (
     <div
       style={{
@@ -42,11 +55,11 @@ export const LogIn = props => {
         label="Username"
         style={{ marginBottom: 20 }}
         onChange={handleChange('username')}
-        onKeyDown={async e => {
+        error={errors}
+        helperText={errors ? 'Invalid Credentials' : undefined}
+        onKeyDown={e => {
           if (e.key === 'Enter') {
-            setValues({ ...values, buttonDisabled: true })
-            await props.login(values.username, values.password)
-            props.handleClose()
+            checkCredentials()
           }
         }}
       />
@@ -57,6 +70,8 @@ export const LogIn = props => {
         label="Password"
         type={values.showPassword ? 'text' : 'password'}
         style={{ marginBottom: 20 }}
+        error={errors}
+        helperText={errors ? 'Invalid Credentials' : undefined}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -69,11 +84,9 @@ export const LogIn = props => {
             </InputAdornment>
           ),
         }}
-        onKeyDown={async e => {
+        onKeyDown={e => {
           if (e.key === 'Enter') {
-            setValues({ ...values, buttonDisabled: true })
-            await props.login(values.username, values.password)
-            props.handleClose()
+            checkCredentials()
           }
         }}
         onChange={handleChange('password')}
@@ -82,10 +95,8 @@ export const LogIn = props => {
         variant="contained"
         color="primary"
         disabled={values.buttonDisabled ? true : false}
-        onClick={async () => {
-          setValues({ ...values, buttonDisabled: true })
-          await props.login(values.username, values.password)
-          props.handleClose()
+        onClick={() => {
+          checkCredentials()
         }}
       >
         Log In
