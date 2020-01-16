@@ -19,6 +19,7 @@ const Container = props => {
   const [login] = useLogin()
   const executeLogin = async (username, password) => {
     try {
+      cookies.remove('RSESSION', { path: '/' })
       const { data } = await login({ variables: { username, password } })
       cookies.set('RSESSION', data.logIn, { path: '/' })
       return true
