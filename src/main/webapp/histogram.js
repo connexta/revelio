@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import { List, Map, Set, fromJS } from 'immutable'
 
 import Autocomplete from '@material-ui/lab/Autocomplete'
+import Tooltip from '@material-ui/core/Tooltip'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
+import { formatDateString, getFileSize, isDate } from './utils'
 
 const AttributeSelect = props => {
   const { attributes, value, onChange } = props
@@ -28,34 +30,67 @@ const getResultId = result => {
   return result.getIn(['metacard', 'properties', 'id'])
 }
 
+const getAttributeSet = result => {
+  return result
+    .getIn(['metacard', 'properties'])
+    .keySeq()
+    .toSet()
+}
+
+const getAttributeValue = (result, attribute) => {
+  return result.getIn(['metacard', 'properties']).get(attribute)
+}
+
+const getAttributeKeysFromResults = results => {
+  return results.reduce((acc, data) => {
+    return acc.merge(getAttributeSet(data))
+  }, Set())
+}
+
+const getResultsContainingAttribute = (results, attribute) => {
+  return results.filter(result => {
+    const attributes = getAttributeSet(result)
+    return attributes.includes(attribute)
+  })
+}
+
+const prettyifyValue = (value, attribute) => {
+  if (attribute == 'resource-size') {
+    return getFileSize(value)
+  }
+
+  if (isDate(value)) {
+    return formatDateString(value, 'MMM dd yyyy')
+  }
+  return value
+}
+
+const mapMultiValueAttrToResults = (values, result) => {
+  return values.reduce((listAcc, listValue) => {
+    return listAcc.update(listValue, (val = List()) => val.push(result))
+  }, Map())
+}
+
+const mapAttrValuesToResults = (results, attribute) => {
+  return results.reduce((acc, result) => {
+    const value = getAttributeValue(result, attribute)
+    if (List.isList(value)) {
+      const listValues = mapMultiValueAttrToResults(value, result)
+      return acc.merge(listValues)
+    }
+
+    const attrValue = prettyifyValue(value, attribute)
+    return acc.update(attrValue, (val = List()) => val.push(result))
+  }, Map())
+}
+
 const Histogram = props => {
   const [attribute, setAttribute] = useState(null)
   const { results, onSelect } = props
   const values = fromJS(results || {})
-  const attrSet = values.reduce((acc, data) => {
-    return acc.merge(
-      data
-        .getIn(['metacard', 'properties'])
-        .keySeq()
-        .toSet()
-    )
-  }, Set())
 
-  const filteredResults = values.filter(result => {
-    const attributes = result
-      .getIn(['metacard', 'properties'])
-      .keySeq()
-      .toSet()
-    return attributes.includes(attribute)
-  })
-
-  const attrMap = filteredResults.reduce((acc, result) => {
-    const attributes = result.getIn(['metacard', 'properties'])
-    const value = attributes.get(attribute)
-    return acc.update(value, (val = List()) => val.push(result))
-  }, Map())
-
-  const options = attrSet.toJS()
+  const attributeSet = getAttributeKeysFromResults(values)
+  const options = attributeSet.toJS()
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -64,21 +99,32 @@ const Histogram = props => {
         value={attribute}
         onChange={setAttribute}
       />
-      {attrMap.isEmpty() ? null : (
-        <Graph
-          attributeCount={values.size}
-          selectedAttribute={attribute}
-          attributeMap={attrMap}
-          onSelect={onSelect}
-        />
-      )}
+      <Graph
+        selectedAttribute={attribute}
+        results={values}
+        onSelect={onSelect}
+      />
     </div>
   )
 }
 
 const Graph = props => {
-  const { attributeCount, selectedAttribute, attributeMap, onSelect } = props
-  const columnWidth = 100 / attributeMap.size
+  const { selectedAttribute, results, onSelect } = props
+
+  const matchingResults = getResultsContainingAttribute(
+    results,
+    selectedAttribute
+  )
+
+  if (matchingResults.isEmpty()) {
+    return null
+  }
+
+  const attributeValueMap = mapAttrValuesToResults(
+    matchingResults,
+    selectedAttribute
+  )
+  const columnWidth = 100 / attributeValueMap.size
 
   return (
     <div className="graph-wrapper">
@@ -96,15 +142,15 @@ const Graph = props => {
             width: '100%',
           }}
         >
-          <BarLinesContainer
+          <LineContainer
             columnWidth={columnWidth}
-            attributeCount={attributeCount}
+            attributeCount={results.size}
             selectedAttribute={selectedAttribute}
-            attributeMap={attributeMap}
+            attributeMap={attributeValueMap}
             onSelect={onSelect}
           />
-          <BarTextContent
-            attributeMap={attributeMap}
+          <BarLabels
+            attributeMap={attributeValueMap}
             columnWidth={columnWidth}
           />
         </div>
@@ -129,7 +175,7 @@ const Line = props => {
   )
 }
 
-const BarTextContent = props => {
+const BarLabels = props => {
   const { attributeMap, columnWidth } = props
 
   return (
@@ -146,30 +192,39 @@ const BarTextContent = props => {
       {attributeMap
         .keySeq()
         .toList()
-        .map(attr => {
+        .map(attribute => {
           return (
             <div
-              key={attr}
+              key={attribute}
               style={{
                 width: `${columnWidth}%`,
               }}
             >
-              <Typography
-                align="center"
-                style={{
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  marginLeft: '3px',
-                  marginRight: '3px',
-                }}
-              >
-                {attr}
-              </Typography>
+              <BarLabel label={attribute} />
             </div>
           )
         })}
     </div>
+  )
+}
+
+const BarLabel = props => {
+  const { label } = props
+  return (
+    <Tooltip title={label}>
+      <Typography
+        align="center"
+        style={{
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          marginLeft: '3px',
+          marginRight: '3px',
+        }}
+      >
+        {label}
+      </Typography>
+    </Tooltip>
   )
 }
 
@@ -201,7 +256,7 @@ const renderBars = (total, valueMap, columnWidth, onSelect) => {
   return barsAgain
 }
 
-const BarLinesContainer = props => {
+const LineContainer = props => {
   const { attributeCount, attributeMap, columnWidth, onSelect } = props
   return (
     <div
