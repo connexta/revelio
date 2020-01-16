@@ -18,7 +18,7 @@ const GalleryItem = props => {
             display: 'flex',
             flexDirection: 'column',
             textAlign: 'center',
-            height: '100%'
+            height: '100%',
           }}
         >
           <div
@@ -26,7 +26,7 @@ const GalleryItem = props => {
               flex: 1,
               display: 'flex',
               justifyContent: 'center',
-              alignItems: 'center'
+              alignItems: 'center',
             }}
           >
             <img
@@ -34,7 +34,9 @@ const GalleryItem = props => {
               style={{ maxWidth: '100%', maxHeight: '300px' }}
             />
           </div>
-          <Typography style={{ fontSize: 14, marginTop: 10 }}>{title}</Typography>
+          <Typography style={{ fontSize: 14, marginTop: 10 }}>
+            {title}
+          </Typography>
         </div>
       </CardActionArea>
     </Card>
@@ -62,7 +64,7 @@ export default props => {
 
       <div
         style={{
-          padding: 20
+          padding: 20,
         }}
       >
         <div
@@ -70,7 +72,7 @@ export default props => {
             display: 'grid',
             gridGap: '20px',
             gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', // 'auto-fit' not IE11 compatible
-            msGridColumns: 'repeat(3, 1fr)'
+            msGridColumns: 'repeat(3, 1fr)',
           }}
         >
           {results.map(result => {
