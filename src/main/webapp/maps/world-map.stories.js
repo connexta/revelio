@@ -2,12 +2,16 @@ import { storiesOf } from '../@storybook/react'
 import { select } from '@connexta/ace/@storybook/addon-knobs'
 import React from 'react'
 import WorldMap from './world-map'
-import { geometry, coordinates } from 'geospatialdraw'
 import Style from 'ol/style/Style'
 import Fill from 'ol/style/Fill'
 import Circle from 'ol/style/Circle'
 import Stroke from 'ol/style/Stroke'
-const { BUFFER_CLASSNAME, HIDDEN_CLASSNAME, POINT_RADIUS } = geometry
+import { LAT_LON } from 'geospatialdraw/bin/coordinates/units'
+import {
+  BUFFER_CLASSNAME,
+  HIDDEN_CLASSNAME,
+} from 'geospatialdraw/bin/geometry/geometry'
+import { POINT_RADIUS } from 'geospatialdraw/bin/shapes/shape'
 
 const featureHasClass = (feature, className) =>
   (feature.get('class') || []).includes(className)
@@ -51,7 +55,7 @@ stories.add('bare map', () => {
     <WorldMap
       projection={PROJECTION}
       style={MAP_STYLE}
-      coordinateType={coordinates.LAT_LON}
+      coordinateType={LAT_LON}
       maxZoom={20}
       minZoom={1.5}
       zoom={2}
@@ -331,7 +335,7 @@ stories.add('render geometries', () => {
       style={MAP_STYLE}
       geos={geos}
       viewport={viewport}
-      coordinateType={coordinates.LAT_LON}
+      coordinateType={LAT_LON}
       maxZoom={20}
       minZoom={1.5}
       zoom={2}

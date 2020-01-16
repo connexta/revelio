@@ -8,10 +8,27 @@ import BBox from './bbox'
 import Keyword from './keyword'
 import Location from './location'
 import {
-  shapes,
-  geometry,
-  coordinates as coordinateEditor,
-} from 'geospatialdraw'
+  MILES,
+  KILOMETERS,
+  NAUTICAL_MILES,
+} from 'geospatialdraw/bin/geometry/units'
+import {
+  LAT_LON,
+  LAT_LON_DMS,
+  USNG,
+  UTM,
+} from 'geospatialdraw/bin/coordinates/units'
+import {
+  geoJSONToGeometryJSON,
+  makeEmptyGeometry,
+} from 'geospatialdraw/bin/geometry/utilities'
+import {
+  makePointRadiusGeo,
+  makeLineGeo,
+  makePolygonGeo,
+  makeBBoxGeo,
+} from 'geospatialdraw/bin/geometry/shape-factory'
+import { POLYGON, LINE } from 'geospatialdraw/bin/shapes/shape'
 import withCoordinateUnitTabs from './with-coordinate-unit-tabs'
 import { DrawProvider } from '../react-hooks/use-draw-interface'
 
@@ -23,44 +40,28 @@ stories.addDecorator(Story => <Story />)
 const editors = {
   pointRadius: {
     Editor: PointRadius,
-    geo: geometry.makePointRadiusGeo(
-      'pointRadiusGeo',
-      45,
-      38,
-      600,
-      geometry.MILES
-    ),
+    geo: makePointRadiusGeo('pointRadiusGeo', 45, 38, 600, MILES),
   },
   line: {
     Editor: Line,
-    geo: geometry.makeLineGeo(
-      'lineGeo',
-      [[50, 50], [56, 20], [36, 30]],
-      50,
-      geometry.KILOMETERS
-    ),
+    geo: makeLineGeo('lineGeo', [[50, 50], [56, 20], [36, 30]], 50, KILOMETERS),
   },
   polygon: {
     Editor: Polygon,
-    geo: geometry.makePolygonGeo(
+    geo: makePolygonGeo(
       'polygonGeo',
       [[50, 50], [56, 20], [36, 30]],
       30,
-      geometry.NAUTICAL_MILES
+      NAUTICAL_MILES
     ),
   },
   bbox: {
     Editor: BBox,
-    geo: geometry.makeBBoxGeo('bboxGeo', [20, 30, 50, 50]),
+    geo: makeBBoxGeo('bboxGeo', [20, 30, 50, 50]),
   },
 }
 
-const coordinateUnits = [
-  coordinateEditor.LAT_LON,
-  coordinateEditor.LAT_LON_DMS,
-  coordinateEditor.USNG,
-  coordinateEditor.UTM,
-]
+const coordinateUnits = [LAT_LON, LAT_LON_DMS, USNG, UTM]
 
 Object.keys(editors).forEach(key => {
   const editor = editors[key]
@@ -187,9 +188,7 @@ const useKeyword = value => {
 }
 
 stories.add(`keyword`, () => {
-  const [value, setValue] = useState(
-    geometry.makeEmptyGeometry('keyword', shapes.POLYGON)
-  )
+  const [value, setValue] = useState(makeEmptyGeometry('keyword', POLYGON))
   const keywordProps = useKeyword(value)
   return (
     <Keyword
@@ -205,7 +204,7 @@ stories.add(`keyword`, () => {
 
 stories.add(`keyword prefilled`, () => {
   const [value, setValue] = useState(
-    geometry.geoJSONToGeometryJSON('keyword-prefilled', {
+    geoJSONToGeometryJSON('keyword-prefilled', {
       type: 'Feature',
       geometry: {
         type: 'Polygon',
@@ -239,9 +238,7 @@ stories.add(`keyword prefilled`, () => {
 })
 
 stories.add(`location`, () => {
-  const [value, setValue] = useState(
-    geometry.makeEmptyGeometry('location', shapes.LINE)
-  )
+  const [value, setValue] = useState(makeEmptyGeometry('location', LINE))
   const keyword = useKeyword(value)
   return (
     <Location
@@ -259,9 +256,7 @@ stories.add(`location`, () => {
 })
 
 stories.add(`location with draw button`, () => {
-  const [value, setValue] = useState(
-    geometry.makeEmptyGeometry('location', shapes.LINE)
-  )
+  const [value, setValue] = useState(makeEmptyGeometry('location', LINE))
   const keyword = useKeyword(value)
   return (
     <DrawProvider>
@@ -281,7 +276,7 @@ stories.add(`location with draw button`, () => {
 
 stories.add(`location with keyword`, () => {
   const [value, setValue] = useState(
-    geometry.geoJSONToGeometryJSON('location-keyword', {
+    geoJSONToGeometryJSON('location-keyword', {
       type: 'Feature',
       geometry: {
         type: 'Polygon',
@@ -300,7 +295,7 @@ stories.add(`location with keyword`, () => {
         keywordId: '1dc06d71-dc20-44d5-b211-de33816071c1',
         buffer: {
           width: 50,
-          unit: geometry.MILES,
+          unit: MILES,
         },
       },
     })
@@ -323,7 +318,7 @@ stories.add(`location with keyword`, () => {
 
 stories.add(`location with bounding box`, () => {
   const [value, setValue] = useState(
-    geometry.makeBBoxGeo('location-bbox', [20, 30, 50, 50])
+    makeBBoxGeo('location-bbox', [20, 30, 50, 50])
   )
   const keyword = useKeyword(value)
   return (

@@ -1,16 +1,15 @@
 import * as React from 'react'
-import { coordinates as coordinateEditor } from 'geospatialdraw'
+import {
+  geoToLineProps,
+  linePropsToGeo,
+} from 'geospatialdraw/bin/coordinates/geometry/polygon-line'
 import CoordinateList from './coordinate-list'
 import Props from './geo-editor'
 
 const Line: React.SFC<Props> = ({ value, onChange, coordinateUnit }) => {
-  const {
-    id,
-    properties,
-    coordinates,
-    buffer,
-    bufferUnit,
-  } = coordinateEditor.geoToLineProps(value)
+  const { id, properties, coordinates, buffer, bufferUnit } = geoToLineProps(
+    value
+  )
   return (
     <CoordinateList
       coordinateList={coordinates}
@@ -19,7 +18,7 @@ const Line: React.SFC<Props> = ({ value, onChange, coordinateUnit }) => {
       bufferUnit={bufferUnit}
       onChange={(coordinateListValue, bufferValue, bufferUnitValue) =>
         onChange(
-          coordinateEditor.linePropsToGeo({
+          linePropsToGeo({
             id,
             coordinates: coordinateListValue,
             buffer: bufferValue,

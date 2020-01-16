@@ -1,12 +1,13 @@
-import { geometry, coordinates as coordinateEditor } from 'geospatialdraw'
+import { GeometryJSON } from 'geospatialdraw/bin/geometry/geometry'
+import { CoordinateUnit } from 'geospatialdraw/bin/coordinates/units'
 
 type BasicEditorProps = {
-  value: geometry.GeometryJSON
-  onChange: (geo: geometry.GeometryJSON) => void
+  value: GeometryJSON
+  onChange: (geo: GeometryJSON) => void
 }
 
 type EditorWithCoordinateUnit = BasicEditorProps & {
-  coordinateUnit: coordinateEditor.CoordinateUnit
+  coordinateUnit: CoordinateUnit
 }
 
 export { BasicEditorProps }

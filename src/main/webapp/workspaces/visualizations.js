@@ -22,7 +22,8 @@ import {
 } from '../maps'
 import WKT from 'ol/format/WKT'
 import GeoJSON from 'ol/format/GeoJSON'
-import { geometry, coordinates } from 'geospatialdraw'
+import { geoJSONToGeometryJSON } from 'geospatialdraw/bin/geometry/utilities'
+import { LAT_LON } from 'geospatialdraw/bin/coordinates/units'
 import { Set } from 'immutable'
 
 const MapComponent = withDrawMenu(ClusterMap)
@@ -211,16 +212,13 @@ const Visualizations = props => {
                 .readFeatures(result.metacard.properties.location)
                 .map(locationGeo => {
                   const featureGeo = geoJSON.writeFeatureObject(locationGeo)
-                  return geometry.geoJSONToGeometryJSON(
-                    result.metacard.properties.id,
-                    {
-                      ...featureGeo,
-                      properties: {
-                        ...featureGeo.properties,
-                        selected: selection.has(result.metacard.properties.id),
-                      },
-                    }
-                  )
+                  return geoJSONToGeometryJSON(result.metacard.properties.id, {
+                    ...featureGeo,
+                    properties: {
+                      ...featureGeo.properties,
+                      selected: selection.has(result.metacard.properties.id),
+                    },
+                  })
                 })
             : []
       )
@@ -237,7 +235,7 @@ const Visualizations = props => {
         projection={PROJECTION}
         mapStyle={RENDERER_STYLE}
         drawStyle={DRAWING_STYLE}
-        coordinateType={coordinates.LAT_LON}
+        coordinateType={LAT_LON}
         maxZoom={20}
         minZoom={1.5}
         zoom={2}

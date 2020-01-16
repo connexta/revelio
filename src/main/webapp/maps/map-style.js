@@ -6,8 +6,11 @@ import Circle from 'ol/style/Circle'
 import Stroke from 'ol/style/Stroke'
 import Icon from 'ol/style/Icon'
 import Text from 'ol/style/Text'
-import { geometry } from 'geospatialdraw'
-const { BUFFER_CLASSNAME, HIDDEN_CLASSNAME, POINT_RADIUS, POLYGON } = geometry
+import {
+  BUFFER_CLASSNAME,
+  HIDDEN_CLASSNAME,
+} from 'geospatialdraw/bin/geometry/geometry'
+import { POINT_RADIUS, POLYGON } from 'geospatialdraw/bin/shapes/shape'
 import { getIconText } from '../icons/map-pin'
 
 const LINE_WIDTH = 1.8

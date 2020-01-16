@@ -1,5 +1,8 @@
 import * as React from 'react'
-import { coordinates as coordinateEditor } from 'geospatialdraw'
+import {
+  geoToPointRadiusProps,
+  pointRadiusPropsToGeo,
+} from 'geospatialdraw/bin/coordinates/geometry/point-circle'
 import Point from './point'
 import Props from './geo-editor'
 import Length from './length'
@@ -17,7 +20,7 @@ const PointRadius: React.SFC<Props> = ({
     radius,
     radiusUnit,
     properties,
-  } = coordinateEditor.geoToPointRadiusProps(value)
+  } = geoToPointRadiusProps(value)
   return (
     <SpacedLinearContainer direction="column" spacing={1}>
       <Point
@@ -25,7 +28,7 @@ const PointRadius: React.SFC<Props> = ({
         value={{ lat, lon }}
         onChange={({ lat, lon }) => {
           onChange(
-            coordinateEditor.pointRadiusPropsToGeo({
+            pointRadiusPropsToGeo({
               id,
               lat,
               lon,
@@ -41,7 +44,7 @@ const PointRadius: React.SFC<Props> = ({
         value={{ length: radius, unit: radiusUnit }}
         onChange={({ length, unit }) =>
           onChange(
-            coordinateEditor.pointRadiusPropsToGeo({
+            pointRadiusPropsToGeo({
               id,
               lat,
               lon,

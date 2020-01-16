@@ -3,7 +3,7 @@ import { action } from '@connexta/ace/@storybook/addon-actions'
 import { select } from '@connexta/ace/@storybook/addon-knobs'
 import React, { useState } from 'react'
 import ClusterMap from './cluster-map'
-import { coordinates } from 'geospatialdraw'
+import { LAT_LON } from 'geospatialdraw/bin/coordinates/units'
 import { RENDERER_STYLE as MAP_STYLE } from './map-style'
 
 const PROJECTION = 'EPSG:4326'
@@ -204,7 +204,7 @@ stories.add('render clusters', () => {
       style={MAP_STYLE}
       geos={geos}
       viewport={viewport}
-      coordinateType={coordinates.LAT_LON}
+      coordinateType={LAT_LON}
       selectGeos={ids => {
         setGeos(
           geos.map(g => ({

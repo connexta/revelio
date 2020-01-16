@@ -1,5 +1,7 @@
 import * as React from 'react'
-import { geometry, coordinates as coordinateEditor } from 'geospatialdraw'
+import { LengthUnit } from 'geospatialdraw/bin/geometry/units'
+import { CoordinateUnit } from 'geospatialdraw/bin/coordinates/units'
+import useCoordinateList from 'geospatialdraw/bin/coordinates/react-hooks/coordinate-list'
 import Box from '@material-ui/core/Box'
 import ButtonGroup from '@material-ui/core/ButtonGroup'
 import Button from '@material-ui/core/Button'
@@ -14,13 +16,13 @@ import CoordinateValue from './coordinate-value'
 
 type Props = {
   coordinateList: [number, number][]
-  coordinateUnit: coordinateEditor.CoordinateUnit
+  coordinateUnit: CoordinateUnit
   buffer: number
-  bufferUnit: geometry.LengthUnit
+  bufferUnit: LengthUnit
   onChange: (
     coordinateList: [number, number][],
     buffer: number,
-    bufferUnit: geometry.LengthUnit
+    bufferUnit: LengthUnit
   ) => void
 }
 
@@ -40,7 +42,7 @@ const CoordinateList: React.SFC<Props> = ({
     addCoordinateAfter,
     deleteCoordinate,
     setCoordinate,
-  } = coordinateEditor.useCoordinateList(initCoordinates, 0)
+  } = useCoordinateList(initCoordinates, 0)
   React.useEffect(
     () => {
       if (JSON.stringify(coordinateList) !== JSON.stringify(initCoordinates)) {

@@ -5,7 +5,25 @@ import React, { useState, useEffect } from 'react'
 import withDrawMenu from './with-draw-menu'
 import WorldMap from './world-map'
 import ClusterMap from './cluster-map'
-import { geometry, shapes, coordinates } from 'geospatialdraw'
+import {
+  LINE,
+  POLYGON,
+  POINT_RADIUS,
+  BOUNDING_BOX,
+} from 'geospatialdraw/bin/shapes/shape'
+import {
+  METERS,
+  MILES,
+  KILOMETERS,
+  NAUTICAL_MILES,
+} from 'geospatialdraw/bin/geometry/units'
+import {
+  makeLineGeo,
+  makePolygonGeo,
+  makeBBoxGeo,
+  makePointRadiusGeo,
+} from 'geospatialdraw/bin/geometry/shape-factory'
+import { LAT_LON } from 'geospatialdraw/bin/coordinates/units'
 import { DRAWING_STYLE, RENDERER_STYLE } from './map-style'
 
 const WorldMapWithDrawMenu = withDrawMenu(WorldMap)
@@ -20,51 +38,36 @@ const PROJECTION = 'EPSG:4326'
 
 const geometryCatalog = {
   none: {
-    shape: shapes.POLYGON,
+    shape: POLYGON,
     geo: null,
   },
   Line: {
-    shape: shapes.LINE,
-    geo: geometry.makeLineGeo(
-      '',
-      [[50, 50], [56, 20], [36, 30]],
-      0,
-      geometry.METERS
-    ),
+    shape: LINE,
+    geo: makeLineGeo('', [[50, 50], [56, 20], [36, 30]], 0, METERS),
   },
   Polygon: {
-    shape: shapes.POLYGON,
-    geo: geometry.makePolygonGeo(
-      '',
-      [[50, 50], [56, 20], [36, 30]],
-      0,
-      geometry.METERS
-    ),
+    shape: POLYGON,
+    geo: makePolygonGeo('', [[50, 50], [56, 20], [36, 30]], 0, METERS),
   },
   'Bounding Box': {
-    shape: shapes.BOUNDING_BOX,
-    geo: geometry.makeBBoxGeo('', [20, 30, 50, 50]),
+    shape: BOUNDING_BOX,
+    geo: makeBBoxGeo('', [20, 30, 50, 50]),
   },
   Circle: {
-    shape: shapes.POINT_RADIUS,
-    geo: geometry.makePointRadiusGeo('', 50, 50, 600, geometry.MILES),
+    shape: POINT_RADIUS,
+    geo: makePointRadiusGeo('', 50, 50, 600, MILES),
   },
   'Buffered Line': {
-    shape: shapes.LINE,
-    geo: geometry.makeLineGeo(
-      '',
-      [[50, 50], [56, 20], [36, 30]],
-      250,
-      geometry.KILOMETERS
-    ),
+    shape: LINE,
+    geo: makeLineGeo('', [[50, 50], [56, 20], [36, 30]], 250, KILOMETERS),
   },
   'Buffered Polygon': {
-    shape: shapes.POLYGON,
-    geo: geometry.makePolygonGeo(
+    shape: POLYGON,
+    geo: makePolygonGeo(
       '',
       [[50, 50], [56, 20], [36, 30]],
       150,
-      geometry.NAUTICAL_MILES
+      NAUTICAL_MILES
     ),
   },
 }
@@ -98,7 +101,7 @@ const createDrawMenuStory = (Component, additionalProps) => () => {
       zoom={2}
       geos={geos}
       viewport={viewport}
-      coordinateType={coordinates.LAT_LON}
+      coordinateType={LAT_LON}
       isDrawing={isDrawing}
       mapStyle={RENDERER_STYLE}
       drawStyle={DRAWING_STYLE}

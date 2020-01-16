@@ -11,7 +11,17 @@ import withCoordinateUnitTabs from './with-coordinate-unit-tabs'
 import withDrawButton from './with-draw-button'
 import Keyword from './keyword'
 import { BasicEditorProps } from './geo-editor'
-import { geometry, shapes } from 'geospatialdraw'
+import { makeEmptyGeometry } from 'geospatialdraw/bin/geometry/utilities'
+import {
+  LINE,
+  POLYGON,
+  POINT_RADIUS,
+  BBOX,
+  POINT,
+  Shape,
+} from 'geospatialdraw/bin/shapes/shape'
+import ShapeDetector from 'geospatialdraw/bin/shapes/shape-detector'
+import { GeometryJSON } from 'geospatialdraw/bin/geometry/geometry'
 
 type LocationType = 'line' | 'polygon' | 'pointRadius' | 'bbox' | 'keyword'
 
@@ -20,7 +30,7 @@ type LocationTypeComponentMap = {
     label: string
     Component: React.ComponentType<BasicEditorProps>
     ComponentWithDrawButton: React.ComponentType<BasicEditorProps>
-    shape: shapes.Shape
+    shape: Shape
   }
 }
 
@@ -35,60 +45,54 @@ const componentMap: LocationTypeComponentMap = {
   line: {
     label: 'Line',
     Component: withCoordinateUnitTabs(Line),
-    ComponentWithDrawButton: withDrawButton(
-      withCoordinateUnitTabs(Line),
-      shapes.LINE
-    ),
-    shape: shapes.LINE,
+    ComponentWithDrawButton: withDrawButton(withCoordinateUnitTabs(Line), LINE),
+    shape: LINE,
   },
   polygon: {
     label: 'Polygon',
     Component: withCoordinateUnitTabs(Polygon),
     ComponentWithDrawButton: withDrawButton(
       withCoordinateUnitTabs(Polygon),
-      shapes.POLYGON
+      POLYGON
     ),
-    shape: shapes.POLYGON,
+    shape: POLYGON,
   },
   pointRadius: {
     label: 'Point-Radius',
     Component: withCoordinateUnitTabs(PointRadius),
     ComponentWithDrawButton: withDrawButton(
       withCoordinateUnitTabs(PointRadius),
-      shapes.POINT_RADIUS
+      POINT_RADIUS
     ),
-    shape: shapes.POINT_RADIUS,
+    shape: POINT_RADIUS,
   },
   bbox: {
     label: 'Bounding Box',
     Component: withCoordinateUnitTabs(BBox),
-    ComponentWithDrawButton: withDrawButton(
-      withCoordinateUnitTabs(BBox),
-      shapes.BBOX
-    ),
-    shape: shapes.BOUNDING_BOX,
+    ComponentWithDrawButton: withDrawButton(withCoordinateUnitTabs(BBox), BBOX),
+    shape: BBOX,
   },
   keyword: {
     label: 'Keyword',
     Component: Keyword,
     ComponentWithDrawButton: Keyword,
-    shape: shapes.POLYGON,
+    shape: POLYGON,
   },
 }
 
 type ShapeToLocationTypeMap = { [key: string]: LocationType }
 
 const shapeToLocationTypeMap: ShapeToLocationTypeMap = {
-  [shapes.LINE]: 'line',
-  [shapes.POLYGON]: 'polygon',
-  [shapes.POINT_RADIUS]: 'pointRadius',
-  [shapes.POINT]: 'pointRadius',
-  [shapes.BOUNDING_BOX]: 'bbox',
+  [LINE]: 'line',
+  [POLYGON]: 'polygon',
+  [POINT_RADIUS]: 'pointRadius',
+  [POINT]: 'pointRadius',
+  [BBOX]: 'bbox',
 }
 
-const shapeDetector = new shapes.ShapeDetector()
+const shapeDetector = new ShapeDetector()
 
-const locationTypeFromGeo = (geo: geometry.GeometryJSON): LocationType => {
+const locationTypeFromGeo = (geo: GeometryJSON): LocationType => {
   if (typeof geo.properties.keyword === 'string') {
     return 'keyword'
   } else {
@@ -124,7 +128,7 @@ const Location: React.SFC<Props> = ({
             keywordId,
           }
         : rest
-    const geo = geometry.makeEmptyGeometry(id, shape, properties)
+    const geo = makeEmptyGeometry(id, shape, properties)
     onChange(geo)
   }
   return (

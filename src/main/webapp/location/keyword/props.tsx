@@ -1,5 +1,8 @@
 import { BasicEditorProps } from '../geo-editor'
-import { geometry } from 'geospatialdraw'
+import {
+  GeometryJSON,
+  GeometryJSONProperties,
+} from 'geospatialdraw/bin/geometry/geometry'
 
 export type Suggestion = {
   id: string
@@ -19,7 +22,7 @@ export type KeywordProps = BasicEditorProps & {
 }
 
 export type ContainerProps = KeywordProps & {
-  useFeatureQuery: queryHook<geometry.GeometryJSON, string>
+  useFeatureQuery: queryHook<GeometryJSON, string>
   useSuggestionQuery: queryHook<Suggestion[], string>
 }
 
@@ -39,5 +42,4 @@ type SelectedKeyword = {
   keywordId?: string
 }
 
-export type KeywordGeoProperties = geometry.GeometryJSONProperties &
-  SelectedKeyword
+export type KeywordGeoProperties = GeometryJSONProperties & SelectedKeyword
