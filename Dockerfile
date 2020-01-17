@@ -7,9 +7,9 @@ USER revelio
 WORKDIR '/revelio'
 
 # Entry point (express server)
-COPY target/server/bundle.middleware.js .
+COPY --chown=revelio:root target/server/bundle.middleware.js .
 
 # Static bundle chunks
-COPY target/webapp/* ./target/webapp/
+COPY --chown=revelio:root target/webapp/* ./target/webapp/
 
 CMD ["node", "bundle.middleware.js"]
