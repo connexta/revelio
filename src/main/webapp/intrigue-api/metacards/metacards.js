@@ -300,7 +300,7 @@ const createMetacard = async (parent, args, context) => {
   const metacardsToCreate = {
     metacards: [
       {
-        'metacard-type': attrs['metacardType'],
+        metacardType: attrs['metacard_type'],
         attributes: metacard,
       },
     ],
