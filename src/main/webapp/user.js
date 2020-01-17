@@ -8,6 +8,7 @@ import PersonIcon from '@material-ui/icons/Person'
 import gql from 'graphql-tag'
 import React from 'react'
 import { useApolloFallback } from './react-hooks'
+import Cookies from 'universal-cookie'
 
 const UserDrawer = props => (
   <Drawer
@@ -47,7 +48,9 @@ const User = props => {
   }
 
   const signOut = () => {
-    window.location.href = '../../logout?service=' + window.location.href
+    const cookies = new Cookies()
+    cookies.remove('RSESSION', { path: '/' })
+    location.reload(true)
   }
 
   return (
