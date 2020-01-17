@@ -20,6 +20,7 @@ export type QueryFilter = {
   type: string // cql operator, ex: ILIKE
   value: any
   geojson?: GeometryJSON
+  distance?: number //buffer for location filter
 }
 export type QueryFilterProps = {
   onChange: (value: QueryFilter) => void

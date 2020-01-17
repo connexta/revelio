@@ -108,7 +108,11 @@ const AddButton = ({ addFilter }) => {
 
   return (
     <React.Fragment>
-      <Button onClick={handleClick} style={{ marginLeft: '20px' }}>
+      <Button
+        variant="outlined"
+        onClick={handleClick}
+        style={{ marginLeft: '20px' }}
+      >
         Add Options
       </Button>
 

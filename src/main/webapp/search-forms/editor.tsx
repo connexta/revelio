@@ -19,12 +19,13 @@ import {
   sampleAttributeDefinitions,
 } from '../query-filters/filter/dummyDefinitions'
 import { defaultFilter } from '../query-filters/filter/filter-utils'
+import QuerySettings, { QuerySettingsType } from './query-settings'
+import Menu from '@material-ui/core/Menu'
+import useAnchorEl from '../react-hooks/use-anchor-el'
+import MenuItem from '@material-ui/core/MenuItem'
 
 const { useQueryExecutor, useApolloFallback } = require('../react-hooks')
 const genResults = require('../gen-results').default
-const { SourcesSelect } = require('../sources')
-const { FilterCard } = require('../basic-search')
-const SortOrder = require('../sort-order').default
 
 const Loading = () => {
   return (
@@ -79,14 +80,30 @@ const getFilterTree = (form: SearchFormType) => {
   return { ...form.filterTree }
 }
 
-const getSorts = (sorts: string[]) => {
-  return sorts.map(sort => {
-    const splitIndex = sort.lastIndexOf(',')
-    return {
-      attribute: sort.substring(0, splitIndex),
-      direction: sort.substring(splitIndex + 1, sort.length),
-    }
-  })
+const AddButton = (props: { options: any }) => {
+  const [anchorEl, open, close] = useAnchorEl()
+  return (
+    <React.Fragment>
+      <Button variant="outlined" style={{ marginLeft: 10 }} onClick={open}>
+        Add Option
+      </Button>
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={close}>
+        {Object.keys(props.options).map(option => {
+          return (
+            <MenuItem
+              key={option}
+              onClick={() => {
+                props.options[option]()
+                close()
+              }}
+            >
+              {option}
+            </MenuItem>
+          )
+        })}
+      </Menu>
+    </React.Fragment>
+  )
 }
 
 const QueryBuilder = (props: QueryBuilderProps) => {
@@ -96,9 +113,11 @@ const QueryBuilder = (props: QueryBuilderProps) => {
   )
   const [title, setTitle] = useState(form.title || 'New Search')
 
-  const [sources, setSources] = useState(form.sources || ['ddf.distribution'])
-
-  const [sorts, setSorts] = useState(getSorts(form.sorts || []))
+  const [querySettings, setQuerySettings] = useState<QuerySettingsType>({
+    sources: form.sources || undefined,
+    sorts: form.sorts || undefined,
+    detail_level: form.detail_level || undefined,
+  })
 
   const { attributeDefinitions = sampleAttributeDefinitions } = props
 
@@ -110,6 +129,31 @@ const QueryBuilder = (props: QueryBuilderProps) => {
         ...filterTree.filters,
       ],
     })
+  }
+
+  const addSources = () => {
+    if (querySettings.sources === undefined) {
+      setQuerySettings({ ...querySettings, sources: [] })
+    }
+  }
+
+  const addSorts = () => {
+    if (querySettings.sorts === undefined) {
+      setQuerySettings({ ...querySettings, sorts: [] })
+    }
+  }
+
+  const addResultForm = () => {
+    if (querySettings.detail_level === undefined) {
+      setQuerySettings({ ...querySettings, detail_level: null })
+    }
+  }
+
+  const options = {
+    'Field Filter': addFilter,
+    Sources: addSources,
+    'Sort Order': addSorts,
+    'Result Form': addResultForm,
   }
 
   return (
@@ -135,28 +179,9 @@ const QueryBuilder = (props: QueryBuilderProps) => {
             }}
             autoFocus
           />
-          <Button
-            variant="outlined"
-            style={{ marginLeft: 10 }}
-            onClick={addFilter}
-          >
-            Add Field
-          </Button>
+          <AddButton options={options} />
         </Box>
         <Divider />
-        <Typography
-          variant="h6"
-          component="h1"
-          style={{
-            padding: 5,
-            margin: '0px auto',
-            height: 'fit-content',
-            paddingBottom: 0,
-          }}
-          color="textPrimary"
-        >
-          Search Criteria
-        </Typography>
         {filterTree.filters.map((filter: QueryFilter, i) => (
           <Box key={i} style={{ padding: '0px 16px' }}>
             <Filter
@@ -175,29 +200,7 @@ const QueryBuilder = (props: QueryBuilderProps) => {
             />
           </Box>
         ))}
-        <Divider style={{ margin: '10px 0px' }} />
-        <Typography
-          variant="h6"
-          component="h1"
-          style={{ padding: 5, margin: '0px auto', height: 'fit-content' }}
-          color="textPrimary"
-        >
-          Search Settings
-        </Typography>
-        <Box style={{ padding: '0px 16px' }}>
-          <FilterCard label="Sources">
-            <SourcesSelect
-              value={sources}
-              sources={['ddf.distribution']}
-              onChange={setSources}
-            />
-          </FilterCard>
-        </Box>
-        <Box style={{ padding: '0px 16px' }}>
-          <FilterCard label="Sorts">
-            <SortOrder value={sorts} onChange={setSorts} />
-          </FilterCard>
-        </Box>
+        <QuerySettings settings={querySettings} onChange={setQuerySettings} />
       </Box>
       <Box
         style={{
@@ -214,7 +217,23 @@ const QueryBuilder = (props: QueryBuilderProps) => {
               endIcon={<PlayCircleFilledIcon />}
               onClick={() => {
                 if (props.onSearch) {
-                  props.onSearch({ filterTree, srcs: ['ddf.distribution'] })
+                  const {
+                    sources: srcs,
+                    sorts = [],
+                    detail_level,
+                  } = querySettings
+                  props.onSearch({
+                    filterTree,
+                    srcs: srcs || ['ddf.distribution'],
+                    sorts: sorts.map(sort => {
+                      const splitIndex = sort.lastIndexOf(',')
+                      return {
+                        attribute: sort.substring(0, splitIndex),
+                        direction: sort.substring(splitIndex + 1, sort.length),
+                      }
+                    }),
+                    detail_level,
+                  })
                 }
               }}
             >
@@ -244,8 +263,8 @@ const QueryBuilder = (props: QueryBuilderProps) => {
                 filterTree,
                 title,
                 id: form.id,
-                sorts: sorts.map(sort => `${sort.attribute},${sort.direction}`),
-                sources,
+                ...querySettings,
+                detail_level: querySettings.detail_level || undefined,
               })
             }
           }}

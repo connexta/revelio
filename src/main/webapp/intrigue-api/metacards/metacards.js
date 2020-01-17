@@ -127,7 +127,7 @@ const typeDefs = `
   }
 `
 
-const { write } = require('./cql')
+const { transformFilterToCQL } = require('./CQLUtils')
 import {
   getQueryTemplates,
   createQueryTemplate,
@@ -136,7 +136,7 @@ import {
 
 const getCql = ({ filterTree, cql }) => {
   if (filterTree !== undefined) {
-    return '(' + write(filterTree) + ')'
+    return transformFilterToCQL(filterTree)
   }
   return cql
 }
