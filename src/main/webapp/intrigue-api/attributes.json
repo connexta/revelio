@@ -95,11 +95,6 @@
     "type": "STRING"
   },
   {
-    "id": "thumbnail",
-    "multivalued": false,
-    "type": "BINARY"
-  },
-  {
     "id": "media.compression",
     "multivalued": false,
     "type": "STRING"

@@ -7,6 +7,11 @@ module.exports = (json = require('../attributes.json')) => {
       multivalued: false,
       type: 'STRING',
     },
+    {
+      id: 'thumbnail',
+      multivalued: false,
+      type: 'STRING',
+    },
   ])
 
   const idMap = attributes.map(a => a.id).reduce((map, id) => {

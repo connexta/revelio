@@ -111,7 +111,7 @@ const SimpleSearch = props => {
           ) : null}
           <ResultTable
             results={page}
-            attributes={['title', /*'thumbnail',*/ 'created']}
+            attributes={['title', 'thumbnail', 'created']}
           />
           <TablePagination
             count={results.length}

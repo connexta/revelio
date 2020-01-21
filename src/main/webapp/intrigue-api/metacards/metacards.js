@@ -1,4 +1,5 @@
 const genSchema = require('./gen-schema')
+import { setIn, updateIn } from 'immutable'
 
 const ROOT = '/search/catalog/internal'
 
@@ -202,6 +203,41 @@ const lists = (id, fetch, toGraphqlName) => async () => {
     : null
 }
 
+const makeActionIdUnique = (id, action) => {
+  return {
+    ...action,
+    id: action.id + '-' + id,
+  }
+}
+
+const isThumbnailAction = ({ id }) => {
+  return id === 'catalog.data.metacard.thumbnail'
+}
+
+const isDefaultThumbnailAction = action => {
+  return action.url.endsWith('?transform=thumbnail')
+}
+
+const isEmptyThumbnail = thumbnail => {
+  return thumbnail === undefined || thumbnail === null || thumbnail === ''
+}
+
+const createThumbnailUrl = result => {
+  const action = result.actions.find(isThumbnailAction)
+
+  if (action && !isDefaultThumbnailAction(action)) {
+    return action.url
+  }
+
+  const thumbnail = result.metacard.properties.thumbnail
+
+  if (isEmptyThumbnail(thumbnail)) {
+    return undefined
+  }
+
+  return 'data:image/jpeg;base64,' + thumbnail
+}
+
 const metacards = async (parent, args, { catalog, toGraphqlName, fetch }) => {
   const q = { ...args.settings, filterTree: args.filterTree }
   const json = await catalog.query(processQuery(q))
@@ -212,10 +248,31 @@ const metacards = async (parent, args, { catalog, toGraphqlName, fetch }) => {
       ...properties,
       queries: queries(properties.queries),
       lists: lists(properties.id, fetch, toGraphqlName),
+      thumbnail: createThumbnailUrl(result),
     }
   })
+
+  const results = json.results.map(result => {
+    const withUuidActions = updateIn(result, ['actions'], actions => {
+      return actions.map(action =>
+        makeActionIdUnique(result.metacard.properties.id, action)
+      )
+    })
+    const thumbnail = createThumbnailUrl(result)
+    if (thumbnail !== undefined) {
+      return setIn(
+        withUuidActions,
+        ['metacard', 'properties', 'thumbnail'],
+        thumbnail
+      )
+    } else {
+      return withUuidActions
+    }
+  })
+
   json.status['elapsed'] = json.request_duration_millis
-  return { attributes, ...json }
+
+  return { attributes, ...json, results }
 }
 
 const metacardsByTag = async (parent, args, context) => {

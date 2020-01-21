@@ -11,7 +11,7 @@ import TableCell from '@material-ui/core/TableCell'
 import TableBody from '@material-ui/core/TableBody'
 import More from '@material-ui/icons/UnfoldMore'
 import Less from '@material-ui/icons/UnfoldLess'
-import DefaultThumbnail from '../thumbnail/thumbnail'
+import Thumbnail from '../thumbnail/thumbnail'
 import Button from '@material-ui/core/Button'
 import Checkbox from '@material-ui/core/Checkbox'
 
@@ -69,7 +69,7 @@ const Description = props => {
   )
 }
 
-const getCellContent = (attribute, result, Thumbnail) => {
+const getCellContent = (attribute, result) => {
   const { properties } = result.metacard
   switch (attribute) {
     case 'thumbnail':
@@ -81,7 +81,7 @@ const getCellContent = (attribute, result, Thumbnail) => {
             justifyContent: 'center',
           }}
         >
-          <Thumbnail result={result} />
+          <Thumbnail src={properties.thumbnail} />
         </div>
       )
     case 'description':
@@ -98,15 +98,7 @@ const getCellContent = (attribute, result, Thumbnail) => {
 const getId = result => result.metacard.properties.id
 
 const Result = props => {
-  const {
-    attributes,
-    selected,
-    onClick,
-    onSelect,
-    onRemove,
-    Thumbnail,
-    result,
-  } = props
+  const { attributes, selected, onClick, onSelect, onRemove, result } = props
   const id = getId(result)
   return (
     <TableRow
@@ -130,18 +122,11 @@ const Result = props => {
       </TableCell>
       {attributes.map(attribute => (
         <TableCell key={attribute}>
-          {getCellContent(attribute.toLowerCase(), result, Thumbnail)}
+          {getCellContent(attribute.toLowerCase(), result)}
         </TableCell>
       ))}
     </TableRow>
   )
-}
-
-const DDFThumbnail = ({ result }) => {
-  const { url } =
-    result.actions.find(({ id }) => id === 'catalog.data.metacard.thumbnail') ||
-    {}
-  return <DefaultThumbnail src={url} />
 }
 
 const computeSelected = (selection, results, start, end, e) => {
@@ -163,7 +148,7 @@ const computeSelected = (selection, results, start, end, e) => {
 }
 
 const Results = props => {
-  const { results, attributes, onSelect, Thumbnail = DDFThumbnail } = props
+  const { results, attributes, onSelect } = props
   const selection = Set(props.selection)
   const [lastSelected, setLastSelected] = useState(null)
   const allowTextSelect = !useKeyPressed('Shift')
@@ -203,7 +188,6 @@ const Results = props => {
               <Result
                 key={id}
                 result={result}
-                Thumbnail={Thumbnail}
                 attributes={attributes}
                 selected={selection.has(id)}
                 onRemove={() => {

@@ -4,6 +4,7 @@ import Dialog from '@material-ui/core/Dialog'
 import Typography from '@material-ui/core/Typography'
 import React from 'react'
 import { Inspector } from '../inspector'
+import Thumbnail from '../thumbnail/thumbnail'
 
 const GalleryItem = props => {
   const { title, thumbnail } = props
@@ -29,10 +30,7 @@ const GalleryItem = props => {
               alignItems: 'center',
             }}
           >
-            <img
-              src={`data:image/jpeg;base64,${thumbnail}`}
-              style={{ maxWidth: '100%', maxHeight: '300px' }}
-            />
+            <Thumbnail src={thumbnail} style={{ maxHeight: '300px' }} />
           </div>
           <Typography style={{ fontSize: 14, marginTop: 10 }}>
             {title}
@@ -75,18 +73,20 @@ export default props => {
             msGridColumns: 'repeat(3, 1fr)',
           }}
         >
-          {results.map(result => {
-            const { id, title, thumbnail } = result.metacard.properties
+          {results
+            .filter(item => item.metacard.properties.thumbnail)
+            .map(result => {
+              const { id, title, thumbnail } = result.metacard.properties
 
-            return (
-              <GalleryItem
-                key={id}
-                title={title}
-                thumbnail={thumbnail}
-                onClick={() => setSelected(id)}
-              />
-            )
-          })}
+              return (
+                <GalleryItem
+                  key={id}
+                  title={title}
+                  thumbnail={thumbnail}
+                  onClick={() => setSelected(id)}
+                />
+              )
+            })}
         </div>
       </div>
     </React.Fragment>
