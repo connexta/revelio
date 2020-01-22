@@ -1,6 +1,6 @@
 import { geoJSONToGeometryJSON } from 'geospatialdraw/bin/geometry/utilities'
 import { geoToFilter } from './location'
-import { makeSearchGeoId } from './query-filters/filter'
+import { makeSearchGeoIdForFilter } from './query-filters/filter'
 const { Map, Set, fromJS } = require('immutable')
 export const APPLY_TO_KEY = 'applyTo'
 export const DATATYPES_KEY = 'datatypes'
@@ -46,7 +46,7 @@ const unitsMap = Map(fromJS(relativeUnits))
 const datatypeProperties = ['metadata-content-type', 'datatype']
 
 const parseGeoFilter = (filter = {}) =>
-  geoJSONToGeometryJSON(makeSearchGeoId(), filter.geojson)
+  geoJSONToGeometryJSON(makeSearchGeoIdForFilter(filter.value), filter.geojson)
 
 export const fromFilterTree = filterTree => {
   return filterTree.filters

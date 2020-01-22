@@ -4,7 +4,10 @@ import IndividualFilter, {
   QueryFilterProps,
 } from './individual-filter'
 import FilterGroup, { FilterGroupType, FilterGroupProps } from './filter-group'
-export { makeDefaultSearchGeo, makeSearchGeoId } from './search-geo-factory'
+export {
+  makeDefaultSearchGeo,
+  makeSearchGeoIdForFilter,
+} from './search-geo-factory'
 
 export const isFilterGroup = (
   object: QueryFilter | FilterGroupType

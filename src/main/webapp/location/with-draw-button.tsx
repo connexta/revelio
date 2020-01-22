@@ -61,7 +61,7 @@ const withDrawButton = (
   const editorOnChange = (geo: GeometryJSON) => {
     setDrawState({
       geo,
-      active: true,
+      active: drawState.active,
       shape,
     })
     onChange(geo)

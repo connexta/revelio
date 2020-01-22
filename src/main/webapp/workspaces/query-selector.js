@@ -1,13 +1,14 @@
 import Button from '@material-ui/core/Button'
 import Popover from '@material-ui/core/Popover'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   Actions,
   DeleteAction,
   EditAction,
   IndexCardItem,
 } from '../index-cards'
+const { useDrawInterface } = require('../react-hooks')
 
 const useOpenClose = props => {
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -30,9 +31,26 @@ const useOpenClose = props => {
 const QueryCard = props => {
   const { title, onClick, QueryEditor, query } = props
   const [anchorEl, open, handleOpen, handleClose] = useOpenClose(props)
-
+  const [{ active: isDrawing }] = useDrawInterface()
+  const [wasDrawing, setWasDrawing] = useState(false)
+  const drawAnchorEl = useRef(null)
+  useEffect(
+    () => {
+      if (isDrawing) {
+        setWasDrawing(true)
+        handleClose()
+      }
+      if (!isDrawing && wasDrawing) {
+        handleOpen({
+          currentTarget: drawAnchorEl.current,
+        })
+      }
+    },
+    [isDrawing]
+  )
   return (
     <React.Fragment>
+      <div ref={drawAnchorEl} />
       <IndexCardItem
         title={title}
         subHeader={'Has not been run'}
@@ -43,11 +61,13 @@ const QueryCard = props => {
           <DeleteAction />
         </Actions>
       </IndexCardItem>
-
       <Popover
         open={open}
         anchorEl={anchorEl}
-        onClose={handleClose}
+        onClose={() => {
+          setWasDrawing(isDrawing)
+          handleClose()
+        }}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'left',
