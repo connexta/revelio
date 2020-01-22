@@ -94,7 +94,14 @@ export const AddCardItem = props => {
 }
 
 export const IndexCardItem = props => {
-  const { title, subHeader, owner, modified, children, onClick } = props
+  const {
+    title,
+    subHeader,
+    metacard_owner,
+    modified,
+    children,
+    onClick,
+  } = props
 
   return (
     <ItemContainer onClick={onClick}>
@@ -104,9 +111,9 @@ export const IndexCardItem = props => {
           subheader={subHeader || moment(modified).fromNow()}
         />
         <CardContent>
-          {owner && (
+          {metacard_owner && (
             <Typography variant="body2" color="textSecondary" component="p">
-              Owner: {owner}
+              Owner: {metacard_owner}
             </Typography>
           )}
         </CardContent>

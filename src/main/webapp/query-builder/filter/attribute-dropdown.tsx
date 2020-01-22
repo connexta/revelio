@@ -5,11 +5,10 @@ import TextField from '@material-ui/core/TextField'
 import { QueryFilterProps } from './individual-filter'
 import { getDefaultValue } from './filter-utils'
 import { getIn } from 'immutable'
-import {
-  sampleAttributeDefinitions,
-  AttributeDefinition,
-} from './dummyDefinitions'
+import sampleAttributeDefinitions from './sample-attribute-definitions'
 import { Comparators } from './comparator-dropdown'
+import { AttributeDefinition } from '../types'
+
 const AttributeDropdown = (props: QueryFilterProps) => {
   const { attributeDefinitions = sampleAttributeDefinitions, filter } = props
 

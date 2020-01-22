@@ -159,7 +159,7 @@ const fragment = gql`
     title
     description
     modified: metacard_modified
-    owner: metacard_owner
+    metacard_owner
     attributes: ui_attribute_group
   }
 `
@@ -169,7 +169,6 @@ const resultForms = gql`
     metacardsByTag(tag: "attribute-group") {
       attributes {
         ...ResultFormAttributes
-        owner: metacard_owner
       }
     }
   }
@@ -181,7 +180,6 @@ const useCreate = () => {
     mutation CreateResultForms($attrs: MetacardAttributesInput!) {
       createMetacard(attrs: $attrs) {
         ...ResultFormAttributes
-        owner: metacard_owner
       }
     }
     ${fragment}
@@ -313,7 +311,7 @@ export default () => {
   }
 
   const onCreate = form => {
-    const { attributes, modified, owner, ...rest } = form
+    const { attributes, modified, ...rest } = form
     create({
       variables: {
         attrs: {
@@ -321,7 +319,6 @@ export default () => {
           metacard_type: 'attribute-group',
           metacard_tags: ['VALID', 'attribute-group'],
           metacard_modified: modified,
-          metacard_owner: owner,
           ...rest,
         },
       },

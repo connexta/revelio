@@ -8,7 +8,7 @@ import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import AttributeDropdown from '../filter/attribute-dropdown'
 import ComparatorDropdown from '../filter/comparator-dropdown'
-import { sampleAttributeDefinitions } from '../filter/dummyDefinitions'
+import sampleAttributeDefinitions from '../filter/sample-attribute-definitions'
 const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
   .default
 
@@ -98,19 +98,21 @@ type TextFilterProps = QueryFilterProps & {
 }
 
 const TextFilter = (props: TextFilterProps) => {
-  const { enums = [], filter } = props
+  const { enums, filter } = props
   const errors = validateText(filter.value)
+
   return (
     <Autocomplete
-      freeSolo
       disableClearable
       autoSelect
+      freeSolo
+      defaultValue={filter.value} //don't remove defaultValue https://github.com/mui-org/material-ui/issues/19423
+      inputValue={filter.value}
       options={enums}
-      value={filter.value}
-      onChange={(_, value: any) => {
+      loading={props.loading}
+      onInputChange={(_, value: string) => {
         props.onChange({ ...filter, value })
       }}
-      loading={props.loading}
       renderInput={params => {
         return (
           <TextField
@@ -119,9 +121,6 @@ const TextFilter = (props: TextFilterProps) => {
             helperText={errors.value}
             placeholder="Use * for wildcard"
             variant="outlined"
-            onChange={event => {
-              props.onChange({ ...filter, value: event.target.value })
-            }}
             fullWidth
           />
         )

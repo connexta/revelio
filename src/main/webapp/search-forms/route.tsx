@@ -13,21 +13,22 @@ const {
 } = require('../index-cards')
 import { useState, Fragment } from 'react'
 import SearchFormEditor from './editor'
-import { SearchFormType } from '.'
+import { QueryType } from '../query-builder/types'
 import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 import Box from '@material-ui/core/Box'
+import { defaultFilter } from '../query-builder/filter/filter-utils'
 
 type SearchFormProps = {
-  onDelete: (form: SearchFormType) => void
-  onSave: (form: SearchFormType) => void
-  form?: SearchFormType
+  onDelete: (form: QueryType) => void
+  onSave: (form: QueryType) => void
+  form?: QueryType
 }
 
 const SearchForm = (props: SearchFormProps) => {
   const [editing, setEditing] = useState(false)
   const onCancel = () => setEditing(false)
-  const onSave = (form: SearchFormType) => {
+  const onSave = (form: QueryType) => {
     setEditing(false)
     props.onSave(form)
   }
@@ -55,13 +56,13 @@ const SearchForm = (props: SearchFormProps) => {
 }
 
 type AddProps = {
-  onCreate: (form: SearchFormType) => void
+  onCreate: (form: QueryType) => void
 }
 
 const AddSearchForm = (props: AddProps) => {
   const [editing, setEditing] = useState(false)
   const onCancel = () => setEditing(false)
-  const onSave = (form: SearchFormType) => {
+  const onSave = (form: QueryType) => {
     setEditing(false)
     props.onCreate(form)
   }
@@ -70,7 +71,16 @@ const AddSearchForm = (props: AddProps) => {
       {editing ? (
         <Dialog fullWidth maxWidth={false} open onClose={onCancel}>
           <Box height="calc(100vh - 128px)">
-            <SearchFormEditor onCancel={onCancel} onSave={onSave} />
+            <SearchFormEditor
+              form={{
+                filterTree: {
+                  type: 'AND',
+                  filters: [{ ...defaultFilter }],
+                },
+              }}
+              onCancel={onCancel}
+              onSave={onSave}
+            />
           </Box>
         </Dialog>
       ) : null}
@@ -80,12 +90,12 @@ const AddSearchForm = (props: AddProps) => {
 }
 
 type RouteProps = {
-  onDelete: (form: SearchFormType) => void
-  onSave: (form: SearchFormType) => void
-  onCreate: (form: SearchFormType) => void
+  onDelete: (form: QueryType) => void
+  onSave: (form: QueryType) => void
+  onCreate: (form: QueryType) => void
   loading?: boolean
   error?: any
-  forms: SearchFormType[]
+  forms: QueryType[]
 }
 
 const Route = (props: RouteProps) => {

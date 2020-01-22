@@ -5,7 +5,7 @@ import { getIn } from 'immutable'
 import Box from '@material-ui/core/Box'
 import AttributeDropdown from '../filter/attribute-dropdown'
 import ComparatorDropdown from '../filter/comparator-dropdown'
-import { sampleAttributeDefinitions } from '../filter/dummyDefinitions'
+import sampleAttributeDefinitions from '../filter/sample-attribute-definitions'
 
 const intRegex = /^(-?\d*$)|^$/
 const floatRegex = /^-?\d*(\.\d*)?$|^$/

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import IndividualFilter, { QueryFilter } from './individual-filter'
+import IndividualFilter from './individual-filter'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
@@ -7,15 +7,10 @@ import Add from '@material-ui/icons/Add'
 import { defaultFilter, filterHeaderButtonStyle } from './filter-utils'
 import Operator from './operator'
 import { isFilterGroup } from '../filter'
-import { AttributeDefinition } from './dummyDefinitions'
 import Fab from '@material-ui/core/Fab'
 
 import Remove from '@material-ui/icons/Remove'
-
-export type FilterGroupType = {
-  type: string
-  filters: Array<FilterGroupType | QueryFilter>
-}
+import { FilterGroupType, QueryFilter, AttributeDefinition } from '../types'
 
 export type FilterGroupProps = {
   limitDepth?: number // Used to limit number of nested groups

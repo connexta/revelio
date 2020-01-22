@@ -1,21 +1,4 @@
-export type AttributeDefinition = {
-  id: string
-  enums: string[]
-  type:
-    | 'STRING'
-    | 'XML'
-    | 'DATE'
-    | 'LOCATION'
-    | 'GEOMETRY'
-    | 'BOOLEAN'
-    | 'INTEGER'
-    | 'SHORT'
-    | 'LONG'
-    | 'FLOAT'
-    | 'DOUBLE'
-}
-
-export const sampleAttributeDefinitions = [
+const sampleAttributeDefinitions = [
   {
     type: 'XML',
     enums: [],
@@ -67,3 +50,4 @@ export const sampleAttributeDefinitions = [
     id: 'topic.vocabulary',
   },
 ]
+export default sampleAttributeDefinitions
