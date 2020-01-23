@@ -3,7 +3,7 @@ import { QueryFilterProps } from '../filter/individual-filter'
 import { makeDefaultSearchGeo } from '../filter'
 import { Location, geoToFilter } from '../../location'
 import AttributeDropdown from '../filter/attribute-dropdown'
-import { makeSearchGeoId } from '../filter/search-geo-factory'
+import { makeSearchGeoIdForFilter } from '../filter/search-geo-factory'
 import { wktToGeo } from '../../location/geo-to-wkt'
 
 const getGeojson = (filter: QueryFilterProps['filter']) => {
@@ -12,7 +12,7 @@ const getGeojson = (filter: QueryFilterProps['filter']) => {
   if (filter.value) {
     return wktToGeo({
       wkt: filter.value,
-      id: makeSearchGeoId(),
+      id: makeSearchGeoIdForFilter(filter.value),
       buffer: filter.distance || 0,
       bufferUnit: 'meters',
     })
