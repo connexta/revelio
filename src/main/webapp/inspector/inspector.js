@@ -50,7 +50,7 @@ const ThumbnailValue = props => {
         width: '100%',
       }}
     >
-      <Thumbnail src={`data:image/jpeg;base64,${value}`} />
+      <Thumbnail src={value} />
     </div>
   )
 }
@@ -157,7 +157,7 @@ const ActionLinks = props => {
             <Typography color="textSecondary" gutterBottom>
               <Link target="_blank" href={action.url}>
                 {' '}
-                {action.id}{' '}
+                {action.displayName || action.title || action.id}{' '}
               </Link>
             </Typography>
           </ListItem>
