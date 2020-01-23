@@ -95,10 +95,7 @@ const getCellContent = (attribute, result) => {
   }
 }
 
-const getId = result => {
-  debugger
-  result.metacard.attributes.id
-}
+const getId = result => result.metacard.attributes.id
 
 const Result = props => {
   const { attributes, selected, onClick, onSelect, onRemove, result } = props
