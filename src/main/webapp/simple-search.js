@@ -138,7 +138,7 @@ const Container = () => {
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
   const selectedResults = results.filter(result => {
-    return selected.has(result.metacard.properties.id)
+    return selected.has(result.metacard.attributes.id)
   })
 
   return (
