@@ -13,7 +13,7 @@ for (let i = 0; i < 20; i++) {
   genResults = genResults.concat(
     thumbnailResults.map(result => {
       const { id } = result.metacard.attributes
-      return setIn(result, ['metacard', 'properties', 'id'], `${id}${i}`)
+      return setIn(result, ['metacard', 'attributes', 'id'], `${id}${i}`)
     })
   )
 }

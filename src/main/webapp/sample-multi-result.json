@@ -94,7 +94,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "410",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -208,7 +208,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "1037",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -322,7 +322,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "created": "2020-01-06T09:23:25.036-0700",
         "point-of-contact": "admin@localhost.local",
         "resource-size": "512017",
@@ -443,7 +443,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "885",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -557,7 +557,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "836",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -671,7 +671,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "526",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -785,7 +785,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "777",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -899,7 +899,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "887",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -1013,7 +1013,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "852",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -1127,7 +1127,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "840",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -1241,7 +1241,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "4516",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -1355,7 +1355,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "771",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -1469,7 +1469,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "525",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -1583,7 +1583,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "1058",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -1697,7 +1697,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "773",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -1811,7 +1811,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "850",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -1925,7 +1925,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "1070",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -2039,7 +2039,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "1065",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -2153,7 +2153,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "886",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -2267,7 +2267,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "837",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -2381,7 +2381,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "525",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -2495,7 +2495,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "1018",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -2609,7 +2609,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "3203",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -2723,7 +2723,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "885",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -2837,7 +2837,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "838",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -2951,7 +2951,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "527",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -3065,7 +3065,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "410",
         "modified": "2019-09-30T15:17:43.710-0700",
@@ -3179,7 +3179,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "resource-size": "442231",
         "modified": "2019-09-03T14:48:14.581-0700",
@@ -3303,7 +3303,7 @@
       }
     ],
     "metacard": {
-      "properties": {
+      "attributes": {
         "point-of-contact": "system@localhost.local",
         "location": "POLYGON ((-115.073896 31.216337, -115.073896 36.987378, -109.019569 36.987378, -109.019569 31.216337, -115.073896 31.216337))",
         "resource-size": "1018",

@@ -49,7 +49,7 @@ const CITIES = [DC, LA, PARIS, PHOENIX]
 const genResults = (n = 100) =>
   new Array(n).fill(0).map((_v, i) => ({
     metacard: {
-      properties: {
+      attributes: {
         ...CITIES[Math.min(i, CITIES.length - 1)],
         id: (i + 1).toString(),
       },

@@ -27,18 +27,18 @@ const AttributeSelect = props => {
 }
 
 const getResultId = result => {
-  return result.getIn(['metacard', 'properties', 'id'])
+  return result.getIn(['metacard', 'attributes', 'id'])
 }
 
 const getAttributeSet = result => {
   return result
-    .getIn(['metacard', 'properties'])
+    .getIn(['metacard', 'attributes'])
     .keySeq()
     .toSet()
 }
 
 const getAttributeValue = (result, attribute) => {
-  return result.getIn(['metacard', 'properties']).get(attribute)
+  return result.getIn(['metacard', 'attributes']).get(attribute)
 }
 
 const getAttributeKeysFromResults = results => {
