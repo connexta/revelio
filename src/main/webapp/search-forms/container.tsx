@@ -60,7 +60,7 @@ const useDelete = () => {
 const useSave = () => {
   const mutation = gql`
     mutation SaveSearchForm($id: ID!, $attrs: MetacardAttributesInput!) {
-      saveMetacard(id: $id, attrs: $attrs) {
+      saveMetacard(id: $id, attributes: $attrs) {
         ...SearchFormAttributes
       }
     }
