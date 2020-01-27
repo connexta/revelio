@@ -30,7 +30,6 @@ import {
 } from 'geospatialdraw/bin/geometry/shape-factory'
 import { POLYGON, LINE } from 'geospatialdraw/bin/shapes/shape'
 import withCoordinateUnitTabs from './with-coordinate-unit-tabs'
-import { DrawProvider } from '../react-hooks/use-draw-interface'
 
 const MOCK_AJAX_DELAY = 2000
 
@@ -259,18 +258,16 @@ stories.add(`location with draw button`, () => {
   const [value, setValue] = useState(makeEmptyGeometry('location', LINE))
   const keyword = useKeyword(value)
   return (
-    <DrawProvider>
-      <Location
-        value={value}
-        onChange={update => {
-          action('onChange')(update)
-          setValue(update)
-        }}
-        editorProps={{
-          keyword,
-        }}
-      />
-    </DrawProvider>
+    <Location
+      value={value}
+      onChange={update => {
+        action('onChange')(update)
+        setValue(update)
+      }}
+      editorProps={{
+        keyword,
+      }}
+    />
   )
 })
 
