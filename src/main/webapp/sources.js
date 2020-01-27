@@ -43,7 +43,7 @@ export const sources = gql`
 `
 
 export const Sources = props => {
-  const { sources } = props
+  const sources = props.sources === undefined ? [] : props.sources
   const offlineCount = sources.filter(source => !source.isAvailable).length
   const getIcon = source => (source.isAvailable ? OnlineIcon : OfflineIcon)
 
