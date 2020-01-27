@@ -11,6 +11,7 @@ imageName="$DOCKER_REPO_URL:$currentHash"
 echo "Tagging image as: $imageName"
 
 docker build -t $imageName .
+docker tag $imageName $DOCKER_REPO_URL:latest
 docker push $imageName
 docker push $DOCKER_REPO_URL:latest
 
