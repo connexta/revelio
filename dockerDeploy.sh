@@ -8,7 +8,7 @@ echo "Tagging current image to push into $DOCKER_REPO_URL"
 currentHash=$(git rev-parse --short=8 HEAD)
 imageName="$DOCKER_REPO_URL:$currentHash"
 
-echo "Tagging image as: $imageName"
+echo "Tagging new image as: $imageName"
 
 docker build -t $imageName .
 docker tag $imageName $DOCKER_REPO_URL:latest
