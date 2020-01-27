@@ -12,5 +12,6 @@ echo "Tagging image as: $imageName"
 
 docker build -t $imageName .
 docker push $imageName
+docker push $DOCKER_REPO_URL:latest
 
 echo "Image push complete and viewable at https://hub.docker.com/repository/docker/$DOCKER_REPO_URL"
