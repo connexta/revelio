@@ -31,7 +31,7 @@ const useOpenClose = props => {
 const QueryCard = props => {
   const { title, onClick, QueryEditor, query } = props
   const [anchorEl, open, handleOpen, handleClose] = useOpenClose(props)
-  const { active: isDrawing } = useDrawInterface()
+  const [{ active: isDrawing }] = useDrawInterface()
   const [wasDrawing, setWasDrawing] = useState(false)
   const drawAnchorEl = useRef(null)
   useEffect(
