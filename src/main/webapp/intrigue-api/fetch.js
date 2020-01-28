@@ -20,7 +20,18 @@ const fetch = require('isomorphic-fetch')
 const ddfLocation = url.parse(
   process.env.DDF_LOCATION || 'https://localhost:8993'
 )
+
 const Origin = process.env.DDF_ORIGIN || ddfLocation.href
+
+const timeoutInterval = process.env.TIMEOUT || 5000
+
+const getAbortController = async () => {
+  if (typeof window !== 'undefined') {
+    return window.AbortController
+  } else {
+    return (await import('abort-controller')).default
+  }
+}
 
 const cacheBust = urlString => {
   const { query, ...rest } = url.parse(urlString)
@@ -36,8 +47,11 @@ const cacheBust = urlString => {
   })
 }
 
-module.exports = (url, { headers, ...opts } = {}) => {
-  return fetch(cacheBust(url), {
+const fetchRequest = async (url, timeout, { headers, ...opts } = {}) => {
+  const AbortController = await getAbortController()
+  const controller = new AbortController()
+  const fetchReq = fetch(cacheBust(url), {
+    signal: controller.signal,
     credentials: 'same-origin',
     cache: 'no-cache',
     ...opts,
@@ -49,4 +63,15 @@ module.exports = (url, { headers, ...opts } = {}) => {
       ...headers,
     },
   })
+  const timeoutPromise = new Promise(resolve => {
+    setTimeout(() => {
+      resolve({ message: 'Request exceeded desired timeout.' })
+      controller.abort()
+    }, timeout)
+  })
+  return Promise.race([fetchReq, timeoutPromise])
+}
+
+module.exports = (url, { headers, ...opts } = {}) => {
+  return fetchRequest(url, timeoutInterval, { headers, ...opts })
 }
