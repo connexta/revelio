@@ -329,7 +329,7 @@ export default () => {
   }
 
   const onSave = form => {
-    const { attributes, modified, owner, ...rest } = form
+    const { attributes, modified, ...rest } = form
     save({
       variables: {
         id: form.id,

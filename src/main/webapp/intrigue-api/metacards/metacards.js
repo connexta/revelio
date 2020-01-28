@@ -1,5 +1,5 @@
 const genSchema = require('./gen-schema')
-import { setIn, updateIn } from 'immutable'
+import { setIn, updateIn, merge } from 'immutable'
 
 const ROOT = '/search/catalog/internal'
 
@@ -386,20 +386,17 @@ const saveMetacard = async (parent, args, context) => {
   const [oldMetacardAttrs] = oldMetacard.attributes
   const { catalog, fromGraphqlName, toGraphqlName } = context
 
-  Object.keys(oldMetacardAttrs).forEach(attrs => {
-    if (attributes[attrs] === undefined) {
-      attributes[attrs] = oldMetacardAttrs[attrs]
-    }
-  })
+  const newMetacardAttrs = merge(oldMetacardAttrs, attributes)
   const body = {
     metacards: [
       {
         ids: [id],
         metacardType: args.attributes.metacard_type,
-        attributes,
+        attributes: renameKeys(fromGraphqlName, newMetacardAttrs),
       },
     ],
   }
+
   const res = await catalog.update(body)
 
   if (res) {
