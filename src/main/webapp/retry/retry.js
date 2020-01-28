@@ -38,7 +38,7 @@ export default props => {
               try {
                 await onRetry()
               } catch (err) {
-                /* eslint no-console: "error" */
+                //eslint-disable-next-line
                 console.log(err)
               }
               setLoading(false)
