@@ -91,13 +91,58 @@ const preferencesToGraphql = preferences => {
   return removeIn(transformed, ['querySettings', 'detail-level'])
 }
 
+const getSystemProperties = async fetch => {
+  const [configProperties, configUiProperties] = await Promise.all([
+    (await fetch(`${ROOT}/config`)).json(),
+    (await fetch(`${ROOT}/platform/config/ui`)).json(),
+  ])
+  return {
+    ...configProperties,
+    ...configUiProperties,
+  }
+}
+
+const getDefaultPreferences = async fetch => {
+  const systemProperties = await getSystemProperties(fetch)
+  return {
+    alertPersistence: true, // persist across sessions by default
+    alertExpiration: 2592000000, // 1 month in milliseconds
+    resultBlacklist: [],
+    resultCount: systemProperties.resultCount,
+    dateTimeFormat: {
+      datetimefmt: 'YYYY-MM-DD[T]HH:mm:ss.SSSZ',
+      timefmt: 'HH:mm:ssZ',
+    },
+    timeZone: 'Etc/UTC',
+    theme: { theme: 'sea' },
+    querySettings: {
+      src: undefined,
+      federation: 'enterprise',
+      sorts: [
+        {
+          attribute: 'modified',
+          direction: 'descending',
+        },
+      ],
+    },
+  }
+}
+
+//0 in guest, 1 in logged in user (alerts)
+const NUM_KEYS_IN_UNINITIALIZED_PREFERENCES = 1
+
 const user = async (parent, args, { fetch }) => {
   const res = await fetch(`${ROOT}/user`)
   const json = await res.json()
 
-  return setIn(json, ['preferences'], () =>
-    preferencesToGraphql(json.preferences)
-  )
+  let preferences = json.preferences
+  if (
+    Object.keys(preferences).length <= NUM_KEYS_IN_UNINITIALIZED_PREFERENCES
+  ) {
+    preferences = await getDefaultPreferences(fetch)
+  }
+
+  return setIn(json, ['preferences'], () => preferencesToGraphql(preferences))
 }
 
 const filterDeepHelper = filterFunction => object =>
