@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/connexta/revelio.svg?branch=master)](https://travis-ci.org/connexta/revelio)
 
 Revelio is a sandbox for migrating
-[Intrigue](https://github.com/codice/ddf/tree/master/ui/packages/catalog-ui-search)
+[Intrigue](https://github.com/codice/ddf-ui/tree/master/ui-frontend/packages/catalog-ui-search)
 features off of Backbone and Marionette towards GraphQL and React.
 
 ## Why are we doing this?
