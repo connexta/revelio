@@ -2,7 +2,7 @@ import React from 'react'
 import { storiesOf } from '../@storybook/react'
 const stories = storiesOf('Retry', module)
 import RetryNotification from './retry'
-import { text, boolean } from '@connexta/ace/@storybook/addon-knobs'
+import { text } from '@connexta/ace/@storybook/addon-knobs'
 import { action } from '@connexta/ace/@storybook/addon-actions'
 
 stories.add('Retry', () => {

@@ -38,6 +38,7 @@ export default props => {
               try {
                 await onRetry()
               } catch (err) {
+                /* eslint no-console: "error" */
                 console.log(err)
               }
               setLoading(false)
