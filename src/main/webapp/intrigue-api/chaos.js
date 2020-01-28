@@ -19,7 +19,7 @@ const randomize = async (opts = {}) => {
   const {
     sleepMin = 500,
     sleepMax = 1000,
-    errorRate = 0.55, // 10% error rate
+    errorRate = 0.1, // 10% error rate
   } = opts
 
   await sleep(randomBetween(sleepMin, sleepMax))
