@@ -404,7 +404,8 @@ const saveMetacard = async (parent, args, context) => {
     return renameKeys(toGraphqlName, {
       id,
       'metacard.modified': modified,
-      ...newMetacardAttrs,
+      'metacard.owner': newMetacardAttrs.metacard_owner,
+      ...attributes,
     })
   }
 }
