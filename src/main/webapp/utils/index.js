@@ -1,9 +1,13 @@
 const { mergeDeep, mergeDeepOverwriteLists } = require('./immutable-utils')
-const { formatDateString, getFileSize, isDate } = require('./human-readable')
+const {
+  formatDateString,
+  getFileSize,
+  isValidDate,
+} = require('./human-readable')
 module.exports = {
   formatDateString,
   getFileSize,
-  isDate,
+  isValidDate,
   mergeDeep,
   mergeDeepOverwriteLists,
 }
