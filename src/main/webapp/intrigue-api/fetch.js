@@ -19,8 +19,6 @@ const url = require('url')
 const qs = require('querystring')
 const fetch = require('isomorphic-fetch')
 const ddfLocation = url.parse(config('DDF_LOCATION'))
-console.log('DDF LOCATION ')
-console.log(ddfLocation)
 const Origin = ddfLocation.href
 
 const fetchRequest = async (url, { headers, ...opts } = {}) => {
@@ -39,8 +37,6 @@ const fetchRequest = async (url, { headers, ...opts } = {}) => {
 }
 
 const withCacheBusting = (fetcher, ddfLocation) => async (urlString, opts) => {
-  console.log('URL STRING IS: ')
-  console.log(urlString)
   const { query, ...rest } = url.parse(urlString)
   const { hostname, port, protocol } = ddfLocation
 
@@ -54,24 +50,8 @@ const withCacheBusting = (fetcher, ddfLocation) => async (urlString, opts) => {
     search: '?' + qs.stringify({ ...qs.parse(query), _: Date.now() }),
   })
 
-  console.log('The busted URL is: ' + bustedUrl)
-
   return await fetcher(bustedUrl, opts)
 }
-
-// const cacheBust = urlString => {
-//   const { query, ...rest } = url.parse(urlString)
-//   const { hostname, port, protocol } = ddfLocation
-//   return url.format({
-//     ...rest,
-//     hostname,
-//     port,
-//     protocol,
-//     ...(typeof window !== 'undefined' ? window.location : {}),
-//     pathname: rest.pathname,
-//     search: '?' + qs.stringify({ ...qs.parse(query), _: Date.now() }),
-//   })
-// }
 
 const getAbortController = async () => {
   if (typeof window !== 'undefined') {
@@ -82,8 +62,6 @@ const getAbortController = async () => {
 }
 
 const withTimeout = (fetcher, timeout) => async (url, opts) => {
-  console.log('This is url is:')
-  console.log(url)
   const AbortController = await getAbortController()
   const controller = new AbortController()
   const fetchReq = fetcher(url, {
