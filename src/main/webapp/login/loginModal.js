@@ -5,7 +5,7 @@ import Container from './container'
 export const LogInModal = props => {
   const { handleClose, open, label } = props
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open}>
       <Container handleClose={handleClose} label={label} />
     </Dialog>
   )

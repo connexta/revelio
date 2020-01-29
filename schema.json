@@ -28,19 +28,15 @@
             },
             {
               "name": "metacards",
-              "description": "#### Query the Catalog Framework for Metcards.\n\nBelow is an example filterTree to query for all resource Metacards:\n\n```javascript\n{\n  \"type\": \"=\",\n  \"property\": \"anyText\",\n  \"value\": \"*\"\n}\n```\n\nIf no metacard tag is specified in the filterTree, **only resource metacards** will be returned.",
+              "description": "#### Query the Catalog Framework for Metacards.\n\nBelow is an example filterTree to query for all resource Metacards:\n\n```javascript\n{\n  \"type\": \"=\",\n  \"property\": \"anyText\",\n  \"value\": \"*\"\n}\n```\n\nIf no metacard tag is specified in the filterTree, **only resource metacards** will be returned.",
               "args": [
                 {
                   "name": "filterTree",
                   "description": "",
                   "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Json",
-                      "ofType": null
-                    }
+                    "kind": "SCALAR",
+                    "name": "Json",
+                    "ofType": null
                   },
                   "defaultValue": null
                 },
@@ -372,6 +368,16 @@
               "type": {
                 "kind": "SCALAR",
                 "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "detail_level",
+              "description": "Result Form Name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               },
               "defaultValue": null
@@ -945,18 +951,6 @@
                   "name": "String",
                   "ofType": null
                 }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "thumbnail",
-              "description": "metacard attribute: **`thumbnail`**",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "Binary",
-                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -2348,6 +2342,18 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
+            },
+            {
+              "name": "thumbnail",
+              "description": "metacard attribute: **`thumbnail`**",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "inputFields": null,
@@ -2387,8 +2393,8 @@
         },
         {
           "kind": "SCALAR",
-          "name": "Binary",
-          "description": "Binary content embedded as a base64 String",
+          "name": "Geometry",
+          "description": "WKT embedded as a String",
           "fields": null,
           "inputFields": null,
           "interfaces": null,
@@ -2397,8 +2403,8 @@
         },
         {
           "kind": "SCALAR",
-          "name": "Geometry",
-          "description": "WKT embedded as a String",
+          "name": "Binary",
+          "description": "Binary content embedded as a base64 String",
           "fields": null,
           "inputFields": null,
           "interfaces": null,
@@ -4970,6 +4976,29 @@
               "deprecationReason": null
             },
             {
+              "name": "updateUserPreferences",
+              "description": "",
+              "args": [
+                {
+                  "name": "userPreferences",
+                  "description": "",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Json",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Json",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "logIn",
               "description": "",
               "args": [
@@ -5002,29 +5031,9 @@
                   "defaultValue": null
                 }
               ],
-              "type": { "kind": "SCALAR", "name": "String", "ofType": null },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-
-            {
-              "name": "updateUserPreferences",
-              "description": "",
-              "args": [
-                {
-                  "name": "userPreferences",
-                  "description": "",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Json",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                }
-              ],
               "type": {
                 "kind": "SCALAR",
-                "name": "Json",
+                "name": "String",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -5273,16 +5282,6 @@
                   "name": "String",
                   "ofType": null
                 }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "thumbnail",
-              "description": "metacard attribute: **`thumbnail`**",
-              "type": {
-                "kind": "SCALAR",
-                "name": "Binary",
-                "ofType": null
               },
               "defaultValue": null
             },
@@ -6465,6 +6464,16 @@
             {
               "name": "metacard_type",
               "description": "metacard attribute: **`metacard-type`**",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "thumbnail",
+              "description": "metacard attribute: **`thumbnail`**",
               "type": {
                 "kind": "SCALAR",
                 "name": "String",
