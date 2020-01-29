@@ -32,6 +32,9 @@ const typeDefs = `
     sorts: [QuerySortInput]
     spellcheck: Boolean
 
+    # Result Form Name
+    detail_level: String
+
     # Page size
     count: Int
 
@@ -105,7 +108,7 @@ const typeDefs = `
     # \`\`\`
     #
     # If no metacard tag is specified in the filterTree, **only resource metacards** will be returned.
-    metacards(filterTree: Json!, settings: QuerySettingsInput): QueryResponse
+    metacards(filterTree: Json, settings: QuerySettingsInput): QueryResponse
 
     metacardsByTag(tag: String!, settings: QuerySettingsInput): QueryResponse
     metacardsById(ids: [ID]!, settings: QuerySettingsInput): [QueryResponse]
@@ -135,11 +138,21 @@ import {
   saveQueryTemplate,
 } from '../query-templates/query-templates'
 
+const WILDCARD_FITLER = {
+  property: 'anyText',
+  type: 'ILIKE',
+  value: '%',
+}
+
 const getCql = ({ filterTree, cql }) => {
-  if (filterTree !== undefined) {
+  if (filterTree != undefined) {
     return transformFilterToCQL(filterTree)
   }
-  return cql
+  if (cql != undefined) {
+    return cql
+  }
+
+  return transformFilterToCQL(WILDCARD_FITLER)
 }
 
 const processQuery = ({ filterTree, cql, ...query }) => {
