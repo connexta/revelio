@@ -1,5 +1,5 @@
 const genSchema = require('./gen-schema')
-import { setIn, updateIn } from 'immutable'
+import { setIn, updateIn, merge } from 'immutable'
 
 const ROOT = '/search/catalog/internal'
 
@@ -118,7 +118,7 @@ const typeDefs = `
 
   extend type Mutation {
     createMetacard(attrs: MetacardAttributesInput!): MetacardAttributes
-    saveMetacard(id: ID!, attrs: MetacardAttributesInput!): MetacardAttributes
+    saveMetacard(id: ID!, attributes: MetacardAttributesInput!): MetacardAttributes
 
     # TBD: Should only be used when...
     # createMetacardFromJson(attrs: Json!): MetacardAttributes
@@ -294,28 +294,30 @@ const metacardsByTag = async (parent, args, context) => {
 }
 
 const metacardsById = async (parent, args, context) => {
-  return args.ids.map(id =>
-    metacards(
-      parent,
-      {
-        filterTree: {
-          type: 'AND',
-          filters: [
-            {
-              type: '=',
-              property: 'id',
-              value: id,
-            },
-            {
-              type: 'LIKE',
-              property: 'metacard-tags',
-              value: '%',
-            },
-          ],
+  return await Promise.all(
+    args.ids.map(id =>
+      metacards(
+        parent,
+        {
+          filterTree: {
+            type: 'AND',
+            filters: [
+              {
+                type: '=',
+                property: 'id',
+                value: id,
+              },
+              {
+                type: 'LIKE',
+                property: 'metacard-tags',
+                value: '%',
+              },
+            ],
+          },
+          settings: args.settings,
         },
-        settings: args.settings,
-      },
-      context
+        context
+      )
     )
   )
 }
@@ -368,45 +370,42 @@ const createMetacard = async (parent, args, context) => {
 }
 
 const saveMetacard = async (parent, args, context) => {
-  const { id, attrs } = args
+  const { id, attributes } = args
   if (
-    Array.isArray(attrs.metacard_tags) &&
-    attrs.metacard_tags.includes('query-template')
+    Array.isArray(attributes.metacard_tags) &&
+    attributes.metacard_tags.includes('query-template')
   ) {
     return await saveQueryTemplate(parent, args, context)
   }
 
-  const { fetch, fromGraphqlName, toGraphqlName } = context
+  const [oldMetacard] = await metacardsById(
+    parent,
+    { ids: [id], ...args },
+    context
+  )
+  const [oldMetacardAttrs] = oldMetacard.attributes
+  const { catalog, fromGraphqlName, toGraphqlName } = context
 
-  const attributes = Object.keys(attrs).map(attribute => {
-    const value = attrs[attribute]
-    return {
-      attribute: fromGraphqlName(attribute),
-      values: Array.isArray(value) ? value : [value],
-    }
-  })
+  const newMetacardAttrs = merge(oldMetacardAttrs, attributes)
+  const body = {
+    metacards: [
+      {
+        ids: [id],
+        metacardType: args.attributes.metacard_type,
+        attributes: renameKeys(fromGraphqlName, newMetacardAttrs),
+      },
+    ],
+  }
 
-  const body = [
-    {
-      ids: [id],
-      attributes,
-    },
-  ]
+  const res = await catalog.update(body)
 
-  const res = await fetch(`${ROOT}/metacards`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
-
-  if (res.ok) {
+  if (res) {
     const modified = new Date().toISOString()
     return renameKeys(toGraphqlName, {
       id,
       'metacard.modified': modified,
-      ...attrs,
+      'metacard.owner': newMetacardAttrs.metacard_owner,
+      ...attributes,
     })
   }
 }
