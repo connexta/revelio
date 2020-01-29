@@ -1,5 +1,6 @@
 import { AuthenticationError } from 'apollo-server-errors'
 
+import config from '../../configuration'
 import createRpcClient from './rpc'
 import fetch from './fetch'
 import withChaos from './chaos'
@@ -122,7 +123,7 @@ const context = args => {
 
   let wrappedFetch = withAuth(fetch, req)
 
-  if (process.env.CHAOS_ENABLED) {
+  if (config('CHAOS_ENABLED')) {
     wrappedFetch = withChaos(wrappedFetch)
   }
 

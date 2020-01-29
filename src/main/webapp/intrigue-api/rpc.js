@@ -17,6 +17,9 @@ const createClient = fetch => {
       body: JSON.stringify(req),
     })
 
+    // console.log('HERE!')
+    // console.log(res)
+
     const { result, error } = await res.json()
 
     if (error) {

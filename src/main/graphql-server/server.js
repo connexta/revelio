@@ -1,10 +1,11 @@
 require('babel-polyfill')
 
 const express = require('express')
+const config = require('../configuration')
 const router = require('./middleware')
 const compression = require('compression')
 const app = express()
-const port = process.env.EXPRESS_PORT || 4000
+const port = config('EXPRESS_PORT')
 const path = require('path')
 const fs = require('fs')
 const cachedBundleManifest = JSON.parse(

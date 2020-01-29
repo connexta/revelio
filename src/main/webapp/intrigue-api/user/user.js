@@ -133,6 +133,7 @@ const NUM_KEYS_IN_UNINITIALIZED_PREFERENCES = 1
 
 const user = async (parent, args, { fetch }) => {
   const res = await fetch(`${ROOT}/user`)
+  debugger
   const json = await res.json()
 
   let preferences = json.preferences
