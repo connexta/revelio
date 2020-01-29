@@ -35,6 +35,10 @@ then be reflected in Revelio.
     yarn install
     yarn start
 
+### Yarn Version
+
+One thing to note, please ensure minimum yarn version is at least `v1.21.0`. You may encounter errors such as `Error: Cannot find module 'MODULE NAME HERE'` if your yarn version is not high enough. 
+
 ### Production
 
 To run the production JavaScript code, do:
