@@ -212,7 +212,7 @@ const useCreate = () => {
 const useSave = () => {
   const mutation = gql`
     mutation SaveResultForms($id: ID!, $attrs: MetacardAttributesInput!) {
-      saveMetacard(id: $id, attrs: $attrs) {
+      saveMetacard(id: $id, attributes: $attrs) {
         ...ResultFormAttributes
       }
     }
@@ -329,14 +329,14 @@ export default () => {
   }
 
   const onSave = form => {
-    const { attributes, modified, owner, ...rest } = form
+    const { attributes, modified, ...rest } = form
     save({
       variables: {
         id: form.id,
         attrs: {
           ui_attribute_group: attributes,
           metacard_modified: modified,
-          metacard_owner: owner,
+          metacard_type: 'attribute-group',
           ...rest,
         },
       },

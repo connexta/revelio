@@ -77,15 +77,18 @@ export const AddCardItem = props => {
   const { onClick } = props
 
   return (
-    <ItemContainer
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-      onClick={onClick}
-    >
-      <AddCircleOutlineIcon style={{ width: '50%', height: '50%' }} />
+    <ItemContainer onClick={onClick}>
+      <CardActionArea
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        <AddCircleOutlineIcon style={{ width: '50%', height: '50%' }} />
+      </CardActionArea>
     </ItemContainer>
   )
 }
@@ -107,8 +110,8 @@ export const IndexCardItem = props => {
             </Typography>
           )}
         </CardContent>
+        {children}
       </CardActionArea>
-      {children}
     </ItemContainer>
   )
 }

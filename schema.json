@@ -4926,7 +4926,7 @@
                   "defaultValue": null
                 },
                 {
-                  "name": "attrs",
+                  "name": "attributes",
                   "description": "",
                   "type": {
                     "kind": "NON_NULL",
