@@ -8,6 +8,7 @@ try {
     env = JSON.parse(fs.readFileSync(configurationPath))
   }
 } catch (err) {
+  //eslint-disable-next-line
   console.error('Error reading in the environment configuration', err)
 }
 
