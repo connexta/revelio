@@ -12,6 +12,8 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 
+import SharingModal from '../sharing/sharing-modal'
+
 import {
   IndexCards,
   IndexCardItem,
@@ -74,7 +76,7 @@ const Item = props => {
       ) : null}
       <IndexCardItem {...form} onClick={() => setEditing(true)}>
         <Actions>
-          <ShareAction />
+          <ShareAction form={form} />
           <DeleteAction onDelete={onDelete} />
         </Actions>
       </IndexCardItem>
