@@ -18,7 +18,7 @@ const config = require('../../configuration')
 const url = require('url')
 const qs = require('querystring')
 const fetch = require('isomorphic-fetch')
-const ddfLocation = url.parse(config('DDF_LOCATION'))
+const ddfLocation = config('DDF_LOCATION')
 const Origin = ddfLocation.href
 
 const fetchRequest = async (url, { headers, ...opts } = {}) => {
