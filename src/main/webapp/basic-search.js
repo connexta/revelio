@@ -22,6 +22,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import Collapse from '@material-ui/core/Collapse'
 import SortOrder from './sort-order'
+import MatchTypes from './match-types'
 import { SourcesSelect } from './sources'
 import { makeDefaultSearchGeo } from './query-builder/filter'
 import { Location } from './location'
@@ -50,21 +51,6 @@ const timeAttributes = [
   'metacard.modified',
   'metacard.version.versioned-on',
   'modified',
-]
-
-const datatypes = [
-  'Interactive Resource',
-  'Moving Image',
-  'Still Image',
-  'Dataset',
-  'Collection',
-  'Event',
-  'Service',
-  'Software',
-  'Sound',
-  'Text',
-  'Image',
-  'Physical Object',
 ]
 
 const TextSearch = ({ text, handleChange }) => {
@@ -165,29 +151,10 @@ export const populateDefaultQuery = (
   phonetics: false,
 })
 
-const MatchTypes = ({ state = [], setState, errors = {} }) => {
+const MatchTypesFilter = ({ state = [], setState, errors = {} }) => {
   errors = errors.matchTypesErrors || {}
   return (
-    <FormControl fullWidth>
-      <InputLabel>Match Types</InputLabel>
-      <Select
-        error={errors.datatypes !== undefined}
-        multiple
-        value={state}
-        onChange={e => setState(e.target.value)}
-        renderValue={selected => selected.join(', ')}
-      >
-        {datatypes.map(datatype => (
-          <MenuItem key={datatype} value={datatype}>
-            <Checkbox checked={state.indexOf(datatype) > -1} />
-            <ListItemText primary={datatype} />
-          </MenuItem>
-        ))}
-      </Select>
-      <FormHelperText error={errors.datatypes !== undefined}>
-        {errors.datatypes}
-      </FormHelperText>
-    </FormControl>
+    <MatchTypes value={state} onChange={setState} errors={errors.datatypes} />
   )
 }
 
@@ -271,7 +238,7 @@ const BasicLocation = ({ state, setState }) => {
 const filters = {
   [LOCATION_KEY]: BasicLocation,
   timeRange: BasicTimeRange,
-  datatypes: MatchTypes,
+  datatypes: MatchTypesFilter,
   sources: BasicSources,
   sortOrder: BasicSortOrder,
 }

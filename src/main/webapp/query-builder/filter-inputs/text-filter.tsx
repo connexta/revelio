@@ -37,12 +37,9 @@ const FACET_WHITELIST = gql`
 
 const WithFacetedSuggestions = (props: QueryFilterProps) => {
   const { filter } = props
-  const { data, loading, error } = useQuery(FACET_WHITELIST)
+  const { data, loading } = useQuery(FACET_WHITELIST)
   if (loading) {
     return <TextFilterContainer {...props} loading={true} />
-  }
-  if (error) {
-    return <TextFilterContainer {...props} />
   }
 
   const attributeSuggestionList =
@@ -56,15 +53,12 @@ const WithFacetedSuggestions = (props: QueryFilterProps) => {
 
 const WithFacetedQuery = (props: QueryFilterProps) => {
   const { filter } = props
-  const { data, loading, error } = useQuery(FACETED_QUERY, {
+  const { data, loading } = useQuery(FACETED_QUERY, {
     variables: { attribute: filter.property },
   })
 
   if (loading) {
     return <TextFilterContainer {...props} loading={true} />
-  }
-  if (error) {
-    return <TextFilterContainer {...props} />
   }
 
   const enums = getIn(data, ['facet'], []).map((facet: any) => facet.value)
