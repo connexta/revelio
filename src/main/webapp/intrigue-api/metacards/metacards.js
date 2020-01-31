@@ -139,12 +139,6 @@ const WILDCARD_FITLER = {
   value: '%',
 }
 
-const WILDCARD_FITLER = {
-  property: 'anyText',
-  type: 'ILIKE',
-  value: '%',
-}
-
 const getCql = ({ filterTree, cql }) => {
   if (filterTree != undefined) {
     return transformFilterToCQL(filterTree)
