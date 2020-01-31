@@ -4,6 +4,8 @@ import { boolean } from '@storybook/addon-knobs'
 import { useState } from 'react'
 import SearchFormRoute from './route'
 import { SearchFormEditor } from './editor'
+import { action } from '@storybook/addon-actions'
+import { defaultFilter } from '../query-builder/filter/filter-utils'
 const { SelectionProvider } = require('../react-hooks/use-selection-interface')
 
 const stories = storiesOf('Search Forms', module)
@@ -13,6 +15,10 @@ const startingForms = [
     id: '1',
     title: 'Title 1',
     modified: new Date().toISOString(),
+    filterTree: {
+      type: 'AND',
+      filters: [{ ...defaultFilter }],
+    },
   },
   {
     id: '2',
@@ -67,7 +73,11 @@ stories.add('editor', () => {
   return (
     <SelectionProvider>
       <div style={{ height: '100vh' }}>
-        <SearchFormEditor />
+        <SearchFormEditor
+          onSearch={action('onSearch')}
+          onCancel={action('onCancel')}
+          onSave={action('onSave')}
+        />
       </div>
     </SelectionProvider>
   )

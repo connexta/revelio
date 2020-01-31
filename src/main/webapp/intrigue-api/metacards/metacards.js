@@ -132,11 +132,6 @@ const typeDefs = `
 `
 
 const { transformFilterToCQL } = require('./CQLUtils')
-import {
-  getQueryTemplates,
-  createQueryTemplate,
-  saveQueryTemplate,
-} from '../query-templates/query-templates'
 
 const WILDCARD_FITLER = {
   property: 'anyText',
@@ -196,16 +191,7 @@ const queries = (ids = []) => async (args, context) => {
     ],
   }
 
-  const res = await metacards({}, { filterTree }, context)
-
-  return res.attributes.map(attrs => {
-    const { filterTree } = attrs
-
-    return {
-      ...attrs,
-      filterTree: () => JSON.parse(filterTree),
-    }
-  })
+  return metacards({}, { filterTree }, context)
 }
 
 const lists = (id, fetch, toGraphqlName) => async () => {
@@ -257,11 +243,13 @@ const metacards = async (parent, args, { catalog, toGraphqlName, fetch }) => {
 
   const attributes = json.results.map(result => {
     const properties = renameKeys(toGraphqlName, result.metacard.properties)
+    const { filterTree } = properties
     return {
       ...properties,
       queries: queries(properties.queries),
       lists: lists(properties.id, fetch, toGraphqlName),
       thumbnail: createThumbnailUrl(result),
+      filterTree: () => filterTree && JSON.parse(filterTree),
     }
   })
 
@@ -289,9 +277,6 @@ const metacards = async (parent, args, { catalog, toGraphqlName, fetch }) => {
 }
 
 const metacardsByTag = async (parent, args, context) => {
-  if (args.tag === 'query-template') {
-    return await getQueryTemplates(parent, args, context)
-  }
   return metacards(
     parent,
     {
@@ -359,16 +344,13 @@ const facet = async (parent, args, { catalog }) => {
 
 const createMetacard = async (parent, args, context) => {
   const { attrs } = args
-  if (
-    Array.isArray(attrs.metacard_tags) &&
-    attrs.metacard_tags.includes('query-template')
-  ) {
-    return await createQueryTemplate(parent, args, context)
-  }
+
   const { catalog, fromGraphqlName, toGraphqlName } = context
 
-  const metacard = renameKeys(fromGraphqlName, attrs)
-
+  const metacard = renameKeys(fromGraphqlName, {
+    ...attrs,
+    filterTree: attrs.filterTree && JSON.stringify(attrs.filterTree),
+  })
   const metacardsToCreate = {
     metacards: [
       {
@@ -377,19 +359,18 @@ const createMetacard = async (parent, args, context) => {
       },
     ],
   }
-
   const res = await catalog.create(metacardsToCreate)
-  return renameKeys(toGraphqlName, res.createdMetacards[0].attributes)
+  return renameKeys(toGraphqlName, {
+    ...res.createdMetacards[0].attributes,
+    filterTree:
+      res.createdMetacards[0].attributes.filterTree &&
+      JSON.parse(res.createdMetacards[0].attributes.filterTree),
+  })
 }
 
 const saveMetacard = async (parent, args, context) => {
-  const { id, attributes } = args
-  if (
-    Array.isArray(attributes.metacard_tags) &&
-    attributes.metacard_tags.includes('query-template')
-  ) {
-    return await saveQueryTemplate(parent, args, context)
-  }
+  const { id } = args
+  let attributes = args.attributes
 
   const [oldMetacard] = await metacardsById(
     parent,
@@ -398,6 +379,11 @@ const saveMetacard = async (parent, args, context) => {
   )
   const [oldMetacardAttrs] = oldMetacard.attributes
   const { catalog, fromGraphqlName, toGraphqlName } = context
+  if (attributes.filterTree) {
+    attributes = setIn(attributes, ['filterTree'], () =>
+      JSON.parse(attributes.filterTree)
+    )
+  }
 
   const newMetacardAttrs = merge(oldMetacardAttrs, attributes)
   const body = {

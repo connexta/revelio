@@ -6,11 +6,8 @@ import Popover from '@material-ui/core/Popover'
 import MenuItem from '@material-ui/core/MenuItem'
 import DropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { Map, getIn } from 'immutable'
-import { QueryFilter } from './individual-filter'
-import {
-  AttributeDefinition,
-  sampleAttributeDefinitions,
-} from './dummyDefinitions'
+import sampleAttributeDefinitions from './sample-attribute-definitions'
+import { QueryFilter, AttributeDefinition } from '../types'
 
 const booleanComparators = ['=', 'IS NULL']
 const booleanAliases = Map({ '=': 'IS', 'IS NULL': 'IS EMPTY' })

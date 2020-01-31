@@ -1,4 +1,4 @@
-import { AttributeDefinition } from './dummyDefinitions'
+import { AttributeDefinition } from '../types'
 
 export const defaultFilter = {
   property: 'anyText',

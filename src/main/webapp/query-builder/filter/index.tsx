@@ -1,9 +1,7 @@
 import * as React from 'react'
-import IndividualFilter, {
-  QueryFilter,
-  QueryFilterProps,
-} from './individual-filter'
-import FilterGroup, { FilterGroupType, FilterGroupProps } from './filter-group'
+import IndividualFilter, { QueryFilterProps } from './individual-filter'
+import FilterGroup, { FilterGroupProps } from './filter-group'
+import { FilterGroupType, QueryFilter } from '../types'
 export {
   makeDefaultSearchGeo,
   makeSearchGeoIdForFilter,

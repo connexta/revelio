@@ -15,7 +15,7 @@ const SortOrder = require('../sort-order').default
 export type QuerySettingsType = {
   sources?: string[]
   sorts?: string[]
-  detail_level?: string | null //Result Form Name
+  detail_level?: string //Result Form Name
 }
 
 const getSorts = (sorts?: string[]) => {
@@ -71,15 +71,15 @@ type QuerySettingsProps = {
 const QuerySettings = (props: QuerySettingsProps) => {
   const { settings = {} } = props
   if (
-    settings.sources === undefined &&
-    settings.sorts === undefined &&
-    settings.detail_level === undefined
+    settings.sources == undefined &&
+    settings.sorts == undefined &&
+    settings.detail_level == undefined
   )
     return null
 
   return (
     <Section title="Search Settings">
-      {settings.sources !== undefined && (
+      {settings.sources != undefined && (
         <Box style={{ padding: '0px 16px' }}>
           <FilterCard
             label="Sources"
@@ -97,7 +97,7 @@ const QuerySettings = (props: QuerySettingsProps) => {
           </FilterCard>
         </Box>
       )}
-      {settings.sorts !== undefined && (
+      {settings.sorts != undefined && (
         <Box style={{ padding: '0px 16px' }}>
           <FilterCard
             label="Sorts"
@@ -119,7 +119,7 @@ const QuerySettings = (props: QuerySettingsProps) => {
           </FilterCard>
         </Box>
       )}
-      {settings.detail_level !== undefined && (
+      {settings.detail_level != undefined && (
         <Box style={{ padding: '0px 16px' }}>
           <FilterCard
             label="Result Form"
@@ -128,9 +128,17 @@ const QuerySettings = (props: QuerySettingsProps) => {
             }}
           >
             <ResultFormSelect
-              value={settings.detail_level}
-              onChange={(value: any) => {
-                props.onChange({ ...settings, detail_level: value })
+              value={
+                settings.detail_level === 'All Fields'
+                  ? null
+                  : settings.detail_level
+              }
+              onChange={(value: string | null) => {
+                let newValue = value
+                if (newValue === null) {
+                  newValue = 'All Fields'
+                }
+                props.onChange({ ...settings, detail_level: newValue })
               }}
             />
           </FilterCard>

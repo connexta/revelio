@@ -9,8 +9,8 @@ const fragment = gql`
     id
     title
     filterTree
-    modified
-    owner: metacard_owner
+    modified: metacard_modified
+    metacard_owner
     sorts
     sources
     detail_level
@@ -115,11 +115,17 @@ export default () => {
   }
   const [save] = useSave()
   const onSave = (form: any) => {
+    const { title, filterTree, id, sources, sorts, detail_level } = form
     save({
       variables: {
-        id: form.id,
+        id,
         attrs: {
-          ...form,
+          title,
+          filterTree,
+          id,
+          sources,
+          sorts,
+          detail_level,
           metacard_tags: ['query-template', 'VALID'],
         },
       },
@@ -128,11 +134,18 @@ export default () => {
 
   const [create] = useCreate()
   const onCreate = (form: any) => {
+    const { title, filterTree, id, sources, sorts, detail_level } = form
     create({
       variables: {
         attrs: {
-          ...form,
+          title,
+          filterTree,
+          id,
+          sources,
+          sorts,
+          detail_level,
           metacard_tags: ['query-template', 'VALID'],
+          metacard_type: 'query-template',
         },
       },
     })

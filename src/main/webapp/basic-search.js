@@ -23,7 +23,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import Collapse from '@material-ui/core/Collapse'
 import SortOrder from './sort-order'
 import { SourcesSelect } from './sources'
-import { makeDefaultSearchGeo } from './query-filters/filter'
+import { makeDefaultSearchGeo } from './query-builder/filter'
 import { Location } from './location'
 
 import {

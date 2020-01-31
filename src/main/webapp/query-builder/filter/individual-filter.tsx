@@ -1,27 +1,17 @@
 import * as React from 'react'
-import TextFilter from '../filter-input/text-filter'
-import LocationFilter from '../filter-input/location-filter'
-import DateFilter from '../filter-input/date-filter'
-import BooleanFilter from '../filter-input/boolean-filter'
-import NumberFilter from '../filter-input/number-filter'
+import TextFilter from '../filter-inputs/text-filter'
+import LocationFilter from '../filter-inputs/location-filter'
+import DateFilter from '../filter-inputs/date-filter'
+import BooleanFilter from '../filter-inputs/boolean-filter'
+import NumberFilter from '../filter-inputs/number-filter'
 // const FilterCard = require('../../basic-search').FilterCard
 // @ts-ignore require not working in storybook for some reason
 import { FilterCard } from '../../basic-search'
 import { getIn } from 'immutable'
-import {
-  AttributeDefinition,
-  sampleAttributeDefinitions,
-} from './dummyDefinitions'
+import sampleAttributeDefinitions from './sample-attribute-definitions'
 import { deserialize, serialize } from './filter-serialization'
-import { GeometryJSON } from 'geospatialdraw/bin/geometry/geometry'
+import { QueryFilter, AttributeDefinition } from '../types'
 
-export type QueryFilter = {
-  property: string //property name, ex: anyText
-  type: string // cql operator, ex: ILIKE
-  value: any
-  geojson?: GeometryJSON
-  distance?: number //buffer for location filter
-}
 export type QueryFilterProps = {
   onChange: (value: QueryFilter) => void
   onRemove?: () => void
