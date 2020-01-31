@@ -3,7 +3,7 @@ import { geoToFilter } from './location'
 import { makeSearchGeoIdForFilter } from './query-builder/filter'
 const { Map, Set, fromJS } = require('immutable')
 export const APPLY_TO_KEY = 'applyTo'
-export const DATATYPES_KEY = 'datatypes'
+export const MATCHTYPE_KEY = 'matchType'
 export const LOCATION_KEY = 'location'
 export const TEXT_KEY = 'text'
 export const TIME_RANGE_KEY = 'timeRange'
@@ -43,12 +43,12 @@ const relativeUnits = {
 // Create the Map
 const unitsMap = Map(fromJS(relativeUnits))
 
-const datatypeProperties = ['metadata-content-type', 'datatype']
-
 const parseGeoFilter = (filter = {}) =>
   geoJSONToGeometryJSON(makeSearchGeoIdForFilter(filter.value), filter.geojson)
 
-export const fromFilterTree = filterTree => {
+export const fromFilterTree = (filterTree, basicSearchSettings = {}) => {
+  const basicSearchMatchType =
+    basicSearchSettings.basicSearchMatchType || 'datatype'
   return filterTree.filters
     ? filterTree.filters.reduce((accumulator, filter) => {
         const { property, value, filters } = filter
@@ -78,9 +78,9 @@ export const fromFilterTree = filterTree => {
             )
           }
 
-          if (datatypeProperties.includes(filters[0].property)) {
+          if (filters[0].property === basicSearchMatchType) {
             const applyTo = Set(filters.map(({ value }) => value)).toJSON()
-            return accumulator.set(DATATYPES_KEY, applyTo)
+            return accumulator.set(MATCHTYPE_KEY, applyTo)
           }
         }
 
@@ -103,7 +103,10 @@ export const parseRelative = relative => {
   return {}
 }
 
-export const toFilterTree = basicData => {
+export const toFilterTree = (basicData, basicSearchSettings = {}) => {
+  const basicSearchMatchType =
+    basicSearchSettings.basicSearchMatchType || 'datatype'
+
   const getTimeRangeFilter = () => {
     const applyTo = basicData.getIn([TIME_RANGE_KEY, APPLY_TO_KEY])
     const rest = basicData.getIn([TIME_RANGE_KEY, 'value'])
@@ -126,24 +129,19 @@ export const toFilterTree = basicData => {
     }
   }
 
-  const getDatatypesFilter = () => {
-    const applyTo = basicData.get(DATATYPES_KEY)
+  const getMatchTypesFilter = () => {
+    const applyTo = basicData.get(MATCHTYPE_KEY)
     if (!applyTo || applyTo.length === 0) {
       return null
     }
-    const datatypeFilters = applyTo.map(value => ({
+    const matchTypeFilters = applyTo.map(value => ({
       type: 'ILIKE',
-      property: 'datatype',
-      value,
-    }))
-    const contentTypeFilters = applyTo.map(value => ({
-      type: 'ILIKE',
-      property: 'metadata-content-type',
+      property: basicSearchMatchType,
       value,
     }))
     return {
       type: 'OR',
-      filters: [...datatypeFilters, ...contentTypeFilters],
+      filters: [...matchTypeFilters],
     }
   }
 
@@ -159,9 +157,9 @@ export const toFilterTree = basicData => {
     ? geoToFilter(basicData.get(LOCATION_KEY))
     : null
   const timeRange = getTimeRangeFilter()
-  const datatypes = getDatatypesFilter()
+  const matchtypes = getMatchTypesFilter()
 
-  const filters = [text, location, timeRange, datatypes].filter(
+  const filters = [text, location, timeRange, matchtypes].filter(
     filter => filter !== null
   )
 

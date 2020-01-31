@@ -22,13 +22,18 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import Collapse from '@material-ui/core/Collapse'
 import SortOrder from './sort-order'
+import FacetedDropdown from './faceted-dropdown'
 import { SourcesSelect } from './sources'
 import { makeDefaultSearchGeo } from './query-builder/filter'
 import { Location } from './location'
+import { useQuery } from '@apollo/react-hooks'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import gql from 'graphql-tag'
+import { getIn } from 'immutable'
 
 import {
   APPLY_TO_KEY,
-  DATATYPES_KEY,
+  MATCHTYPE_KEY,
   LOCATION_KEY,
   TEXT_KEY,
   TIME_RANGE_KEY,
@@ -39,6 +44,7 @@ import TimeRange, {
   createTimeRange,
   validate as validateTimeRange,
 } from './time-range'
+import { useApolloFallback } from './react-hooks'
 
 const timeAttributes = [
   'created',
@@ -50,21 +56,6 @@ const timeAttributes = [
   'metacard.modified',
   'metacard.version.versioned-on',
   'modified',
-]
-
-const datatypes = [
-  'Interactive Resource',
-  'Moving Image',
-  'Still Image',
-  'Dataset',
-  'Collection',
-  'Event',
-  'Service',
-  'Software',
-  'Sound',
-  'Text',
-  'Image',
-  'Physical Object',
 ]
 
 const TextSearch = ({ text, handleChange }) => {
@@ -82,7 +73,7 @@ const TextSearch = ({ text, handleChange }) => {
 const filterMap = {
   location: 'Location',
   timeRange: 'Time Range',
-  datatypes: 'Match Types',
+  [MATCHTYPE_KEY]: 'Match Types',
   sources: 'Sources',
   sortOrder: 'Sort Order',
 }
@@ -165,29 +156,23 @@ export const populateDefaultQuery = (
   phonetics: false,
 })
 
-const MatchTypes = ({ state = [], setState, errors = {} }) => {
-  errors = errors.matchTypesErrors || {}
+const MatchTypes = ({
+  state = [],
+  setState,
+  errors = {},
+  basicSearchSettings = {},
+}) => {
+  const error = errors.matchTypesErrors || {}
   return (
-    <FormControl fullWidth>
-      <InputLabel>Match Types</InputLabel>
-      <Select
-        error={errors.datatypes !== undefined}
-        multiple
-        value={state}
-        onChange={e => setState(e.target.value)}
-        renderValue={selected => selected.join(', ')}
-      >
-        {datatypes.map(datatype => (
-          <MenuItem key={datatype} value={datatype}>
-            <Checkbox checked={state.indexOf(datatype) > -1} />
-            <ListItemText primary={datatype} />
-          </MenuItem>
-        ))}
-      </Select>
-      <FormHelperText error={errors.datatypes !== undefined}>
-        {errors.datatypes}
-      </FormHelperText>
-    </FormControl>
+    <FacetedDropdown
+      label="Match Types"
+      facetAttribute={basicSearchSettings.basicSearchMatchType || 'datatype'}
+      error={error.matchTypes}
+      multiple
+      value={state}
+      onChange={e => setState(e.target.value)}
+      renderValue={selected => selected.join(', ')}
+    />
   )
 }
 
@@ -271,7 +256,7 @@ const BasicLocation = ({ state, setState }) => {
 const filters = {
   [LOCATION_KEY]: BasicLocation,
   timeRange: BasicTimeRange,
-  datatypes: MatchTypes,
+  [MATCHTYPE_KEY]: MatchTypes,
   sources: BasicSources,
   sortOrder: BasicSortOrder,
 }
@@ -279,7 +264,7 @@ const filters = {
 const filterLabels = {
   [LOCATION_KEY]: 'Location',
   timeRange: 'Time Range',
-  datatypes: 'Match Types',
+  [MATCHTYPE_KEY]: 'Match Types',
   sources: 'Sources',
   sortOrder: 'Sort Order',
 }
@@ -294,7 +279,9 @@ const defaultFilters = {
 
 const getFilterTree = props => {
   if (props.query && props.query.filterTree) {
-    return fromFilterTree(props.query.filterTree)
+    return fromFilterTree(props.query.filterTree, {
+      basicSearchMatchType: props.basicSearchMatchType,
+    })
   }
 
   return Map({ text: '*' })
@@ -407,6 +394,9 @@ export const BasicSearch = props => {
                   setFilterTree(filterTree.set(filter, state))
                 }}
                 errors={submitted ? errors : {}}
+                basicSearchSettings={{
+                  basicSearchMatchType: props.basicSearchMatchType,
+                }}
               />
             </FilterCard>
           )
@@ -428,7 +418,9 @@ export const BasicSearch = props => {
             if (isEmpty(errors)) {
               props.onSearch(
                 populateDefaultQuery(
-                  toFilterTree(filterTree),
+                  toFilterTree(filterTree, {
+                    basicSearchMatchType: props.basicSearchMatchType,
+                  }),
                   filterTree.get('sources'),
                   filterTree.get('sortOrder')
                 )
@@ -479,9 +471,9 @@ const validate = (filterMap = Map()) => {
     }
   }
 
-  if (filterMap.has(DATATYPES_KEY)) {
+  if (filterMap.has(MATCHTYPE_KEY)) {
     const matchTypesErrors = validateMatchTypes(
-      filterMap.getIn([DATATYPES_KEY])
+      filterMap.getIn([MATCHTYPE_KEY])
     )
     if (!isEmpty(matchTypesErrors)) {
       errors['matchTypesErrors'] = matchTypesErrors
@@ -490,4 +482,30 @@ const validate = (filterMap = Map()) => {
   return errors
 }
 
-export default BasicSearch
+const MATCHTYPE_ATTRIBUTE = gql`
+  query getAttributeSuggestionList {
+    systemProperties {
+      basicSearchMatchType
+    }
+  }
+`
+
+const Container = props => {
+  const { data, loading } = useQuery(MATCHTYPE_ATTRIBUTE)
+  if (loading) {
+    return <LinearProgress />
+  }
+
+  const matchTypeAttribute = getIn(
+    data,
+    ['systemProperties', 'basicSearchMatchType'],
+    'datatype'
+  )
+
+  return <BasicSearch {...props} basicSearchMatchType={matchTypeAttribute} />
+}
+
+export default props => {
+  const Component = useApolloFallback(Container, BasicSearch)
+  return <Component {...props} />
+}
