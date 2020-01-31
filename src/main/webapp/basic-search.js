@@ -73,7 +73,7 @@ const TextSearch = ({ text, handleChange }) => {
 const filterMap = {
   location: 'Location',
   timeRange: 'Time Range',
-  matchTypes: 'Match Types',
+  [MATCHTYPE_KEY]: 'Match Types',
   sources: 'Sources',
   sortOrder: 'Sort Order',
 }
@@ -156,7 +156,7 @@ export const populateDefaultQuery = (
   phonetics: false,
 })
 
-const MatchTypesFilter = ({
+const MatchTypes = ({
   state = [],
   setState,
   errors = {},
@@ -256,7 +256,7 @@ const BasicLocation = ({ state, setState }) => {
 const filters = {
   [LOCATION_KEY]: BasicLocation,
   timeRange: BasicTimeRange,
-  matchTypes: MatchTypesFilter,
+  [MATCHTYPE_KEY]: MatchTypes,
   sources: BasicSources,
   sortOrder: BasicSortOrder,
 }
@@ -264,7 +264,7 @@ const filters = {
 const filterLabels = {
   [LOCATION_KEY]: 'Location',
   timeRange: 'Time Range',
-  matchTypes: 'Match Types',
+  [MATCHTYPE_KEY]: 'Match Types',
   sources: 'Sources',
   sortOrder: 'Sort Order',
 }
