@@ -105,7 +105,7 @@ export const IndexCardItem = props => {
 
   return (
     <ItemContainer onClick={onClick}>
-      <CardActionArea>
+      <CardActionArea component={'div'}>
         <CardHeader
           title={title}
           subheader={subHeader || moment(modified).fromNow()}
