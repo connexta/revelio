@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { BasicSearch } from './basic-search'
+import BasicSearch from './basic-search'
 import ResultTable from './results/results'
 import QueryStatus from './query-status'
 
