@@ -4,6 +4,7 @@ const renderer = require('./helpers/renderer')
 const { createLogger, format, transports } = require('winston')
 const { v4 } = require('uuid')
 const onFinished = require('on-finished')
+const config = require('../configuration')
 
 const {
   resolvers,
@@ -19,7 +20,7 @@ const Authorization = 'Basic ' + btoa('admin:admin')
 
 const router = express.Router()
 
-const LOG_LEVEL = process.env.LOG_LEVEL || 'info'
+const LOG_LEVEL = config('LOG_LEVEL')
 const rootLogger = createLogger({
   level: LOG_LEVEL,
   format: format.combine(
@@ -116,7 +117,7 @@ const captureGraphql = () => {
   }
 }
 
-if (process.env.GRAPHQL_CAPTURE) {
+if (config('GRAPHQL_CAPTURE')) {
   router.use(express.json())
   router.use('/graphql', captureGraphql())
 }

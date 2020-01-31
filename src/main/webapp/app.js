@@ -1,7 +1,7 @@
 import React from 'react'
 import Routes from './routes'
 import { BrowserRouter } from 'react-router-dom'
-import { createClientApollo } from './intrigue-api/graphql'
+import createClientApollo from './intrigue-api/create-client-apollo'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { LogInModal } from './login/loginModal'
 
