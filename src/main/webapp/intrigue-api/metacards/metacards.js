@@ -191,7 +191,8 @@ const queries = (ids = []) => async (args, context) => {
     ],
   }
 
-  return metacards({}, { filterTree }, context)
+  const res = await metacards({}, { filterTree }, context)
+  return res.attributes
 }
 
 const lists = (id, fetch, toGraphqlName) => async () => {
