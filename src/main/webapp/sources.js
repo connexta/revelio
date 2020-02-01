@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
@@ -18,6 +18,7 @@ import Typography from '@material-ui/core/Typography'
 import OnlineIcon from '@material-ui/icons/CloudDoneOutlined'
 import OfflineIcon from '@material-ui/icons/OfflineBoltOutlined'
 import Select from '@material-ui/core/Select'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import { useApolloFallback } from './react-hooks'
 
 const sourcesMessage = offlineCount => {
@@ -38,6 +39,18 @@ export const sources = gql`
       isAvailable
       sourceId
       local
+    }
+  }
+`
+
+const userPref = gql`
+  query userPref {
+    user {
+      preferences {
+        querySettings {
+          src
+        }
+      }
     }
   }
 `
@@ -78,8 +91,12 @@ export const Sources = props => {
 }
 
 const SourcesSelectComponent = props => {
-  const { sources = [], value = [], onChange } = props
-
+  const { sources = [], value = [], onChange, defaultValue } = props
+  useEffect(() => {
+    if ((!value || value.length === 0) && defaultValue) {
+      onChange(defaultValue)
+    }
+  }, [])
   return (
     <FormControl fullWidth>
       <InputLabel>Sources</InputLabel>
@@ -103,18 +120,22 @@ const SourcesSelectComponent = props => {
 }
 
 const SourcesSelectContainer = props => {
-  const { loading, data = {} } = useQuery(sources)
+  const sourcesQuery = useQuery(sources)
+  const userPrefsQuery = useQuery(userPref)
+  if (sourcesQuery.error || userPrefsQuery.error) {
+    return <div>Error</div>
+  }
+  if (sourcesQuery.loading || userPrefsQuery.loading) {
+    return <LinearProgress />
+  }
 
   return (
     <SourcesSelectComponent
       {...props}
-      sources={
-        loading
-          ? []
-          : data.sources
-              .filter(source => source.isAvailable)
-              .map(source => source.sourceId)
-      }
+      defaultValue={userPrefsQuery.data.user.preferences.querySettings.src}
+      sources={sourcesQuery.data.sources
+        .filter(source => source.isAvailable)
+        .map(source => source.sourceId)}
     />
   )
 }

@@ -160,7 +160,7 @@ const AttributeSelect = props => {
   return (
     <Autocomplete
       options={attributeDescriptors}
-      defaultValue={value}
+      value={value}
       autoSelect
       disableClearable
       onChange={(event, value) => {
@@ -223,7 +223,10 @@ const getNextAvailableSort = descriptors => {
 }
 
 const SortOrder = props => {
-  const { attributeDescriptors = sampleAttributeDescriptors } = props
+  const {
+    attributeDescriptors = sampleAttributeDescriptors,
+    defaultValue,
+  } = props
 
   const value = fromJS(props.value || [])
 
@@ -244,7 +247,11 @@ const SortOrder = props => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (value.isEmpty()) {
-      onChange(pushNextSort())
+      if (defaultValue) {
+        onChange(value.concat(defaultValue))
+      } else {
+        onChange(pushNextSort())
+      }
     }
   }, [])
 
@@ -307,6 +314,16 @@ const query = gql`
       id
       type
     }
+    user {
+      preferences {
+        querySettings {
+          sorts {
+            attribute
+            direction
+          }
+        }
+      }
+    }
   }
 `
 
@@ -321,7 +338,13 @@ const Container = props => {
 
   const attributeDescriptors = data.metacardTypes
 
-  return <SortOrder {...props} attributeDescriptors={attributeDescriptors} />
+  return (
+    <SortOrder
+      {...props}
+      attributeDescriptors={attributeDescriptors}
+      defaultValue={data.user.preferences.querySettings.sorts}
+    />
+  )
 }
 
 export default props => {

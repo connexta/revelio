@@ -89,7 +89,6 @@ const QuerySettings = (props: QuerySettingsProps) => {
           >
             <SourcesSelect
               value={settings.sources}
-              sources={['ddf.distribution']}
               onChange={(value: any) => {
                 props.onChange({ ...settings, sources: value })
               }}

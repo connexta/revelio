@@ -3,7 +3,7 @@ import FormControl from '@material-ui/core/FormControl'
 import MenuItem from '@material-ui/core/MenuItem'
 import gql from 'graphql-tag'
 import { getIn } from 'immutable'
-import React from 'react'
+import React, { useEffect } from 'react'
 import OutlinedSelect from '../input/outlined-select'
 import { useApolloFallback } from '../react-hooks'
 
@@ -15,10 +15,23 @@ const resultForms = gql`
         title
       }
     }
+    user {
+      preferences {
+        querySettings {
+          detail_level
+        }
+      }
+    }
   }
 `
 
 const ResultForms = props => {
+  useEffect(() => {
+    if (!props.value && props.defaultValue) {
+      props.onChange(props.defaultValue)
+    }
+  }, [])
+
   return (
     <FormControl fullWidth variant="outlined" margin="normal">
       <OutlinedSelect
@@ -50,6 +63,11 @@ const Container = props => {
     <ResultForms
       {...props}
       resultForms={getIn(data, ['metacardsByTag', 'attributes'])}
+      defaultValue={getIn(
+        data,
+        ['user', 'preferences', 'querySettings', 'detail_level'],
+        null
+      )}
     />
   )
 }
