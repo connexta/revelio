@@ -1,47 +1,25 @@
 import React, { useState } from 'react'
 
-import DateFnsUtils from '@date-io/date-fns'
 import FormControl from '@material-ui/core/FormControl'
 import FormHelperText from '@material-ui/core/FormHelperText'
 import InputLabel from '@material-ui/core/InputLabel'
+import moment from 'moment'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from '@material-ui/pickers'
+import { KeyboardDatePicker } from '@material-ui/pickers'
 
 import { Map } from 'immutable'
+import { isValidDate } from './utils'
 
 const relativeUnits = ['minutes', 'hours', 'days', 'months', 'years']
-
-const isValidDate = date => {
-  if (date === undefined) {
-    return false
-  }
-
-  if (date === null) {
-    return false
-  }
-
-  if (typeof date === 'string') {
-    return isValidDate(new Date(date))
-  }
-
-  if (date instanceof Date) {
-    return !isNaN(date.valueOf())
-  }
-
-  return false
-}
 
 export const createTimeRange = timeRange => {
   const {
     type = 'BEFORE',
-    value = new Date(),
-    from = new Date(),
-    to = new Date(),
+    value = moment().format(),
+    from = moment().format(),
+    to = moment().format(),
     last = 1,
     unit = 'days',
   } = timeRange
@@ -130,7 +108,7 @@ const createTimeRangeComponent = label => props => {
   return (
     <DatePicker
       label={label}
-      value={timeRange.value}
+      value={moment(timeRange.value)}
       error={errors.value !== undefined}
       helperText={errors.value}
       onChange={date => {
@@ -159,7 +137,7 @@ const TimeRangeDuring = props => {
         label="From"
         error={errors.from !== undefined}
         helperText={errors.from}
-        value={timeRange.from}
+        value={moment(timeRange.from)}
         onChange={date => {
           const value = `${date}/${timeRange.to}`
           setTimeRange({ ...timeRange, from: date, value })
@@ -170,7 +148,7 @@ const TimeRangeDuring = props => {
         label="To"
         error={errors.to !== undefined}
         helperText={errors.to}
-        value={timeRange.to}
+        value={moment(timeRange.to)}
         onChange={date => {
           timeRange.to = date
           const value = `${timeRange.from}/${date}`
@@ -237,31 +215,28 @@ const DatePicker = props => {
   const [state, setState] = useState(value)
 
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <KeyboardDatePicker
-        error={error}
-        helperText={helperText}
-        fullWidth
-        disableToolbar
-        variant="inline"
-        format="MM/dd/yyyy"
-        margin="normal"
-        id="date-picker-inline"
-        label={label}
-        value={state}
-        onChange={(date, value) => {
-          if (isValidDate(date)) {
-            onChange(date.toISOString())
-          } else {
-            onChange('')
-          }
-          setState(value)
-        }}
-        KeyboardButtonProps={{
-          'aria-label': 'change date',
-        }}
-      />
-    </MuiPickersUtilsProvider>
+    <KeyboardDatePicker
+      error={error}
+      helperText={helperText}
+      fullWidth
+      disableToolbar
+      variant="inline"
+      format="MM/DD/YYYY"
+      margin="normal"
+      label={label}
+      value={moment(state, 'MM/DD/YYYY').toISOString()}
+      onChange={(date, value) => {
+        if (isValidDate(date)) {
+          onChange(date.toISOString())
+        } else {
+          onChange('')
+        }
+        setState(value)
+      }}
+      KeyboardButtonProps={{
+        'aria-label': 'change date',
+      }}
+    />
   )
 }
 

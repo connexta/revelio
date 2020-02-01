@@ -3,6 +3,8 @@ import Routes from './routes'
 import { BrowserRouter } from 'react-router-dom'
 import createClientApollo from './intrigue-api/create-client-apollo'
 import { ApolloProvider } from '@apollo/react-hooks'
+import { MuiPickersUtilsProvider } from '@material-ui/pickers'
+import MomentUtils from '@date-io/moment'
 import { LogInModal } from './login/loginModal'
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
@@ -25,20 +27,22 @@ const App = () => {
     }
   }, [])
   return (
-    <ApolloProvider client={client}>
-      <BrowserRouter basename="/search/catalog">
-        <div>
-          <Routes />
-          {showLogin ? (
-            <LogInModal
-              label="Log In"
-              open={true}
-              handleClose={() => setShowLogIn(false)}
-            />
-          ) : null}
-        </div>
-      </BrowserRouter>
-    </ApolloProvider>
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+      <ApolloProvider client={client}>
+        <BrowserRouter basename="/search/catalog">
+          <div>
+            <Routes />
+            {showLogin ? (
+              <LogInModal
+                label="Log In"
+                open={true}
+                handleClose={() => setShowLogIn(false)}
+              />
+            ) : null}
+          </div>
+        </BrowserRouter>
+      </ApolloProvider>
+    </MuiPickersUtilsProvider>
   )
 }
 

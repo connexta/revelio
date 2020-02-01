@@ -1,5 +1,4 @@
-import DateFnsUtils from '@date-io/date-fns'
-const dateUtil = new DateFnsUtils()
+import moment from 'moment'
 
 // copied from Common.js in DDF
 export const getFileSize = item => {
@@ -75,14 +74,33 @@ export const getFileSize = item => {
   }
 }
 
-export const isDate = value => {
-  return dateUtil.isValid(value)
+export const isValidDate = date => {
+  if (date === undefined) {
+    return false
+  }
+
+  if (date === null) {
+    return false
+  }
+
+  if (typeof date === 'string') {
+    return isValidDate(new Date(date))
+  }
+
+  if (date instanceof Date) {
+    return !isNaN(date.valueOf())
+  }
+
+  if (date instanceof moment) {
+    return date.isValid()
+  }
+
+  return false
 }
 
 export const formatDateString = (dateString, format) => {
-  if (isDate(dateString)) {
-    const date = dateUtil.date(dateString)
-    return dateUtil.format(date, format)
+  if (isValidDate(dateString)) {
+    return moment(dateString).format(format)
   }
   return 'Invalid Date'
 }
