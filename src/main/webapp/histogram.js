@@ -74,9 +74,19 @@ const mapMultiValueAttrToResults = (values, result) => {
 const mapAttrValuesToResults = (results, attribute) => {
   return results.reduce((acc, result) => {
     const value = getAttributeValue(result, attribute)
+
+    // if this => { value: ['text', 'collection', 'image'], attribute: 'datatype' }
     if (List.isList(value)) {
+      // get this => {'text': result3, 'collection': result3, 'image': result3}*/
       const listValues = mapMultiValueAttrToResults(value, result)
-      return acc.merge(listValues)
+      /*
+        merge this => {'text': result3, 'collection': result3, 'image': result3}
+        into this => { 
+          {'collection':  [result1, result2]} 
+          {'text':  [result1, result2]} 
+          {'image':  [result1, result2]} 
+        }*/
+      return acc.mergeWith((oldVal, newVal) => oldVal.push(newVal), listValues)
     }
 
     const attrValue = prettyifyValue(value, attribute)
