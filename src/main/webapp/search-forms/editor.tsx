@@ -42,7 +42,7 @@ if (typeof window !== 'undefined') {
       import(//prettier-ignore
       // @ts-ignore
       /* webpackChunkName: "visualizations" */ '../workspaces/visualizations').then(
-        module => module.default
+        module => React.memo(module.default)
       ),
     loading: Loading,
   })
@@ -56,7 +56,7 @@ type FooterProps = {
 
 const Footer = (props: FooterProps) => {
   return (
-    <Box display="flex" justifyContent="flex-end" height="55px">
+    <Box display="flex" justifyContent="flex-end" height="100%">
       <Box
         style={{
           margin: 'auto 5px',
@@ -137,13 +137,15 @@ export const SearchFormEditor = (props: EditorProps) => {
             }}
           />
           <Divider style={{ marginTop: '5px' }} />
-          <Footer
-            onSave={() => {
-              props.onSave(searchForm)
-            }}
-            onCancel={props.onCancel}
-            onSearch={onSearch}
-          />
+          <Box width="100%" height="50px">
+            <Footer
+              onSave={() => {
+                props.onSave(searchForm)
+              }}
+              onCancel={props.onCancel}
+              onSearch={onSearch}
+            />
+          </Box>
         </Box>
 
         <Paper style={{ width: `calc(100% - 500px)`, height: '100%' }}>
