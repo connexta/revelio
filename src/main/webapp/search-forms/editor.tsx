@@ -42,7 +42,7 @@ if (typeof window !== 'undefined') {
       import(//prettier-ignore
       // @ts-ignore
       /* webpackChunkName: "visualizations" */ '../workspaces/visualizations').then(
-        module => React.memo(module.default)
+        module => React.memo(module.default) // Prevents the map from re-rendering when parent does
       ),
     loading: Loading,
   })
