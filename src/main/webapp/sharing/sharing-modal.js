@@ -13,12 +13,16 @@ export const SharingModal = props => {
     <div>
       {sharing ? (
         <Dialog
-          open={open}
+          open={sharing}
           onClose={() => {
             isSharing(false)
           }}
+          onClick={e => {
+            e.stopPropagation()
+            e.preventDefault()
+          }}
         >
-          <DialogTitle>{`${form.title} Access`}</DialogTitle>
+          <DialogTitle>{`"${form.title}" Access`}</DialogTitle>
           <DialogContent>
             <Container
               id={form.id}

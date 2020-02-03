@@ -1,33 +1,16 @@
 import React from 'react'
-import { LinearProgress } from '@material-ui/core'
-import { Divider } from '@material-ui/core'
-import { Tab } from '@material-ui/core'
-import { Tabs } from '@material-ui/core'
-import { Person } from '@material-ui/icons'
-import { Group } from '@material-ui/icons'
-import { FormControl } from '@material-ui/core'
-import { TextField } from '@material-ui/core'
-import { Button } from '@material-ui/core'
-import { Grid } from '@material-ui/core'
-import { MenuItem } from '@material-ui/core'
-const permissionLevels = [
-  {
-    value: 'READ',
-    label: 'Can read',
-  },
-  {
-    value: 'WRITE',
-    label: 'Can write',
-  },
-  {
-    value: 'ADMIN',
-    label: 'Owner',
-  },
-]
+import Box from '@material-ui/core/Box'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import Divider from '@material-ui/core/Divider'
+import Tab from '@material-ui/core/Tab'
+import Tabs from '@material-ui/core/Tabs'
+import Person from '@material-ui/icons/Person'
+import Group from '@material-ui/icons/Group'
+import Typography from '@material-ui/core/Typography'
+import UserSharePanel from './user-share-panel'
 
 export const Sharing = props => {
   const [tabValue, setTabValue] = React.useState(0)
-  const [permission, setPermissions] = React.useState('READ')
   const { loading, error, individuals, groups } = props
   if (loading) {
     return <LinearProgress />
@@ -40,7 +23,11 @@ export const Sharing = props => {
     <React.Fragment>
       <Tabs
         value={tabValue}
-        onChange={(_e, v) => setTabValue(v)}
+        onChange={(e, v) => {
+          e.stopPropagation()
+          e.preventDefault()
+          setTabValue(v)
+        }}
         variant="fullWidth"
         scrollButtons="on"
         indicatorColor="primary"
@@ -50,45 +37,16 @@ export const Sharing = props => {
         <Tab label="Groups" icon={<Group />} />
       </Tabs>
       <Divider />
-      <FormControl>
-        <Grid
-          spacing={3}
-          alignItems="center"
-          style={{ margineBottom: '10px' }}
-          justify="flex-start"
-          container
-        >
-          <Grid item style={{ width: '400px' }}>
-            <TextField label="Enter a user" variant="outlined" />
-          </Grid>
-          <Grid item>
-            <Button
-              color="primary"
-              variant="contained"
-              style={{ position: 'relative' }}
-            >
-              Share
-            </Button>
-          </Grid>
-          <Grid item>
-            <TextField
-              select
-              style={{ position: 'relative' }}
-              label="Permission"
-              value={permission}
-              onChange={e => {
-                setPermissions(e.target.value)
-              }}
-            >
-              {permissionLevels.map(perm => (
-                <MenuItem key={perm.value} value={perm.value}>
-                  {perm.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-        </Grid>
-      </FormControl>
+      <Typography
+        component="div"
+        role="tabpanel"
+        hidden={0 !== tabValue}
+        id={`scrollable-force-tabpanel-${tabValue}`}
+      >
+        <Box p={1}>
+          <UserSharePanel />
+        </Box>
+      </Typography>
     </React.Fragment>
   )
 }
