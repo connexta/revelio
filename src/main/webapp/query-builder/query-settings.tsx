@@ -103,7 +103,9 @@ const QuerySettings = (props: QuerySettingsProps) => {
               onChange={(value: any) => {
                 props.onChange({
                   ...settings,
-                  sorts: value,
+                  sorts: value.map(
+                    (sort: any) => `${sort.attribute},${sort.direction}`
+                  ),
                 })
               }}
             />

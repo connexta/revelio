@@ -98,7 +98,13 @@ const searchFormToSearch = (form: QueryType) => {
   return {
     filterTree,
     srcs: srcs || ['ddf.distribution'],
-    sorts: sorts || [],
+    sorts: (sorts || []).map(sort => {
+      const splitIndex = sort.lastIndexOf(',')
+      return {
+        attribute: sort.substring(0, splitIndex),
+        direction: sort.substring(splitIndex + 1, sort.length),
+      }
+    }),
     detail_level: detail_level === 'All Fields' ? undefined : detail_level,
   }
 }
