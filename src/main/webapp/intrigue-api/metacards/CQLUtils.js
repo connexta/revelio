@@ -23,7 +23,7 @@ export const transformFilterToCQL = filter => {
 const sanitizeGeometryCql = cqlString => {
   //sanitize polygons
   let polygons = cqlString.match(
-    /'POLYGON\(\((-?[0-9]*.?[0-9]* -?[0-9]*.?[0-9]*,?)*\)\)'/g
+    /'POLYGON *\(\((-?[0-9]*.?[0-9]* -?[0-9]*.?[0-9]*,?)*\)\)'/g
   )
   if (polygons) {
     polygons.forEach(polygon => {
@@ -32,7 +32,7 @@ const sanitizeGeometryCql = cqlString => {
   }
 
   //sanitize multipolygons
-  let multipolygons = cqlString.match(/'MULTIPOLYGON\(\(\(.*\)\)\)'/g)
+  let multipolygons = cqlString.match(/'MULTIPOLYGON *\(\(\(.*\)\)\)'/g)
   if (multipolygons) {
     multipolygons.forEach(multipolygon => {
       cqlString = cqlString.replace(
