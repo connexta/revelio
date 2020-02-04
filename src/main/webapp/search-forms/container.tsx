@@ -127,6 +127,7 @@ export default () => {
           sorts,
           detail_level,
           metacard_tags: ['query-template', 'VALID'],
+          metacard_type: 'query-template',
         },
       },
     })

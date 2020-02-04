@@ -381,12 +381,15 @@ const saveMetacard = async (parent, args, context) => {
   const [oldMetacardAttrs] = oldMetacard.attributes
   const { catalog, fromGraphqlName, toGraphqlName } = context
   if (attributes.filterTree) {
-    attributes = setIn(attributes, ['filterTree'], () =>
-      JSON.parse(attributes.filterTree)
+    attributes = setIn(
+      attributes,
+      ['filterTree'],
+      JSON.stringify(attributes.filterTree)
     )
   }
 
   const newMetacardAttrs = merge(oldMetacardAttrs, attributes)
+
   const body = {
     metacards: [
       {
@@ -405,7 +408,10 @@ const saveMetacard = async (parent, args, context) => {
       id,
       'metacard.modified': modified,
       'metacard.owner': newMetacardAttrs.metacard_owner,
-      ...attributes,
+      ...res.updatedMetacards[0].attributes,
+      filterTree:
+        res.updatedMetacards[0].attributes.filterTree &&
+        JSON.parse(res.updatedMetacards[0].attributes.filterTree),
     })
   }
 }

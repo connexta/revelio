@@ -7,16 +7,11 @@ import IconButton from '@material-ui/core/IconButton'
 import Collapse from '@material-ui/core/Collapse'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
+import { QuerySettingsType } from './types'
 const ResultFormSelect = require('../user-settings/result-form-select').default
 const { SourcesSelect } = require('../sources')
 const { FilterCard } = require('../basic-search')
 const SortOrder = require('../sort-order').default
-
-export type QuerySettingsType = {
-  sources?: string[]
-  sorts?: string[]
-  detail_level?: string //Result Form Name
-}
 
 const getSorts = (sorts?: string[]) => {
   if (!sorts) return undefined
@@ -28,7 +23,6 @@ const getSorts = (sorts?: string[]) => {
     }
   })
 }
-
 const Section = (props: { title: string; children: ReactNode }) => {
   const [open, setOpen] = useState(true)
   const Arrow = open ? KeyboardArrowUpIcon : KeyboardArrowDownIcon
@@ -84,7 +78,7 @@ const QuerySettings = (props: QuerySettingsProps) => {
           <FilterCard
             label="Sources"
             onRemove={() => {
-              props.onChange({ ...settings, sources: undefined })
+              props.onChange({ ...settings, sources: null })
             }}
           >
             <SourcesSelect
@@ -101,7 +95,7 @@ const QuerySettings = (props: QuerySettingsProps) => {
           <FilterCard
             label="Sorts"
             onRemove={() => {
-              props.onChange({ ...settings, sorts: undefined })
+              props.onChange({ ...settings, sorts: null })
             }}
           >
             <SortOrder
@@ -123,7 +117,7 @@ const QuerySettings = (props: QuerySettingsProps) => {
           <FilterCard
             label="Result Form"
             onRemove={() => {
-              props.onChange({ ...settings, detail_level: undefined })
+              props.onChange({ ...settings, detail_level: null })
             }}
           >
             <ResultFormSelect

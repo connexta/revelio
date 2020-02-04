@@ -1,12 +1,9 @@
 import { GeometryJSON } from 'geospatialdraw/bin/geometry/geometry'
 
-export type QueryType = {
+export type QueryType = QuerySettingsType & {
   title?: string
   filterTree?: FilterGroupType
   id?: string
-  sources?: string[]
-  sorts?: string[]
-  detail_level?: string //Result Form title
   metacard_modified?: string
   metacard_owner?: string
 }
@@ -39,4 +36,9 @@ export type AttributeDefinition = {
     | 'LONG'
     | 'FLOAT'
     | 'DOUBLE'
+}
+export type QuerySettingsType = {
+  sources?: string[] | null
+  sorts?: string[] | null
+  detail_level?: string | null //Result Form title
 }
