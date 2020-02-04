@@ -1,7 +1,14 @@
-import * as React from 'react'
-
-import LinearProgress from '@material-ui/core/LinearProgress'
+import Box from '@material-ui/core/Box'
 import Dialog from '@material-ui/core/Dialog'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import Snackbar from '@material-ui/core/Snackbar'
+import SnackbarContent from '@material-ui/core/SnackbarContent'
+import * as React from 'react'
+import { Fragment, useState } from 'react'
+import { defaultFilter } from '../query-builder/filter/filter-utils'
+import QueryBuilder from '../query-builder/query-builder'
+import { QueryType } from '../query-builder/types'
+import SearchFormEditor from './editor'
 
 const {
   IndexCards,
@@ -11,13 +18,6 @@ const {
   ShareAction,
   DeleteAction,
 } = require('../index-cards')
-import { useState, Fragment } from 'react'
-import SearchFormEditor from './editor'
-import { QueryType } from '../query-builder/types'
-import Snackbar from '@material-ui/core/Snackbar'
-import SnackbarContent from '@material-ui/core/SnackbarContent'
-import Box from '@material-ui/core/Box'
-import { defaultFilter } from '../query-builder/filter/filter-utils'
 
 type SearchFormProps = {
   onDelete: (form: QueryType) => void
@@ -27,6 +27,7 @@ type SearchFormProps = {
 
 const SearchForm = (props: SearchFormProps) => {
   const [editing, setEditing] = useState(false)
+  const [form, setForm] = useState(props.form)
   const onCancel = () => setEditing(false)
   const onSave = (form: QueryType) => {
     setEditing(false)
@@ -38,7 +39,10 @@ const SearchForm = (props: SearchFormProps) => {
         <Dialog fullWidth maxWidth={false} open onClose={onCancel}>
           <Box height="calc(100vh - 128px)">
             <SearchFormEditor
-              form={props.form}
+              queryBuilder={QueryBuilder}
+              title={'Search Form Editor'}
+              query={form}
+              onChange={(form: QueryType) => setForm(form)}
               onCancel={onCancel}
               onSave={onSave}
             />
@@ -59,12 +63,20 @@ type AddProps = {
   onCreate: (form: QueryType) => void
 }
 
+const defaultForm: QueryType = {
+  filterTree: {
+    type: 'AND',
+    filters: [{ ...defaultFilter }],
+  },
+}
 const AddSearchForm = (props: AddProps) => {
   const [editing, setEditing] = useState(false)
+  const [form, setForm] = useState(defaultForm)
   const onCancel = () => setEditing(false)
   const onSave = (form: QueryType) => {
     setEditing(false)
     props.onCreate(form)
+    setForm(defaultForm)
   }
   return (
     <Fragment>
@@ -72,12 +84,10 @@ const AddSearchForm = (props: AddProps) => {
         <Dialog fullWidth maxWidth={false} open onClose={onCancel}>
           <Box height="calc(100vh - 128px)">
             <SearchFormEditor
-              form={{
-                filterTree: {
-                  type: 'AND',
-                  filters: [{ ...defaultFilter }],
-                },
-              }}
+              queryBuilder={QueryBuilder}
+              title={'Search Form Editor'}
+              query={form}
+              onChange={(form: QueryType) => setForm(form)}
               onCancel={onCancel}
               onSave={onSave}
             />
@@ -119,10 +129,10 @@ const Route = (props: RouteProps) => {
       {forms
         .slice()
         .sort((a: any, b: any) => (a.modified > b.modified ? -1 : 1))
-        .map((form, i) => {
+        .map(form => {
           return (
             <SearchForm
-              key={i}
+              key={form.id}
               form={form}
               onDelete={() => {
                 onDelete(form)
