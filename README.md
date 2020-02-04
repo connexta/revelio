@@ -30,7 +30,8 @@ specialized components, such as
 
 Revelio should be run alongside an instance of [DDF](https://github.com/codice/ddf).
 Changes made on DDF (creating/deleting workspaces, result forms, etc.) will
-then be reflected in Revelio.
+then be reflected in Revelio. Revelio uses the [RPC](https://github.com/connexta/ddf-jsonrpc) API
+to communicate with DDF. The jar for the rpc endpoint will need to be hot deployed to DDF.
 
     yarn install
     yarn start
