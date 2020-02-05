@@ -1,20 +1,24 @@
 import React from 'react'
 import FormControl from '@material-ui/core/FormControl'
 import Button from '@material-ui/core/Button'
-import Grid from '@material-ui/core/Grid'
 import UserAddRow from './user-add-row'
 
 export const UserSharePanel = props => {
   const [numOfRows, setNumOfRows] = React.useState(1)
+  const [sharing, setSharing] = React.useState({})
   const { individuals = {} } = props
   return (
     <FormControl style={{ width: '100%' }}>
-      {Object.keys(individuals).map(permission => {
-        return individuals[permission].map(user => {
-          return <UserAddRow value={user} />
-        })
-      })}
-      {Array(numOfRows).fill(<UserAddRow />)}
+      <div style={{ maxHeight: '400px', overflow: 'auto', paddingTop: '.5em' }}>
+        {Object.keys(individuals).map(permission => {
+          if (Array.isArray(individuals[permission])) {
+            return individuals[permission].map((user, index) => {
+              return <UserAddRow key={index} value={user} level={permission} />
+            })
+          }
+        })}
+        {Array(numOfRows).fill(<UserAddRow />)}
+      </div>
       <Button
         color="primary"
         variant="contained"
@@ -25,18 +29,6 @@ export const UserSharePanel = props => {
       >
         + new user
       </Button>
-      <Grid spacing={1} container style={{ marginBottom: '.625rem' }}>
-        <Grid item style={{ width: '50%' }}>
-          <Button color="primary" variant="outlined" fullWidth>
-            Cancel
-          </Button>
-        </Grid>
-        <Grid item style={{ width: '50%' }}>
-          <Button color="primary" variant="contained" fullWidth>
-            Save
-          </Button>
-        </Grid>
-      </Grid>
     </FormControl>
   )
 }

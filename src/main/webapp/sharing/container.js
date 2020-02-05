@@ -16,7 +16,6 @@ const getSharingAttributes = id => {
         groups {
           read
           write
-          admin
         }
       }
     }
@@ -35,6 +34,7 @@ const Container = props => {
       individuals={individuals}
       groups={groups}
       id={props.id}
+      handleClose={props.handleClose}
     />
   )
 }

@@ -349,7 +349,6 @@ const metacardSharingAttributes = async (parent, args, context) => {
     groups: {
       read: metacardAttrs.security_access_groups_read || [],
       write: metacardAttrs.security_access_groups || [],
-      admin: metacardAttrs.security_access_administrators || [],
     },
   }
 }

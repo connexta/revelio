@@ -6,15 +6,15 @@ import Button from '@material-ui/core/Button'
 
 const permissionLevels = [
   {
-    value: 'READ',
+    value: 'read',
     label: 'Can read',
   },
   {
-    value: 'WRITE',
+    value: 'write',
     label: 'Can write',
   },
   {
-    value: 'ADMIN',
+    value: 'admin',
     label: 'Owner',
   },
 ]
@@ -46,17 +46,20 @@ const groups = [
   },
 ]
 
-export const UserAddRow = props => {
-  const [permission, setPermissions] = React.useState('READ')
-  const [group, setGroup] = React.useState('ADMIN')
+export const GroupAddRow = props => {
+  const { value = '', level = '' } = props
+  const [permission, setPermissions] = React.useState(
+    level === '' ? 'read' : level
+  )
+  const [group, setGroup] = React.useState(value === '' ? 'ADMIN' : value)
   return (
     <Grid
-      spacing={1}
+      spacing={2}
       style={{ marginBottom: '.625rem', width: '100%' }}
       justify="flex-start"
       container
     >
-      <Grid item xs={7}>
+      <Grid item xs={6}>
         <TextField
           label="Group"
           select
@@ -73,16 +76,7 @@ export const UserAddRow = props => {
           ))}
         </TextField>
       </Grid>
-      <Grid item>
-        <Button
-          color="primary"
-          variant="contained"
-          style={{ position: 'relative', height: '100%', width: '100%' }}
-        >
-          Share
-        </Button>
-      </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={4}>
         <TextField
           select
           label="Permission"
@@ -99,8 +93,17 @@ export const UserAddRow = props => {
           ))}
         </TextField>
       </Grid>
+      <Grid item xs={2}>
+        <Button
+          color="primary"
+          variant="contained"
+          style={{ position: 'relative', height: '100%', width: '100%' }}
+        >
+          Remove
+        </Button>
+      </Grid>
     </Grid>
   )
 }
 
-export default UserAddRow
+export default GroupAddRow
