@@ -6,12 +6,12 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 
 const ignorableStatusCodes = new Set(['UNAUTHENTICATED'])
 const hasIgnorable = err => {
-  if (!err) return false
   if (err && err.graphQLErrors) {
     return (
       err.graphQLErrors.filter(error => ignorableStatusCodes.has(error.message))
         .length > 0
     )
+    return false
   }
 }
 
