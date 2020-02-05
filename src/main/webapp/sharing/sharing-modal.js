@@ -13,6 +13,7 @@ export const SharingModal = props => {
     <div>
       {sharing ? (
         <Dialog
+          fullWidth={true}
           open={sharing}
           onClose={() => {
             isSharing(false)
@@ -22,7 +23,9 @@ export const SharingModal = props => {
             e.preventDefault()
           }}
         >
-          <DialogTitle>{`"${form.title}" Access`}</DialogTitle>
+          <DialogTitle style={{ textAlign: 'center' }}>{`"${
+            form.title
+          }" Access`}</DialogTitle>
           <DialogContent>
             <Container
               id={form.id}

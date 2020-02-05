@@ -8,6 +8,7 @@ import Person from '@material-ui/icons/Person'
 import Group from '@material-ui/icons/Group'
 import Typography from '@material-ui/core/Typography'
 import UserSharePanel from './user-share-panel'
+import GroupSharePanel from './group-share-panel'
 
 export const Sharing = props => {
   const [tabValue, setTabValue] = React.useState(0)
@@ -24,8 +25,6 @@ export const Sharing = props => {
       <Tabs
         value={tabValue}
         onChange={(e, v) => {
-          e.stopPropagation()
-          e.preventDefault()
           setTabValue(v)
         }}
         variant="fullWidth"
@@ -42,9 +41,21 @@ export const Sharing = props => {
         role="tabpanel"
         hidden={0 !== tabValue}
         id={`scrollable-force-tabpanel-${tabValue}`}
+        style={{ marginTop: '.625rem' }}
       >
-        <Box p={1}>
+        <Box>
           <UserSharePanel />
+        </Box>
+      </Typography>
+      <Typography
+        component="div"
+        role="tabpanel"
+        hidden={1 !== tabValue}
+        id={`scrollable-force-tabpanel-${tabValue}`}
+        style={{ marginTop: '.625rem' }}
+      >
+        <Box>
+          <GroupSharePanel />
         </Box>
       </Typography>
     </React.Fragment>
