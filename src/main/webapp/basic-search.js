@@ -148,8 +148,8 @@ export const populateDefaultQuery = (
   sorts = defaultSorts
 ) => ({
   srcs,
-  start: 1,
-  count: 250,
+  startIndex: 1,
+  pageSize: 250,
   filterTree,
   sorts,
   spellcheck: false,

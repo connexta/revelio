@@ -54,6 +54,7 @@
     "ol": "^6.0.1",
     "on-finished": "^2.3.0",
     "polished": "^3.4.1",
+    "qs": "^6.9.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-loadable": "^5.5.0",

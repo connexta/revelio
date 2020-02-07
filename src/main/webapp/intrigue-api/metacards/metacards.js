@@ -36,10 +36,10 @@ const typeDefs = `
     detail_level: String
 
     # Page size
-    count: Int
+    pageSize: Int
 
     # Start of paging. First element is 1, not 0.
-    start: Int
+    startIndex: Int
     type: String
   }
 
