@@ -23,7 +23,7 @@ export const transformFilterToCQL = filter => {
 const sanitizeGeometryCql = cqlString => {
   //sanitize polygons
   let polygons = cqlString.match(
-    /'POLYGON\(\((-?[0-9]*.?[0-9]* -?[0-9]*.?[0-9]*,?)*\)\)'/g
+    /'POLYGON *\(\((-?[0-9]*.?[0-9]* -?[0-9]*.?[0-9]*,?)*\)\)'/g
   )
   if (polygons) {
     polygons.forEach(polygon => {
@@ -32,7 +32,7 @@ const sanitizeGeometryCql = cqlString => {
   }
 
   //sanitize multipolygons
-  let multipolygons = cqlString.match(/'MULTIPOLYGON\(\(\(.*\)\)\)'/g)
+  let multipolygons = cqlString.match(/'MULTIPOLYGON *\(\(\(.*\)\)\)'/g)
   if (multipolygons) {
     multipolygons.forEach(multipolygon => {
       cqlString = cqlString.replace(
@@ -43,7 +43,9 @@ const sanitizeGeometryCql = cqlString => {
   }
 
   //sanitize points
-  let points = cqlString.match(/'POINT\(-?[0-9]*.?[0-9]* -?[0-9]*.?[0-9]*\)'/g)
+  let points = cqlString.match(
+    /'POINT *\(-?[0-9]*.?[0-9]* -?[0-9]*.?[0-9]*\)'/g
+  )
   if (points) {
     points.forEach(point => {
       cqlString = cqlString.replace(point, point.replace(/'/g, ''))
@@ -52,7 +54,7 @@ const sanitizeGeometryCql = cqlString => {
 
   //sanitize linestrings
   let linestrings = cqlString.match(
-    /'LINESTRING\((-?[0-9]*.?[0-9]* -?[0-9]*.?[0-9]*.?)*\)'/g
+    /'LINESTRING *\((-?[0-9]*.?[0-9]* -?[0-9]*.?[0-9]*.?)*\)'/g
   )
   if (linestrings) {
     linestrings.forEach(linestring => {
