@@ -142,6 +142,31 @@
               "deprecationReason": null
             },
             {
+              "name": "metacardSharingAttributes",
+              "description": "",
+              "args": [
+                {
+                  "name": "id",
+                  "description": "",
+                  "type": { "kind": "SCALAR", "name": "ID", "ofType": null },
+                  "defaultValue": null
+                },
+                {
+                  "name": "settings",
+                  "description": "",
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "QuerySettingsInput",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": { "kind": "OBJECT", "name": "Accessors", "ofType": null },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "facet",
               "description": "Get known values for a given attribute.\n\nNOTE: attributes need to be **whitelisted by an Admin** before they can be faceted",
               "args": [

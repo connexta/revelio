@@ -45,8 +45,8 @@ export const DeleteAction = props => {
 }
 
 export const ShareAction = props => {
-  const { form } = props
-  return <SharingModal form={form} />
+  const { id, title } = props
+  return <SharingModal id={id} title={title} />
 }
 
 export const Actions = CardActions

@@ -5,10 +5,11 @@ import Dialog from '@material-ui/core/Dialog'
 import IconButton from '@material-ui/core/IconButton'
 import Container from './container'
 import ShareIcon from '@material-ui/icons/Share'
+import CloseIcon from '@material-ui/icons/Close'
 
 export const SharingModal = props => {
   const [sharing, isSharing] = React.useState(false)
-  const { form } = props
+  const { id, title } = props
   return (
     <div>
       {sharing ? (
@@ -23,13 +24,13 @@ export const SharingModal = props => {
             e.preventDefault()
           }}
         >
-          <DialogTitle style={{ textAlign: 'center' }}>{`"${
-            form.title
-          }" Access`}</DialogTitle>
+          <DialogTitle style={{ textAlign: 'center' }}>
+            {`"${title}" Access`}
+          </DialogTitle>
           <DialogContent>
             <Container
-              id={form.id}
-              title={form.title}
+              id={id}
+              title={title}
               handleClose={() => {
                 isSharing(false)
               }}

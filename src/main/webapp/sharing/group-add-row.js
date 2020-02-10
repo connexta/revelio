@@ -3,6 +3,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
+import AutoComplete from '@material-ui/lab/AutoComplete'
 
 const permissionLevels = [
   {
@@ -13,45 +14,17 @@ const permissionLevels = [
     value: 'write',
     label: 'Can write',
   },
-  {
-    value: 'admin',
-    label: 'Owner',
-  },
-]
-
-const groups = [
-  {
-    value: 'ADMIN',
-    label: 'admin',
-  },
-  {
-    value: 'DATAMANAGER',
-    label: 'data-manager',
-  },
-  {
-    value: 'GUEST',
-    label: 'guest',
-  },
-  {
-    value: 'LOCALHOSTDATA',
-    label: 'localhost-data-manager',
-  },
-  {
-    value: 'MANAGER',
-    label: 'manager',
-  },
-  {
-    value: 'SYSADMIN',
-    label: 'system-admin',
-  },
 ]
 
 export const GroupAddRow = props => {
-  const { value = '', level = '' } = props
-  const [permission, setPermissions] = React.useState(
-    level === '' ? 'read' : level
-  )
-  const [group, setGroup] = React.useState(value === '' ? 'ADMIN' : value)
+  const {
+    value = '',
+    level = '',
+    userRoles = [],
+    index,
+    handleChange,
+    removeGroup,
+  } = props
   return (
     <Grid
       spacing={2}
@@ -60,29 +33,25 @@ export const GroupAddRow = props => {
       container
     >
       <Grid item xs={6}>
-        <TextField
-          label="Group"
-          select
-          style={{ height: '100%', width: '100%' }}
-          value={group}
+        <AutoComplete
+          options={userRoles}
+          getOptionLabel={option => option}
+          defaultValue={value}
           onChange={e => {
-            setGroup(e.target.value)
+            handleChange(e, index, 'groupName')
           }}
-        >
-          {groups.map(group => (
-            <MenuItem key={group.value} value={group.value}>
-              {group.label}
-            </MenuItem>
-          ))}
-        </TextField>
+          renderInput={params => (
+            <TextField {...params} label="Group" variant="outlined" fullWidth />
+          )}
+        />
       </Grid>
       <Grid item xs={4}>
         <TextField
           select
           label="Permission"
-          value={permission}
+          value={level}
           onChange={e => {
-            setPermissions(e.target.value)
+            handleChange(e, index, 'permission')
           }}
           style={{ height: '100%', width: '100%' }}
         >
@@ -98,6 +67,9 @@ export const GroupAddRow = props => {
           color="primary"
           variant="contained"
           style={{ position: 'relative', height: '100%', width: '100%' }}
+          onClick={e => {
+            removeGroup(index)
+          }}
         >
           Remove
         </Button>

@@ -9,12 +9,10 @@ import Group from '@material-ui/icons/Group'
 import Typography from '@material-ui/core/Typography'
 import UserSharePanel from './user-share-panel'
 import GroupSharePanel from './group-share-panel'
-import Grid from '@material-ui/core/Grid'
-import Button from '@material-ui/core/Button'
 
 export const Sharing = props => {
   const [tabValue, setTabValue] = React.useState(0)
-  const { loading, error, individuals, groups } = props
+  const { loading, error, individuals, groups, userRoles, save, id } = props
   if (loading) {
     return <LinearProgress />
   }
@@ -46,7 +44,13 @@ export const Sharing = props => {
         style={{ marginTop: '.625em' }}
       >
         <Box>
-          <UserSharePanel individuals={individuals} />
+          <UserSharePanel
+            individuals={individuals}
+            setUsers={setUsers}
+            userState={userState}
+            save={save}
+            id={id}
+          />
         </Box>
       </Typography>
       <Typography
@@ -57,28 +61,9 @@ export const Sharing = props => {
         style={{ marginTop: '.625em' }}
       >
         <Box>
-          <GroupSharePanel groups={groups} />
+          <GroupSharePanel groups={groups} userRoles={userRoles} save={save} />
         </Box>
       </Typography>
-      <Grid spacing={1} container style={{ marginBottom: '.625rem' }}>
-        <Grid item style={{ width: '50%' }}>
-          <Button
-            color="primary"
-            variant="outlined"
-            fullWidth
-            onClick={() => {
-              props.handleClose(true)
-            }}
-          >
-            Cancel
-          </Button>
-        </Grid>
-        <Grid item style={{ width: '50%' }}>
-          <Button color="primary" variant="contained" fullWidth>
-            Save All
-          </Button>
-        </Grid>
-      </Grid>
     </React.Fragment>
   )
 }

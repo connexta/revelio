@@ -51,7 +51,7 @@ const SearchForm = (props: SearchFormProps) => {
       ) : null}
       <IndexCardItem {...props.form} onClick={() => setEditing(true)}>
         <Actions>
-          <ShareAction />
+          <ShareAction id={props.form.id} title={props.form.title} />
           <DeleteAction onDelete={props.onDelete} />
         </Actions>
       </IndexCardItem>

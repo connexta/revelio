@@ -20,10 +20,7 @@ const permissionLevels = [
 ]
 
 export const UserAddRow = props => {
-  const { value = '', level = '' } = props
-  const [permission, setPermissions] = React.useState(
-    level === '' ? 'read' : level
-  )
+  const { value = '', level = '', handleChange, index, removeUser } = props
   return (
     <Grid
       spacing={2}
@@ -36,15 +33,18 @@ export const UserAddRow = props => {
           variant="outlined"
           style={{ width: '100%' }}
           value={value}
+          onChange={e => {
+            handleChange(e, index, 'userName')
+          }}
         />
       </Grid>
       <Grid item xs={4}>
         <TextField
           select
           label="Permission"
-          value={permission}
+          value={level}
           onChange={e => {
-            setPermissions(e.target.value)
+            handleChange(e, index, 'permission')
           }}
           style={{ height: '100%', width: '100%' }}
         >
@@ -60,6 +60,9 @@ export const UserAddRow = props => {
           color="primary"
           variant="contained"
           style={{ position: 'relative', height: '100%', width: '100%' }}
+          onClick={e => {
+            removeUser(index)
+          }}
         >
           Remove
         </Button>
