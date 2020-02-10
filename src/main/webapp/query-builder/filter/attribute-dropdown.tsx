@@ -7,9 +7,14 @@ import { getDefaultValue } from './filter-utils'
 import { getIn } from 'immutable'
 import sampleAttributeDefinitions from './sample-attribute-definitions'
 import { Comparators } from './comparator-dropdown'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import { AttributeDefinition } from '../types'
-
-const AttributeDropdown = (props: QueryFilterProps) => {
+import useAttributeDefinitions from '../../react-hooks/use-attribute-definitions'
+const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
+  .default
+const AttributeDropdown = (
+  props: QueryFilterProps & { attributeDefinitions?: AttributeDefinition[] }
+) => {
   const { attributeDefinitions = sampleAttributeDefinitions, filter } = props
 
   const getType = (property: string) => {
@@ -55,4 +60,25 @@ const AttributeDropdown = (props: QueryFilterProps) => {
   )
 }
 
-export default AttributeDropdown
+const AttributeDefinitionsContainer = (props: QueryFilterProps) => {
+  const { loading, error, attributeDefinitions } = useAttributeDefinitions()
+  if (loading) {
+    return <LinearProgress />
+  }
+
+  if (error) {
+    return <div>{error}</div>
+  }
+
+  return (
+    <AttributeDropdown {...props} attributeDefinitions={attributeDefinitions} />
+  )
+}
+
+export default (props: QueryFilterProps) => {
+  const Component = useApolloFallback(
+    AttributeDefinitionsContainer,
+    AttributeDropdown
+  )
+  return <Component {...props} />
+}
