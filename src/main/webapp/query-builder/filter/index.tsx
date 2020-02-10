@@ -13,8 +13,11 @@ const isFilterGroupProps = (props: FilterProps): props is FilterGroupProps =>
   isFilterGroup(props.filter)
 
 const Filter = (props: FilterProps) => {
-  const Component = isFilterGroupProps(props) ? FilterGroup : IndividualFilter
-  return <Component {...props} />
+  if (isFilterGroupProps(props)) {
+    return <FilterGroup {...props} />
+  } else {
+    return <IndividualFilter {...props} />
+  }
 }
 
 export default Filter
