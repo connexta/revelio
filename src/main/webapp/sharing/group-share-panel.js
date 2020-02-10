@@ -20,7 +20,7 @@ const setupState = groups => {
     .filter(item => item !== undefined)
 }
 
-export const GroupSharePanel = props => {
+export default props => {
   const { groups = {}, userRoles = [] } = props
   const [groupState, setGroupState] = React.useState(setupState(groups))
 
@@ -83,5 +83,3 @@ export const GroupSharePanel = props => {
     </FormControl>
   )
 }
-
-export default GroupSharePanel

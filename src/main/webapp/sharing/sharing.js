@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography'
 import UserSharePanel from './user-share-panel'
 import GroupSharePanel from './group-share-panel'
 
-export const Sharing = props => {
+export default props => {
   const [tabValue, setTabValue] = React.useState(0)
   const { loading, error, individuals, groups, userRoles, save, id } = props
   if (loading) {
@@ -44,13 +44,7 @@ export const Sharing = props => {
         style={{ marginTop: '.625em' }}
       >
         <Box>
-          <UserSharePanel
-            individuals={individuals}
-            setUsers={setUsers}
-            userState={userState}
-            save={save}
-            id={id}
-          />
+          <UserSharePanel individuals={individuals} save={save} id={id} />
         </Box>
       </Typography>
       <Typography
@@ -67,5 +61,3 @@ export const Sharing = props => {
     </React.Fragment>
   )
 }
-
-export default Sharing

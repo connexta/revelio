@@ -148,7 +148,11 @@
                 {
                   "name": "id",
                   "description": "",
-                  "type": { "kind": "SCALAR", "name": "ID", "ofType": null },
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  },
                   "defaultValue": null
                 },
                 {
@@ -162,7 +166,11 @@
                   "defaultValue": null
                 }
               ],
-              "type": { "kind": "OBJECT", "name": "Accessors", "ofType": null },
+              "type": {
+                "kind": "OBJECT",
+                "name": "Accessors",
+                "ofType": null
+              },
               "isDeprecated": false,
               "deprecationReason": null
             },
@@ -408,7 +416,7 @@
               "defaultValue": null
             },
             {
-              "name": "count",
+              "name": "pageSize",
               "description": "Page size",
               "type": {
                 "kind": "SCALAR",
@@ -418,7 +426,7 @@
               "defaultValue": null
             },
             {
-              "name": "start",
+              "name": "startIndex",
               "description": "Start of paging. First element is 1, not 0.",
               "type": {
                 "kind": "SCALAR",
@@ -2497,6 +2505,100 @@
                 "kind": "SCALAR",
                 "name": "Boolean",
                 "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Accessors",
+          "description": "",
+          "fields": [
+            {
+              "name": "individuals",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "SecurityMap",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "groups",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "SecurityMap",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "SecurityMap",
+          "description": "",
+          "fields": [
+            {
+              "name": "read",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "write",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "admin",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
               },
               "isDeprecated": false,
               "deprecationReason": null

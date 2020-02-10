@@ -3,7 +3,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
-import AutoComplete from '@material-ui/lab/AutoComplete'
+import AutoComplete from '@material-ui/lab/Autocomplete'
 
 const permissionLevels = [
   {
@@ -16,7 +16,7 @@ const permissionLevels = [
   },
 ]
 
-export const GroupAddRow = props => {
+export default props => {
   const {
     value = '',
     level = '',
@@ -67,7 +67,7 @@ export const GroupAddRow = props => {
           color="primary"
           variant="contained"
           style={{ position: 'relative', height: '100%', width: '100%' }}
-          onClick={e => {
+          onClick={() => {
             removeGroup(index)
           }}
         >
@@ -77,5 +77,3 @@ export const GroupAddRow = props => {
     </Grid>
   )
 }
-
-export default GroupAddRow

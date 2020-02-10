@@ -20,7 +20,7 @@ const setupState = individuals => {
     .filter(item => item !== undefined)
 }
 
-export const UserSharePanel = props => {
+export default props => {
   const { individuals = {}, save, id } = props
   const [userState, setUserState] = React.useState(setupState(individuals))
   const handleChange = (event, index, type) => {
@@ -112,5 +112,3 @@ export const UserSharePanel = props => {
     </FormControl>
   )
 }
-
-export default UserSharePanel

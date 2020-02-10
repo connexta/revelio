@@ -19,7 +19,7 @@ const permissionLevels = [
   },
 ]
 
-export const UserAddRow = props => {
+export default props => {
   const { value = '', level = '', handleChange, index, removeUser } = props
   return (
     <Grid
@@ -60,7 +60,7 @@ export const UserAddRow = props => {
           color="primary"
           variant="contained"
           style={{ position: 'relative', height: '100%', width: '100%' }}
-          onClick={e => {
+          onClick={() => {
             removeUser(index)
           }}
         >
@@ -70,5 +70,3 @@ export const UserAddRow = props => {
     </Grid>
   )
 }
-
-export default UserAddRow

@@ -5,7 +5,6 @@ import Dialog from '@material-ui/core/Dialog'
 import IconButton from '@material-ui/core/IconButton'
 import Container from './container'
 import ShareIcon from '@material-ui/icons/Share'
-import CloseIcon from '@material-ui/icons/Close'
 
 export const SharingModal = props => {
   const [sharing, isSharing] = React.useState(false)
