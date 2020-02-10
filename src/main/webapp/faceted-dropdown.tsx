@@ -10,7 +10,8 @@ import Checkbox from '@material-ui/core/Checkbox'
 import ListItemText from '@material-ui/core/ListItemText'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
-import { FormHelperText } from '@material-ui/core'
+import FormHelperText from '@material-ui/core/FormHelperText'
+import ErrorMessage from './error'
 const { useApolloFallback } = require('./react-hooks')
 
 const QUERY = gql`
@@ -39,12 +40,20 @@ type DropdownProps = Props & {
 
 const FacetedDropdown = (props: Props) => {
   const { facetAttribute } = props
-  const { data, loading } = useQuery(QUERY, {
+  const { data, loading, error, refetch } = useQuery(QUERY, {
     variables: { attribute: facetAttribute },
   })
 
   if (loading) {
     return <LinearProgress />
+  }
+
+  if (error) {
+    return (
+      <ErrorMessage onRetry={refetch} error={error}>
+        Error Finding Values for {facetAttribute}
+      </ErrorMessage>
+    )
   }
 
   const facetEnums = getIn(data, ['facet'], []).map((facet: any) => facet.value)

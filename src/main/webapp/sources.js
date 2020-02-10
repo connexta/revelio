@@ -20,7 +20,8 @@ import OfflineIcon from '@material-ui/icons/OfflineBoltOutlined'
 import Select from '@material-ui/core/Select'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { useApolloFallback } from './react-hooks'
-
+import ErrorMessage from './error'
+import { getIn } from 'immutable'
 const sourcesMessage = offlineCount => {
   if (offlineCount === 0) {
     return 'All sources are currently up'
@@ -122,8 +123,12 @@ const SourcesSelectComponent = props => {
 const SourcesSelectContainer = props => {
   const sourcesQuery = useQuery(sources)
   const userPrefsQuery = useQuery(userPref)
-  if (sourcesQuery.error || userPrefsQuery.error) {
-    return <div>Error</div>
+  if (sourcesQuery.error) {
+    return (
+      <ErrorMessage onRetry={sourcesQuery.refetch} error={sourcesQuery.error}>
+        Error Retrieving Sources
+      </ErrorMessage>
+    )
   }
   if (sourcesQuery.loading || userPrefsQuery.loading) {
     return <LinearProgress />
@@ -132,7 +137,11 @@ const SourcesSelectContainer = props => {
   return (
     <SourcesSelectComponent
       {...props}
-      defaultValue={userPrefsQuery.data.user.preferences.querySettings.src}
+      defaultValue={getIn(
+        userPrefsQuery,
+        ['data', 'user', 'preferences', 'querySettings', 'src'],
+        undefined
+      )}
       sources={sourcesQuery.data.sources
         .filter(source => source.isAvailable)
         .map(source => source.sourceId)}

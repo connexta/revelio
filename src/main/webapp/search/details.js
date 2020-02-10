@@ -1,17 +1,15 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
-import { getIn } from 'immutable'
-
 import { useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
-
-import Paper from '@material-ui/core/Paper'
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
-
+import gql from 'graphql-tag'
+import { getIn } from 'immutable'
+import React from 'react'
+import { useParams } from 'react-router-dom'
 import Thumbnail from '../thumbnail/thumbnail'
+import ErrorMessage from '../error'
 
 const LoadingComponent = () => <LinearProgress />
 
@@ -32,7 +30,7 @@ const searchByID = gql`
 const Details = () => {
   const { id } = useParams()
 
-  const { loading, error, data } = useQuery(searchByID, {
+  const { loading, error, data, refetch } = useQuery(searchByID, {
     variables: { ids: [id] },
   })
 
@@ -41,7 +39,11 @@ const Details = () => {
   }
 
   if (error) {
-    return <Typography>Error getting details</Typography>
+    return (
+      <ErrorMessage onRetry={refetch} error={error}>
+        Error getting details
+      </ErrorMessage>
+    )
   }
 
   const attributes = getIn(

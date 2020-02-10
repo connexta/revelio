@@ -9,6 +9,7 @@ import { defaultFilter } from '../query-builder/filter/filter-utils'
 import QueryBuilder from '../query-builder/query-builder'
 import { QueryType } from '../query-builder/types'
 import SearchFormEditor from './editor'
+import ErrorMessage from '../error'
 
 const {
   IndexCards,
@@ -114,7 +115,7 @@ const Route = (props: RouteProps) => {
   const { loading, error, forms, onDelete, onSave, onCreate } = props
   if (loading === true) return <Loading />
 
-  if (error) return <div>Error</div>
+  if (error) return <ErrorMessage />
   return (
     <IndexCards>
       {message ? (

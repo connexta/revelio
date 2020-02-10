@@ -6,6 +6,8 @@ import { getIn } from 'immutable'
 import React, { useEffect } from 'react'
 import OutlinedSelect from '../input/outlined-select'
 import { useApolloFallback } from '../react-hooks'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import ErrorMessage from '../error'
 
 const resultForms = gql`
   query SearchForms {
@@ -57,9 +59,18 @@ const ResultForms = props => {
 }
 
 const Container = props => {
-  const { error, data, loading } = useQuery(resultForms)
+  const { data, loading, error, refetch } = useQuery(resultForms)
 
-  return loading || error ? null : (
+  if (loading) return <LinearProgress />
+
+  if (error)
+    return (
+      <ErrorMessage onRetry={refetch} error={error}>
+        Error Retrieveing Result Forms
+      </ErrorMessage>
+    )
+
+  return (
     <ResultForms
       {...props}
       resultForms={getIn(data, ['metacardsByTag', 'attributes'])}

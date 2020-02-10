@@ -16,8 +16,8 @@ import Remove from '@material-ui/icons/Remove'
 import Select from '@material-ui/core/Select'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
-
-import { fromJS } from 'immutable'
+import ErrorMessage from './error'
+import { fromJS, getIn } from 'immutable'
 
 const getDirectionLabel = type => {
   let ascending = ''
@@ -298,15 +298,6 @@ const Loading = () => {
     </Paper>
   )
 }
-const Error = props => {
-  return (
-    <Paper>
-      <Typography>
-        {props.message ? props.message : 'Something went wrong'}
-      </Typography>
-    </Paper>
-  )
-}
 
 const query = gql`
   query MetacardTypesSearchSettings {
@@ -328,21 +319,27 @@ const query = gql`
 `
 
 const Container = props => {
-  const { loading, error, data = {} } = useQuery(query)
+  const { loading, data, error, refetch } = useQuery(query)
   if (loading) {
     return <Loading />
   }
-  if (error) {
-    return <Error message={error} />
-  }
 
-  const attributeDescriptors = data.metacardTypes
+  if (error)
+    return (
+      <ErrorMessage onRetry={refetch} error={error}>
+        Error Retrieving Attributes
+      </ErrorMessage>
+    )
 
   return (
     <SortOrder
       {...props}
-      attributeDescriptors={attributeDescriptors}
-      defaultValue={data.user.preferences.querySettings.sorts}
+      attributeDescriptors={getIn(data, ['metacardTypes'], [])}
+      defaultValue={getIn(
+        data,
+        ['user', 'preferences', 'querySettings', 'sorts'],
+        undefined
+      )}
     />
   )
 }
