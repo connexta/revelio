@@ -1,21 +1,19 @@
 import * as React from 'react'
 import IndividualFilter, { QueryFilterProps } from './individual-filter'
 import FilterGroup, { FilterGroupProps } from './filter-group'
-import { FilterGroupType, QueryFilter } from '../types'
+import { isFilterGroup } from '../types'
 export {
   makeDefaultSearchGeo,
   makeSearchGeoIdForFilter,
 } from './search-geo-factory'
 
-export const isFilterGroup = (
-  object: QueryFilter | FilterGroupType
-): object is FilterGroupType =>
-  (object as FilterGroupType).filters !== undefined
-
 type FilterProps = FilterGroupProps | QueryFilterProps
 
+const isFilterGroupProps = (props: FilterProps): props is FilterGroupProps =>
+  isFilterGroup(props.filter)
+
 const Filter = (props: FilterProps) => {
-  const Component = isFilterGroup(props.filter) ? FilterGroup : IndividualFilter
+  const Component = isFilterGroupProps(props) ? FilterGroup : IndividualFilter
   return <Component {...props} />
 }
 

@@ -8,7 +8,10 @@ import DropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { Map, getIn } from 'immutable'
 import sampleAttributeDefinitions from './sample-attribute-definitions'
 import { QueryFilter, AttributeDefinition } from '../types'
-
+import LinearProgress from '@material-ui/core/LinearProgress'
+import useAttributeDefinitions from '../../react-hooks/use-attribute-definitions'
+const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
+  .default
 const booleanComparators = ['=', 'IS NULL']
 const booleanAliases = Map({ '=': 'IS', 'IS NULL': 'IS EMPTY' })
 
@@ -62,11 +65,14 @@ export const Comparators = {
 type ComparatorDropdownProps = {
   onChange: (value: string) => void
   editing?: boolean
-  attributeDefinitions?: AttributeDefinition[]
   filter: QueryFilter
 }
 
-const ComparatorDropdown = (props: ComparatorDropdownProps) => {
+const ComparatorDropdown = (
+  props: ComparatorDropdownProps & {
+    attributeDefinitions?: AttributeDefinition[]
+  }
+) => {
   const [anchorEl, open, close] = useAnchorEl()
   const { attributeDefinitions = sampleAttributeDefinitions, filter } = props
   const type = getIn(
@@ -127,4 +133,28 @@ const ComparatorDropdown = (props: ComparatorDropdownProps) => {
   )
 }
 
-export default ComparatorDropdown
+const AttributeDefinitionsContainer = (props: ComparatorDropdownProps) => {
+  const { loading, error, attributeDefinitions } = useAttributeDefinitions()
+  if (loading) {
+    return <LinearProgress />
+  }
+
+  if (error) {
+    return <div>{error}</div>
+  }
+
+  return (
+    <ComparatorDropdown
+      {...props}
+      attributeDefinitions={attributeDefinitions}
+    />
+  )
+}
+
+export default (props: ComparatorDropdownProps) => {
+  const Component = useApolloFallback(
+    AttributeDefinitionsContainer,
+    ComparatorDropdown
+  )
+  return <Component {...props} />
+}
