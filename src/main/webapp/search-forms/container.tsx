@@ -49,7 +49,7 @@ const useDelete = () => {
         data: {
           metacardsByTag: {
             attributes,
-            __typeName: 'QueryResponse',
+            __typename: 'QueryResponse',
           },
         },
       })

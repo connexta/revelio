@@ -1,21 +1,44 @@
-import * as React from 'react'
-import { AttributeDefinition, QueryFilter, QueryType } from './types'
-import useAnchorEl from '../react-hooks/use-anchor-el'
+import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
+import Divider from '@material-ui/core/Divider'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
-import sampleAttributeDefinitions from './filter/sample-attribute-definitions'
-import { defaultFilter } from './filter/filter-utils'
-import { setIn, getIn } from 'immutable'
-import Box from '@material-ui/core/Box'
+import Paper from '@material-ui/core/Paper'
 import TextField from '@material-ui/core/TextField'
-import Divider from '@material-ui/core/Divider'
+import Typography from '@material-ui/core/Typography'
+import { getIn, setIn } from 'immutable'
+import * as React from 'react'
+import useAnchorEl from '../react-hooks/use-anchor-el'
+import useAttributeDefinitions from '../react-hooks/use-attribute-definitions'
+import { defaultFilter } from './filter/filter-utils'
 import Filter from './filter/individual-filter'
+import sampleAttributeDefinitions from './filter/sample-attribute-definitions'
 import QuerySettings from './query-settings'
-type QueryBuilderProps = {
+import { AttributeDefinition, QueryFilter, QueryType } from './types'
+const { useApolloFallback } = require('../react-hooks')
+
+export type QueryBuilderProps = {
   attributeDefinitions?: AttributeDefinition[]
-  onChange: (form: QueryType) => void
-  form?: QueryType
+  onChange: (query: QueryType) => void
+  query?: QueryType
+}
+
+const Loading = () => {
+  return (
+    <Paper>
+      <LinearProgress />
+    </Paper>
+  )
+}
+const Error = (props: any) => {
+  return (
+    <Paper>
+      <Typography>
+        {props.message ? props.message : 'Something went wrong'}
+      </Typography>
+    </Paper>
+  )
 }
 
 const AddButton = (props: { options: any }) => {
@@ -45,12 +68,12 @@ const AddButton = (props: { options: any }) => {
 }
 
 const QueryBuilder = (props: QueryBuilderProps) => {
-  const { form = {} } = props
+  const { query = {} } = props
   const {
     title,
     filterTree = { type: 'AND', filters: [] },
     ...querySettings
-  } = form
+  } = query
   const { attributeDefinitions = sampleAttributeDefinitions } = props
 
   const addFilter = () => {
@@ -61,13 +84,13 @@ const QueryBuilder = (props: QueryBuilderProps) => {
       ['filters'],
       [{ ...defaultFilter }, ...currentFilters]
     )
-    props.onChange(setIn(form, ['filterTree'], newFilterTree))
+    props.onChange(setIn(query, ['filterTree'], newFilterTree))
   }
 
   const addSources = () => {
     if (querySettings.sources == undefined) {
       props.onChange({
-        ...form,
+        ...query,
         sources: [],
       })
     }
@@ -76,7 +99,7 @@ const QueryBuilder = (props: QueryBuilderProps) => {
   const addSorts = () => {
     if (querySettings.sorts == undefined) {
       props.onChange({
-        ...form,
+        ...query,
         sorts: [],
       })
     }
@@ -84,7 +107,7 @@ const QueryBuilder = (props: QueryBuilderProps) => {
 
   const addResultForm = () => {
     if (querySettings.detail_level == undefined) {
-      props.onChange({ ...form, detail_level: 'All Fields' })
+      props.onChange({ ...query, detail_level: 'All Fields' })
     }
   }
 
@@ -112,11 +135,11 @@ const QueryBuilder = (props: QueryBuilderProps) => {
       <Box display="flex" style={{ padding: 8 }} alignItems="center">
         <TextField
           fullWidth
-          value={form.title}
+          value={query.title}
           variant="outlined"
           label="Search Title"
           onChange={event => {
-            props.onChange(setIn(form, ['title'], event.target.value))
+            props.onChange(setIn(query, ['title'], event.target.value))
           }}
           autoFocus
         />
@@ -130,12 +153,12 @@ const QueryBuilder = (props: QueryBuilderProps) => {
             onChange={(newFilter: any) => {
               const filters = filterTree.filters.slice()
               filters[i] = newFilter
-              props.onChange(setIn(form, ['filterTree', 'filters'], filters))
+              props.onChange(setIn(query, ['filterTree', 'filters'], filters))
             }}
             onRemove={() => {
               const filters = filterTree.filters.slice()
               filters.splice(i, 1)
-              props.onChange(setIn(form, ['filterTree', 'filters'], filters))
+              props.onChange(setIn(query, ['filterTree', 'filters'], filters))
             }}
             attributeDefinitions={attributeDefinitions}
           />
@@ -150,4 +173,21 @@ const QueryBuilder = (props: QueryBuilderProps) => {
     </Box>
   )
 }
-export default QueryBuilder
+
+const Container = (props: QueryBuilderProps) => {
+  const { loading, error, attributeDefinitions } = useAttributeDefinitions()
+  if (loading) {
+    return <Loading />
+  }
+
+  if (error) {
+    return <Error message={error} />
+  }
+
+  return <QueryBuilder {...props} attributeDefinitions={attributeDefinitions} />
+}
+
+export default (props: QueryBuilderProps) => {
+  const Component = useApolloFallback(Container, QueryBuilder)
+  return <Component {...props} />
+}
