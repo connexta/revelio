@@ -1,9 +1,8 @@
 import React from 'react'
 import gql from 'graphql-tag'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { useApolloFallback } from '../react-hooks'
 import Sharing from './sharing'
-import { useMutation } from '@apollo/react-hooks'
 import LinearProgress from '@material-ui/core/LinearProgress'
 
 const fragment = gql`

@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Container from './container'
 import ShareIcon from '@material-ui/icons/Share'
 
-export const SharingModal = props => {
+export default props => {
   const [sharing, isSharing] = React.useState(false)
   const { id, title, metacardType } = props
   return (
@@ -50,5 +50,3 @@ export const SharingModal = props => {
     </div>
   )
 }
-
-export default SharingModal
