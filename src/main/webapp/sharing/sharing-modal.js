@@ -8,7 +8,7 @@ import ShareIcon from '@material-ui/icons/Share'
 
 export const SharingModal = props => {
   const [sharing, isSharing] = React.useState(false)
-  const { id, title } = props
+  const { id, title, metacardType } = props
   return (
     <div>
       {sharing ? (
@@ -30,6 +30,7 @@ export const SharingModal = props => {
             <Container
               id={id}
               title={title}
+              metacardType={metacardType}
               handleClose={() => {
                 isSharing(false)
               }}

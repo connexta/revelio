@@ -4,53 +4,69 @@ import { useQuery } from '@apollo/react-hooks'
 import { useApolloFallback } from '../react-hooks'
 import Sharing from './sharing'
 import { useMutation } from '@apollo/react-hooks'
+import LinearProgress from '@material-ui/core/LinearProgress'
+
+const fragment = gql`
+  fragment SharingAttributes on MetacardAttributes {
+    security_access_individuals_read
+    security_access_individuals
+    security_access_administrators
+    security_access_groups_read
+    security_access_groups
+  }
+`
+const mutation = gql`
+  mutation saveMetacardSharing($id: ID!, $attrs: MetacardAttributesInput!) {
+    saveMetacard(id: $id, attributes: $attrs) {
+      ...SharingAttributes
+    }
+  }
+  ${fragment}
+`
+
+const getMetacardSharing = gql`
+  query Sharing($ids: [ID]!) {
+    metacardsById(ids: $ids) {
+      attributes {
+        ...SharingAttributes
+      }
+    }
+    user {
+      roles
+    }
+  }
+  ${fragment}
+`
 
 const Container = props => {
-  const getSharingAttributes = id => {
-    const getMetacardSharing = gql`
-      query Sharing($id: ID!, $settings: QuerySettingsInput) {
-        metacardSharingAttributes(id: $id, settings: $settings) {
-          individuals {
-            read
-            write
-            admin
-          }
-          groups {
-            read
-            write
-          }
-        }
-        user {
-          roles
-        }
-      }
-    `
-    return useQuery(getMetacardSharing, { variables: { id } })
-  }
+  const { id, metacardType } = props
+  const [save] = useMutation(mutation)
+  const { loading, error, data } = useQuery(getMetacardSharing, {
+    variables: { ids: [id] },
+  })
 
-  const fragment = gql`
-    fragment SharingAttributes on MetacardAttributes {
-      security_access_individuals_read
-      security_access_individuals
-      security_access_administrators
-    }
-  `
-  const saveMetacardSharing = () => {
-    const mutation = gql`
-      mutation saveMetacardSharing($id: ID!, $attrs: MetacardAttributesInput!) {
-        saveMetacard(id: $id, attributes: $attrs) {
-          ...SharingAttributes
-        }
-      }
-      ${fragment}
-    `
-    return useMutation(mutation)
+  if (loading) {
+    return <LinearProgress />
   }
+  if (error) {
+    return <div>Error</div>
+  }
+  const [sharingAttributes] = data.metacardsById[0].attributes
+  const {
+    security_access_individuals_read = [],
+    security_access_individuals = [],
+    security_access_administrators = [],
+    security_access_groups_read = [],
+    security_access_groups = [],
+  } = sharingAttributes
+  const individuals = {
+    security_access_individuals_read,
+    security_access_individuals,
+    security_access_administrators,
+  }
+  const groups = { security_access_groups_read, security_access_groups }
+  const userRoles = data.user.roles
 
-  const { loading, error, data } = getSharingAttributes(props.id)
-  const individuals = loading ? [] : data.metacardSharingAttributes.individuals
-  const groups = loading ? [] : data.metacardSharingAttributes.groups
-  const userRoles = loading ? [] : data.user.roles
   return (
     <Sharing
       loading={loading}
@@ -60,7 +76,8 @@ const Container = props => {
       id={props.id}
       userRoles={userRoles}
       handleClose={props.handleClose}
-      save={saveMetacardSharing}
+      save={save}
+      metacardType={metacardType}
     />
   )
 }

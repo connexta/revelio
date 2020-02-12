@@ -6,15 +6,15 @@ import Button from '@material-ui/core/Button'
 
 const permissionLevels = [
   {
-    value: 'read',
+    value: 'security_access_individuals_read',
     label: 'Can read',
   },
   {
-    value: 'write',
+    value: 'security_access_individuals',
     label: 'Can write',
   },
   {
-    value: 'admin',
+    value: 'security_access_administrators',
     label: 'Owner',
   },
 ]
@@ -34,7 +34,7 @@ export default props => {
           style={{ width: '100%' }}
           value={value}
           onChange={e => {
-            handleChange(e, index, 'userName')
+            handleChange(e, index, 'label', 'user')
           }}
         />
       </Grid>
@@ -44,7 +44,7 @@ export default props => {
           label="Permission"
           value={level}
           onChange={e => {
-            handleChange(e, index, 'permission')
+            handleChange(e, index, 'permission', 'user')
           }}
           style={{ height: '100%', width: '100%' }}
         >
@@ -61,7 +61,7 @@ export default props => {
           variant="contained"
           style={{ position: 'relative', height: '100%', width: '100%' }}
           onClick={() => {
-            removeUser(index)
+            removeUser(index, 'user')
           }}
         >
           Remove

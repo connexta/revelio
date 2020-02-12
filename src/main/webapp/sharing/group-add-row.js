@@ -3,15 +3,14 @@ import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
-import AutoComplete from '@material-ui/lab/Autocomplete'
 
 const permissionLevels = [
   {
-    value: 'read',
+    value: 'security_access_groups_read',
     label: 'Can read',
   },
   {
-    value: 'write',
+    value: 'security_access_groups',
     label: 'Can write',
   },
 ]
@@ -33,17 +32,21 @@ export default props => {
       container
     >
       <Grid item xs={6}>
-        <AutoComplete
-          options={userRoles}
-          getOptionLabel={option => option}
-          defaultValue={value}
+        <TextField
+          select
+          label="Group"
+          value={value}
           onChange={e => {
-            handleChange(e, index, 'groupName')
+            handleChange(e, index, 'label', 'group')
           }}
-          renderInput={params => (
-            <TextField {...params} label="Group" variant="outlined" fullWidth />
-          )}
-        />
+          style={{ height: '100%', width: '100%' }}
+        >
+          {userRoles.map(role => (
+            <MenuItem key={role} value={role}>
+              {role}
+            </MenuItem>
+          ))}
+        </TextField>
       </Grid>
       <Grid item xs={4}>
         <TextField
@@ -51,7 +54,7 @@ export default props => {
           label="Permission"
           value={level}
           onChange={e => {
-            handleChange(e, index, 'permission')
+            handleChange(e, index, 'permission', 'group')
           }}
           style={{ height: '100%', width: '100%' }}
         >

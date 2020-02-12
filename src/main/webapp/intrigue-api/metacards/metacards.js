@@ -82,15 +82,6 @@ const typeDefs = `
     # 3. Getting all the possible attributes.
     metacard: Json
   }
-  type Accessors {
-    individuals: SecurityMap
-    groups: SecurityMap
-  }
-  type SecurityMap {
-     read: [String]
-     write: [String]
-     admin: [String]
-   }
 
   type QueryResponse {
     results: [QueryResponseResult]
@@ -121,7 +112,6 @@ const typeDefs = `
 
     metacardsByTag(tag: String!, settings: QuerySettingsInput): QueryResponse
     metacardsById(ids: [ID]!, settings: QuerySettingsInput): [QueryResponse]
-    metacardSharingAttributes(id: ID, settings: QuerySettingsInput) : Accessors
 
     # Get known values for a given attribute.
     #
@@ -331,28 +321,6 @@ const metacardsById = async (parent, args, context) => {
   )
 }
 
-const metacardSharingAttributes = async (parent, args, context) => {
-  const { id } = args
-  const [metacard] = await metacardsById(
-    parent,
-    { ids: [id], ...args },
-    context
-  )
-  const [metacardAttrs] = metacard.attributes
-
-  return {
-    individuals: {
-      read: metacardAttrs.security_access_individuals_read || [],
-      write: metacardAttrs.security_access_individuals || [],
-      admin: metacardAttrs.security_access_administrators || [],
-    },
-    groups: {
-      read: metacardAttrs.security_access_groups_read || [],
-      write: metacardAttrs.security_access_groups || [],
-    },
-  }
-}
-
 const facet = async (parent, args, { catalog }) => {
   const { attribute } = args
 
@@ -459,7 +427,6 @@ const resolvers = {
     metacards,
     metacardsByTag,
     metacardsById,
-    metacardSharingAttributes,
     facet,
   },
   Mutation: {
