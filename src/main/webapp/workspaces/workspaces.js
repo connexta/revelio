@@ -325,6 +325,7 @@ export default () => {
       <RetryNotification
         message={'Issue retrieving workspaces, would you like to retry?'}
         onRetry={refetch}
+        error={error}
       />
     )
   }
