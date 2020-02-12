@@ -11,7 +11,6 @@ const hasIgnorable = err => {
       err.graphQLErrors.filter(error => ignorableStatusCodes.has(error.message))
         .length > 0
     )
-    return false
   }
 }
 
