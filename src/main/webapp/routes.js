@@ -40,6 +40,8 @@ import User from './user'
 import UserSettings from './user-settings'
 import loadable from 'react-loadable'
 
+import url from 'url'
+
 export const LoadingComponent = () => <LinearProgress />
 
 const Link = props => {
@@ -77,6 +79,21 @@ const loadDynamicRoute = route => {
     'simple-search': loadable({
       loader: () =>
         import(/* webpackChunkName: "simple-search" */ './simple-search'),
+      loading: LoadingComponent,
+    }),
+    search: loadable({
+      loader: () =>
+        import(/* webpackChunkName: "page-search" */ './search/search'),
+      loading: LoadingComponent,
+    }),
+    'search-results': loadable({
+      loader: () =>
+        import(/* webpackChunkName: "page-results" */ './search/results'),
+      loading: LoadingComponent,
+    }),
+    'search-details': loadable({
+      loader: () =>
+        import(/* webpackChunkName: "page-details" */ './search/details'),
       loading: LoadingComponent,
     }),
     'result-forms': loadable({
@@ -131,11 +148,12 @@ const routes = [
     loadDynamicRoute('workspaces')
   ),
   createRoute(
-    '/search',
-    'Search',
+    '/simple-search',
+    'Simple Search',
     SearchIcon,
     loadDynamicRoute('simple-search')
   ),
+  createRoute('/search', 'Search', SearchIcon, loadDynamicRoute('search')),
   createRoute('/sources', 'Sources', CloudIcon, loadDynamicRoute('sources')),
   createRoute(
     '/search-forms',
@@ -158,11 +176,22 @@ const otherRoutes = [
     path: '/workspaces/:id',
     component: loadDynamicRoute('workspace'),
   },
+  {
+    title: 'Results',
+    path: '/search/results',
+    component: loadDynamicRoute('search-results'),
+  },
+  {
+    title: 'Details',
+    path: '/search/results/:id',
+    component: loadDynamicRoute('search-details'),
+  },
 ]
 
 export const hasPath = path => {
   return routes.concat(otherRoutes).some(route => {
-    const match = matchPath(path, {
+    const { pathname } = url.parse(path)
+    const match = matchPath(pathname, {
       path: route.path,
       exact: true,
       strict: false,

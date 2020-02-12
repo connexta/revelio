@@ -21,6 +21,11 @@ export type FilterGroupType = {
   filters: Array<FilterGroupType | QueryFilter>
 }
 
+export const isFilterGroup = (
+  filter: QueryFilter | FilterGroupType
+): filter is FilterGroupType =>
+  (filter as FilterGroupType).filters !== undefined
+
 export type AttributeDefinition = {
   id: string
   enums: string[]

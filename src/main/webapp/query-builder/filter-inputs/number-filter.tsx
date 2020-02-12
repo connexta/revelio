@@ -3,10 +3,15 @@ import { QueryFilterProps } from '../filter/individual-filter'
 import TextField from '@material-ui/core/TextField'
 import { getIn } from 'immutable'
 import Box from '@material-ui/core/Box'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import AttributeDropdown from '../filter/attribute-dropdown'
 import ComparatorDropdown from '../filter/comparator-dropdown'
 import sampleAttributeDefinitions from '../filter/sample-attribute-definitions'
-
+import useAttributeDefinitions from '../../react-hooks/use-attribute-definitions'
+import { AttributeDefinition } from '../types'
+import { useState } from 'react'
+const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
+  .default
 const intRegex = /^(-?\d*$)|^$/
 const floatRegex = /^-?\d*(\.\d*)?$|^$/
 
@@ -22,7 +27,8 @@ const validateNumber = (num: string) => {
 }
 
 const FloatInput = (props: any) => {
-  const errors = validateNumber(props.value)
+  const [value, setValue] = useState(props.value)
+  const errors = validateNumber(value)
   return (
     <TextField
       error={errors.value !== undefined}
@@ -30,10 +36,13 @@ const FloatInput = (props: any) => {
       onChange={event => {
         const value = event.target.value
         if (value.match(floatRegex)) {
-          props.onChange(value)
+          setValue(value)
+          if (!isNaN(Number(value))) {
+            props.onChange(value)
+          }
         }
       }}
-      value={props.value}
+      value={value}
       variant="outlined"
       style={{ width: 100 }}
     />
@@ -41,7 +50,8 @@ const FloatInput = (props: any) => {
 }
 
 const IntegerInput = (props: any) => {
-  const errors = validateNumber(props.value)
+  const [value, setValue] = useState(props.value)
+  const errors = validateNumber(value)
   return (
     <TextField
       error={errors.value !== undefined}
@@ -49,10 +59,13 @@ const IntegerInput = (props: any) => {
       onChange={event => {
         const value = event.target.value
         if (value.match(intRegex)) {
-          props.onChange(value)
+          setValue(value)
+          if (!isNaN(Number(value))) {
+            props.onChange(value)
+          }
         }
       }}
-      value={props.value}
+      value={value}
       variant="outlined"
       style={{ width: 100 }}
     />
@@ -66,7 +79,9 @@ const NumberInput = (props: any) => {
   }
 }
 
-const NumberFilter = (props: QueryFilterProps) => {
+const NumberFilter = (
+  props: QueryFilterProps & { attributeDefinitions?: AttributeDefinition[] }
+) => {
   const { attributeDefinitions = sampleAttributeDefinitions, filter } = props
 
   const getType = (property: string) => {
@@ -128,8 +143,22 @@ const TO: any = {
   'IS NULL': () => null,
 }
 
+const InputContainer = (props: QueryFilterProps) => {
+  const { loading, error, attributeDefinitions } = useAttributeDefinitions()
+  if (loading) {
+    return <LinearProgress />
+  }
+
+  if (error) {
+    return <div>{error}</div>
+  }
+
+  return <NumberFilter {...props} attributeDefinitions={attributeDefinitions} />
+}
+
 export default (props: QueryFilterProps) => {
   const { filter } = props
+  const Component = useApolloFallback(InputContainer, NumberFilter)
   return (
     <React.Fragment>
       <AttributeDropdown {...props} />
@@ -154,7 +183,7 @@ export default (props: QueryFilterProps) => {
       />
       {filter.type !== 'IS NULL' && (
         <Box>
-          <NumberFilter {...props} />
+          <Component {...props} />
         </Box>
       )}
     </React.Fragment>

@@ -1,12 +1,15 @@
 const { storiesOf } = require('../@storybook/react')
 import React from 'react'
 import { boolean } from '@storybook/addon-knobs'
-import { useState } from 'react'
 import SearchFormRoute from './route'
-import { SearchFormEditor } from './editor'
+import { QueryEditor } from './editor'
 import { action } from '@storybook/addon-actions'
 import { defaultFilter } from '../query-builder/filter/filter-utils'
 const { SelectionProvider } = require('../react-hooks/use-selection-interface')
+
+import QueryBuilder from '../query-builder/query-builder'
+import { QueryType } from '../query-builder/types'
+const { useState } = require('../@storybook/use-state')
 
 const stories = storiesOf('Search Forms', module)
 
@@ -69,11 +72,16 @@ stories.add('route', () => {
     </SelectionProvider>
   )
 })
+
 stories.add('editor', () => {
+  const [form, setForm] = useState({})
   return (
     <SelectionProvider>
       <div style={{ height: '100vh' }}>
-        <SearchFormEditor
+        <QueryEditor
+          queryBuilder={QueryBuilder}
+          query={form}
+          onChange={(form: QueryType) => setForm(form)}
           onSearch={action('onSearch')}
           onCancel={action('onCancel')}
           onSave={action('onSave')}

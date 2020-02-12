@@ -6,18 +6,17 @@ import Typography from '@material-ui/core/Typography'
 import Add from '@material-ui/icons/Add'
 import { defaultFilter, filterHeaderButtonStyle } from './filter-utils'
 import Operator from './operator'
-import { isFilterGroup } from '../filter'
+import { isFilterGroup } from '../types'
 import Fab from '@material-ui/core/Fab'
 
 import Remove from '@material-ui/icons/Remove'
-import { FilterGroupType, QueryFilter, AttributeDefinition } from '../types'
+import { FilterGroupType, QueryFilter } from '../types'
 
 export type FilterGroupProps = {
   limitDepth?: number // Used to limit number of nested groups
   editing?: boolean
   onChange: (value: FilterGroupType) => void
   onRemove?: () => void
-  attributeDefinitions?: AttributeDefinition[]
   filter: FilterGroupType
 }
 
@@ -145,7 +144,6 @@ const FilterList = (props: FilterGroupProps) => {
                 editing={props.editing}
                 onChange={onChange}
                 onRemove={onRemove}
-                attributeDefinitions={props.attributeDefinitions}
               />
             </Box>
           )
@@ -157,7 +155,6 @@ const FilterList = (props: FilterGroupProps) => {
                 editing={props.editing}
                 onChange={onChange}
                 onRemove={onRemove}
-                attributeDefinitions={props.attributeDefinitions}
               />
             </Box>
           )

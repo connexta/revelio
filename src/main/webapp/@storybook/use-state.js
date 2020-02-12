@@ -1,7 +1,7 @@
 import { action } from '@connexta/ace/@storybook/addon-actions'
 import React from 'react'
 
-const useState = initialState => {
+export const useState = initialState => {
   const [state, setState] = React.useState(initialState)
   const onChange = newState => {
     setState(newState)

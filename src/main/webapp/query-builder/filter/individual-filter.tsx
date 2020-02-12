@@ -11,12 +11,15 @@ import { getIn } from 'immutable'
 import sampleAttributeDefinitions from './sample-attribute-definitions'
 import { deserialize, serialize } from './filter-serialization'
 import { QueryFilter, AttributeDefinition } from '../types'
+import useAttributeDefinitions from '../../react-hooks/use-attribute-definitions'
+import LinearProgress from '@material-ui/core/LinearProgress'
+const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
+  .default
 
 export type QueryFilterProps = {
   onChange: (value: QueryFilter) => void
   onRemove?: () => void
   editing?: boolean
-  attributeDefinitions?: AttributeDefinition[]
   filter: QueryFilter
 }
 
@@ -51,21 +54,48 @@ const withSerialization = (Component: any) => {
   }
 }
 
-export default withSerialization((props: QueryFilterProps) => {
-  const { attributeDefinitions = sampleAttributeDefinitions, filter } = props
+const IndividualFilter = withSerialization(
+  (
+    props: QueryFilterProps & { attributeDefinitions?: AttributeDefinition[] }
+  ) => {
+    const { attributeDefinitions = sampleAttributeDefinitions, filter } = props
 
-  const getType = (property: string) => {
-    return getIn(
-      attributeDefinitions.find(definition => definition.id === property),
-      ['type'],
-      'STRING'
+    const getType = (property: string) => {
+      return getIn(
+        attributeDefinitions.find(definition => definition.id === property),
+        ['type'],
+        'STRING'
+      )
+    }
+    const type = getType(filter.property)
+    const Component = Inputs[type] || TextFilter
+    return (
+      <FilterCard label={filter.property} onRemove={props.onRemove}>
+        <Component {...props} />
+      </FilterCard>
     )
   }
-  const type = getType(filter.property)
-  const Component = Inputs[type] || TextFilter
+)
+
+const AttributeDefinitionsContainer = (props: QueryFilterProps) => {
+  const { loading, error, attributeDefinitions } = useAttributeDefinitions()
+  if (loading) {
+    return <LinearProgress />
+  }
+
+  if (error) {
+    return <div>{error}</div>
+  }
+
   return (
-    <FilterCard label={filter.property} onRemove={props.onRemove}>
-      <Component {...props} />
-    </FilterCard>
+    <IndividualFilter {...props} attributeDefinitions={attributeDefinitions} />
   )
-})
+}
+
+export default (props: QueryFilterProps) => {
+  const Component = useApolloFallback(
+    AttributeDefinitionsContainer,
+    IndividualFilter
+  )
+  return <Component {...props} />
+}
