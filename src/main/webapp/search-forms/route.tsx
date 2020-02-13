@@ -108,7 +108,7 @@ type RouteProps = {
   loading?: boolean
   error?: ApolloError
   forms: QueryType[]
-  refetch: () => void
+  refetch?: () => void
 }
 
 const Route = (props: RouteProps) => {
