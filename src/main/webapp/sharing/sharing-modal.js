@@ -7,7 +7,7 @@ import Container from './container'
 import ShareIcon from '@material-ui/icons/Share'
 
 export default props => {
-  const [sharing, isSharing] = React.useState(false)
+  const [sharing, setSharing] = React.useState(false)
   const { id, title, metacardType } = props
   return (
     <div>
@@ -16,7 +16,7 @@ export default props => {
           fullWidth={true}
           open={sharing}
           onClose={() => {
-            isSharing(false)
+            setSharing(false)
           }}
           onClick={e => {
             e.stopPropagation()
@@ -32,7 +32,7 @@ export default props => {
               title={title}
               metacardType={metacardType}
               handleClose={() => {
-                isSharing(false)
+                setSharing(false)
               }}
             />
           </DialogContent>
@@ -42,7 +42,7 @@ export default props => {
         onClick={e => {
           e.stopPropagation()
           e.preventDefault()
-          isSharing(true)
+          setSharing(true)
         }}
       >
         <ShareIcon />

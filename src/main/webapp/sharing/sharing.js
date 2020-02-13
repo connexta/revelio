@@ -111,7 +111,6 @@ export default props => {
         component="div"
         role="tabpanel"
         hidden={0 !== tabValue}
-        id={`scrollable-force-tabpanel-${tabValue}`}
         style={{ marginTop: '.625em' }}
       >
         <Box>
@@ -128,7 +127,6 @@ export default props => {
         component="div"
         role="tabpanel"
         hidden={1 !== tabValue}
-        id={`scrollable-force-tabpanel-${tabValue}`}
         style={{ marginTop: '.625em' }}
       >
         <Box>
