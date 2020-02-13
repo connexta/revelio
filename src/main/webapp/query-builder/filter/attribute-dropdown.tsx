@@ -10,6 +10,7 @@ import { Comparators } from './comparator-dropdown'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { AttributeDefinition } from '../types'
 import useAttributeDefinitions from '../../react-hooks/use-attribute-definitions'
+import ErrorMessage from '../../error'
 const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
   .default
 const AttributeDropdown = (
@@ -61,13 +62,22 @@ const AttributeDropdown = (
 }
 
 const AttributeDefinitionsContainer = (props: QueryFilterProps) => {
-  const { loading, error, attributeDefinitions } = useAttributeDefinitions()
+  const {
+    loading,
+    error,
+    attributeDefinitions,
+    refetch,
+  } = useAttributeDefinitions()
   if (loading) {
     return <LinearProgress />
   }
 
   if (error) {
-    return <div>{error}</div>
+    return (
+      <ErrorMessage onRetry={refetch} error={error}>
+        Error Retrieveing Attributes
+      </ErrorMessage>
+    )
   }
 
   return (

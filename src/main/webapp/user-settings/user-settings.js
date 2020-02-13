@@ -26,6 +26,8 @@ import NotificationSettings from './notification-settings'
 import SearchSettings from './search-settings'
 import TimeSettings from './time-settings'
 import ThemeSettings from './theme-settings'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import ErrorMessage from '../error'
 
 const generateSetting = (title, Icon = AccessibleForwardIcon, component) => {
   return {
@@ -224,7 +226,7 @@ const query = gql`
 `
 
 const Container = () => {
-  const { error, data, loading } = useQuery(query)
+  const { error, data, loading, refetch } = useQuery(query)
   const [updateUserPreferences] = useMutation(mutation, {
     update: (cache, { data: { updateUserPreferences } }) => {
       const { systemProperties } = cache.readQuery({ query })
@@ -241,7 +243,14 @@ const Container = () => {
       })
     },
   })
-  return loading || error ? null : (
+  if (loading) return <LinearProgress />
+  if (error)
+    return (
+      <ErrorMessage onRetry={refetch} error={error}>
+        Error Retrieving User Preferences
+      </ErrorMessage>
+    )
+  return (
     <UserSettings
       value={Map(data.user.preferences)}
       systemProperties={data.systemProperties}

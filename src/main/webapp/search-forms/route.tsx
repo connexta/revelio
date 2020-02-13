@@ -9,6 +9,8 @@ import { defaultFilter } from '../query-builder/filter/filter-utils'
 import QueryBuilder from '../query-builder/query-builder'
 import { QueryType } from '../query-builder/types'
 import SearchFormEditor from './editor'
+const RetryNotification = require('../retry/retry').default
+import { ApolloError } from 'apollo-client/errors/ApolloError'
 
 const {
   IndexCards,
@@ -104,17 +106,25 @@ type RouteProps = {
   onSave: (form: QueryType) => void
   onCreate: (form: QueryType) => void
   loading?: boolean
-  error?: any
+  error?: ApolloError
   forms: QueryType[]
+  refetch?: () => void
 }
 
 const Route = (props: RouteProps) => {
   const [message, setMessage] = useState<string | null>(null)
 
-  const { loading, error, forms, onDelete, onSave, onCreate } = props
+  const { loading, error, forms, onDelete, onSave, onCreate, refetch } = props
   if (loading === true) return <Loading />
 
-  if (error) return <div>Error</div>
+  if (error)
+    return (
+      <RetryNotification
+        message={'Issue retrieving search forms, would you like to retry?'}
+        onRetry={refetch}
+        error={error}
+      />
+    )
   return (
     <IndexCards>
       {message ? (

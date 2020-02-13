@@ -104,7 +104,7 @@ const useCreate = () => {
 }
 
 export default () => {
-  const { loading, error, data } = useQuery(searchForms)
+  const { loading, error, data, refetch } = useQuery(searchForms)
   const [_delete] = useDelete()
   const onDelete = (form: any) => {
     _delete({
@@ -162,6 +162,7 @@ export default () => {
       error={error}
       onDelete={onDelete}
       forms={forms}
+      refetch={refetch}
     />
   )
 }

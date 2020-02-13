@@ -9,6 +9,8 @@ import gql from 'graphql-tag'
 import React from 'react'
 import { useApolloFallback } from './react-hooks'
 import Cookies from 'universal-cookie'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import ErrorMessage from './error'
 
 const UserDrawer = props => (
   <Drawer
@@ -86,8 +88,16 @@ const query = gql`
 `
 
 const Container = () => {
-  const { error, data, loading } = useQuery(query)
-  return loading || error ? null : <User value={data.user} />
+  const { error, data, loading, refetch } = useQuery(query)
+
+  if (loading) return <LinearProgress />
+  if (error)
+    return (
+      <ErrorMessage onRetry={refetch} error={error}>
+        Error Retrieving User
+      </ErrorMessage>
+    )
+  return <User value={data.user} />
 }
 
 export default props => {

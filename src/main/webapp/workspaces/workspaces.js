@@ -33,6 +33,7 @@ import QuerySelector from './query-selector'
 
 import loadable from 'react-loadable'
 import Lists from '../lists'
+import ErrorMessage from '../error'
 
 const LoadingComponent = () => <LinearProgress />
 let MemoizedVisualizations = () => null
@@ -90,7 +91,7 @@ export const Workspace = () => {
   }
 
   if (error) {
-    return <div>Error</div>
+    return <ErrorMessage error={error}>Error Retrieving Workspace</ErrorMessage>
   }
 
   const QueryEditor = props => (

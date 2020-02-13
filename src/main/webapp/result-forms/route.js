@@ -20,6 +20,7 @@ import {
   ShareAction,
   Actions,
 } from '../index-cards'
+import RetryComponent from '../retry/retry'
 
 const Loading = () => {
   return <LinearProgress />
@@ -107,14 +108,29 @@ const Notification = props => {
 export const Route = props => {
   const [message, setMessage] = useState(null)
 
-  const { loading, error, forms, Editor, onCreate, onSave, onDelete } = props
+  const {
+    loading,
+    error,
+    forms,
+    Editor,
+    onCreate,
+    onSave,
+    onDelete,
+    refetch,
+  } = props
 
   if (loading) {
     return <Loading />
   }
 
   if (error) {
-    return <div>Error</div>
+    return (
+      <RetryComponent
+        message={'Issue retrieving result forms, would you like to retry?'}
+        onRetry={refetch}
+        error={error}
+      />
+    )
   }
 
   return (
@@ -300,7 +316,7 @@ const EditorWithAttributes = props => {
 }
 
 export default () => {
-  const { loading, error, data } = useQuery(resultForms)
+  const { loading, error, data, refetch } = useQuery(resultForms)
 
   const [create] = useCreate()
   const [save] = useSave()
@@ -311,7 +327,7 @@ export default () => {
   }
 
   if (error) {
-    return <Route error={error} />
+    return <Route error={error} refetch={refetch} />
   }
 
   const onCreate = form => {
@@ -361,6 +377,7 @@ export default () => {
       onCreate={onCreate}
       onSave={onSave}
       onDelete={onDelete}
+      refetch={refetch}
     />
   )
 }

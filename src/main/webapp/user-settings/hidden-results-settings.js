@@ -13,6 +13,7 @@ import { Map } from 'immutable'
 import React from 'react'
 import Inspector from '../inspector'
 import { useApolloFallback } from '../react-hooks'
+import ErrorMessage from '../error'
 
 const resultQuery = gql`
   query ResultQuery($ids: [ID]!) {
@@ -48,18 +49,20 @@ const Loading = () => {
 }
 
 const ResultInfoError = props => (
-  <Dialog open onClose={props.onClose}>
-    Error
+  <Dialog open>
+    <ErrorMessage onRetry={props.refetch} error={props.error}>
+      Error Retrieving Result
+    </ErrorMessage>
   </Dialog>
 )
 
 const ResultInfoContainer = props => {
-  const { loading, data, error } = useQuery(resultQuery, {
+  const { loading, data, error, refetch } = useQuery(resultQuery, {
     variables: { id: props.selected },
   })
 
   if (error) {
-    return <ResultInfoError />
+    return <ResultInfoError refetch={refetch} error={error} />
   }
 
   return (

@@ -1,24 +1,22 @@
-import React from 'react'
-
-import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
-
 import Grid from '@material-ui/core/Grid'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import Typography from '@material-ui/core/Typography'
-import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Table from '@material-ui/core/Table'
-import TableRow from '@material-ui/core/TableRow'
-import TableCell from '@material-ui/core/TableCell'
 import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
 import TablePagination from '@material-ui/core/TablePagination'
-import TextFieldsIcon from '@material-ui/icons/TextFields'
+import TableRow from '@material-ui/core/TableRow'
+import Tabs from '@material-ui/core/Tabs'
+import Typography from '@material-ui/core/Typography'
 import ImageIcon from '@material-ui/icons/Image'
-
-import useSearchRouting, { DetailsLink } from './search-routing'
-import Search from './search'
+import TextFieldsIcon from '@material-ui/icons/TextFields'
+import gql from 'graphql-tag'
+import React from 'react'
+import ErrorMessage from '../error'
 import Thumbnail from '../thumbnail/thumbnail'
+import Search from './search'
+import useSearchRouting, { DetailsLink } from './search-routing'
 
 const LoadingComponent = () => <LinearProgress />
 
@@ -161,7 +159,7 @@ const Results = () => {
 
   const isImageType = type === 'image'
 
-  const { loading, error, data } = useQuery(metacardQuery, {
+  const { loading, error, data, refetch } = useQuery(metacardQuery, {
     variables: {
       filter: getQueryFilter({ query, isImageType }),
       settings: {
@@ -176,7 +174,11 @@ const Results = () => {
   }
 
   if (error) {
-    return <Typography>Error: Query Failed</Typography>
+    return (
+      <ErrorMessage onRetry={refetch} error={error}>
+        Error: Query Failed
+      </ErrorMessage>
+    )
   }
 
   const { attributes, status } = data.metacards
