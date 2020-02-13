@@ -120,7 +120,7 @@ const Route = (props: RouteProps) => {
   if (error)
     return (
       <RetryNotification
-        message={'Issue retrieving workspaces, would you like to retry?'}
+        message={'Issue retrieving search forms, would you like to retry?'}
         onRetry={refetch}
         error={error}
       />

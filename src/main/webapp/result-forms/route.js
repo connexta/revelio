@@ -126,7 +126,7 @@ export const Route = props => {
   if (error) {
     return (
       <RetryComponent
-        message={'Issue retrieving workspaces, would you like to retry?'}
+        message={'Issue retrieving result forms, would you like to retry?'}
         onRetry={refetch}
         error={error}
       />
