@@ -34,6 +34,7 @@ import QuerySelector from './query-selector'
 import loadable from 'react-loadable'
 import Lists from '../lists'
 import ErrorMessage from '../error'
+import { getIn } from 'immutable'
 
 const LoadingComponent = () => <LinearProgress />
 let MemoizedVisualizations = () => null
@@ -232,7 +233,7 @@ export const Workspace = () => {
 }
 
 const Workspaces = props => {
-  const { workspaces, onCreate } = props
+  const { workspaces, onCreate, onDelete } = props
 
   return (
     <IndexCards>
@@ -251,7 +252,10 @@ const Workspaces = props => {
                   title={workspace.title}
                   metacardType="workspace"
                 />
-                <DeleteAction />
+                <DeleteAction
+                  onDelete={() => onDelete(workspace)}
+                  message="This will permanently delete the workspace."
+                />
               </Actions>
             </IndexCardItem>
           </Link>
@@ -317,9 +321,38 @@ const useCreate = () => {
   return [create, redirectId]
 }
 
+const useDelete = () => {
+  const mutation = gql`
+    mutation DeleteWorkspace($id: ID!) {
+      deleteMetacard(id: $id)
+    }
+  `
+  return useMutation(mutation, {
+    update: (cache, { data }) => {
+      const query = workspaces
+      const attributes = getIn(
+        cache.readQuery({ query }),
+        ['metacardsByTag', 'attributes'],
+        []
+      ).filter(({ id }) => id !== data.deleteMetacard)
+
+      cache.writeQuery({
+        query,
+        data: {
+          metacardsByTag: {
+            attributes,
+            __typename: 'QueryResponse',
+          },
+        },
+      })
+    },
+  })
+}
+
 export default () => {
   const { refetch, loading, error, data } = useQuery(workspaces)
   const [create, redirectId] = useCreate()
+  const [_delete] = useDelete()
 
   if (loading) {
     return <LoadingComponent />
@@ -351,8 +384,22 @@ export default () => {
     })
   }
 
+  const onDelete = ({ id }) => {
+    _delete({
+      variables: {
+        id,
+      },
+    })
+  }
+
   const workspacesSortedByTime = data.metacardsByTag.attributes.sort(
     (a, b) => (a.modified > b.modified ? -1 : 1)
   )
-  return <Workspaces workspaces={workspacesSortedByTime} onCreate={onCreate} />
+  return (
+    <Workspaces
+      workspaces={workspacesSortedByTime}
+      onCreate={onCreate}
+      onDelete={onDelete}
+    />
+  )
 }

@@ -80,7 +80,10 @@ const Item = props => {
             title={form.title}
             metacardType="attribute-group"
           />
-          <DeleteAction onDelete={onDelete} />
+          <DeleteAction
+            message="This will permanently delete the result form."
+            onDelete={onDelete}
+          />
         </Actions>
       </IndexCardItem>
     </Fragment>
