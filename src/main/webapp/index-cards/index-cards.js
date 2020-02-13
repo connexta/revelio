@@ -4,7 +4,6 @@ import Typography from '@material-ui/core/Typography'
 
 import IconButton from '@material-ui/core/IconButton'
 
-import ShareIcon from '@material-ui/icons/Share'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import EditIcon from '@material-ui/icons/Edit'
 
@@ -17,6 +16,7 @@ import CardActionArea from '@material-ui/core/CardActionArea'
 import moment from 'moment'
 
 import ConfirmDelete from '../confirm-delete'
+import SharingModal from '../sharing/sharing-modal'
 
 const onClick = action => e => {
   e.preventDefault()
@@ -45,12 +45,8 @@ export const DeleteAction = props => {
 }
 
 export const ShareAction = props => {
-  const { onShare } = props
-  return (
-    <IconButton onClick={onClick(onShare)}>
-      <ShareIcon />
-    </IconButton>
-  )
+  const { id, title, metacardType } = props
+  return <SharingModal id={id} title={title} metacardType={metacardType} />
 }
 
 export const Actions = CardActions

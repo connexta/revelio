@@ -245,7 +245,11 @@ const Workspaces = props => {
           >
             <IndexCardItem {...workspace}>
               <Actions>
-                <ShareAction />
+                <ShareAction
+                  id={workspace.id}
+                  title={workspace.title}
+                  metacardType="workspace"
+                />
                 <DeleteAction />
               </Actions>
             </IndexCardItem>

@@ -74,7 +74,11 @@ const Item = props => {
       ) : null}
       <IndexCardItem {...form} onClick={() => setEditing(true)}>
         <Actions>
-          <ShareAction />
+          <ShareAction
+            id={form.id}
+            title={form.title}
+            metacardType="attribute-group"
+          />
           <DeleteAction onDelete={onDelete} />
         </Actions>
       </IndexCardItem>
