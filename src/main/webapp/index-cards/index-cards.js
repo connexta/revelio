@@ -36,12 +36,8 @@ export const EditAction = props => {
 }
 
 export const DeleteAction = props => {
-  const { onDelete } = props
-  return (
-    <ConfirmDelete onDelete={onDelete}>
-      This will permanently delete the search form.
-    </ConfirmDelete>
-  )
+  const { onDelete, message } = props
+  return <ConfirmDelete onDelete={onDelete}>{message}</ConfirmDelete>
 }
 
 export const ShareAction = props => {

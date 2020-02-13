@@ -54,7 +54,10 @@ const SearchForm = (props: SearchFormProps) => {
       <IndexCardItem {...props.form} onClick={() => setEditing(true)}>
         <Actions>
           <ShareAction {...props.form} metacardType="query-template" />
-          <DeleteAction onDelete={props.onDelete} />
+          <DeleteAction
+            message="This will permanently delete the search form."
+            onDelete={props.onDelete}
+          />
         </Actions>
       </IndexCardItem>
     </Fragment>
