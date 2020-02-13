@@ -113,8 +113,8 @@ export const IndexCardItem = props => {
             </Typography>
           )}
         </CardContent>
-        {children}
       </CardActionArea>
+      {children}
     </ItemContainer>
   )
 }
