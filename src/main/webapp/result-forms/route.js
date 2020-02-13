@@ -11,7 +11,6 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 
 import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
-import ErrorMessage from '../error'
 
 import {
   IndexCards,
