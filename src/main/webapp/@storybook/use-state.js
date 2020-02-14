@@ -1,7 +1,7 @@
 import { action } from '@connexta/ace/@storybook/addon-actions'
 import React from 'react'
 
-export const useState = initialState => {
+export default initialState => {
   const [state, setState] = React.useState(initialState)
   const onChange = newState => {
     setState(newState)
@@ -9,5 +9,3 @@ export const useState = initialState => {
   }
   return [state, onChange]
 }
-
-export default useState

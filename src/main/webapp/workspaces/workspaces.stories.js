@@ -7,7 +7,7 @@ import { SelectionProvider } from '../react-hooks/use-selection-interface'
 import useState from '../@storybook/use-state'
 import QuerySelector from './query-selector'
 import queries from './sample-queries.json'
-import { BasicSearch } from '../basic-search'
+import BasicSearch from '../basic-search'
 
 const stories = storiesOf('Workspaces', module)
 

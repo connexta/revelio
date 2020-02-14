@@ -398,7 +398,7 @@ export const BasicSearchQueryBuilder = props => {
   )
 }
 
-export const BasicSearch = props => {
+const BasicSearch = props => {
   const [query, setQuery] = React.useState(props.query)
 
   const [submitted, setSubmitted] = React.useState(false)

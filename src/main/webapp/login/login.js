@@ -7,7 +7,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import FormLabel from '@material-ui/core/FormLabel'
 import IconButton from '@material-ui/core/IconButton'
 
-export const LogIn = props => {
+export default props => {
   const [values, setValues] = React.useState({
     username: '',
     password: '',
@@ -104,5 +104,3 @@ export const LogIn = props => {
     </div>
   )
 }
-
-export default LogIn

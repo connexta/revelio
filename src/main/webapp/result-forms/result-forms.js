@@ -34,7 +34,7 @@ const validate = (form = {}) => {
   return errors
 }
 
-export const ResultForms = props => {
+export default props => {
   const { form = {}, attributes = [], onCancel, onSave } = props
 
   const { state, setState, ...rest } = useUndoState(Set(form.attributes))
@@ -122,5 +122,3 @@ export const ResultForms = props => {
     </div>
   )
 }
-
-export default ResultForms

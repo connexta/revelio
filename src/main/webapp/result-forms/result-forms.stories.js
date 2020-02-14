@@ -9,7 +9,7 @@ import { Set } from 'immutable'
 import { useUndoState } from '../react-hooks'
 
 import TransferList from './transfer-list'
-import { ResultForms } from './result-forms'
+import ResultForms from './result-forms'
 import { Route, Editor } from './route'
 
 const getAttributes = total => {
