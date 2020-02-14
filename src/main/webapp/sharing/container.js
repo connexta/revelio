@@ -7,6 +7,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 
 const fragment = gql`
   fragment SharingAttributes on MetacardAttributes {
+    id
     security_access_individuals_read
     security_access_individuals
     security_access_administrators
