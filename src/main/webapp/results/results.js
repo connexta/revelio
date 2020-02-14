@@ -81,7 +81,7 @@ const getCellContent = (attribute, result) => {
             justifyContent: 'center',
           }}
         >
-          <Thumbnail src={properties.thumbnail} />
+          <Thumbnail src={attributes.thumbnail} />
         </div>
       )
     case 'description':
