@@ -1,50 +1,47 @@
-import React, { useState } from 'react'
-
+import { useQuery } from '@apollo/react-hooks'
 import Button from '@material-ui/core/Button'
-import IconButton from '@material-ui/core/IconButton'
 import Checkbox from '@material-ui/core/Checkbox'
-import Divider from '@material-ui/core/Divider'
-import CloseIcon from '@material-ui/icons/Close'
+import Collapse from '@material-ui/core/Collapse'
 import { red } from '@material-ui/core/colors'
+import Divider from '@material-ui/core/Divider'
 import FormControl from '@material-ui/core/FormControl'
 import FormHelperText from '@material-ui/core/FormHelperText'
+import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import ListItemText from '@material-ui/core/ListItemText'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import Paper from '@material-ui/core/Paper'
 import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
-import { Map } from 'immutable'
 import Typography from '@material-ui/core/Typography'
+import CloseIcon from '@material-ui/icons/Close'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
-import Collapse from '@material-ui/core/Collapse'
-import SortOrder from './sort-order'
-import FacetedDropdown from './faceted-dropdown'
-import { SourcesSelect } from './sources'
-import { makeDefaultSearchGeo } from './query-builder/filter'
-import { Location } from './location'
-import { useQuery } from '@apollo/react-hooks'
-import LinearProgress from '@material-ui/core/LinearProgress'
 import gql from 'graphql-tag'
-import { getIn } from 'immutable'
-
+import { get, getIn, Map, remove } from 'immutable'
+import React, { useState } from 'react'
 import {
   APPLY_TO_KEY,
-  MATCHTYPE_KEY,
+  fromFilterTree,
   LOCATION_KEY,
+  MATCHTYPE_KEY,
   TEXT_KEY,
   TIME_RANGE_KEY,
   toFilterTree,
-  fromFilterTree,
 } from './basic-search-helper'
+import FacetedDropdown from './faceted-dropdown'
+import { Location } from './location'
+import { makeDefaultSearchGeo } from './query-builder/filter'
+import { useApolloFallback } from './react-hooks'
+import SortOrder from './sort-order'
+import { SourcesSelect } from './sources'
 import TimeRange, {
   createTimeRange,
   validate as validateTimeRange,
 } from './time-range'
-import { useApolloFallback } from './react-hooks'
 
 const timeAttributes = [
   'created',
@@ -68,14 +65,6 @@ const TextSearch = ({ text, handleChange }) => {
       onChange={handleChange}
     />
   )
-}
-
-const filterMap = {
-  location: 'Location',
-  timeRange: 'Time Range',
-  [MATCHTYPE_KEY]: 'Match Types',
-  sources: 'Sources',
-  sortOrder: 'Sort Order',
 }
 
 const defaultSorts = [
@@ -113,7 +102,7 @@ const AddButton = ({ addFilter }) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        {Object.keys(filterMap).map(filter => (
+        {Object.keys(filterLabels).map(filter => (
           <MenuItem
             key={filter}
             value={filter}
@@ -122,7 +111,7 @@ const AddButton = ({ addFilter }) => {
               handleClose()
             }}
           >
-            {filterMap[filter]}
+            {filterLabels[filter]}
           </MenuItem>
         ))}
       </Menu>
@@ -277,7 +266,7 @@ const defaultFilters = {
   [LOCATION_KEY]: makeDefaultSearchGeo(),
 }
 
-const getFilterTree = props => {
+const getFilterMap = props => {
   if (props.query && props.query.filterTree) {
     return fromFilterTree(props.query.filterTree, {
       basicSearchMatchType: props.basicSearchMatchType,
@@ -285,6 +274,12 @@ const getFilterTree = props => {
   }
 
   return Map({ text: '*' })
+}
+
+const createQuery = filterMap => {
+  const srcs = get(filterMap, 'sources')
+  const sorts = get(filterMap, 'sortOrder')
+  return populateDefaultQuery(toFilterTree(filterMap), srcs, sorts)
 }
 
 export const FilterCard = props => {
@@ -332,23 +327,21 @@ export const FilterCard = props => {
   )
 }
 
-export const BasicSearch = props => {
-  const [filterTree, setFilterTree] = React.useState(getFilterTree(props))
+export const BasicSearchQueryBuilder = props => {
+  const { submitted = true } = props
+  const [filterMap, setFilterMap] = useState(getFilterMap(props))
 
-  const [submitted, setSubmitted] = React.useState(false)
-  const errors = validate(filterTree)
+  const onChange = filterMap => {
+    setFilterMap(filterMap)
+    return props.onChange(createQuery(filterMap))
+  }
 
-  const text = filterTree.get('text')
+  const errors = validate(filterMap)
+
+  const text = filterMap.get('text')
 
   return (
-    <div
-      style={{
-        overflow: 'auto',
-        padding: 2,
-        maxWidth: 600,
-        maxHeight: '100%',
-      }}
-    >
+    <React.Fragment>
       <Paper
         style={{
           display: 'flex',
@@ -359,14 +352,12 @@ export const BasicSearch = props => {
       >
         <TextSearch
           text={text}
-          handleChange={e =>
-            setFilterTree(filterTree.set(TEXT_KEY, e.target.value))
-          }
+          handleChange={e => onChange(filterMap.set(TEXT_KEY, e.target.value))}
         />
         <AddButton
           addFilter={filter => {
-            setFilterTree(
-              filterTree.merge({
+            onChange(
+              filterMap.merge({
                 [filter]: defaultFilters[filter],
               })
             )
@@ -374,8 +365,7 @@ export const BasicSearch = props => {
         />
       </Paper>
 
-      {filterTree
-        .remove('text')
+      {remove(filterMap, 'text')
         .map((state, filter) => {
           const Component = filters[filter]
           const label = filterLabels[filter]
@@ -385,13 +375,13 @@ export const BasicSearch = props => {
               key={filter}
               label={label}
               onRemove={() => {
-                setFilterTree(filterTree.remove(filter))
+                onChange(remove(filterMap, filter))
               }}
             >
               <Component
                 state={state}
                 setState={state => {
-                  setFilterTree(filterTree.set(filter, state))
+                  onChange(filterMap.set(filter, state))
                 }}
                 errors={submitted ? errors : {}}
                 basicSearchSettings={{
@@ -404,6 +394,32 @@ export const BasicSearch = props => {
         .valueSeq()}
 
       <Divider />
+    </React.Fragment>
+  )
+}
+
+export const BasicSearch = props => {
+  const [query, setQuery] = React.useState(props.query)
+
+  const [submitted, setSubmitted] = React.useState(false)
+
+  return (
+    <div
+      style={{
+        overflow: 'auto',
+        padding: 2,
+        maxWidth: 600,
+        maxHeight: '100%',
+      }}
+    >
+      <BasicSearchQueryBuilder
+        query={props.query}
+        onChange={query => {
+          setQuery(query)
+        }}
+        submitted={submitted}
+        basicSearchMatchType={props.basicSearchMatchType}
+      />
 
       <div
         style={{
@@ -414,16 +430,14 @@ export const BasicSearch = props => {
           fullWidth
           onSearch={() => {
             setSubmitted(true)
-
+            const filterMap = getFilterMap({
+              query,
+              basicSearchMatchType: props.basicSearchMatchType,
+            })
+            const errors = validate(filterMap)
             if (isEmpty(errors)) {
               props.onSearch(
-                populateDefaultQuery(
-                  toFilterTree(filterTree, {
-                    basicSearchMatchType: props.basicSearchMatchType,
-                  }),
-                  filterTree.get('sources'),
-                  filterTree.get('sortOrder')
-                )
+                query || populateDefaultQuery(toFilterTree(filterMap))
               )
             }
           }}
