@@ -77,7 +77,7 @@ const server = new ApolloServer({
 
 // Useful for getting example request/responses from the graphql endpoint.
 // Off by default.
-const captureGraphql = () => {
+export const captureGraphql = () => {
   rootLogger.info({ message: 'GraphQL capturing enabled.' })
   const captures = []
 
