@@ -64,19 +64,19 @@ const QueryBuilder = (props: QueryBuilderProps) => {
   }
 
   const addSources = () => {
-    if (querySettings.sources == undefined) {
+    if (querySettings.sourceIds == undefined) {
       props.onChange({
         ...query,
-        sources: [],
+        sourceIds: [],
       })
     }
   }
 
   const addSorts = () => {
-    if (querySettings.sorts == undefined) {
+    if (querySettings.sortPolicy == undefined) {
       props.onChange({
         ...query,
-        sorts: [],
+        sortPolicy: [],
       })
     }
   }

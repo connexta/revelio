@@ -69,8 +69,8 @@ const TextSearch = ({ text, handleChange }) => {
 
 const defaultSorts = [
   {
-    attribute: 'modified',
-    direction: 'descending',
+    propertyName: 'modified',
+    sortOrder: 'descending',
   },
 ]
 
@@ -134,13 +134,13 @@ const SearchButton = props => (
 export const populateDefaultQuery = (
   filterTree,
   srcs = defaultSources,
-  sorts = defaultSorts
+  sortPolicy = defaultSorts
 ) => ({
   srcs,
   startIndex: 1,
   pageSize: 250,
   filterTree,
-  sorts,
+  sortPolicy,
   spellcheck: false,
   phonetics: false,
 })

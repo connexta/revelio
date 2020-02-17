@@ -70,7 +70,7 @@ const Description = props => {
 }
 
 const getCellContent = (attribute, result) => {
-  const { properties } = result.metacard
+  const { attributes } = result.metacard
   switch (attribute) {
     case 'thumbnail':
       return (
@@ -81,21 +81,21 @@ const getCellContent = (attribute, result) => {
             justifyContent: 'center',
           }}
         >
-          <Thumbnail src={properties.thumbnail} />
+          <Thumbnail src={attributes.thumbnail} />
         </div>
       )
     case 'description':
-      return <Description text={properties.description} />
+      return <Description text={attributes.description} />
     default:
       return (
         <Typography style={{ ...cellStyles }}>
-          {properties[attribute]}
+          {attributes[attribute]}
         </Typography>
       )
   }
 }
 
-const getId = result => result.metacard.properties.id
+const getId = result => result.metacard.attributes.id
 
 const Result = props => {
   const { attributes, selected, onClick, onSelect, onRemove, result } = props

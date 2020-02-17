@@ -77,7 +77,7 @@ const AttributeSortOrder = props => {
   const value = fromJS(props.value || {})
 
   const attribute = attributeDescriptors.find(
-    attr => attr.id === value.get('attribute')
+    attr => attr.id === value.get('propertyName')
   )
 
   return (
@@ -94,15 +94,15 @@ const AttributeSortOrder = props => {
         value={attribute}
         attributeDescriptors={availableDescriptors}
         onChange={attribute => {
-          onChange(value.set('attribute', attribute.id))
+          onChange(value.set('propertyName', attribute.id))
         }}
       />
 
       <DirectionSelect
-        value={value.get('direction')}
+        value={value.get('sortOrder')}
         attributeType={attribute.type}
         onChange={direction => {
-          onChange(value.set('direction', direction))
+          onChange(value.set('sortOrder', direction))
         }}
       />
     </div>
@@ -212,14 +212,14 @@ const getAvailableAttributes = (descriptors, used) => {
 }
 
 const getUsedAttributes = sorts => {
-  return sorts.map(sort => sort.get('attribute'))
+  return sorts.map(sort => sort.get('propertyName'))
 }
 
 const getNextAvailableSort = descriptors => {
-  const direction = 'ascending'
-  const attribute = descriptors[0].id
+  const sortOrder = 'ascending'
+  const propertyName = descriptors[0].id
 
-  return { attribute, direction }
+  return { propertyName, sortOrder }
 }
 
 const SortOrder = props => {
@@ -308,9 +308,9 @@ const query = gql`
     user {
       preferences {
         querySettings {
-          sorts {
-            attribute
-            direction
+          sortPolicy {
+            propertyName
+            sortOrder
           }
         }
       }
@@ -337,7 +337,7 @@ const Container = props => {
       attributeDescriptors={getIn(data, ['metacardTypes'], [])}
       defaultValue={getIn(
         data,
-        ['user', 'preferences', 'querySettings', 'sorts'],
+        ['user', 'preferences', 'querySettings', 'sortPolicy'],
         undefined
       )}
     />

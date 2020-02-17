@@ -139,7 +139,7 @@ const Visualizations = props => {
     const [selected] = useSelectionInterface()
 
     const selectedResults = results.filter(result => {
-      return selected.has(result.metacard.properties.id)
+      return selected.has(result.metacard.attributes.id)
     })
 
     return (
@@ -172,7 +172,7 @@ const Visualizations = props => {
     const [selected, onSelect] = useSelectionInterface()
 
     const selectedResults = results.filter(result => {
-      return selected.has(result.metacard.properties.id)
+      return selected.has(result.metacard.attributes.id)
     })
 
     return (
@@ -207,16 +207,16 @@ const Visualizations = props => {
     const geos = results
       .map(
         result =>
-          result.metacard.properties.location
+          result.metacard.attributes.location
             ? wkt
-                .readFeatures(result.metacard.properties.location)
+                .readFeatures(result.metacard.attributes.location)
                 .map(locationGeo => {
                   const featureGeo = geoJSON.writeFeatureObject(locationGeo)
-                  return geoJSONToGeometryJSON(result.metacard.properties.id, {
+                  return geoJSONToGeometryJSON(result.metacard.attributes.id, {
                     ...featureGeo,
                     properties: {
                       ...featureGeo.properties,
-                      selected: selection.has(result.metacard.properties.id),
+                      selected: selection.has(result.metacard.attributes.id),
                     },
                   })
                 })

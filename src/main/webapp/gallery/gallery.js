@@ -45,7 +45,7 @@ export default props => {
   const [selected, setSelected] = React.useState(null)
 
   const results = props.results.filter(
-    result => result.metacard.properties.thumbnail !== undefined
+    result => result.metacard.attributes.thumbnail !== undefined
   )
 
   return (
@@ -54,7 +54,7 @@ export default props => {
         <Dialog open onClose={() => setSelected(null)}>
           <Inspector
             results={results.filter(
-              result => result.metacard.properties.id === selected
+              result => result.metacard.attributes.id === selected
             )}
           />
         </Dialog>
@@ -74,10 +74,9 @@ export default props => {
           }}
         >
           {results
-            .filter(item => item.metacard.properties.thumbnail)
+            .filter(item => item.metacard.attributes.thumbnail)
             .map(result => {
-              const { id, title, thumbnail } = result.metacard.properties
-
+              const { id, title, thumbnail } = result.metacard.attributes
               return (
                 <GalleryItem
                   key={id}

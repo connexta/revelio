@@ -49,7 +49,7 @@ const userPref = gql`
     user {
       preferences {
         querySettings {
-          src
+          sourceIds
         }
       }
     }
@@ -139,7 +139,7 @@ const SourcesSelectContainer = props => {
       {...props}
       defaultValue={getIn(
         userPrefsQuery,
-        ['data', 'user', 'preferences', 'querySettings', 'src'],
+        ['data', 'user', 'preferences', 'querySettings', 'sourceIds'],
         undefined
       )}
       sources={sourcesQuery.data.sources

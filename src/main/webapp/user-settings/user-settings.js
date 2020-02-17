@@ -209,11 +209,11 @@ const query = gql`
         }
         timeZone
         querySettings {
-          src
+          sourceIds
           federation
-          sorts {
-            attribute
-            direction
+          sortPolicy {
+            propertyName
+            sortOrder
           }
           detail_level
         }

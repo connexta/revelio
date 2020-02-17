@@ -132,7 +132,7 @@ const useQueryExecutor = () => {
             query: simpleSearch,
             variables: {
               filterTree,
-              settings: { src, ...settings },
+              settings: { sourceIds: [src], ...settings },
             },
             fetchPolicy: 'network-only',
           })

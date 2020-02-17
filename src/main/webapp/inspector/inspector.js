@@ -83,7 +83,7 @@ const MultiResultPropertiesList = props => {
     .sort()
     .map(key => {
       const values = results.map(result => {
-        return result.metacard.properties[key] || 'No Value'
+        return result.metacard.attributes[key] || 'No Value'
       })
       return (
         <div key={key}>
@@ -120,7 +120,7 @@ const Details = props => {
   return (
     <Paper>
       <List>
-        <PropertiesList properties={result.metacard.properties} />
+        <PropertiesList properties={result.metacard.attributes} />
       </List>
     </Paper>
   )
@@ -203,12 +203,12 @@ const Summary = props => {
   let summaryProperties = { '': 'No summary attributes were provided.' }
   if (summaryAttributes && summaryAttributes.length) {
     const result = results instanceof Array ? results[0] : results
-    const properties = result.metacard.properties
+    const attributes = result.metacard.attributes
 
     const filteredProperties = summaryAttributes.map(attr => {
-      const property = properties[attr]
-      if (property != undefined) {
-        return { [attr]: property }
+      const attribute = attributes[attr]
+      if (attribute != undefined) {
+        return { [attr]: attribute }
       } else {
         return {}
       }
@@ -234,8 +234,8 @@ const Summary = props => {
 
 const getAttributeSet = results => {
   return results.reduce((acc, value) => {
-    const properties = value.metacard.properties
-    const keys = Object.keys(properties)
+    const attributes = value.metacard.attributes
+    const keys = Object.keys(attributes)
     return new Set([...acc, ...keys])
   }, new Set())
 }

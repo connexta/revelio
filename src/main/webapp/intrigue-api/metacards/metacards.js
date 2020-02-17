@@ -16,20 +16,20 @@ const typeDefs = `
   }
 
   input QuerySortInput {
-    attribute: String
-    direction: Direction
+    propertyName: String
+    sortOrder: Direction
   }
 
   type QuerySort {
-    attribute: String
-    direction: Direction
+    propertyName: String
+    sortOrder: Direction
   }
 
   input QuerySettingsInput {
-    src: String
+    sourceIds: [String]
     federation: String
     phonetics: Boolean
-    sorts: [QuerySortInput]
+    sortPolicy: [QuerySortInput]
     spellcheck: Boolean
 
     # Result Form Name
@@ -44,10 +44,10 @@ const typeDefs = `
   }
 
   type QuerySettings {
-    src: [String]
+    sourceIds: [String]
     federation: String
     phonetics: Boolean
-    sorts: [QuerySort]
+    sortPolicy: [QuerySort]
     spellcheck: Boolean
     detail_level: String
     type: String
@@ -229,7 +229,7 @@ const createThumbnailUrl = result => {
     return action.url
   }
 
-  const thumbnail = result.metacard.properties.thumbnail
+  const thumbnail = result.metacard.attributes.thumbnail
 
   if (isEmptyThumbnail(thumbnail)) {
     return undefined
@@ -243,12 +243,12 @@ const metacards = async (parent, args, { catalog, toGraphqlName, fetch }) => {
   const json = await catalog.query(processQuery(q))
 
   const attributes = json.results.map(result => {
-    const properties = renameKeys(toGraphqlName, result.metacard.properties)
-    const { filterTree } = properties
+    const attributes = renameKeys(toGraphqlName, result.metacard.attributes)
+    const { filterTree } = attributes
     return {
-      ...properties,
-      queries: queries(properties.queries),
-      lists: lists(properties.id, fetch, toGraphqlName),
+      ...attributes,
+      queries: queries(attributes.queries),
+      lists: lists(attributes.id, fetch, toGraphqlName),
       thumbnail: createThumbnailUrl(result),
       filterTree: () => filterTree && JSON.parse(filterTree),
     }
@@ -257,14 +257,14 @@ const metacards = async (parent, args, { catalog, toGraphqlName, fetch }) => {
   const results = json.results.map(result => {
     const withUuidActions = updateIn(result, ['actions'], actions => {
       return actions.map(action =>
-        makeActionIdUnique(result.metacard.properties.id, action)
+        makeActionIdUnique(result.metacard.attributes.id, action)
       )
     })
     const thumbnail = createThumbnailUrl(result)
     if (thumbnail !== undefined) {
       return setIn(
         withUuidActions,
-        ['metacard', 'properties', 'thumbnail'],
+        ['metacard', 'attributes', 'thumbnail'],
         thumbnail
       )
     } else {

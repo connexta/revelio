@@ -319,12 +319,16 @@
           "fields": null,
           "inputFields": [
             {
-              "name": "src",
+              "name": "sourceIds",
               "description": "",
               "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
               },
               "defaultValue": null
             },
@@ -349,7 +353,7 @@
               "defaultValue": null
             },
             {
-              "name": "sorts",
+              "name": "sortPolicy",
               "description": "",
               "type": {
                 "kind": "LIST",
@@ -383,7 +387,7 @@
               "defaultValue": null
             },
             {
-              "name": "count",
+              "name": "pageSize",
               "description": "Page size",
               "type": {
                 "kind": "SCALAR",
@@ -393,7 +397,7 @@
               "defaultValue": null
             },
             {
-              "name": "start",
+              "name": "startIndex",
               "description": "Start of paging. First element is 1, not 0.",
               "type": {
                 "kind": "SCALAR",
@@ -434,7 +438,7 @@
           "fields": null,
           "inputFields": [
             {
-              "name": "attribute",
+              "name": "propertyName",
               "description": "",
               "type": {
                 "kind": "SCALAR",
@@ -444,7 +448,7 @@
               "defaultValue": null
             },
             {
-              "name": "direction",
+              "name": "sortOrder",
               "description": "",
               "type": {
                 "kind": "ENUM",
@@ -3297,7 +3301,7 @@
           "description": "",
           "fields": [
             {
-              "name": "src",
+              "name": "sourceIds",
               "description": "",
               "args": [],
               "type": {
@@ -3337,7 +3341,7 @@
               "deprecationReason": null
             },
             {
-              "name": "sorts",
+              "name": "sortPolicy",
               "description": "",
               "args": [],
               "type": {
@@ -3400,7 +3404,7 @@
           "description": "",
           "fields": [
             {
-              "name": "attribute",
+              "name": "propertyName",
               "description": "",
               "args": [],
               "type": {
@@ -3412,7 +3416,7 @@
               "deprecationReason": null
             },
             {
-              "name": "direction",
+              "name": "sortOrder",
               "description": "",
               "args": [],
               "type": {

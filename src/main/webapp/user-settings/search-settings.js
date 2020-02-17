@@ -16,20 +16,20 @@ const Defaults = props => (
     </Typography>
 
     <SortOrder
-      value={getIn(props.value, ['querySettings', 'sorts'])}
+      value={getIn(props.value, ['querySettings', 'sortPolicy'])}
       onChange={sortOrder =>
         props.onChange(
-          setIn(props.value, ['querySettings', 'sorts'], sortOrder)
+          setIn(props.value, ['querySettings', 'sortPolicy'], sortOrder)
         )
       }
     />
     <Spacing />
     <SourceSelect
-      value={getIn(props.value, ['querySettings', 'src'])}
+      value={getIn(props.value, ['querySettings', 'sourceIds'])}
       onChange={newValue => {
         const querySettings = merge(get(props.value, 'querySettings'), {
           federation: newValue !== null ? 'selected' : 'enterprise',
-          src: newValue,
+          sourceIds: [newValue],
         })
 
         props.onChange(set(props.value, 'querySettings', querySettings))

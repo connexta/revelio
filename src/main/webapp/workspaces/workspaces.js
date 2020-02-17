@@ -195,8 +195,8 @@ export const Workspace = () => {
               {/* //TODO add paging */}
               {results.map(({ metacard }) => (
                 <IndexCardItem
-                  key={metacard.properties.id}
-                  title={metacard.properties.title}
+                  key={metacard.attributes.id}
+                  title={metacard.attributes.title}
                   subHeader={' '}
                 />
               ))}
@@ -217,8 +217,8 @@ export const Workspace = () => {
 
             {listResults.map(({ metacard }) => (
               <IndexCardItem
-                key={metacard.properties.id}
-                title={metacard.properties.title}
+                key={metacard.attributes.id}
+                title={metacard.attributes.title}
                 subHeader={' '}
               />
             ))}
