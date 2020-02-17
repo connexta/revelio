@@ -1,5 +1,5 @@
 import React from 'react'
-import Routes, { hasPath } from '../../webapp/routes'
+import RevelioRoutes, { hasPath } from '../../webapp/routes'
 import { renderToString, renderToStaticMarkup } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom'
 import { getDataFromTree } from '@apollo/react-ssr'
@@ -17,11 +17,11 @@ const executableSchema = makeExecutableSchema({ typeDefs, resolvers })
 
 const ROOT_PATH = '/search/catalog'
 
-module.exports = async (req, res, next) => {
+export default async (req, res, next) => {
   const path = req.originalUrl.replace(ROOT_PATH, '')
   try {
     if (hasPath(path)) {
-      const html = await executeSSR(req)
+      const html = await executeSSR({ Routes: RevelioRoutes })(req)
       res.end(html)
     } else {
       next()
@@ -57,7 +57,7 @@ const Html = ({ content, state, css, scripts = [] }) => {
   )
 }
 
-const executeSSR = async req => {
+export const executeSSR = ({ Routes }) => async req => {
   const { originalUrl, clientBundles } = req
 
   const sheets = new ServerStyleSheets()

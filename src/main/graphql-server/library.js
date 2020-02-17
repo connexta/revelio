@@ -1,3 +1,3 @@
-// import Renderer from './helpers/renderer'
 import { captureGraphql } from './middleware'
-export { captureGraphql }
+import { executeSSR } from './helpers/renderer'
+export { captureGraphql, executeSSR }

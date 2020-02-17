@@ -1,6 +1,6 @@
 const { ApolloServer } = require('apollo-server-express')
 const express = require('express')
-const renderer = require('./helpers/renderer')
+const renderer = require('./helpers/renderer').default
 const { createLogger, format, transports } = require('winston')
 const { v4 } = require('uuid')
 const onFinished = require('on-finished')
