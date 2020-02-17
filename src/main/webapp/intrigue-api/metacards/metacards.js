@@ -21,8 +21,8 @@ const typeDefs = `
   }
 
   type QuerySort {
-    attribute: String
-    direction: Direction
+    propertyName: String
+    sortOrder: Direction
   }
 
   input QuerySettingsInput {

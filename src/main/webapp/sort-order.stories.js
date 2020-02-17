@@ -23,11 +23,11 @@ stories.add('Sort Order', () => {
 })
 
 stories.add('Sort Order with values provided', () => {
-  const sorts = [
-    { attribute: 'thumbnail', direction: 'ascending' },
-    { attribute: 'phonetics', direction: 'descending' },
-    { attribute: 'media.bit-rate', direction: 'ascending' },
-    { attribute: 'location', direction: 'descending' },
+  const sortPolicy = [
+    { propertyName: 'thumbnail', sortOrder: 'ascending' },
+    { propertyName: 'phonetics', sortOrder: 'descending' },
+    { propertyName: 'media.bit-rate', sortOrder: 'ascending' },
+    { propertyName: 'location', sortOrder: 'descending' },
   ]
 
   return <SortOrder {...useSortState(sorts)} />

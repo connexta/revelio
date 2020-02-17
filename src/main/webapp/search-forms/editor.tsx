@@ -89,15 +89,15 @@ const queryToSearch = (query: QueryType) => {
   return {
     filterTree,
     srcs: sourceIds || ['ddf.distribution'],
-    sorts: (sortPolicy || []).map(sort => {
+    sortPolicy: (sortPolicy || []).map(sort => {
       //query builder might have sorts in the correct format already
       if (typeof sort !== 'string') {
         return sort
       }
       const splitIndex = sort.lastIndexOf(',')
       return {
-        attribute: sort.substring(0, splitIndex),
-        direction: sort.substring(splitIndex + 1, sort.length),
+        propertyName: sort.substring(0, splitIndex),
+        sortOrder: sort.substring(splitIndex + 1, sort.length),
       }
     }),
     detail_level: detail_level === 'All Fields' ? undefined : detail_level,

@@ -77,7 +77,7 @@ const AttributeSortOrder = props => {
   const value = fromJS(props.value || {})
 
   const attribute = attributeDescriptors.find(
-    attr => attr.id === value.get('attribute')
+    attr => attr.id === value.get('propertyName')
   )
 
   return (
@@ -99,7 +99,7 @@ const AttributeSortOrder = props => {
       />
 
       <DirectionSelect
-        value={value.get('direction')}
+        value={value.get('sortOrder')}
         attributeType={attribute.type}
         onChange={direction => {
           onChange(value.set('sortOrder', direction))

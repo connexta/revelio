@@ -16,7 +16,7 @@ const available = availability => {
 }
 
 const generateSources = (numSources = 0, availability) => {
-  const sources = []
+  const sourceIds = []
 
   for (let i = 0; i < numSources; i++) {
     sources.push({
@@ -28,7 +28,7 @@ const generateSources = (numSources = 0, availability) => {
     })
   }
 
-  return sources
+  return sourceIds
 }
 
 stories.add('Basic', () => {
