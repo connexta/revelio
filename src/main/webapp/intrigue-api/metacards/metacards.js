@@ -16,8 +16,8 @@ const typeDefs = `
   }
 
   input QuerySortInput {
-    attribute: String
-    direction: Direction
+    propertyName: String
+    sortOrder: Direction
   }
 
   type QuerySort {
@@ -26,10 +26,10 @@ const typeDefs = `
   }
 
   input QuerySettingsInput {
-    src: String
+    sourceIds: [String]
     federation: String
     phonetics: Boolean
-    sorts: [QuerySortInput]
+    sortPolicy: [QuerySortInput]
     spellcheck: Boolean
 
     # Result Form Name
@@ -44,10 +44,10 @@ const typeDefs = `
   }
 
   type QuerySettings {
-    src: [String]
+    sourceIds: [String]
     federation: String
     phonetics: Boolean
-    sorts: [QuerySort]
+    sortPolicy: [QuerySort]
     spellcheck: Boolean
     detail_level: String
     type: String
@@ -229,7 +229,7 @@ const createThumbnailUrl = result => {
     return action.url
   }
 
-  const thumbnail = result.metacard.properties.thumbnail
+  const thumbnail = result.metacard.attributes.thumbnail
 
   if (isEmptyThumbnail(thumbnail)) {
     return undefined
@@ -264,7 +264,7 @@ const metacards = async (parent, args, { catalog, toGraphqlName, fetch }) => {
     if (thumbnail !== undefined) {
       return setIn(
         withUuidActions,
-        ['metacard', 'properties', 'thumbnail'],
+        ['metacard', 'attributes', 'thumbnail'],
         thumbnail
       )
     } else {

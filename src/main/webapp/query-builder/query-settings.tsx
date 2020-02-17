@@ -65,46 +65,46 @@ type QuerySettingsProps = {
 const QuerySettings = (props: QuerySettingsProps) => {
   const { settings = {} } = props
   if (
-    settings.sources == undefined &&
-    settings.sorts == undefined &&
+    settings.sourceIds == undefined &&
+    settings.sortPolicy == undefined &&
     settings.detail_level == undefined
   )
     return null
 
   return (
     <Section title="Search Settings">
-      {settings.sources != undefined && (
+      {settings.sourceIds != undefined && (
         <Box style={{ padding: '0px 16px' }}>
           <FilterCard
             label="Sources"
             onRemove={() => {
-              props.onChange({ ...settings, sources: null })
+              props.onChange({ ...settings, sourceIds: null })
             }}
           >
             <SourcesSelect
-              value={settings.sources}
+              value={settings.sourceIds}
               onChange={(value: any) => {
-                props.onChange({ ...settings, sources: value })
+                props.onChange({ ...settings, sourceIds: value })
               }}
             />
           </FilterCard>
         </Box>
       )}
-      {settings.sorts != undefined && (
+      {settings.sortPolicy != undefined && (
         <Box style={{ padding: '0px 16px' }}>
           <FilterCard
             label="Sorts"
             onRemove={() => {
-              props.onChange({ ...settings, sorts: null })
+              props.onChange({ ...settings, sortPolicy: null })
             }}
           >
             <SortOrder
-              value={getSorts(settings.sorts)}
+              value={getSorts(settings.sortPolicy)}
               onChange={(value: any) => {
                 props.onChange({
                   ...settings,
-                  sorts: value.map(
-                    (sort: any) => `${sort.attribute},${sort.direction}`
+                  sortPolicy: value.map(
+                    (sort: any) => `${sort.properyName},${sort.sortOrder}`
                   ),
                 })
               }}

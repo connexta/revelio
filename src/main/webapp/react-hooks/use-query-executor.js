@@ -132,12 +132,13 @@ const useQueryExecutor = () => {
             query: simpleSearch,
             variables: {
               filterTree,
-              settings: { src, ...settings },
+              settings: { sourceIds: [src], ...settings },
             },
             fetchPolicy: 'network-only',
           })
           onSuccess(src, data)
         } catch (e) {
+          console.log(e)
           onError(src)
         }
       })

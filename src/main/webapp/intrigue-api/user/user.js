@@ -116,12 +116,12 @@ const getDefaultPreferences = async fetch => {
     timeZone: 'Etc/UTC',
     theme: { theme: 'sea' },
     querySettings: {
-      src: undefined,
+      sourceIds: undefined,
       federation: 'enterprise',
-      sorts: [
+      sortPolicy: [
         {
-          attribute: 'modified',
-          direction: 'descending',
+          propertyName: 'modified',
+          sortOrder: 'descending',
         },
       ],
     },

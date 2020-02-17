@@ -12,10 +12,10 @@ const query = {
     type: 'ILIKE',
     value: '*',
   },
-  sorts: [
+  sortPolicy: [
     {
-      attribute: 'modified',
-      direction: 'descending',
+      propertyName: 'modified',
+      sortOrder: 'descending',
     },
   ],
 }

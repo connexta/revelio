@@ -211,9 +211,9 @@ const query = gql`
         querySettings {
           src
           federation
-          sorts {
-            attribute
-            direction
+          sortPolicy {
+            propertyName
+            sortOrder
           }
           detail_level
         }

@@ -85,11 +85,11 @@ type EditorProps = {
 }
 
 const queryToSearch = (query: QueryType) => {
-  const { sources: srcs, sorts, detail_level, filterTree } = query
+  const { sourceIds, sortPolicy, detail_level, filterTree } = query
   return {
     filterTree,
-    srcs: srcs || ['ddf.distribution'],
-    sorts: (sorts || []).map(sort => {
+    srcs: sourceIds || ['ddf.distribution'],
+    sorts: (sortPolicy || []).map(sort => {
       //query builder might have sorts in the correct format already
       if (typeof sort !== 'string') {
         return sort
