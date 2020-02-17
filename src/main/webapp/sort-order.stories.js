@@ -30,5 +30,5 @@ stories.add('Sort Order with values provided', () => {
     { propertyName: 'location', sortOrder: 'descending' },
   ]
 
-  return <SortOrder {...useSortState(sorts)} />
+  return <SortOrder {...useSortState(sortPolicy)} />
 })
