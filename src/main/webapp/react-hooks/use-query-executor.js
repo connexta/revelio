@@ -138,7 +138,6 @@ const useQueryExecutor = () => {
           })
           onSuccess(src, data)
         } catch (e) {
-          console.log(e)
           onError(src)
         }
       })
