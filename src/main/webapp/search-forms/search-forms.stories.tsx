@@ -9,7 +9,7 @@ const { SelectionProvider } = require('../react-hooks/use-selection-interface')
 
 import QueryBuilder from '../query-builder/query-builder'
 import { QueryType } from '../query-builder/types'
-import useState from '../@storybook/use-state'
+const useState = require('../@storybook/use-state').default
 
 const stories = storiesOf('Search Forms', module)
 
