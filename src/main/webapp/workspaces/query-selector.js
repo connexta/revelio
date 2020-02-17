@@ -1,7 +1,8 @@
 import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
 import Popover from '@material-ui/core/Popover'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState } from 'react'
 import {
   Actions,
   DeleteAction,
@@ -30,55 +31,41 @@ const useOpenClose = props => {
 
 const QueryCard = props => {
   const { title, onClick, QueryEditor, query } = props
-  const [anchorEl, open, handleOpen, handleClose] = useOpenClose(props)
+  const [editing, setEditing] = useState(false)
+  //TODO reopen query popover, and query editor with updated query
   const [{ active: isDrawing }] = useDrawInterface()
-  const [wasDrawing, setWasDrawing] = useState(false)
-  const drawAnchorEl = useRef(null)
-  useEffect(
-    () => {
-      if (isDrawing) {
-        setWasDrawing(true)
-        handleClose()
-      }
-      if (!isDrawing && wasDrawing) {
-        handleOpen({
-          currentTarget: drawAnchorEl.current,
-        })
-      }
-    },
-    [isDrawing]
-  )
+
   return (
     <React.Fragment>
-      <div ref={drawAnchorEl} />
       <IndexCardItem
         title={title}
         subHeader={'Has not been run'}
         onClick={onClick}
       >
         <Actions>
-          <EditAction onEdit={handleOpen} />
+          <EditAction onEdit={() => setEditing(true)} />
           <DeleteAction />
         </Actions>
       </IndexCardItem>
-      <Popover
-        open={open}
-        anchorEl={anchorEl}
-        onClose={() => {
-          setWasDrawing(isDrawing)
-          handleClose()
-        }}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-      >
-        <QueryEditor query={query} onSearch={handleClose} />
-      </Popover>
+      {!isDrawing &&
+        editing && (
+          <Dialog
+            fullWidth
+            maxWidth={false}
+            open={open}
+            onClose={() => {
+              setEditing(false)
+            }}
+          >
+            <QueryEditor
+              query={query}
+              onSearch={() => setEditing(false)}
+              onCancel={() => {
+                setEditing(false)
+              }}
+            />
+          </Dialog>
+        )}
     </React.Fragment>
   )
 }
@@ -102,7 +89,6 @@ const QuerySelector = props => {
         onSelect(query)
       }}
       QueryEditor={QueryEditor}
-      onClose={handleClose}
     />
   ))
 
@@ -117,7 +103,6 @@ const QuerySelector = props => {
             }}
             query={currentQuery}
             QueryEditor={QueryEditor}
-            onClose={handleClose}
           />
 
           <Button

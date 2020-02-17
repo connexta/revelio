@@ -1,40 +1,33 @@
-import React, { memo, useState } from 'react'
-
-import LinearProgress from '@material-ui/core/LinearProgress'
-import Typography from '@material-ui/core/Typography'
-
-import TextField from '@material-ui/core/TextField'
+import { useMutation, useQuery } from '@apollo/react-hooks'
+import Box from '@material-ui/core/Box'
 import Divider from '@material-ui/core/Divider'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
-
+import Typography from '@material-ui/core/Typography'
+import gql from 'graphql-tag'
+import { getIn } from 'immutable'
+import React, { memo, useState } from 'react'
+import loadable from 'react-loadable'
+import { Link, Redirect, useParams } from 'react-router-dom'
+import { populateDefaultQuery } from '../basic-search'
+import { fromFilterTree, toFilterTree } from '../basic-search-helper'
+import ErrorMessage from '../error'
 import {
-  IndexCards,
-  IndexCardItem,
+  Actions,
   AddCardItem,
   DeleteAction,
+  IndexCardItem,
+  IndexCards,
   ShareAction,
-  Actions,
 } from '../index-cards'
-
-import RetryNotification from '../retry/retry'
-
-import { Link, useParams, Redirect } from 'react-router-dom'
-
-import { useQueryExecutor } from '../react-hooks'
-
-import gql from 'graphql-tag'
-import { useQuery, useMutation } from '@apollo/react-hooks'
-
-import QueryStatus from '../query-status'
-import BasicSearch, { populateDefaultQuery } from '../basic-search'
-import { toFilterTree, fromFilterTree } from '../basic-search-helper'
-import QuerySelector from './query-selector'
-
-import loadable from 'react-loadable'
 import Lists from '../lists'
-import ErrorMessage from '../error'
-import { getIn } from 'immutable'
+import AdvancedSearchQueryBuilder from '../query-builder/query-builder'
+import QueryStatus from '../query-status'
+import { useQueryExecutor } from '../react-hooks'
+import RetryNotification from '../retry/retry'
+import Editor from '../search-forms/editor'
+import QuerySelector from './query-selector'
 
 const LoadingComponent = () => <LinearProgress />
 let MemoizedVisualizations = () => null
@@ -95,32 +88,21 @@ export const Workspace = () => {
     return <ErrorMessage error={error}>Error Retrieving Workspace</ErrorMessage>
   }
 
-  const QueryEditor = props => (
-    <div style={{ padding: 20 }}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <TextField
-          style={{ marginBottom: 20 }}
-          label="Query Title"
-          value={props.query.title || ''}
-          fullWidth
+  const QueryEditor = props => {
+    const [query, setQuery] = React.useState(props.query)
+    return (
+      <Box height="calc(100vh - 128px)">
+        <Editor
+          //TODO add option to switch between different query builders
+          queryBuilder={AdvancedSearchQueryBuilder}
+          query={query}
+          onChange={query => setQuery(query)}
+          onCancel={props.onCancel}
+          //TO-DO: onSave={}
         />
-      </div>
-      <div style={{ overflow: 'hidden', padding: 2 }}>
-        <BasicSearch
-          query={props.query}
-          onSearch={query => {
-            if (typeof props.onSearch === 'function') {
-              props.onSearch(query)
-            }
-            // setPageIndex(0)
-            setQuery(query)
-            onClear()
-            onSearch(query)
-          }}
-        />
-      </div>
-    </div>
-  )
+      </Box>
+    )
+  }
 
   const attributes = data.metacardsById[0].attributes[0]
 

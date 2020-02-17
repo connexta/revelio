@@ -1,17 +1,16 @@
+import Box from '@material-ui/core/Box'
 import React from 'react'
-
 import { storiesOf } from '../@storybook/react'
-import { action } from '@connexta/ace/@storybook/addon-actions'
-import Visualizations from './visualizations'
-import { SelectionProvider } from '../react-hooks/use-selection-interface'
 import useState from '../@storybook/use-state'
+import genResults from '../gen-results'
+import AdvancedSearchQueryBuilder from '../query-builder/query-builder'
+import { SelectionProvider } from '../react-hooks/use-selection-interface'
+import Editor from '../search-forms/editor'
 import QuerySelector from './query-selector'
 import queries from './sample-queries.json'
-import BasicSearch from '../basic-search'
+import Visualizations from './visualizations'
 
 const stories = storiesOf('Workspaces', module)
-
-import genResults from '../gen-results'
 
 stories.add('Visualizations', () => {
   const results = genResults()
@@ -25,29 +24,32 @@ stories.add('Visualizations', () => {
   )
 })
 
-const QueryEditor = ({ query }) => {
+const QueryEditor = props => {
+  const [query, setQuery] = React.useState(props.query)
   return (
-    <div style={{ padding: 20 }}>
-      <div style={{ overflow: 'hidden', padding: 2 }}>
-        <BasicSearch
-          query={query}
-          onSearch={query => {
-            action('onChange')(query)
-          }}
-        />
-      </div>
-    </div>
+    <Box height="calc(100vh - 128px)">
+      <Editor
+        //TODO add option to switch between different query builders
+        queryBuilder={AdvancedSearchQueryBuilder}
+        query={query}
+        onChange={query => setQuery(query)}
+        onCancel={props.onCancel}
+        //TO-DO: onSave={}
+      />
+    </Box>
   )
 }
 
 stories.add('Query Selector', () => {
   const [query, setQuery] = useState(queries[0])
   return (
-    <QuerySelector
-      queries={queries}
-      currentQuery={query}
-      QueryEditor={QueryEditor}
-      onSelect={setQuery}
-    />
+    <SelectionProvider>
+      <QuerySelector
+        queries={queries}
+        currentQuery={query}
+        QueryEditor={QueryEditor}
+        onSelect={setQuery}
+      />
+    </SelectionProvider>
   )
 })
