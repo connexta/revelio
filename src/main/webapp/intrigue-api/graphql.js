@@ -1,18 +1,20 @@
 import { SchemaLink } from 'apollo-link-schema'
-import { makeExecutableSchema } from 'graphql-tools'
+// import { makeExecutableSchema } from 'graphql-tools'
 import { ApolloClient } from 'apollo-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloLink } from 'apollo-link'
-import schema from './schema'
+// import schema from './schema'
 
-const { resolvers, typeDefs, context } = schema
+// const { resolvers, typeDefs, context } = schema
 
-const executableSchema = makeExecutableSchema({
-  typeDefs,
-  resolvers,
-})
+// const executableSchema = makeExecutableSchema({
+//   typeDefs,
+//   resolvers,
+// })
 
-const createServerApollo = (...args) => {
+export const createServerApollo = ({ executableSchema, context }) => (
+  ...args
+) => {
   const cache = new InMemoryCache()
   return new ApolloClient({
     link: ApolloLink.from([
@@ -28,7 +30,4 @@ const createServerApollo = (...args) => {
 
 module.exports = {
   createServerApollo,
-  resolvers,
-  typeDefs,
-  context,
 }

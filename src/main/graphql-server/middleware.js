@@ -10,7 +10,7 @@ const {
   resolvers,
   typeDefs,
   context,
-} = require('../webapp/intrigue-api/graphql')
+} = require('../webapp/intrigue-api/schema').default
 
 const btoa = arg => {
   return Buffer.from(arg).toString('base64')

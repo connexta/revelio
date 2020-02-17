@@ -26,6 +26,9 @@
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
     "@apollo/react-ssr": "^3.1.3",
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-react": "^7.8.3",
     "@date-io/moment": "1.3.13",
     "@material-ui/core": "^4.6.1",
     "@material-ui/icons": "^4.2.1",
@@ -41,6 +44,8 @@
     "apollo-link-http": "^1.5.16",
     "apollo-link-schema": "^1.2.4",
     "apollo-server-express": "^2.9.7",
+    "babel-loader": "^8.0.6",
+    "babel-preset-latest": "^6.24.1",
     "compression": "^1.7.4",
     "express": "4.17.1",
     "geospatialdraw": "0.5.5",
@@ -54,6 +59,7 @@
     "moment-timezone": "^0.5.16",
     "ol": "^6.0.1",
     "on-finished": "^2.3.0",
+    "parcel-bundler": "^1.12.4",
     "polished": "^3.4.1",
     "qs": "^6.9.1",
     "react": "^16.9.0",
@@ -65,8 +71,12 @@
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "styled-components": "^4.3.2",
+    "ts-loader": "^6.2.1",
     "universal-cookie": "^4.0.2",
     "uuid": "^3.3.3",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11",
+    "webpack-node-externals": "^1.7.2",
     "winston": "^3.2.1"
   },
   "scripts": {
@@ -80,7 +90,8 @@
     "storybook": "ace storybook",
     "build": "yarn build:prod && yarn storybook --static",
     "build:prod": "cross-env NODE_ENV=production NODE_OPTIONS='--max_old_space_size=8192' ace bundle --middleware src/main/graphql-server/server.js",
-    "prestart": "ace disable-idp"
+    "prestart": "ace disable-idp",
+    "build:library": "webpack --mode=production"
   },
   "context-path": "/search/catalog/",
   "resolutions": {

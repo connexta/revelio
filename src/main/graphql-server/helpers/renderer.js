@@ -8,6 +8,12 @@ import { createServerApollo } from '../../webapp/intrigue-api/graphql'
 import { ApolloProvider } from '@apollo/react-hooks'
 import Loadable from '@connexta/ace/react-loadable'
 import { getBundles } from '@connexta/ace/react-loadable/webpack'
+import { makeExecutableSchema } from 'graphql-tools'
+import schema from '../../webapp/intrigue-api/schema'
+
+const { resolvers, typeDefs, context } = schema
+
+const executableSchema = makeExecutableSchema({ typeDefs, resolvers })
 
 const ROOT_PATH = '/search/catalog'
 
@@ -55,7 +61,7 @@ const executeSSR = async req => {
   const { originalUrl, clientBundles } = req
 
   const sheets = new ServerStyleSheets()
-  const client = createServerApollo({ req })
+  const client = createServerApollo({ executableSchema, context })({ req })
 
   try {
     await Loadable.preloadAll()
