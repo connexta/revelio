@@ -18,8 +18,8 @@ const useCursorPosition = () => {
       if (map) {
         map.on('pointermove', pointerMove)
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [map]
   )
   return { cursor, setMap }

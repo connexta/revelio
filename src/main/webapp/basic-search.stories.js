@@ -1,7 +1,7 @@
 import React from 'react'
 import { storiesOf } from './@storybook/react'
 import { action } from '@connexta/ace/@storybook/addon-actions'
-import { BasicSearch } from './basic-search'
+import BasicSearch from './basic-search'
 
 const stories = storiesOf('BasicSearch', module)
 

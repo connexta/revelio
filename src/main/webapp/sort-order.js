@@ -244,7 +244,6 @@ const SortOrder = props => {
     return value.push(fromJS(nextSort))
   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (value.isEmpty()) {
       if (defaultValue) {
@@ -253,6 +252,7 @@ const SortOrder = props => {
         onChange(pushNextSort())
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

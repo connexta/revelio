@@ -367,4 +367,4 @@ export default props => {
   return <Component {...props} />
 }
 
-export { Actions, Details, Inspector, MultiResultDetails, Summary }
+export { Actions, Details, MultiResultDetails, Summary }
