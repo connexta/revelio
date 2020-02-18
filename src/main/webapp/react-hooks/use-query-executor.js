@@ -75,6 +75,35 @@ const simpleSearch = gql`
   }
 `
 
+const querySettingsInputKeys = [
+  'sourceIds',
+  'federation',
+  'phonetics',
+  'sortPolicy',
+  'spellcheck',
+  'detail_level',
+  'pageSize',
+  'startIndex',
+  'type',
+]
+
+const getQuerySettings = settings => {
+  const filteredSettings = Object.keys(settings).reduce((acc, key) => {
+    if (querySettingsInputKeys.includes(key)) {
+      return { ...acc, [key]: settings[key] }
+    }
+    return acc
+  }, {})
+
+  const { sortPolicy, detail_level } = filteredSettings
+
+  return {
+    sortPolicy: sortPolicy || [],
+    detail_level: detail_level === 'All Fields' ? undefined : detail_level,
+    ...filteredSettings,
+  }
+}
+
 const useQueryExecutor = () => {
   const client = useApolloClient()
 
@@ -118,7 +147,8 @@ const useQueryExecutor = () => {
 
   const onSearch = useCallback(
     async query => {
-      const { filterTree, srcs, ...settings } = query
+      const { filterTree, srcs = ['ddf.distribution'], ...settings } = query
+      const querySettings = getQuerySettings(settings)
 
       const status = srcs.reduce((status, src) => {
         return status.set(src, { type: 'source.pending' })
@@ -132,7 +162,7 @@ const useQueryExecutor = () => {
             query: simpleSearch,
             variables: {
               filterTree,
-              settings: { sourceIds: [src], ...settings },
+              settings: { sourceIds: [src], ...querySettings },
             },
             fetchPolicy: 'network-only',
           })

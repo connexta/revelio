@@ -2,7 +2,6 @@
   {
     "id": "1b20790f2b8741a0970c76b43e7d067d",
     "title": "*",
-    "cql": "((\"anyText\" ILIKE '%') AND (INTERSECTS(\"anyGeo\", POLYGON((8.3 40.2,8.7 40.2,8.7 40.1,8.3 40.1,8.3 40.2)))))",
     "filterTree": {
       "type": "AND",
       "filters": [
@@ -40,13 +39,11 @@
           }
         }
       ]
-    },
-    "__typename": "MetacardAttributes"
+    }
   },
   {
     "id": "0a77a620362e45518a3eb6522c95a236",
     "title": "Search 1",
-    "cql": "(\"datetime.end\" DURING 2019-12-02T07:00:00.000Z/2019-12-19T07:00:00.000Z)",
     "filterTree": {
       "type": "AND",
       "filters": [
@@ -58,13 +55,11 @@
           "to": "2019-12-19T07:00:00.000Z"
         }
       ]
-    },
-    "__typename": "MetacardAttributes"
+    }
   },
   {
     "id": "af55f6603e334ad9b9f76e1866e0ca68",
     "title": "Search 2",
-    "cql": "(DWITHIN(\"anyGeo\", POINT(-103.565545 44.998067), 557025.618284, meters))",
     "filterTree": {
       "type": "AND",
       "filters": [
@@ -89,7 +84,6 @@
           }
         }
       ]
-    },
-    "__typename": "MetacardAttributes"
+    }
   }
 ]
