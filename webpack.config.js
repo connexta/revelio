@@ -1,26 +1,27 @@
 const path = require('path')
-const nodeExternals = require('webpack-node-externals')
+// const nodeExternals = require('webpack-node-externals')
 
 const nodeResolve = place => require.resolve(place)
 
-module.exports = {
+module.exports = ['source-map'].map(devtool => ({
   entry: {
-    'intrigue-api': path.resolve(
-      __dirname,
-      'src/main/webapp/intrigue-api/library.js'
-    ),
     components: path.resolve(__dirname, 'src/main/webapp/library.js'),
-    'graphql-server': path.resolve(
-      __dirname,
-      'src/main/graphql-server/library.js'
-    ),
   },
+  devtool,
   output: {
     path: path.resolve(__dirname, './build/lib'),
     filename: '[name]/index.js',
+    library: 'a-test-of-revelio',
     libraryTarget: 'umd',
   },
-  externals: [nodeExternals()],
+  externals: [
+    'react',
+    /@material-ui\/.*/,
+    /^@?apollo*/,
+    'immutable',
+    'graphql-tag',
+    'react-hot-loader',
+  ],
   module: {
     rules: [
       {
@@ -48,4 +49,4 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.json', '.jsx', '.ts', '.tsx'],
   },
-}
+}))

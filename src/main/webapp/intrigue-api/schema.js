@@ -59,8 +59,14 @@ const typeDefs = `
   }
 `
 
+export const base = {
+  resolvers: {},
+  typeDefs,
+  context,
+}
+
 export default [
-  { resolvers: {}, typeDefs, context },
+  base,
   require('./metacards/metacards')(),
   require('./location/location'),
   require('./user/user'),

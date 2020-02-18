@@ -1,5 +1,4 @@
-import createApolloClient from './create-client-apollo'
+const { createServerApollo } = require('./graphql')
 import withChaos from './chaos'
-
-
-export { createApolloClient, withChaos }
+import createApolloClient from './create-client-apollo'
+export { createServerApollo, createApolloClient, withChaos }

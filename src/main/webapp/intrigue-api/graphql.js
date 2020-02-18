@@ -3,7 +3,7 @@ import { ApolloClient } from 'apollo-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloLink } from 'apollo-link'
 
-export const createServerApollo = ({ executableSchema, context }) => (
+const createServerApollo = ({ executableSchema, context }) => (
   ...args
 ) => {
   const cache = new InMemoryCache()

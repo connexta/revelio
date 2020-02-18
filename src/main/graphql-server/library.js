@@ -1,3 +1,2 @@
-import { captureGraphql } from './middleware'
-import { executeSSR } from './helpers/renderer'
-export { captureGraphql, executeSSR }
+import executeSSR from './helpers/execute-ssr'
+export { executeSSR }

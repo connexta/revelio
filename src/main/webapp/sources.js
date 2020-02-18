@@ -19,7 +19,7 @@ import OnlineIcon from '@material-ui/icons/CloudDoneOutlined'
 import OfflineIcon from '@material-ui/icons/OfflineBoltOutlined'
 import Select from '@material-ui/core/Select'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import { useApolloFallback } from './react-hooks'
+import useApolloFallback from './react-hooks/use-apollo-fallback'
 import ErrorMessage from './error'
 import { getIn } from 'immutable'
 const sourcesMessage = offlineCount => {

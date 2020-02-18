@@ -1,3 +1,2 @@
-import LoginModal from './login/loginModal'
-
-export { LoginModal }
+import {Sources} from './sources'
+export default Sources
