@@ -4,11 +4,15 @@
   "main": "src/main/webapp/main.js",
   "license": "MIT",
   "devDependencies": {
+    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-react": "^7.8.3",
+    "@babel/core": "^7.8.4",
     "@connexta/ace": "https://github.com/connexta/ace.git#81e7b8b22b3f7e43b356ba5dfbc065ffdb694892",
     "@types/ol": "^5.3.6",
     "@types/react": "^16.9.5",
     "@types/react-loadable": "^5.5.3",
     "@typescript-eslint/parser": "^2.3.3",
+    "babel-loader": "^8.0.6",
     "chai": "4.2.0",
     "cross-env": "^6.0.3",
     "enzyme": "3.10.0",
@@ -65,8 +69,11 @@
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "styled-components": "^4.3.2",
+    "ts-loader": "^6.2.1",
     "universal-cookie": "^4.0.2",
     "uuid": "^3.3.3",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11",
     "winston": "^3.2.1"
   },
   "scripts": {
@@ -80,7 +87,8 @@
     "storybook": "ace storybook",
     "build": "yarn build:prod && yarn storybook --static",
     "build:prod": "cross-env NODE_ENV=production NODE_OPTIONS='--max_old_space_size=8192' ace bundle --middleware src/main/graphql-server/server.js",
-    "prestart": "ace disable-idp"
+    "prestart": "ace disable-idp",
+    "build:library": "webpack --mode=production"
   },
   "context-path": "/search/catalog/",
   "resolutions": {
