@@ -18,8 +18,8 @@ const getSorts = (sorts?: string[]) => {
   return sorts.map(sort => {
     const splitIndex = sort.lastIndexOf(',')
     return {
-      attribute: sort.substring(0, splitIndex),
-      direction: sort.substring(splitIndex + 1, sort.length),
+      propertyName: sort.substring(0, splitIndex),
+      sortOrder: sort.substring(splitIndex + 1, sort.length),
     }
   })
 }
@@ -104,7 +104,7 @@ const QuerySettings = (props: QuerySettingsProps) => {
                 props.onChange({
                   ...settings,
                   sortPolicy: value.map(
-                    (sort: any) => `${sort.properyName},${sort.sortOrder}`
+                    (sort: any) => `${sort.propertyName},${sort.sortOrder}`
                   ),
                 })
               }}
