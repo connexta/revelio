@@ -1,4 +1,5 @@
 const path = require('path')
+const nodeExternals = require('webpack-node-externals')
 
 module.exports = ['source-map'].map(devtool => ({
   entry: {
@@ -10,14 +11,15 @@ module.exports = ['source-map'].map(devtool => ({
     filename: '[name]/index.js',
     library: 'a-test-of-revelio',
     libraryTarget: 'umd',
+    globalObject: 'this',
   },
   externals: [
-    'react',
-    /@material-ui\/.*/,
-    /^@?apollo*/,
-    'immutable',
-    'graphql-tag',
-    'react-hot-loader',
+    // 'react',
+    // /@material-ui\/.*/,
+    // /^@?apollo*/,
+    // 'immutable',
+    // 'graphql-tag',
+    nodeExternals(),
   ],
   module: {
     rules: [
@@ -32,14 +34,13 @@ module.exports = ['source-map'].map(devtool => ({
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-react', '@babel/preset-env'],
-            cacheDirectory: true,
-            plugins: ['react-hot-loader/babel', 'react-loadable/babel'],
+            presets: ['@babel/preset-env', '@babel/preset-react'],
           },
         },
       },
     ],
   },
+
   resolve: {
     extensions: ['.js', '.json', '.jsx', '.ts', '.tsx'],
   },
