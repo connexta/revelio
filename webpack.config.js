@@ -13,14 +13,7 @@ module.exports = ['source-map'].map(devtool => ({
     libraryTarget: 'umd',
     globalObject: 'this',
   },
-  externals: [
-    // 'react',
-    // /@material-ui\/.*/,
-    // /^@?apollo*/,
-    // 'immutable',
-    // 'graphql-tag',
-    nodeExternals(),
-  ],
+  externals: [nodeExternals()],
   module: {
     rules: [
       {
