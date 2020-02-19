@@ -69,7 +69,7 @@ const loadDynamicRoute = route => {
     }),
     workspaces: loadable({
       loader: () =>
-        import(/* webpackChunkName: "workspaces-index" */ './workspaces/workspaces'),
+        import(/* webpackChunkName: "workspaces-index" */ './new-workspaces'),
       loading: LoadingComponent,
     }),
     sources: loadable({

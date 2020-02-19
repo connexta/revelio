@@ -22,6 +22,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import { useApolloFallback } from './react-hooks'
 import ErrorMessage from './error'
 import { getIn } from 'immutable'
+import { Sources } from 'a-test-of-revelio/components'
 const sourcesMessage = offlineCount => {
   if (offlineCount === 0) {
     return 'All sources are currently up'
@@ -55,41 +56,6 @@ const userPref = gql`
     }
   }
 `
-
-export const Sources = props => {
-  const sources = props.sources === undefined ? [] : props.sources
-  const offlineCount = sources.filter(source => !source.isAvailable).length
-  const getIcon = source => (source.isAvailable ? OnlineIcon : OfflineIcon)
-
-  return (
-    <div style={{ maxWidth: 600, margin: '20px auto' }}>
-      <Card>
-        <CardContent>
-          <Typography variant="h5" component="h1">
-            {sourcesMessage(offlineCount)}
-          </Typography>
-          <Divider style={{ marginBottom: 15, marginTop: 10 }} />
-          <List>
-            {sources.map(source => {
-              const Icon = getIcon(source)
-
-              return (
-                <ListItem key={source.sourceId}>
-                  <ListItemIcon>
-                    <Icon key={source.isAvailable} />
-                  </ListItemIcon>
-                  <ListItemText>
-                    <Typography>{source.sourceId}</Typography>
-                  </ListItemText>
-                </ListItem>
-              )
-            })}
-          </List>
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
 
 const SourcesSelectComponent = props => {
   const { sources = [], value = [], onChange, defaultValue } = props
