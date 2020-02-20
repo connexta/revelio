@@ -4,7 +4,7 @@
   "main": "src/main/webapp/main.js",
   "license": "MIT",
   "devDependencies": {
-    "@connexta/ace": "https://github.com/connexta/ace.git#81e7b8b22b3f7e43b356ba5dfbc065ffdb694892",
+    "@connexta/ace": "https://github.com/willwill96/ace.git#3aae64e12e49640715707c1da371bde56a1f1de6",
     "@types/ol": "^5.3.6",
     "@types/react": "^16.9.5",
     "@types/react-loadable": "^5.5.3",
@@ -80,9 +80,15 @@
     "storybook": "ace storybook",
     "build": "yarn build:prod && yarn storybook --static",
     "build:prod": "cross-env NODE_ENV=production NODE_OPTIONS='--max_old_space_size=8192' ace bundle --middleware src/main/graphql-server/server.js",
-    "prestart": "ace disable-idp"
+    "prestart": "ace disable-idp",
+    "build:library": "ace bundle:library"
   },
-  "context-path": "/search/catalog/",
+  "libraryConfig": {
+    "webpackEntry": {
+      "components": "./src/main/webapp/library.js"
+    }
+  },
+  "publicPath": "/search/catalog/",
   "resolutions": {
     "react-hot-loader": "4.12.9"
   }

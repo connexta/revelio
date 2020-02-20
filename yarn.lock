@@ -880,9 +880,9 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@connexta/ace@https://github.com/connexta/ace.git#81e7b8b22b3f7e43b356ba5dfbc065ffdb694892":
+"@connexta/ace@https://github.com/willwill96/ace.git#3aae64e12e49640715707c1da371bde56a1f1de6":
   version "1.0.0"
-  resolved "https://github.com/connexta/ace.git#81e7b8b22b3f7e43b356ba5dfbc065ffdb694892"
+  resolved "https://github.com/willwill96/ace.git#3aae64e12e49640715707c1da371bde56a1f1de6"
   dependencies:
     "@babel/core" "^7.0.0"
     "@storybook/addon-actions" "5.2.3"
@@ -938,7 +938,7 @@
     react-docgen-typescript-loader "^3.1.0"
     react-hot-loader "4.12.6"
     react-loadable "^5.5.0"
-    react-loadable-ssr-addon "https://github.com/connexta/react-loadable-ssr-addon#0f42dcfeeac60770827f24e546b0f4fa64b4c74e"
+    react-loadable-ssr-addon "https://github.com/connexta/react-loadable-ssr-addon#fa05f30e1c78b1ab71ebcd6d3f584110022fcf44"
     require-from-string "^2.0.2"
     rimraf "2.6.2"
     script-loader "0.7.2"
@@ -959,6 +959,7 @@
     webpack-bundle-analyzer "3.3.2"
     webpack-dev-server "3.2.1"
     webpack-merge "4.1.2"
+    webpack-node-externals "^1.7.2"
     whatwg-fetch "2.0.4"
     worker-loader "1.1.1"
 
@@ -12327,9 +12328,9 @@ react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
-"react-loadable-ssr-addon@https://github.com/connexta/react-loadable-ssr-addon#0f42dcfeeac60770827f24e546b0f4fa64b4c74e":
+"react-loadable-ssr-addon@https://github.com/connexta/react-loadable-ssr-addon#fa05f30e1c78b1ab71ebcd6d3f584110022fcf44":
   version "0.2.0"
-  resolved "https://github.com/connexta/react-loadable-ssr-addon#0f42dcfeeac60770827f24e546b0f4fa64b4c74e"
+  resolved "https://github.com/connexta/react-loadable-ssr-addon#fa05f30e1c78b1ab71ebcd6d3f584110022fcf44"
 
 react-loadable@^5.5.0:
   version "5.5.0"
@@ -14842,6 +14843,11 @@ webpack-merge@4.1.2:
   resolved "https://registry.yarnpkg.com/webpack-merge/-/webpack-merge-4.1.2.tgz#5d372dddd3e1e5f8874f5bf5a8e929db09feb216"
   dependencies:
     lodash "^4.17.5"
+
+webpack-node-externals@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/webpack-node-externals/-/webpack-node-externals-1.7.2.tgz#6e1ee79ac67c070402ba700ef033a9b8d52ac4e3"
+  integrity sha512-ajerHZ+BJKeCLviLUUmnyd5B4RavLF76uv3cs6KNuO8W+HuQaEs0y0L7o40NQxdPy5w0pcv8Ew7yPUAQG0UdCg==
 
 webpack-sources@^1.0.1, webpack-sources@^1.1.0, webpack-sources@^1.4.0, webpack-sources@^1.4.1:
   version "1.4.3"
