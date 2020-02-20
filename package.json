@@ -32,7 +32,7 @@
     "@material-ui/lab": "^4.0.0-alpha.32",
     "@material-ui/pickers": "^3.2.5",
     "@material-ui/styles": "^4.9.0",
-    "a-test-of-revelio": "^1.0.32",
+    "a-test-of-revelio": "^1.0.38",
     "abort-controller": "^3.0.0",
     "apollo-cache-inmemory": "^1.6.3",
     "apollo-client": "^2.6.4",
