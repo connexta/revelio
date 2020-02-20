@@ -8,3 +8,4 @@ yarn-error.log
 *.classpath
 *.vscode
 .DS_Store
+build
