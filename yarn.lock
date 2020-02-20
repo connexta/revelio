@@ -880,9 +880,9 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@connexta/ace@https://github.com/willwill96/ace.git#3aae64e12e49640715707c1da371bde56a1f1de6":
+"@connexta/ace@https://github.com/willwill96/ace.git#46b1f9e6d4e344008541dd015cd9025dc4b29ab4":
   version "1.0.0"
-  resolved "https://github.com/willwill96/ace.git#3aae64e12e49640715707c1da371bde56a1f1de6"
+  resolved "https://github.com/willwill96/ace.git#46b1f9e6d4e344008541dd015cd9025dc4b29ab4"
   dependencies:
     "@babel/core" "^7.0.0"
     "@storybook/addon-actions" "5.2.3"
