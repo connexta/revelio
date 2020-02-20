@@ -60,6 +60,20 @@ const workspaceById = gql`
   }
 `
 
+//TODO add paging
+const MemoizedResults = ({ results }) =>
+  React.useMemo(
+    () =>
+      results.map(({ metacard }) => (
+        <IndexCardItem
+          key={metacard.attributes.id}
+          title={metacard.attributes.title}
+          subHeader={' '}
+        />
+      )),
+    [results]
+  )
+
 export const Workspace = () => {
   const { id } = useParams()
 
@@ -160,14 +174,7 @@ export const Workspace = () => {
                   })
                 }}
               />
-              {/* //TODO add paging */}
-              {results.map(({ metacard }) => (
-                <IndexCardItem
-                  key={metacard.attributes.id}
-                  title={metacard.attributes.title}
-                  subHeader={' '}
-                />
-              ))}
+              <MemoizedResults results={results} />
             </React.Fragment>
           )}
 
