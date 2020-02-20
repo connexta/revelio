@@ -4,7 +4,7 @@
   "main": "src/main/webapp/main.js",
   "license": "MIT",
   "devDependencies": {
-    "@connexta/ace": "https://github.com/willwill96/ace.git#3aae64e12e49640715707c1da371bde56a1f1de6",
+    "@connexta/ace": "https://github.com/willwill96/ace.git#46b1f9e6d4e344008541dd015cd9025dc4b29ab4",
     "@types/ol": "^5.3.6",
     "@types/react": "^16.9.5",
     "@types/react-loadable": "^5.5.3",
