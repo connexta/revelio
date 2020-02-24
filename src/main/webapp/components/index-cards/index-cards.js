@@ -48,13 +48,17 @@ export const DuplicateAction = props => {
 }
 
 export const DeleteAction = props => {
-  const { onDelete, message } = props
-  return <ConfirmDelete onDelete={onDelete}>{message}</ConfirmDelete>
+  const { onDelete, message, isWritable } = props
+  return isWritable ? (
+    <ConfirmDelete onDelete={onDelete}>{message}</ConfirmDelete>
+  ) : null
 }
 
 export const ShareAction = props => {
-  const { id, title, metacardType } = props
-  return <SharingModal id={id} title={title} metacardType={metacardType} />
+  const { id, title, metacardType, isAdmin } = props
+  return isAdmin ? (
+    <SharingModal id={id} title={title} metacardType={metacardType} />
+  ) : null
 }
 
 export const Actions = CardActions

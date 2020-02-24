@@ -223,7 +223,7 @@ const unsubscribeMutation = gql`
 `
 
 const Workspaces = props => {
-  const { workspaces, onCreate, onDelete, onDuplicate } = props
+  const { workspaces, onCreate, onDelete, onDuplicate, userAttrs } = props
   const [subscribe] = useMutation(subscribeMutation)
   const [unsubscribe] = useMutation(unsubscribeMutation)
   const [message, setMessage] = React.useState(null)
@@ -243,6 +243,26 @@ const Workspaces = props => {
       {workspaces.map(workspace => {
         const isSubscribed = workspace.userIsSubscribed
         workspace = workspace.attributes
+        const {
+          security_access_administrators,
+          security_access_individuals,
+          security_access_groups,
+        } = workspace
+        const isAdmin =
+          (security_access_administrators === null
+            ? false
+            : security_access_administrators.includes(userAttrs.email)) ||
+          workspace.owner === userAttrs.email
+        const isWritable =
+          (security_access_individuals === null
+            ? false
+            : security_access_individuals.includes(userAttrs.email)) ||
+          (security_access_groups === null
+            ? false
+            : security_access_groups.some(item =>
+                userAttrs.roles.includes(item)
+              )) ||
+          isAdmin
         return (
           <IndexCardItem
             {...workspace}
@@ -254,10 +274,12 @@ const Workspaces = props => {
                 id={workspace.id}
                 title={workspace.title}
                 metacardType="workspace"
+                isAdmin={isAdmin}
               />
               <DeleteAction
                 onDelete={() => onDelete(workspace)}
                 message="This will permanently delete the workspace."
+                isWritable={isWritable}
               />
               <Subscribe
                 subscribe={subscribe}
@@ -282,12 +304,21 @@ const workspaces = gql`
         id
         title
         metacard_owner
+        security_access_individuals_read
+        security_access_individuals
+        security_access_administrators
+        security_access_groups_read
+        security_access_groups
         modified: metacard_modified
       }
       results {
         isSubscribed
         id
       }
+    }
+    user {
+      email
+      roles
     }
   }
 `
@@ -478,6 +509,7 @@ export default () => {
       onCreate={onCreate}
       onDelete={onDelete}
       onDuplicate={onDuplicate}
+      userAttrs={data.user}
     />
   )
 }
