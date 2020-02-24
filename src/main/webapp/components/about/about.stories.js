@@ -1,5 +1,5 @@
 import React from 'react'
-import { storiesOf } from './@storybook/react'
+import { storiesOf } from '../../@storybook/react'
 import { About } from './about'
 import { text } from '@connexta/ace/@storybook/addon-knobs'
 import { action } from '@connexta/ace/@storybook/addon-actions'
