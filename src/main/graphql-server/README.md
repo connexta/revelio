@@ -29,7 +29,7 @@ responses.
 
 ## Chaos Mode
 
-Chaos mode enables enables a 10% random failure for use in development.
+Chaos mode enables a 10% random failure for use in development.
 
 To enable chaos mode, do:
 
