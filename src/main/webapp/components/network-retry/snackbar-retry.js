@@ -3,17 +3,7 @@ import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
-
-const ignorableStatusCodes = new Set(['UNAUTHENTICATED'])
-export const hasIgnorable = err => {
-  if (err && err.graphQLErrors) {
-    return (
-      err.graphQLErrors.filter(error => ignorableStatusCodes.has(error.message))
-        .length > 0
-    )
-  }
-  return false
-}
+import { hasIgnorable } from './utils'
 
 export default props => {
   const {

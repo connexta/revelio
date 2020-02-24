@@ -20,7 +20,7 @@ import {
   ShareAction,
   Actions,
 } from '../components/index-cards'
-import RetryComponent from '../retry/retry'
+import RetryComponent from '../components/network-retry/snackbar-retry'
 
 const Loading = () => {
   return <LinearProgress />

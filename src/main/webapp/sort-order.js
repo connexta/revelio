@@ -16,7 +16,7 @@ import Remove from '@material-ui/icons/Remove'
 import Select from '@material-ui/core/Select'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
-import ErrorMessage from './error'
+import ErrorMessage from './components/network-retry/inline-retry'
 import { fromJS, getIn } from 'immutable'
 
 const getDirectionLabel = type => {

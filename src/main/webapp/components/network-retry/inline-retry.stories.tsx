@@ -1,11 +1,9 @@
-const { storiesOf } = require('./@storybook/react')
+const { storiesOf } = require('../../@storybook/react')
 import * as React from 'react'
-import ErrorMessage from './error'
-import { text } from '@connexta/ace/@storybook/addon-knobs'
+import ErrorMessage from './inline-retry'
+const stories = storiesOf('Network Retry', module)
 
-const stories = storiesOf('Error Message', module)
-
-stories.add('Basic', () => {
+stories.add('Inline', () => {
   return (
     <ErrorMessage
       onRetry={async () =>
@@ -17,12 +15,7 @@ stories.add('Basic', () => {
   )
 })
 
-stories.add('With message', () => {
-  const message = text('Message', 'Custom Error Message')
-  return <ErrorMessage>{message}</ErrorMessage>
-})
-
-stories.add('With custom children', () => {
+stories.add('Inline with custom children', () => {
   const ListOfErrors = () => {
     return (
       <div>

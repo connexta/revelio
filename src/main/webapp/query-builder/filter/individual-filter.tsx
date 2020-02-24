@@ -13,7 +13,7 @@ import { deserialize, serialize } from './filter-serialization'
 import { QueryFilter, AttributeDefinition } from '../types'
 import useAttributeDefinitions from '../../react-hooks/use-attribute-definitions'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import ErrorMessage from '../../error'
+import ErrorMessage from '../../components/network-retry/inline-retry'
 const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
   .default
 

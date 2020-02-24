@@ -13,7 +13,7 @@ import { Map } from 'immutable'
 import React from 'react'
 import Inspector from '../inspector'
 import { useApolloFallback } from '../react-hooks'
-import ErrorMessage from '../error'
+import ErrorMessage from '../components/network-retry/inline-retry'
 
 const resultQuery = gql`
   query ResultQuery($ids: [ID]!) {

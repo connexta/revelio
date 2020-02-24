@@ -17,7 +17,7 @@ import {
   Actions,
 } from '../components/index-cards'
 
-import RetryNotification from '../retry/retry'
+import RetryNotification from '../components/network-retry/snackbar-retry'
 
 import { Link, useParams, Redirect } from 'react-router-dom'
 
@@ -33,7 +33,7 @@ import QuerySelector from './query-selector'
 
 import loadable from 'react-loadable'
 import Lists from '../lists'
-import ErrorMessage from '../error'
+import ErrorMessage from '../components/network-retry/inline-retry'
 import { getIn } from 'immutable'
 
 const LoadingComponent = () => <LinearProgress />

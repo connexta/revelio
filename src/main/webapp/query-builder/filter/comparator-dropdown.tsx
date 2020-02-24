@@ -10,7 +10,7 @@ import sampleAttributeDefinitions from './sample-attribute-definitions'
 import { QueryFilter, AttributeDefinition } from '../types'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import useAttributeDefinitions from '../../react-hooks/use-attribute-definitions'
-import ErrorMessage from '../../error'
+import ErrorMessage from '../../components/network-retry/inline-retry'
 const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
   .default
 const booleanComparators = ['=', 'IS NULL']

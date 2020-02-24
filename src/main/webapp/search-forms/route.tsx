@@ -9,7 +9,7 @@ import { defaultFilter } from '../query-builder/filter/filter-utils'
 import QueryBuilder from '../query-builder/query-builder'
 import { QueryType } from '../query-builder/types'
 import SearchFormEditor from './editor'
-const RetryNotification = require('../retry/retry').default
+import { SnackbarRetry as RetryNotification } from '../components/network-retry'
 import { ApolloError } from 'apollo-client/errors/ApolloError'
 
 const {

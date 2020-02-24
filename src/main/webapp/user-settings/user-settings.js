@@ -27,7 +27,7 @@ import SearchSettings from './search-settings'
 import TimeSettings from './time-settings'
 import ThemeSettings from './theme-settings'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import ErrorMessage from '../error'
+import ErrorMessage from '../components/network-retry/inline-retry'
 
 const generateSetting = (title, Icon = AccessibleForwardIcon, component) => {
   return {

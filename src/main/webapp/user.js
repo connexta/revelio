@@ -10,7 +10,7 @@ import React from 'react'
 import { useApolloFallback } from './react-hooks'
 import Cookies from 'universal-cookie'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import ErrorMessage from './error'
+import ErrorMessage from './components/network-retry/inline-retry'
 
 const UserDrawer = props => (
   <Drawer

@@ -10,7 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { useApolloFallback } from '../../react-hooks'
-import ErrorMessage from '../../error'
+import ErrorMessage from '../network-retry/inline-retry'
 import { getIn } from 'immutable'
 
 const query = gql`

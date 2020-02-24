@@ -10,7 +10,7 @@ import { Comparators } from './comparator-dropdown'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { AttributeDefinition } from '../types'
 import useAttributeDefinitions from '../../react-hooks/use-attribute-definitions'
-import ErrorMessage from '../../error'
+import ErrorMessage from '../../components/network-retry/inline-retry'
 const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
   .default
 const AttributeDropdown = (

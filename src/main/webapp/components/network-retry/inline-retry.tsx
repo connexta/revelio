@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { useState } from 'react'
 import { ApolloError } from 'apollo-client/errors/ApolloError'
-const { hasIgnorable } = require('./retry/retry')
+import { hasIgnorable } from './utils'
 
 const useStyles = makeStyles(theme => ({
   root: {

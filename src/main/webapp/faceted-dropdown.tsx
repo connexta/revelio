@@ -11,7 +11,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
 import FormHelperText from '@material-ui/core/FormHelperText'
-import ErrorMessage from './error'
+import ErrorMessage from './components/network-retry/inline-retry'
 const { useApolloFallback } = require('./react-hooks')
 
 const QUERY = gql`
