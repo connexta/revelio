@@ -65,3 +65,7 @@ work.
 
 To get a deeper look into the system, take a look at the
 [architecture](./docs/architecture.md) docs.
+
+## GraphQL Tools
+
+For information on graphql development tools, take a look at the [GraphQL Tools](./src/main/graphql-server) docs.

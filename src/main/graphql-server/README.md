@@ -27,3 +27,10 @@ or
 It will output if any of the responses differ from the previously captured
 responses.
 
+## Chaos Mode
+
+Chaos mode enables enables a 10% random failure for use in development.
+
+To enable chaos mode, do:
+
+    CHAOS_MODE=1 yarn start
