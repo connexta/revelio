@@ -497,7 +497,7 @@ const validate = (filterMap = Map()) => {
 }
 
 const MATCHTYPE_ATTRIBUTE = gql`
-  query getAttributeSuggestionListBasicSearch {
+  query getBasicSearchMatchType {
     systemProperties {
       basicSearchMatchType
     }
