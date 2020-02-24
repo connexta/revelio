@@ -19,7 +19,7 @@ const {
   Actions,
   ShareAction,
   DeleteAction,
-} = require('../index-cards')
+} = require('../components/index-cards')
 
 type SearchFormProps = {
   onDelete: (form: QueryType) => void

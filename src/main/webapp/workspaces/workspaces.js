@@ -15,7 +15,7 @@ import {
   DeleteAction,
   ShareAction,
   Actions,
-} from '../index-cards'
+} from '../components/index-cards'
 
 import RetryNotification from '../retry/retry'
 

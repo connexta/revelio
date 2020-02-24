@@ -15,8 +15,8 @@ import CardActionArea from '@material-ui/core/CardActionArea'
 
 import moment from 'moment'
 
-import ConfirmDelete from '../confirm-delete'
-import SharingModal from '../sharing/sharing-modal'
+import ConfirmDelete from '../../confirm-delete'
+import SharingModal from '../../sharing/sharing-modal'
 
 const onClick = action => e => {
   e.preventDefault()

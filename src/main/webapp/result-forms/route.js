@@ -19,7 +19,7 @@ import {
   DeleteAction,
   ShareAction,
   Actions,
-} from '../index-cards'
+} from '../components/index-cards'
 import RetryComponent from '../retry/retry'
 
 const Loading = () => {

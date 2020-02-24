@@ -14,7 +14,7 @@ import {
   DeleteAction,
   EditAction,
   IndexCardItem,
-} from '../index-cards'
+} from '../components/index-cards'
 import { useApolloFallback } from '../react-hooks'
 
 const searchByID = gql`

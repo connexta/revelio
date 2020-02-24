@@ -7,7 +7,7 @@ import {
   DeleteAction,
   EditAction,
   IndexCardItem,
-} from '../index-cards'
+} from '../components/index-cards'
 const { useDrawInterface } = require('../react-hooks')
 
 const useOpenClose = props => {
