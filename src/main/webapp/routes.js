@@ -109,7 +109,8 @@ const loadDynamicRoute = route => {
       loading: LoadingComponent,
     }),
     about: loadable({
-      loader: () => import(/* webpackChunkName: "about" */ './about'),
+      loader: () =>
+        import(/* webpackChunkName: "about" */ './components/about'),
       loading: LoadingComponent,
     }),
   }
