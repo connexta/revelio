@@ -11,7 +11,17 @@ import { get } from 'immutable'
 import React from 'react'
 import OutlinedSelect from '../input/outlined-select'
 import { useApolloFallback } from '../react-hooks'
-import { sources } from '../sources'
+import gql from 'graphql-tag'
+
+const query = gql`
+  query UserSettingsSources {
+    sources {
+      isAvailable
+      sourceId
+      local
+    }
+  }
+`
 
 const sourcesSort = (source1, source2) => {
   return source1.local ? -1 : source1.id <= source2.id
@@ -83,7 +93,7 @@ const Sources = props => {
 }
 
 const Container = props => {
-  const { error, data, loading } = useQuery(sources)
+  const { error, data, loading } = useQuery(query)
   return loading || error ? null : (
     <Sources {...props} sources={get(data, 'sources')} />
   )

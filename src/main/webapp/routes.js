@@ -73,7 +73,8 @@ const loadDynamicRoute = route => {
       loading: LoadingComponent,
     }),
     sources: loadable({
-      loader: () => import(/* webpackChunkName: "sources" */ './sources'),
+      loader: () =>
+        import(/* webpackChunkName: "sources" */ './components/sources-info'),
       loading: LoadingComponent,
     }),
     'simple-search': loadable({

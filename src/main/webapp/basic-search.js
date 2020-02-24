@@ -37,7 +37,7 @@ import { Location } from './location'
 import { makeDefaultSearchGeo } from './query-builder/filter'
 import { useApolloFallback } from './react-hooks'
 import SortOrder from './sort-order'
-import { SourcesSelect } from './sources'
+import SourcesSelect from './components/sources-select'
 import TimeRange, {
   createTimeRange,
   validate as validateTimeRange,

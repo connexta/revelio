@@ -1,6 +1,6 @@
 import React from 'react'
-import { storiesOf } from './@storybook/react'
-import { Sources } from './sources'
+import { storiesOf } from '../../@storybook/react'
+import { SourcesInfo } from '.'
 import { number, select } from '@connexta/ace/@storybook/addon-knobs'
 
 const stories = storiesOf('Sources', module)
@@ -42,5 +42,5 @@ stories.add('Basic', () => {
     },
     'all'
   )
-  return <Sources sources={generateSources(n, availability)} />
+  return <SourcesInfo sources={generateSources(n, availability)} />
 })
