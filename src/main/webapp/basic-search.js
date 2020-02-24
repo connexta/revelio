@@ -32,7 +32,7 @@ import {
   TIME_RANGE_KEY,
   toFilterTree,
 } from './basic-search-helper'
-import FacetedDropdown from './faceted-dropdown'
+import FacetedDropdown from './components/faceted-dropdown'
 import { Location } from './location'
 import { makeDefaultSearchGeo } from './query-builder/filter'
 import { useApolloFallback } from './react-hooks'
