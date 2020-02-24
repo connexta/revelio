@@ -14,7 +14,7 @@ import ErrorMessage from '../error'
 const LoadingComponent = () => <LinearProgress />
 
 const searchByID = gql`
-  query SearchByID($ids: [ID]!) {
+  query SearchByIdDetails($ids: [ID]!) {
     metacardsById(ids: $ids) {
       attributes {
         id
