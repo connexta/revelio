@@ -13,6 +13,7 @@ script:
   - yarn install --frozen-lockfile
   - yarn test
   - yarn build
+  - cp RoadMap.html target/storybook/.
   - set +e
 branches:
   only:
