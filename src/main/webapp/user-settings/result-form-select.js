@@ -10,7 +10,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import ErrorMessage from '../error'
 
 const resultForms = gql`
-  query SearchForms {
+  query SearchFormsAttributeGroup {
     metacardsByTag(tag: "attribute-group") {
       attributes {
         id
