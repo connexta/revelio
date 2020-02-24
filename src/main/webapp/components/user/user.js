@@ -11,6 +11,7 @@ import { useApolloFallback } from '../../react-hooks'
 import Cookies from 'universal-cookie'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import ErrorMessage from '../network-retry/inline-retry'
+import { getIn } from 'immutable'
 
 const UserDrawer = props => (
   <Drawer
@@ -63,14 +64,21 @@ export const User = props => {
         onClick={handleDrawerOpen}
       >
         <PersonIcon />
-        <Typography variant="h6">{username}</Typography>
+        <Typography variant="h6">{username || 'User'}</Typography>
       </Button>
-
       <UserDrawer open={open} onClose={handleDrawerClose}>
-        <UserInfo email={email} username={username} />
-        <Divider style={{ marginTop: 10, marginBottom: 15 }} />
-        {isGuest ? null : (
-          <Button color="secondary" onClick={signOut}>{`Sign Out`}</Button>
+        {props.error ? (
+          <ErrorMessage onRetry={props.refetch}>
+            Error Retrieving User Information
+          </ErrorMessage>
+        ) : (
+          <React.Fragment>
+            <UserInfo email={email} username={username} />
+            <Divider style={{ marginTop: 10, marginBottom: 15 }} />
+            {isGuest ? null : (
+              <Button color="secondary" onClick={signOut}>{`Sign Out`}</Button>
+            )}
+          </React.Fragment>
         )}
       </UserDrawer>
     </React.Fragment>
@@ -91,13 +99,10 @@ const Container = () => {
   const { error, data, loading, refetch } = useQuery(query)
 
   if (loading) return <LinearProgress />
-  if (error)
-    return (
-      <ErrorMessage onRetry={refetch} error={error}>
-        Error Retrieving User
-      </ErrorMessage>
-    )
-  return <User value={data.user} />
+
+  return (
+    <User value={getIn(data, ['user'], {})} error={error} refetch={refetch} />
+  )
 }
 
 export default props => {

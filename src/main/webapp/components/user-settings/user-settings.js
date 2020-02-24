@@ -135,13 +135,6 @@ const UserSettings = props => {
   const [open, setOpen] = React.useState(props.open)
   const [selected, setSelected] = React.useState({})
   const [preferences, setPreferences] = React.useState(props.value)
-  if (props.error) {
-    return (
-      <ErrorMessage onRetry={props.refetch}>
-        Error Retrieveing User Preferences
-      </ErrorMessage>
-    )
-  }
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -263,7 +256,7 @@ const Container = () => {
       error={error}
       refetch={refetch}
       value={Map(getIn(data, ['user', 'preferences'], {}))}
-      systemProperties={getIn(data, ['systemProperties'], {}) }
+      systemProperties={getIn(data, ['systemProperties'], {})}
       onSave={userPreferences => {
         //preserve __typename fields
         const newPreferences = mergeDeepOverwriteLists(
