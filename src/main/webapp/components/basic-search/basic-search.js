@@ -1,12 +1,9 @@
 import { useQuery } from '@apollo/react-hooks'
 import Button from '@material-ui/core/Button'
 import Checkbox from '@material-ui/core/Checkbox'
-import Collapse from '@material-ui/core/Collapse'
-import { red } from '@material-ui/core/colors'
 import Divider from '@material-ui/core/Divider'
 import FormControl from '@material-ui/core/FormControl'
 import FormHelperText from '@material-ui/core/FormHelperText'
-import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
 import LinearProgress from '@material-ui/core/LinearProgress'
@@ -16,10 +13,6 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Paper from '@material-ui/core/Paper'
 import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
-import CloseIcon from '@material-ui/icons/Close'
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import gql from 'graphql-tag'
 import { get, getIn, Map, remove } from 'immutable'
 import React, { useState } from 'react'
@@ -32,17 +25,17 @@ import {
   TIME_RANGE_KEY,
   toFilterTree,
 } from './basic-search-helper'
-import FacetedDropdown from './components/faceted-dropdown'
-import { Location } from './location'
-import { makeDefaultSearchGeo } from './query-builder/filter'
-import { useApolloFallback } from './react-hooks'
-import SortOrder from './sort-order'
-import SourcesSelect from './components/sources-select'
+import FacetedDropdown from '../faceted-dropdown'
+import { Location } from '../../location'
+import { makeDefaultSearchGeo } from '../../query-builder/filter'
+import { useApolloFallback } from '../../react-hooks'
+import SortOrder from '../../sort-order'
+import SourcesSelect from '../sources-select'
 import TimeRange, {
   createTimeRange,
   validate as validateTimeRange,
-} from './time-range'
-
+} from '../../time-range'
+import FilterCard from '../containers/filter-card'
 const timeAttributes = [
   'created',
   'datetime.end',
@@ -282,51 +275,6 @@ const createQuery = filterMap => {
   return populateDefaultQuery(toFilterTree(filterMap), srcs, sorts)
 }
 
-export const FilterCard = props => {
-  const [state, setState] = useState(true)
-  const { children, label, onRemove } = props
-
-  const spacing = 16
-  const Arrow = state ? KeyboardArrowUpIcon : KeyboardArrowDownIcon
-
-  return (
-    <Paper style={{ width: '100%', marginTop: 20 }}>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
-        <Typography style={{ padding: 12 }} color="textSecondary">
-          {label}
-        </Typography>
-        <div style={{ display: 'flex' }}>
-          <IconButton onClick={() => setState(!state)}>
-            <Arrow />
-          </IconButton>
-          {onRemove && (
-            <IconButton style={{ color: red[500] }} onClick={onRemove}>
-              <CloseIcon />
-            </IconButton>
-          )}
-        </div>
-      </div>
-      <Collapse in={state}>
-        <Divider />
-        <div
-          style={{
-            padding: spacing,
-            boxSizing: 'border-box',
-          }}
-        >
-          {children}
-        </div>
-      </Collapse>
-    </Paper>
-  )
-}
-
 export const BasicSearchQueryBuilder = props => {
   const { submitted = true } = props
   const [filterMap, setFilterMap] = useState(getFilterMap(props))
@@ -398,7 +346,7 @@ export const BasicSearchQueryBuilder = props => {
   )
 }
 
-const BasicSearch = props => {
+export const BasicSearch = props => {
   const [query, setQuery] = React.useState(props.query)
 
   const [submitted, setSubmitted] = React.useState(false)

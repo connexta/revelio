@@ -10,7 +10,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import { QuerySettingsType } from './types'
 const ResultFormSelect = require('../user-settings/result-form-select').default
 const SourcesSelect = require('../components/sources-select').default
-const { FilterCard } = require('../basic-search')
+const { FilterCard } = require('../components/containers')
 const SortOrder = require('../sort-order').default
 
 const getSorts = (sorts?: string[]) => {

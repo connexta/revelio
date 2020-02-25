@@ -1,4 +1,4 @@
-const { storiesOf } = require('./@storybook/react')
+const { storiesOf } = require('../../@storybook/react')
 import React, { useState } from 'react'
 import QuerySchedule from './query-schedule'
 const stories = storiesOf('Query Schedule', module)

@@ -6,7 +6,7 @@ import BooleanFilter from '../filter-inputs/boolean-filter'
 import NumberFilter from '../filter-inputs/number-filter'
 // const FilterCard = require('../../basic-search').FilterCard
 // @ts-ignore require not working in storybook for some reason
-import { FilterCard } from '../../basic-search'
+import { FilterCard } from '../../components/basic-search/basic-search'
 import { getIn } from 'immutable'
 import sampleAttributeDefinitions from './sample-attribute-definitions'
 import { deserialize, serialize } from './filter-serialization'

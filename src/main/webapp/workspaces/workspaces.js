@@ -27,8 +27,13 @@ import gql from 'graphql-tag'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 
 import QueryStatus from '../query-status'
-import BasicSearch, { populateDefaultQuery } from '../basic-search'
-import { toFilterTree, fromFilterTree } from '../basic-search-helper'
+import BasicSearch, {
+  populateDefaultQuery,
+} from '../components/basic-search/basic-search'
+import {
+  toFilterTree,
+  fromFilterTree,
+} from '../components/basic-search/basic-search-helper'
 import QuerySelector from './query-selector'
 
 import loadable from 'react-loadable'
