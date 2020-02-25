@@ -3,8 +3,8 @@ import CardActionArea from '@material-ui/core/CardActionArea'
 import Dialog from '@material-ui/core/Dialog'
 import Typography from '@material-ui/core/Typography'
 import React from 'react'
-import Inspector from '../inspector'
-import Thumbnail from '../thumbnail/thumbnail'
+import Inspector from '../../inspector'
+import Thumbnail from '../../thumbnail/thumbnail'
 
 const GalleryItem = props => {
   const { title, thumbnail } = props

@@ -12,7 +12,7 @@ import { Layout, Provider, AddConfig, DragSource } from '../react-golden-layout'
 import Histogram from '../components/histogram/histogram'
 import Inspector from '../inspector/inspector'
 import ResultTable from '../results/results'
-import Gallery from '../gallery'
+import Gallery from '../components/gallery'
 
 import {
   ClusterMap,
