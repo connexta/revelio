@@ -5,11 +5,11 @@ import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 import * as React from 'react'
 import { Fragment, useState } from 'react'
-import { defaultFilter } from '../components/query-builder/filter/filter-utils'
-import QueryBuilder from '../components/query-builder/query-builder'
-import { QueryType } from '../components/query-builder/types'
+import { defaultFilter } from '../query-builder/filter/filter-utils'
+import QueryBuilder from '../query-builder/query-builder'
+import { QueryType } from '../query-builder/types'
 import SearchFormEditor from './editor'
-import { SnackbarRetry as RetryNotification } from '../components/network-retry'
+import { SnackbarRetry as RetryNotification } from '../network-retry'
 import { ApolloError } from 'apollo-client/errors/ApolloError'
 
 const {
@@ -19,7 +19,7 @@ const {
   Actions,
   ShareAction,
   DeleteAction,
-} = require('../components/index-cards')
+} = require('../index-cards')
 
 type SearchFormProps = {
   onDelete: (form: QueryType) => void
