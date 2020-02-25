@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
 import Cookies from 'universal-cookie'
 import LogIn from './login'
-import { useApolloFallback } from '../react-hooks'
+import { useApolloFallback } from '../../react-hooks'
 
 const cookies = new Cookies()
 const useLogin = () => {

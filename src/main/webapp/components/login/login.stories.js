@@ -1,8 +1,8 @@
 import React from 'react'
-import { storiesOf } from '../@storybook/react'
+import { storiesOf } from '../../@storybook/react'
 const stories = storiesOf('LogIn', module)
 import LogIn from './login'
-import { LogInModal } from './loginModal'
+import LogInModal from './loginModal'
 
 stories.add('Login Form', () => {
   return <LogIn label="Login" logIn={() => {}} />

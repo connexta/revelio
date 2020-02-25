@@ -5,7 +5,7 @@ import createClientApollo from './intrigue-api/create-client-apollo'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { MuiPickersUtilsProvider } from '@material-ui/pickers'
 import MomentUtils from '@date-io/moment'
-import { LogInModal } from './login/loginModal'
+import LogInModal from './components/login/loginModal'
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
