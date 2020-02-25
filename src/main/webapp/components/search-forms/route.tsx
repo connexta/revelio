@@ -13,12 +13,19 @@ const { Notification } = require('../notification/notification')
 import IconButton from '@material-ui/core/IconButton'
 import StarIcon from '@material-ui/icons/Star'
 const {
+  getSecurityAttributesFromMetacard,
+  isWritable,
+  isAdmin,
+  isReadOnly,
+} = require('../sharing')
+const {
   IndexCards,
   AddCardItem,
   IndexCardItem,
   Actions,
   ShareAction,
   DeleteAction,
+  ReadOnly,
 } = require('../index-cards')
 
 type SearchFormProps = {
@@ -26,6 +33,9 @@ type SearchFormProps = {
   onSave: (form: QueryType) => void
   form?: QueryType
   isDefault?: boolean
+  canRead: boolean
+  canWrite: boolean
+  canShare: boolean
 }
 
 const DefaultSearchFormIndicator = () => (
@@ -64,11 +74,17 @@ const SearchForm = (props: SearchFormProps) => {
         onClick={() => setEditing(true)}
       >
         <Actions>
-          <ShareAction {...props.form} metacardType="query-template" />
+          <ShareAction
+            {...props.form}
+            metacardType="query-template"
+            isAdmin={props.canShare}
+          />
           <DeleteAction
             message="This will permanently delete the search form."
             onDelete={props.onDelete}
+            isWritable={props.canWrite}
           />
+          <ReadOnly isReadOnly={props.canRead} indexCardType="Search Form" />
         </Actions>
       </IndexCardItem>
     </Fragment>
@@ -115,6 +131,10 @@ const AddSearchForm = (props: AddProps) => {
   )
 }
 
+type UserAttributes = {
+  email: String
+  roles: String[]
+}
 type RouteProps = {
   onDelete: (form: QueryType) => void
   onSave: (form: QueryType) => void
@@ -124,13 +144,22 @@ type RouteProps = {
   forms: QueryType[]
   userDefaultForm?: string
   refetch?: () => void
+  userAttributes: UserAttributes
 }
 
 const Route = (props: RouteProps) => {
   const [message, setMessage] = useState<string | null>(null)
-
-  const { loading, error, forms, onDelete, onSave, onCreate, refetch } = props
-  if (loading === true) return <LinearProgress />
+  const {
+    loading,
+    error,
+    forms,
+    onDelete,
+    onSave,
+    onCreate,
+    refetch,
+    userAttributes,
+  } = props
+  if (loading === true) return <Loading />
 
   if (error)
     return (
@@ -140,6 +169,7 @@ const Route = (props: RouteProps) => {
         error={error}
       />
     )
+
   return (
     <IndexCards>
       {message ? (
@@ -155,6 +185,25 @@ const Route = (props: RouteProps) => {
         .slice()
         .sort((a: any, b: any) => (a.modified > b.modified ? -1 : 1))
         .map(form => {
+          const securityAttributes = getSecurityAttributesFromMetacard(form)
+          const canShare = isAdmin(
+            userAttributes.email,
+            securityAttributes,
+            form.metacard_owner
+          )
+          const canWrite = isWritable(
+            userAttributes.email,
+            userAttributes.roles,
+            securityAttributes,
+            canShare
+          )
+          const canRead = isReadOnly(
+            canWrite,
+            canShare,
+            securityAttributes,
+            userAttributes.email,
+            userAttributes.roles
+          )
           return (
             <SearchForm
               key={form.id}
@@ -168,6 +217,9 @@ const Route = (props: RouteProps) => {
                 onSave(newForm)
                 setMessage('Search Form Saved')
               }}
+              canRead={canRead}
+              canWrite={canWrite}
+              canShare={canShare}
             />
           )
         })}

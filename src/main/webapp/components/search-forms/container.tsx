@@ -21,6 +21,11 @@ const searchForms = gql`
   query SearchForms {
     metacardsByTag(tag: "query-template") {
       attributes {
+        security_access_administrators
+        security_access_individuals
+        security_access_individuals_read
+        security_access_groups
+        security_access_groups_read
         ...SearchFormAttributes
       }
     }
@@ -32,6 +37,8 @@ const searchForms = gql`
           }
         }
       }
+      email
+      roles
     }
   }
   ${fragment}
@@ -167,6 +174,7 @@ export default () => {
     ['user', 'preferences', 'querySettings', 'template', 'id'],
     null
   )
+  const userAttributes = getIn(data, ['user'], [])
   return (
     <SearchFormsRoute
       onCreate={onCreate}
@@ -177,6 +185,7 @@ export default () => {
       forms={forms}
       userDefaultForm={userDefaultForm}
       refetch={refetch}
+      userAttributes={userAttributes}
     />
   )
 }

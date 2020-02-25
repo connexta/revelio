@@ -9,6 +9,12 @@ import Dialog from '@material-ui/core/Dialog'
 
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { Notification } from '../notification/notification'
+import {
+  isWritable,
+  isAdmin,
+  isReadOnly,
+  getSecurityAttributesFromMetacard,
+} from '../sharing/sharing-utils'
 
 import {
   IndexCards,
@@ -171,6 +177,11 @@ const resultForms = gql`
   query ResultForms {
     metacardsByTag(tag: "attribute-group") {
       attributes {
+        security_access_individuals_read
+        security_access_individuals
+        security_access_administrators
+        security_access_groups_read
+        security_access_groups
         ...ResultFormAttributes
       }
     }

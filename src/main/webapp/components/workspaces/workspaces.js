@@ -13,6 +13,13 @@ import { useQueryExecutor } from '../../react-hooks'
 import { Notification } from '../notification/notification'
 import Subscribe from './subscribe'
 import {
+  isWritable,
+  isAdmin,
+  isReadOnly,
+  getSecurityAttributesFromMetacard,
+} from '../sharing/sharing-utils'
+
+import {
   Actions,
   AddCardItem,
   DeleteAction,
@@ -242,28 +249,26 @@ const Workspaces = props => {
       ) : null}
       <AddCardItem onClick={onCreate} />
       {workspaces.map(workspace => {
+        const securityAttributes = getSecurityAttributesFromMetacard(workspace)
         const isSubscribed = workspace.userIsSubscribed
         workspace = workspace.attributes
-        const {
-          security_access_administrators,
-          security_access_individuals,
-          security_access_groups,
-        } = workspace
-        const isAdmin =
-          (security_access_administrators === null
-            ? false
-            : security_access_administrators.includes(userAttrs.email)) ||
-          workspace.owner === userAttrs.email
-        const isWritable =
-          (security_access_individuals === null
-            ? false
-            : security_access_individuals.includes(userAttrs.email)) ||
-          (security_access_groups === null
-            ? false
-            : security_access_groups.some(item =>
-                userAttrs.roles.includes(item)
-              )) ||
-          isAdmin
+        const canShare = isAdmin(
+          userAttrs.email,
+          securityAttributes,
+          workspace.owner
+        )
+        const canWrite = isWritable(
+          userAttrs.email,
+          userAttrs.roles,
+          securityAttributes
+        )
+        const canRead = isReadOnly(
+          canWrite,
+          canShare,
+          securityAttributes,
+          userAttrs.email,
+          userAttrs.roles
+        )
         const isReadOnly = !isAdmin && !isWritable
         return (
           <IndexCardItem
@@ -276,12 +281,12 @@ const Workspaces = props => {
                 id={workspace.id}
                 title={workspace.title}
                 metacardType="workspace"
-                isAdmin={isAdmin}
+                isAdmin={canShare}
               />
               <DeleteAction
                 onDelete={() => onDelete(workspace)}
                 message="This will permanently delete the workspace."
-                isWritable={isWritable}
+                isWritable={canWrite}
               />
               <Subscribe
                 subscribe={subscribe}
