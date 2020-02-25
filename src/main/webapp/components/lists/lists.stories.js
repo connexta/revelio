@@ -1,6 +1,6 @@
 import React from 'react'
-import { storiesOf } from '../@storybook/react'
-import useState from '../@storybook/use-state'
+import { storiesOf } from '../../@storybook/react'
+import useState from '../../@storybook/use-state'
 import List from './lists'
 
 const stories = storiesOf('Lists', module)

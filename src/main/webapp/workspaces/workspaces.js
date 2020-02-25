@@ -37,7 +37,7 @@ import {
 import QuerySelector from './query-selector'
 
 import loadable from 'react-loadable'
-import Lists from '../lists'
+import Lists from '../components/lists'
 import ErrorMessage from '../components/network-retry/inline-retry'
 import { getIn } from 'immutable'
 
