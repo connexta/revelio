@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import BasicSearch from './components/basic-search'
 import ResultTable from './results/results'
-import QueryStatus from './query-status'
+import QueryStatus from './components/query-status/query-status'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'

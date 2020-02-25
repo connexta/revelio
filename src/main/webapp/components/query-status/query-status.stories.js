@@ -1,5 +1,5 @@
 import React from 'react'
-import { storiesOf } from './@storybook/react'
+import { storiesOf } from '../../@storybook/react'
 import { action } from '@connexta/ace/@storybook/addon-actions'
 
 const stories = storiesOf('QueryStatus', module)

@@ -26,7 +26,7 @@ import { useQueryExecutor } from '../react-hooks'
 import gql from 'graphql-tag'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 
-import QueryStatus from '../query-status'
+import QueryStatus from '../components/query-status/query-status'
 import BasicSearch, {
   populateDefaultQuery,
 } from '../components/basic-search/basic-search'
