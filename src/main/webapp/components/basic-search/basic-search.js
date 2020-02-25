@@ -29,7 +29,7 @@ import FacetedDropdown from '../faceted-dropdown'
 import { Location } from '../../location'
 import { makeDefaultSearchGeo } from '../../query-builder/filter'
 import { useApolloFallback } from '../../react-hooks'
-import SortOrder from '../../sort-order'
+import SortOrder from '../sort-order/sort-order'
 import SourcesSelect from '../sources-select'
 import TimeRange, {
   createTimeRange,

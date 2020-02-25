@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { action } from '@connexta/ace/@storybook/addon-actions'
-import { storiesOf } from './@storybook/react'
+import { storiesOf } from '../../@storybook/react'
 
 import SortOrder from './sort-order'
 

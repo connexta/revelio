@@ -11,7 +11,7 @@ import { QuerySettingsType } from './types'
 const ResultFormSelect = require('../user-settings/result-form-select').default
 const SourcesSelect = require('../components/sources-select').default
 const { FilterCard } = require('../components/containers')
-const SortOrder = require('../sort-order').default
+const SortOrder = require('../components/sort-order').default
 
 const getSorts = (sorts?: string[]) => {
   if (!sorts) return undefined

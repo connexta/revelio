@@ -6,7 +6,7 @@ const {
   TimeRangeDuring,
   TimeRangeRelative,
   validate,
-} = require('../../time-range')
+} = require('../../components/time-range')
 const {
   uglyMap,
   parseRelative,

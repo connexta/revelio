@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useQuery } from '@apollo/react-hooks'
-import { useApolloFallback } from './react-hooks'
+import { useApolloFallback } from '../../react-hooks'
 import gql from 'graphql-tag'
 
 import Autocomplete from '@material-ui/lab/Autocomplete'
@@ -16,7 +16,7 @@ import Remove from '@material-ui/icons/Remove'
 import Select from '@material-ui/core/Select'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
-import ErrorMessage from './components/network-retry/inline-retry'
+import ErrorMessage from '../network-retry/inline-retry'
 import { fromJS, getIn } from 'immutable'
 
 const getDirectionLabel = type => {
@@ -222,7 +222,7 @@ const getNextAvailableSort = descriptors => {
   return { propertyName, sortOrder }
 }
 
-const SortOrder = props => {
+export const SortOrder = props => {
   const {
     attributeDescriptors = sampleAttributeDescriptors,
     defaultValue,

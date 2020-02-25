@@ -3,7 +3,7 @@ import Slider from '@material-ui/core/Slider'
 import Typography from '@material-ui/core/Typography'
 import { get, getIn, Map, set, setIn, merge } from 'immutable'
 import React from 'react'
-import SortOrder from '../sort-order'
+import SortOrder from '../components/sort-order/sort-order'
 import ResultFormSelect from './result-form-select'
 import SourceSelect from './source-select'
 

@@ -4,9 +4,6 @@ import LocationFilter from '../filter-inputs/location-filter'
 import DateFilter from '../filter-inputs/date-filter'
 import BooleanFilter from '../filter-inputs/boolean-filter'
 import NumberFilter from '../filter-inputs/number-filter'
-// const FilterCard = require('../../basic-search').FilterCard
-// @ts-ignore require not working in storybook for some reason
-import { FilterCard } from '../../components/basic-search/basic-search'
 import { getIn } from 'immutable'
 import sampleAttributeDefinitions from './sample-attribute-definitions'
 import { deserialize, serialize } from './filter-serialization'
@@ -16,6 +13,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import ErrorMessage from '../../components/network-retry/inline-retry'
 const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
   .default
+const FilterCard = require('../../components/containers').FilterCard
 
 export type QueryFilterProps = {
   onChange: (value: QueryFilter) => void
