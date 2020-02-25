@@ -19,8 +19,8 @@ import {
   DeleteAction,
   ShareAction,
   Actions,
-} from '../components/index-cards'
-import RetryComponent from '../components/network-retry/snackbar-retry'
+} from '../index-cards'
+import RetryComponent from '../network-retry/snackbar-retry'
 
 const Loading = () => {
   return <LinearProgress />

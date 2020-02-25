@@ -99,7 +99,7 @@ const loadDynamicRoute = route => {
     }),
     'result-forms': loadable({
       loader: () =>
-        import(/* webpackChunkName: "result-forms" */ './result-forms'),
+        import(/* webpackChunkName: "result-forms" */ './components/result-forms'),
       loading: LoadingComponent,
     }),
     'search-forms': loadable({

@@ -1,7 +1,7 @@
 import React, { memo, useState } from 'react'
 
 import { Set } from 'immutable'
-import { useUndoState } from '../react-hooks'
+import { useUndoState } from '../../react-hooks'
 
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'

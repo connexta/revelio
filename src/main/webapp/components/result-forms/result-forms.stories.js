@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { storiesOf } from '../@storybook/react'
+import { storiesOf } from '../../@storybook/react'
 import { number, boolean, text } from '@connexta/ace/@storybook/addon-knobs'
 import { action } from '@connexta/ace/@storybook/addon-actions'
 
 const stories = storiesOf('ResultForms', module)
 
 import { Set } from 'immutable'
-import { useUndoState } from '../react-hooks'
+import { useUndoState } from '../../react-hooks'
 
 import TransferList from './transfer-list'
 import ResultForms from './result-forms'
