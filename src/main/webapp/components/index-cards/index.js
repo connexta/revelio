@@ -7,4 +7,5 @@ export {
   DuplicateAction,
   EditAction,
   Actions,
+  ReadOnly,
 } from './index-cards'

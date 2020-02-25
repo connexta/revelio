@@ -20,6 +20,7 @@ import {
   IndexCards,
   ShareAction,
   DuplicateAction,
+  ReadOnly,
 } from '../index-cards'
 import Lists from '../lists'
 import { InlineRetry, SnackbarRetry } from '../network-retry'
@@ -263,6 +264,7 @@ const Workspaces = props => {
                 userAttrs.roles.includes(item)
               )) ||
           isAdmin
+        const isReadOnly = !isAdmin && !isWritable
         return (
           <IndexCardItem
             {...workspace}
@@ -290,6 +292,7 @@ const Workspaces = props => {
                 isSubscribed={isSubscribed}
               />
               <DuplicateAction onDuplicate={() => onDuplicate(workspace)} />
+              <ReadOnly isReadOnly={isReadOnly} indexCardType="workspace" />
             </Actions>
           </IndexCardItem>
         )

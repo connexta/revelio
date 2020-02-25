@@ -7,13 +7,14 @@ import IconButton from '@material-ui/core/IconButton'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import EditIcon from '@material-ui/icons/Edit'
 import FileCopyIcon from '@material-ui/icons/FileCopy'
-
+import ErrorIcon from '@material-ui/icons/Error'
+import { withStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardActionArea from '@material-ui/core/CardActionArea'
-
+import Tooltip from '@material-ui/core/Tooltip'
 import moment from 'moment'
 
 import ConfirmDelete from '../confirm-delete'
@@ -58,6 +59,60 @@ export const ShareAction = props => {
   const { id, title, metacardType, isAdmin } = props
   return isAdmin ? (
     <SharingModal id={id} title={title} metacardType={metacardType} />
+  ) : null
+}
+
+const LightTooltip = withStyles(theme => ({
+  tooltip: {
+    backgroundColor: theme.palette.common.white,
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+    border: '1px solid #D3D3D3',
+  },
+}))(Tooltip)
+
+export const ReadOnly = props => {
+  const { isReadOnly, indexCardType } = props
+  const readOnlyMessage =
+    'This ' +
+    indexCardType +
+    ' is Read Only. This means you cannot change, delete or share this ' +
+    indexCardType +
+    '. Please duplicate this ' +
+    indexCardType +
+    ' or ask the owner for permissions to make changes.'
+  return isReadOnly ? (
+    <IconButton style={{ fontSize: '1.3rem' }}>
+      <LightTooltip
+        title={
+          <React.Fragment>
+            <Typography color="inherit">
+              <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <ErrorIcon
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    paddingTop: '.1rem',
+                  }}
+                />{' '}
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    padding: '.3rem',
+                  }}
+                >
+                  {readOnlyMessage}
+                </div>
+              </div>
+            </Typography>
+          </React.Fragment>
+        }
+      >
+        <div>Read Only</div>
+      </LightTooltip>
+    </IconButton>
   ) : null
 }
 
