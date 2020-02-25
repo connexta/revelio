@@ -9,7 +9,7 @@ import { useSelectionInterface, useDrawInterface } from '../react-hooks'
 
 import { Layout, Provider, AddConfig, DragSource } from '../react-golden-layout'
 
-import Histogram from '../histogram'
+import Histogram from '../components/histogram/histogram'
 import Inspector from '../inspector/inspector'
 import ResultTable from '../results/results'
 import Gallery from '../gallery'

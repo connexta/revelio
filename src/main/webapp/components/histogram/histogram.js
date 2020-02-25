@@ -5,7 +5,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import Tooltip from '@material-ui/core/Tooltip'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
-import { formatDateString, getFileSize, isValidDate } from './utils'
+import { formatDateString, getFileSize, isValidDate } from '../../utils'
 
 const AttributeSelect = props => {
   const { attributes, value, onChange } = props
