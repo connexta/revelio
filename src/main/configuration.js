@@ -31,7 +31,7 @@ const defaultConfig = {
 
 module.exports = key => {
   return (
-    (typeof process.env[key] === 'function'
+    (typeof parsableAttributes[key] === 'function'
       ? parsableAttributes[key]()
       : undefined) ||
     process.env[key] ||
