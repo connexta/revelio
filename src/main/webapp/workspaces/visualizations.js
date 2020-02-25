@@ -7,7 +7,12 @@ import MenuItem from '@material-ui/core/MenuItem'
 
 import { useSelectionInterface, useDrawInterface } from '../react-hooks'
 
-import { Layout, Provider, AddConfig, DragSource } from '../react-golden-layout'
+import {
+  Layout,
+  Provider,
+  AddConfig,
+  DragSource,
+} from '../components/react-golden-layout'
 
 import Histogram from '../components/histogram/histogram'
 import Inspector from '../components/inspector/inspector'
