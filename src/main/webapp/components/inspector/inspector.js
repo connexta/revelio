@@ -1,7 +1,7 @@
 import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import Paper from '@material-ui/core/Card'
-import Thumbnail from '../../thumbnail/thumbnail'
+import Thumbnail from '../thumbnail/thumbnail'
 import Divider from '@material-ui/core/Divider'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Link from '@material-ui/core/Link'

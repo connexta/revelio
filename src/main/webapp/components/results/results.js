@@ -11,7 +11,7 @@ import TableCell from '@material-ui/core/TableCell'
 import TableBody from '@material-ui/core/TableBody'
 import More from '@material-ui/icons/UnfoldMore'
 import Less from '@material-ui/icons/UnfoldLess'
-import Thumbnail from '../../thumbnail/thumbnail'
+import Thumbnail from '../thumbnail/thumbnail'
 import Button from '@material-ui/core/Button'
 import Checkbox from '@material-ui/core/Checkbox'
 
