@@ -4,10 +4,10 @@ import MenuItem from '@material-ui/core/MenuItem'
 import gql from 'graphql-tag'
 import { getIn } from 'immutable'
 import React, { useEffect } from 'react'
-import OutlinedSelect from '../input/outlined-select'
-import { useApolloFallback } from '../react-hooks'
+import OutlinedSelect from '../../input/outlined-select'
+import { useApolloFallback } from '../../react-hooks'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import ErrorMessage from '../components/network-retry/inline-retry'
+import ErrorMessage from '../network-retry/inline-retry'
 
 const resultForms = gql`
   query SearchFormsAttributeGroup {

@@ -19,15 +19,15 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 import gql from 'graphql-tag'
 import { fromJS, Map } from 'immutable'
 import React from 'react'
-import { useApolloFallback } from '../react-hooks'
-import { mergeDeepOverwriteLists } from '../utils'
+import { useApolloFallback } from '../../react-hooks'
+import { mergeDeepOverwriteLists } from '../../utils'
 import HiddenResultsSettings from './hidden-results-settings'
 import NotificationSettings from './notification-settings'
 import SearchSettings from './search-settings'
 import TimeSettings from './time-settings'
 import ThemeSettings from './theme-settings'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import ErrorMessage from '../components/network-retry/inline-retry'
+import ErrorMessage from '../network-retry/inline-retry'
 
 const generateSetting = (title, Icon = AccessibleForwardIcon, component) => {
   return {

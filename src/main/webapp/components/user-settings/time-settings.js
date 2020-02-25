@@ -5,7 +5,7 @@ import { Map } from 'immutable'
 import moment from 'moment'
 import momentTimezone from 'moment-timezone'
 import React from 'react'
-import OutlinedSelect from '../input/outlined-select'
+import OutlinedSelect from '../../input/outlined-select'
 
 const useCurrentTime = (datetimefmt, timeZone) => {
   const [currentTime, setCurrentTime] = React.useState(

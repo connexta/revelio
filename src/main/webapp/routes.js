@@ -37,7 +37,7 @@ import { DrawProvider } from './react-hooks/use-draw-interface'
 import { Link as ReactLink, Route, matchPath } from 'react-router-dom'
 
 import User from './components/user/user'
-import UserSettings from './user-settings'
+import UserSettings from './components/user-settings'
 import loadable from 'react-loadable'
 
 import url from 'url'
