@@ -1,5 +1,5 @@
 import { action } from '@connexta/ace/@storybook/addon-actions'
-import { storiesOf } from '../@storybook/react'
+import { storiesOf } from '../../@storybook/react'
 import React, { useState } from 'react'
 import PointRadius from './point-radius'
 import Line from './line'
@@ -12,12 +12,6 @@ import {
   KILOMETERS,
   NAUTICAL_MILES,
 } from 'geospatialdraw/bin/geometry/units'
-import {
-  LAT_LON,
-  LAT_LON_DMS,
-  USNG,
-  UTM,
-} from 'geospatialdraw/bin/coordinates/units'
 import {
   geoJSONToGeometryJSON,
   makeEmptyGeometry,
@@ -60,25 +54,8 @@ const editors = {
   },
 }
 
-const coordinateUnits = [LAT_LON, LAT_LON_DMS, USNG, UTM]
-
 Object.keys(editors).forEach(key => {
   const editor = editors[key]
-  coordinateUnits.forEach(coordinateUnit => {
-    stories.add(`${key} using ${coordinateUnit}`, () => {
-      const [geo, setGeo] = useState(editor.geo)
-      return (
-        <editor.Editor
-          value={geo}
-          onChange={update => {
-            action('onChange')(update)
-            setGeo(update)
-          }}
-          coordinateUnit={coordinateUnit}
-        />
-      )
-    })
-  })
   stories.add(`${key} with coordinate tabs`, () => {
     const [geo, setGeo] = useState(editor.geo)
     const Editor = withCoordinateUnitTabs(editor.Editor)

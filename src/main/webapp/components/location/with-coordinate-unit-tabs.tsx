@@ -9,7 +9,7 @@ import {
 import EditorProps, { BasicEditorProps } from './geo-editor'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
-import SpacedLinearContainer from '../spaced-linear-container'
+import { SpacedLinearContainer } from '../containers'
 
 type OutputComponent = React.SFC<BasicEditorProps>
 type EditorComponent = React.ComponentType<EditorProps>

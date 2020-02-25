@@ -1,5 +1,5 @@
 import * as React from 'react'
-const { useApolloFallback } = require('../../react-hooks')
+const { useApolloFallback } = require('../../../react-hooks')
 import { ContainerProps, PresentationProps } from './props'
 import Container from './container'
 import withRemoteQueries from './with-remote-queries'

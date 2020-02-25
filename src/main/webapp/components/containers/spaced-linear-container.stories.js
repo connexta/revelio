@@ -1,4 +1,4 @@
-import { storiesOf } from './@storybook/react'
+import { storiesOf } from '../../@storybook/react'
 import { number } from '@connexta/ace/@storybook/addon-knobs'
 import React from 'react'
 import SpacedLinearContainer from './spaced-linear-container'

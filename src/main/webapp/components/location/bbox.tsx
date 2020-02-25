@@ -10,7 +10,7 @@ import FormControl from '@material-ui/core/FormControl'
 import FormLabel from '@material-ui/core/FormLabel'
 import Point from './point'
 import Props from './geo-editor'
-import SpacedLinearContainer from '../spaced-linear-container'
+import { SpacedLinearContainer } from '../containers'
 
 const BBox: React.SFC<Props> = ({ value, onChange, coordinateUnit }) => {
   const { id, bbox, properties } = geoToBBoxProps(value)

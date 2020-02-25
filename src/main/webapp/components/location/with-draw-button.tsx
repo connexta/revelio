@@ -1,10 +1,10 @@
 import * as React from 'react'
-const { useDrawInterface } = require('../react-hooks')
+const { useDrawInterface } = require('../../react-hooks')
 import { Shape } from 'geospatialdraw/bin/shapes/shape'
 import useGeometryJSONMemo from 'geospatialdraw/bin/geometry/memo'
 import { GeometryJSON } from 'geospatialdraw/bin/geometry/geometry'
 import { BasicEditorProps } from './geo-editor'
-import SpacedLinearContainer from '../spaced-linear-container'
+import { SpacedLinearContainer } from '../containers'
 import Button from '@material-ui/core/Button'
 
 type OutputComponent = React.SFC<BasicEditorProps>

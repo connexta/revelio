@@ -6,7 +6,7 @@ import {
 import Point from './point'
 import Props from './geo-editor'
 import Length from './length'
-import SpacedLinearContainer from '../spaced-linear-container'
+import { SpacedLinearContainer } from '../containers'
 
 const PointRadius: React.SFC<Props> = ({
   value,

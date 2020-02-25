@@ -2,7 +2,7 @@ import * as React from 'react'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import Props from './props'
 import NumberInput from '../number'
-import SpacedLinearContainer from '../../spaced-linear-container'
+import { SpacedLinearContainer } from '../../containers'
 
 const DECIMAL_DEGREES_PRECISION = 6
 

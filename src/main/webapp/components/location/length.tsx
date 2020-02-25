@@ -2,7 +2,7 @@ import * as React from 'react'
 import { LengthUnit } from 'geospatialdraw/bin/geometry/units'
 import NumberInput, { MaterialUIInputProps } from './number'
 import Units from './units'
-import SpacedLinearContainer from '../spaced-linear-container'
+import { SpacedLinearContainer } from '../containers'
 
 const LENGTH_PRECISION = 3
 

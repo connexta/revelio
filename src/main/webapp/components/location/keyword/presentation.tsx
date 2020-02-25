@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Length from '../length'
-import SpacedLinearContainer from '../../spaced-linear-container'
+import { SpacedLinearContainer } from '../../containers'
 import {
   Suggestion,
   PresentationProps as Props,

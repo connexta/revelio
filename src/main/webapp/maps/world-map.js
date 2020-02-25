@@ -14,7 +14,7 @@ import Renderer from 'geospatialdraw/bin/renderer'
 import { combineExtents } from 'geospatialdraw/bin/geometry/utilities'
 import { LAT_LON } from 'geospatialdraw/bin/coordinates/units'
 import { useCursorPosition } from './effects'
-import CoordinateValue from '../location/coordinate-value'
+import CoordinateValue from '../components/location/coordinate-value'
 
 export const geometryListToViewport = geometryList =>
   geometryList.length > 0

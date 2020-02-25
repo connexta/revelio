@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { QueryFilterProps } from '../filter/individual-filter'
 import { makeDefaultSearchGeo } from '../filter'
-import { Location, geoToFilter } from '../../../location'
+import { Location, geoToFilter } from '../../location'
 import AttributeDropdown from '../filter/attribute-dropdown'
 import { makeSearchGeoIdForFilter } from '../filter/search-geo-factory'
-import { wktToGeo } from '../../../location/geo-to-wkt'
+import { wktToGeo } from '../../location/geo-to-wkt'
 
 const getGeojson = (filter: QueryFilterProps['filter']) => {
   if (filter.geojson) return filter.geojson

@@ -26,7 +26,7 @@ import {
   toFilterTree,
 } from './basic-search-helper'
 import FacetedDropdown from '../faceted-dropdown'
-import { Location } from '../../location'
+import { Location } from '../location'
 import { makeDefaultSearchGeo } from '../query-builder/filter'
 import { useApolloFallback } from '../../react-hooks'
 import SortOrder from '../sort-order/sort-order'

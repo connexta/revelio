@@ -1,5 +1,5 @@
 import * as React from 'react'
-import SpacedLinearContainer from '../../spaced-linear-container'
+import { SpacedLinearContainer } from '../../containers'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import FormControl from '@material-ui/core/FormControl'

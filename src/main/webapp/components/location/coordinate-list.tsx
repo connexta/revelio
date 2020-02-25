@@ -11,7 +11,7 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import Point from './point'
 import Length from './length'
-import SpacedLinearContainer from '../spaced-linear-container'
+import { SpacedLinearContainer } from '../containers'
 import CoordinateValue from './coordinate-value'
 
 type Props = {

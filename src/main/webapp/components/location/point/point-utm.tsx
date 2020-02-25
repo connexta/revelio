@@ -1,5 +1,5 @@
 import * as React from 'react'
-import SpacedLinearContainer from '../../spaced-linear-container'
+import { SpacedLinearContainer } from '../../containers'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import ListItemText from '@material-ui/core/ListItemText'
