@@ -11,7 +11,7 @@ import { Layout, Provider, AddConfig, DragSource } from '../react-golden-layout'
 
 import Histogram from '../components/histogram/histogram'
 import Inspector from '../components/inspector/inspector'
-import ResultTable from '../results/results'
+import ResultTable from '../components/results/results'
 import Gallery from '../components/gallery'
 
 import {

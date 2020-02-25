@@ -1,11 +1,8 @@
 import React, { useState } from 'react'
 import { Results } from './results'
-import { storiesOf } from '../@storybook/react'
-import Skeleton from '@material-ui/lab/Skeleton'
-import { boolean } from '@connexta/ace/@storybook/addon-knobs'
-import tn from './story-thumb'
+import { storiesOf } from '../../@storybook/react'
 
-import genResults from '../gen-results'
+import genResults from '../../gen-results'
 
 const stories = storiesOf('Result', module)
 
@@ -18,15 +15,6 @@ const attributes = [
   'Checksum',
   'ID',
 ]
-
-const Thumbnail = () => {
-  const loaded = boolean('Load Thumbnail', false)
-  return loaded ? (
-    <img style={{ maxHeight: 100 }} src={tn} />
-  ) : (
-    <Skeleton variant="rect" height="100px" width="100px" />
-  )
-}
 
 stories.add('Basic', () => {
   const [selection, setSelected] = useState([])
@@ -53,7 +41,6 @@ stories.add('Basic', () => {
           attributes={attributes}
           selection={selection}
           onSelect={setSelected}
-          Thumbnail={Thumbnail}
         />
       </div>
     </div>
