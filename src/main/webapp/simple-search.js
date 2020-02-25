@@ -10,7 +10,7 @@ import Dialog from '@material-ui/core/Dialog'
 import Typography from '@material-ui/core/Typography'
 import TablePagination from '@material-ui/core/TablePagination'
 
-import Inspector from './inspector'
+import Inspector from './components/inspector'
 
 import { useSelectionInterface, useQueryExecutor } from './react-hooks'
 

@@ -11,7 +11,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility'
 import gql from 'graphql-tag'
 import { Map } from 'immutable'
 import React from 'react'
-import Inspector from '../inspector'
+import Inspector from '../components/inspector'
 import { useApolloFallback } from '../react-hooks'
 import ErrorMessage from '../components/network-retry/inline-retry'
 
