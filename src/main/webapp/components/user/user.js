@@ -7,10 +7,10 @@ import Typography from '@material-ui/core/Typography'
 import PersonIcon from '@material-ui/icons/Person'
 import gql from 'graphql-tag'
 import React from 'react'
-import { useApolloFallback } from './react-hooks'
+import { useApolloFallback } from '../../react-hooks'
 import Cookies from 'universal-cookie'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import ErrorMessage from './components/network-retry/inline-retry'
+import ErrorMessage from '../network-retry/inline-retry'
 
 const UserDrawer = props => (
   <Drawer
@@ -39,7 +39,7 @@ const UserInfo = props => (
   </div>
 )
 
-const User = props => {
+export const User = props => {
   const { email, isGuest, username } = props.value
   const [open, setOpen] = React.useState(props.open)
   const handleDrawerOpen = () => {

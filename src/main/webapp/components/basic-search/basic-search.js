@@ -34,7 +34,7 @@ import SourcesSelect from '../sources-select'
 import TimeRange, {
   createTimeRange,
   validate as validateTimeRange,
-} from '../../time-range'
+} from '../time-range/time-range'
 import FilterCard from '../containers/filter-card'
 const timeAttributes = [
   'created',

@@ -10,11 +10,11 @@ import TextField from '@material-ui/core/TextField'
 import { KeyboardDatePicker } from '@material-ui/pickers'
 
 import { Map } from 'immutable'
-import { isValidDate } from './utils'
+import { isValidDate } from '../../utils'
 
 const relativeUnits = ['minutes', 'hours', 'days', 'months', 'years']
 
-export const createTimeRange = timeRange => {
+const createTimeRange = timeRange => {
   const {
     type = 'BEFORE',
     value = moment().format(),
@@ -253,7 +253,7 @@ const getTimeRangeWhen = type => {
   return ranges[type] || Empty
 }
 
-export const validate = (timeRange = {}) => {
+const validate = (timeRange = {}) => {
   const errors = {}
 
   const { type, value } = timeRange
@@ -304,4 +304,11 @@ export const validate = (timeRange = {}) => {
 }
 
 export default TimeRange
-export { TimeRangeAfter, TimeRangeBefore, TimeRangeDuring, TimeRangeRelative }
+export {
+  TimeRangeAfter,
+  TimeRangeBefore,
+  TimeRangeDuring,
+  TimeRangeRelative,
+  validate,
+  createTimeRange,
+}

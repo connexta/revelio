@@ -1,6 +1,6 @@
 import { boolean, text } from '@connexta/ace/@storybook/addon-knobs'
 import React from 'react'
-import { storiesOf } from './@storybook/react'
+import { storiesOf } from '../../@storybook/react'
 import User from './user'
 
 const stories = storiesOf('User', module)

@@ -36,7 +36,7 @@ import { SelectionProvider } from './react-hooks/use-selection-interface'
 import { DrawProvider } from './react-hooks/use-draw-interface'
 import { Link as ReactLink, Route, matchPath } from 'react-router-dom'
 
-import User from './user'
+import User from './components/user/user'
 import UserSettings from './user-settings'
 import loadable from 'react-loadable'
 
