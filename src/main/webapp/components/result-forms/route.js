@@ -23,6 +23,7 @@ import {
   DeleteAction,
   ShareAction,
   Actions,
+  ReadOnly,
 } from '../index-cards'
 import RetryComponent from '../network-retry/snackbar-retry'
 
@@ -57,8 +58,23 @@ const AddItem = props => {
 }
 
 const Item = props => {
-  const { form, Editor, onDelete } = props
+  const { form, Editor, onDelete, user } = props
 
+  const securityAttributes = getSecurityAttributesFromMetacard(form)
+  const canShare = isAdmin(user.email, securityAttributes, form.owner)
+  const canWrite = isWritable(
+    user.email,
+    user.roles,
+    securityAttributes,
+    canShare
+  )
+  const canRead = isReadOnly(
+    canWrite,
+    canShare,
+    securityAttributes,
+    user.email,
+    user.roles
+  )
   const [editing, setEditing] = useState(false)
 
   const onSave = data => {
@@ -83,11 +99,14 @@ const Item = props => {
             id={form.id}
             title={form.title}
             metacardType="attribute-group"
+            isAdmin={canShare}
           />
           <DeleteAction
             message="This will permanently delete the result form."
             onDelete={onDelete}
+            isWritable={canWrite}
           />
+          <ReadOnly isReadOnly={canRead} indexCardType="Result Form" />
         </Actions>
       </IndexCardItem>
     </Fragment>
@@ -106,6 +125,7 @@ export const Route = props => {
     onSave,
     onDelete,
     refetch,
+    userAttributes,
   } = props
 
   if (loading) {
@@ -151,6 +171,7 @@ export const Route = props => {
                 setMessage('Result Form Deleted')
               }}
               form={form}
+              user={userAttributes}
             />
           )
         })}
@@ -184,6 +205,10 @@ const resultForms = gql`
         security_access_groups
         ...ResultFormAttributes
       }
+    }
+    user {
+      email
+      roles
     }
   }
   ${fragment}
@@ -363,6 +388,7 @@ export default () => {
   }
 
   const forms = data.metacardsByTag.attributes
+  const user = data.user
 
   return (
     <Route
@@ -372,6 +398,7 @@ export default () => {
       onSave={onSave}
       onDelete={onDelete}
       refetch={refetch}
+      userAttributes={user}
     />
   )
 }
