@@ -1,7 +1,7 @@
 import { setIn } from 'immutable'
 import React from 'react'
 import { storiesOf } from '../@storybook/react'
-import results from '../sample-multi-result.json'
+import results from '../sample-data/sample-multi-result.json'
 import Gallery from './gallery'
 
 const thumbnailResults = results.filter(

@@ -1,6 +1,6 @@
 const assert = require('assert')
 import { serialize, deserialize } from './filter-serialization'
-import sampleAttributeDefinitions from './sample-attribute-definitions'
+import sampleAttributeDefinitions from '../../sample-data/sample-attribute-definitions.json'
 // Data stored by server
 const serverIsNull = {
   property: 'topic.vocabulary',

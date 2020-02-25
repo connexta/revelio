@@ -3,7 +3,7 @@ import React from 'react'
 import { storiesOf } from '../../@storybook/react'
 import { action } from '@connexta/ace/@storybook/addon-actions'
 
-import results from '../../sample-multi-result.json'
+import results from '../../sample-data/sample-multi-result.json'
 import Histogram from './histogram'
 
 const stories = storiesOf('Histogram', module)
