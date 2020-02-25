@@ -6,11 +6,11 @@ const {
   TimeRangeDuring,
   TimeRangeRelative,
   validate,
-} = require('../../components/time-range')
+} = require('../../time-range')
 const {
   uglyMap,
   parseRelative,
-} = require('../../components/basic-search/basic-search-helper')
+} = require('../../basic-search/basic-search-helper')
 import AttributeDropdown from '../filter/attribute-dropdown'
 
 import ComparatorDropdown from '../filter/comparator-dropdown'

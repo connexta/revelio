@@ -1,4 +1,4 @@
-const { storiesOf } = require('../@storybook/react')
+const { storiesOf } = require('../../@storybook/react')
 import * as React from 'react'
 import { action } from '@storybook/addon-actions'
 import { number, boolean } from '@storybook/addon-knobs'

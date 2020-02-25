@@ -1,17 +1,17 @@
 import * as React from 'react'
-import useAnchorEl from '../../react-hooks/use-anchor-el'
+import useAnchorEl from '../../../react-hooks/use-anchor-el'
 import Button from '@material-ui/core/Button'
 import Box from '@material-ui/core/Box'
 import Popover from '@material-ui/core/Popover'
 import MenuItem from '@material-ui/core/MenuItem'
 import DropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { Map, getIn } from 'immutable'
-import sampleAttributeDefinitions from '../../sample-data/sample-attribute-definitions.json'
+import sampleAttributeDefinitions from '../../../sample-data/sample-attribute-definitions.json'
 import { QueryFilter, AttributeDefinition } from '../types'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import useAttributeDefinitions from '../../react-hooks/use-attribute-definitions'
-import ErrorMessage from '../../components/network-retry/inline-retry'
-const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
+import useAttributeDefinitions from '../../../react-hooks/use-attribute-definitions'
+import ErrorMessage from '../../network-retry/inline-retry'
+const useApolloFallback = require('../../../react-hooks/use-apollo-fallback')
   .default
 const booleanComparators = ['=', 'IS NULL']
 const booleanAliases = Map({ '=': 'IS', 'IS NULL': 'IS EMPTY' })

@@ -5,13 +5,13 @@ import TextField from '@material-ui/core/TextField'
 import { QueryFilterProps } from './individual-filter'
 import { getDefaultValue } from './filter-utils'
 import { getIn } from 'immutable'
-import sampleAttributeDefinitions from '../../sample-data/sample-attribute-definitions.json'
+import sampleAttributeDefinitions from '../../../sample-data/sample-attribute-definitions.json'
 import { Comparators } from './comparator-dropdown'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { AttributeDefinition } from '../types'
-import useAttributeDefinitions from '../../react-hooks/use-attribute-definitions'
-import ErrorMessage from '../../components/network-retry/inline-retry'
-const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
+import useAttributeDefinitions from '../../../react-hooks/use-attribute-definitions'
+import ErrorMessage from '../../network-retry/inline-retry'
+const useApolloFallback = require('../../../react-hooks/use-apollo-fallback')
   .default
 const AttributeDropdown = (
   props: QueryFilterProps & { attributeDefinitions?: AttributeDefinition[] }

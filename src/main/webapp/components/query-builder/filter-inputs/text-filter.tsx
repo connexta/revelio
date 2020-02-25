@@ -8,7 +8,7 @@ import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import AttributeDropdown from '../filter/attribute-dropdown'
 import ComparatorDropdown from '../filter/comparator-dropdown'
-const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
+const useApolloFallback = require('../../../react-hooks/use-apollo-fallback')
   .default
 
 const intRegex = /^(\d*$)|^$/

@@ -5,15 +5,15 @@ import DateFilter from '../filter-inputs/date-filter'
 import BooleanFilter from '../filter-inputs/boolean-filter'
 import NumberFilter from '../filter-inputs/number-filter'
 import { getIn } from 'immutable'
-import sampleAttributeDefinitions from '../../sample-data/sample-attribute-definitions.json'
+import sampleAttributeDefinitions from '../../../sample-data/sample-attribute-definitions.json'
 import { deserialize, serialize } from './filter-serialization'
 import { QueryFilter, AttributeDefinition } from '../types'
-import useAttributeDefinitions from '../../react-hooks/use-attribute-definitions'
+import useAttributeDefinitions from '../../../react-hooks/use-attribute-definitions'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import ErrorMessage from '../../components/network-retry/inline-retry'
-const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
+import ErrorMessage from '../../network-retry/inline-retry'
+const useApolloFallback = require('../../../react-hooks/use-apollo-fallback')
   .default
-const FilterCard = require('../../components/containers').FilterCard
+const FilterCard = require('../../containers').FilterCard
 
 export type QueryFilterProps = {
   onChange: (value: QueryFilter) => void

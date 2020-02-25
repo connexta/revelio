@@ -7,7 +7,10 @@ import Typography from '@material-ui/core/Typography'
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'
 import React, { useState } from 'react'
 import loadable from 'react-loadable'
-import { AttributeDefinition, QueryType } from '../query-builder/types'
+import {
+  AttributeDefinition,
+  QueryType,
+} from '../components/query-builder/types'
 const { useQueryExecutor, useApolloFallback } = require('../react-hooks')
 const genResults = require('../gen-results').default
 

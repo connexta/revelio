@@ -6,11 +6,11 @@ import Box from '@material-ui/core/Box'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import AttributeDropdown from '../filter/attribute-dropdown'
 import ComparatorDropdown from '../filter/comparator-dropdown'
-import sampleAttributeDefinitions from '../../sample-data/sample-attribute-definitions.json'
-import useAttributeDefinitions from '../../react-hooks/use-attribute-definitions'
+import sampleAttributeDefinitions from '../../../sample-data/sample-attribute-definitions.json'
+import useAttributeDefinitions from '../../../react-hooks/use-attribute-definitions'
 import { AttributeDefinition } from '../types'
 import { useState } from 'react'
-const useApolloFallback = require('../../react-hooks/use-apollo-fallback')
+const useApolloFallback = require('../../../react-hooks/use-apollo-fallback')
   .default
 const intRegex = /^(-?\d*$)|^$/
 const floatRegex = /^-?\d*(\.\d*)?$|^$/

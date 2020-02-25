@@ -1,6 +1,6 @@
 import { geoJSONToGeometryJSON } from 'geospatialdraw/bin/geometry/utilities'
 import { geoToFilter } from '../../location'
-import { makeSearchGeoIdForFilter } from '../../query-builder/filter'
+import { makeSearchGeoIdForFilter } from '../query-builder/filter'
 const { Map, Set, fromJS } = require('immutable')
 export const APPLY_TO_KEY = 'applyTo'
 export const MATCHTYPE_KEY = 'matchType'

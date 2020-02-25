@@ -4,11 +4,11 @@ import { boolean } from '@storybook/addon-knobs'
 import SearchFormRoute from './route'
 import { QueryEditor } from './editor'
 import { action } from '@storybook/addon-actions'
-import { defaultFilter } from '../query-builder/filter/filter-utils'
+import { defaultFilter } from '../components/query-builder/filter/filter-utils'
 const { SelectionProvider } = require('../react-hooks/use-selection-interface')
 
-import QueryBuilder from '../query-builder/query-builder'
-import { QueryType } from '../query-builder/types'
+import QueryBuilder from '../components/query-builder/query-builder'
+import { QueryType } from '../components/query-builder/types'
 const useState = require('../@storybook/use-state').default
 
 const stories = storiesOf('Search Forms', module)
