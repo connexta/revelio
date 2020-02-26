@@ -14,6 +14,7 @@ import {
   IndexCardItem,
   DeleteAction,
   ShareAction,
+  DuplicateAction,
   Actions,
 } from '.'
 
@@ -47,6 +48,7 @@ stories.add('basic usage', () => {
             <Actions>
               <ShareAction onShare={action('onShare')} />
               <DeleteAction onDelete={action('onDelete')} />
+              <DuplicateAction onDuplicate={action('onDuplicate')} />
             </Actions>
           </IndexCardItem>
         )

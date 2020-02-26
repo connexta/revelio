@@ -6,6 +6,7 @@ import IconButton from '@material-ui/core/IconButton'
 
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import EditIcon from '@material-ui/icons/Edit'
+import FileCopyIcon from '@material-ui/icons/FileCopy'
 
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
@@ -31,6 +32,14 @@ export const EditAction = props => {
   return (
     <IconButton onClick={onClick(onEdit)}>
       <EditIcon />
+    </IconButton>
+  )
+}
+export const DuplicateAction = props => {
+  const { onDuplicate } = props
+  return (
+    <IconButton onClick={onClick(onDuplicate)}>
+      <FileCopyIcon />
     </IconButton>
   )
 }
