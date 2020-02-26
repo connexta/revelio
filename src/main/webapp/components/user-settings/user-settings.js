@@ -17,7 +17,7 @@ import SearchIcon from '@material-ui/icons/Search'
 import SettingsIcon from '@material-ui/icons/Settings'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 import gql from 'graphql-tag'
-import { fromJS, Map } from 'immutable'
+import { fromJS, Map, getIn } from 'immutable'
 import React from 'react'
 import { useApolloFallback } from '../../react-hooks'
 import { mergeDeepOverwriteLists } from '../../utils'
@@ -135,6 +135,7 @@ const UserSettings = props => {
   const [open, setOpen] = React.useState(props.open)
   const [selected, setSelected] = React.useState({})
   const [preferences, setPreferences] = React.useState(props.value)
+
   const handleDrawerOpen = () => {
     setOpen(true)
   }
@@ -167,15 +168,21 @@ const UserSettings = props => {
             setSelected(selected)
           }}
         >
-          {Component && (
-            <Component
-              value={preferences}
-              onChange={newPreferences => {
-                setPreferences(newPreferences)
-              }}
-              onSave={onSave}
-              systemProperties={props.systemProperties}
-            />
+          {props.error ? (
+            <ErrorMessage onRetry={props.refetch}>
+              Error Retrieving User Preferences
+            </ErrorMessage>
+          ) : (
+            Component && (
+              <Component
+                value={preferences}
+                onChange={newPreferences => {
+                  setPreferences(newPreferences)
+                }}
+                onSave={onSave}
+                systemProperties={props.systemProperties}
+              />
+            )
           )}
         </DrawerContent>
       </UserSettingsDrawer>
@@ -244,16 +251,12 @@ const Container = () => {
     },
   })
   if (loading) return <LinearProgress />
-  if (error)
-    return (
-      <ErrorMessage onRetry={refetch} error={error}>
-        Error Retrieving User Preferences
-      </ErrorMessage>
-    )
   return (
     <UserSettings
-      value={Map(data.user.preferences)}
-      systemProperties={data.systemProperties}
+      error={error}
+      refetch={refetch}
+      value={Map(getIn(data, ['user', 'preferences'], {}))}
+      systemProperties={getIn(data, ['systemProperties'], {})}
       onSave={userPreferences => {
         //preserve __typename fields
         const newPreferences = mergeDeepOverwriteLists(
