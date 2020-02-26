@@ -1,19 +1,54 @@
-import React, { useState } from 'react'
-import { Set } from 'immutable'
+import React, { useState, forwardRef } from 'react'
+import { Set, fromJS } from 'immutable'
 import { useKeyPressed, useSelectionInterface } from '../../react-hooks'
 
-import Paper from '@material-ui/core/Card'
-import Table from '@material-ui/core/Table'
 import Typography from '@material-ui/core/Typography'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import TableCell from '@material-ui/core/TableCell'
-import TableBody from '@material-ui/core/TableBody'
 import More from '@material-ui/icons/UnfoldMore'
 import Less from '@material-ui/icons/UnfoldLess'
 import Thumbnail from '../thumbnail/thumbnail'
 import Button from '@material-ui/core/Button'
-import Checkbox from '@material-ui/core/Checkbox'
+
+import MaterialTable from 'material-table'
+
+import AddBox from '@material-ui/icons/AddBox'
+import ArrowDownward from '@material-ui/icons/ArrowDownward'
+import Check from '@material-ui/icons/Check'
+import ChevronLeft from '@material-ui/icons/ChevronLeft'
+import ChevronRight from '@material-ui/icons/ChevronRight'
+import Clear from '@material-ui/icons/Clear'
+import DeleteOutline from '@material-ui/icons/DeleteOutline'
+import Edit from '@material-ui/icons/Edit'
+import FilterList from '@material-ui/icons/FilterList'
+import FirstPage from '@material-ui/icons/FirstPage'
+import LastPage from '@material-ui/icons/LastPage'
+import Remove from '@material-ui/icons/Remove'
+import SaveAlt from '@material-ui/icons/SaveAlt'
+import Search from '@material-ui/icons/Search'
+import ViewColumn from '@material-ui/icons/ViewColumn'
+
+const tableIcons = {
+  Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
+  Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+  Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+  Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+  DetailPanel: forwardRef((props, ref) => (
+    <ChevronRight {...props} ref={ref} />
+  )),
+  Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+  Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
+  Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+  FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+  LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+  NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+  PreviousPage: forwardRef((props, ref) => (
+    <ChevronLeft {...props} ref={ref} />
+  )),
+  ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+  Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+  SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
+  ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
+  ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
+}
 
 const cellStyles = {
   minWidth: 150,
@@ -69,8 +104,24 @@ const Description = props => {
   )
 }
 
-const getCellContent = (attribute, result) => {
-  const { attributes } = result.metacard
+const computeSelected = (selection, allRows, rowData, start, end, e) => {
+  const { id } = rowData
+  if (e.ctrlKey || e.metaKey) {
+    return selection.has(id) ? selection.remove(id) : selection.add(id)
+  }
+  if (e.shiftKey && start !== null) {
+    const slice =
+      start < end
+        ? allRows.slice(start, end + 1)
+        : allRows.slice(end, start + 1)
+    const group = Set(slice.map(row => row.id))
+    return group.union(selection)
+  }
+
+  return selection.has(id) ? Set() : Set([id])
+}
+
+const getCellContent = (attribute, value) => {
   switch (attribute) {
     case 'thumbnail':
       return (
@@ -81,70 +132,49 @@ const getCellContent = (attribute, result) => {
             justifyContent: 'center',
           }}
         >
-          <Thumbnail src={attributes.thumbnail} />
+          <Thumbnail src={value} />
         </div>
       )
     case 'description':
-      return <Description text={attributes.description} />
+      return <Description text={value} />
     default:
-      return (
-        <Typography style={{ ...cellStyles }}>
-          {attributes[attribute]}
-        </Typography>
-      )
+      return <Typography style={{ ...cellStyles }}>{value}</Typography>
   }
 }
 
-const getId = result => result.metacard.attributes.id
-
-const Result = props => {
-  const { attributes, selected, onClick, onSelect, onRemove, result } = props
-  const id = getId(result)
-  return (
-    <TableRow
-      onClick={onClick}
-      key={id}
-      selected={selected}
-      style={{ cursor: 'pointer' }}
-    >
-      <TableCell>
-        <Checkbox
-          checked={selected}
-          onClick={e => {
-            e.stopPropagation()
-            if (e.target.checked) {
-              onSelect()
-            } else {
-              onRemove()
-            }
-          }}
-        />
-      </TableCell>
-      {attributes.map(attribute => (
-        <TableCell key={attribute}>
-          {getCellContent(attribute.toLowerCase(), result)}
-        </TableCell>
-      ))}
-    </TableRow>
-  )
+const RenderAttribute = field => rowData => {
+  return getCellContent(field, rowData[field])
 }
 
-const computeSelected = (selection, results, start, end, e) => {
-  const clicked = getId(results[end])
-  if (e.ctrlKey || e.metaKey) {
-    return selection.has(clicked)
-      ? selection.remove(clicked)
-      : selection.add(clicked)
-  }
-  if (e.shiftKey && start !== null) {
-    const slice =
-      start < end
-        ? results.slice(start, end + 1)
-        : results.slice(end, start + 1)
-    const group = Set(slice.map(result => getId(result)))
-    return group.union(selection)
-  }
-  return selection.has(clicked) ? Set() : Set([getId(results[end])])
+const attributesToColumns = (attributes, hidden = false) => {
+  return attributes.map(attribute => {
+    return {
+      title: attribute,
+      field: attribute,
+      render: RenderAttribute(attribute),
+      hidden,
+    }
+  })
+}
+
+const allAttributesToColumns = (displayedAttrs, hiddenAttrs) => {
+  const displayedColumns = attributesToColumns(displayedAttrs)
+  const hiddenColumns = attributesToColumns(hiddenAttrs, true)
+
+  return [...displayedColumns, ...hiddenColumns]
+}
+
+const getAttributeSet = result => {
+  return result
+    .getIn(['metacard', 'attributes'])
+    .keySeq()
+    .toSet()
+}
+
+const getAttributeKeysFromResults = results => {
+  return results.reduce((acc, result) => {
+    return acc.merge(getAttributeSet(result))
+  }, Set())
 }
 
 const Results = props => {
@@ -153,73 +183,63 @@ const Results = props => {
   const [lastSelected, setLastSelected] = useState(null)
   const allowTextSelect = !useKeyPressed('Shift')
 
-  const all = Set(results.map(getId))
+  const data = results.map(result => {
+    // need the copy because material-table adds a tableData object
+    const attributes = Object.assign({}, result.metacard.attributes)
+    const { id } = attributes
+    if (selection.contains(id)) {
+      const tableData = { checked: true }
+      attributes.tableData = tableData
+    }
+    return attributes
+  })
 
-  const allSelected = all.subtract(selection).isEmpty()
+  const allAttributes = getAttributeKeysFromResults(fromJS(results))
+  const hidden = allAttributes.subtract(fromJS(attributes))
+
+  const columns = allAttributesToColumns(attributes, hidden)
+
+  const onSelectionChange = selectedRows => {
+    const selectedIds = selectedRows.map(rowData => rowData.id)
+    const setOfIds = Set(selectedIds)
+    onSelect(setOfIds)
+  }
+
+  const onRowClick = (e, rowData) => {
+    e.stopPropagation()
+    const rowId = rowData.tableData.id
+    const selected = computeSelected(
+      selection,
+      data,
+      rowData,
+      lastSelected,
+      rowId,
+      e
+    )
+    onSelect(selected)
+    setLastSelected(e.shiftKey ? lastSelected : rowId)
+  }
 
   return (
-    <Paper style={{ overflow: 'auto', maxHeight: '100%' }}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              <Checkbox
-                checked={allSelected}
-                onChange={e => {
-                  if (e.target.checked) {
-                    onSelect(all)
-                  } else {
-                    onSelect(Set())
-                  }
-                }}
-              />
-            </TableCell>
-            {attributes.map(attribute => (
-              <TableCell key={attribute}>
-                <Typography>{attribute}</Typography>
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody style={{ userSelect: allowTextSelect ? 'auto' : 'none' }}>
-          {results.map((result, i) => {
-            const id = getId(result)
-            return (
-              <Result
-                key={id}
-                result={result}
-                attributes={attributes}
-                selected={selection.has(id)}
-                onRemove={() => {
-                  onSelect(selection.remove(id))
-                }}
-                onSelect={() => {
-                  onSelect(selection.add(id))
-                }}
-                onClick={e => {
-                  e.stopPropagation()
-                  const selected = computeSelected(
-                    selection,
-                    results,
-                    lastSelected,
-                    i,
-                    e
-                  )
-                  onSelect(selected)
-                  setLastSelected(e.shiftKey ? lastSelected : i)
-                }}
-              />
-            )
-          })}
-        </TableBody>
-      </Table>
-    </Paper>
+    <div style={{ maxWidth: '100%' }}>
+      <MaterialTable
+        icons={tableIcons}
+        options={{ selection: true, showTitle: false }}
+        columns={columns}
+        data={data}
+        onSelectionChange={onSelectionChange}
+        onRowClick={onRowClick}
+        style={{
+          userSelect: allowTextSelect ? 'auto' : 'none',
+        }}
+      />
+    </div>
   )
 }
 
-const Container = prop => {
+const Container = props => {
   const [selection, onSelect] = useSelectionInterface()
-  return <Results {...prop} selection={selection} onSelect={onSelect} />
+  return <Results {...props} selection={selection} onSelect={onSelect} />
 }
 
 export { Results }

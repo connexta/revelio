@@ -1502,6 +1502,14 @@
     "@babel/helper-plugin-utils" "^7.0.0"
     "@babel/plugin-transform-typescript" "^7.3.2"
 
+"@babel/runtime-corejs2@^7.4.4":
+  version "7.8.4"
+  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs2/-/runtime-corejs2-7.8.4.tgz#e4ed23a8be40fa26b97fb649deaba8144c987593"
+  integrity sha512-7jU2FgNqNHX6yTuU/Dr/vH5/O8eVL9U85MG5aDw1LzGfCvvhXC1shdXfVzCQDsoY967yrAKeLujRv7l8BU+dZA==
+  dependencies:
+    core-js "^2.6.5"
+    regenerator-runtime "^0.13.2"
+
 "@babel/runtime@7.3.4":
   version "7.3.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.3.4.tgz#73d12ba819e365fcf7fd152aed56d6df97d21c83"
@@ -1733,10 +1741,17 @@
     whatwg-fetch "2.0.4"
     worker-loader "1.1.1"
 
-"@date-io/core@^1.3.13":
+"@date-io/core@1.x", "@date-io/core@^1.3.13":
   version "1.3.13"
   resolved "https://registry.yarnpkg.com/@date-io/core/-/core-1.3.13.tgz#90c71da493f20204b7a972929cc5c482d078b3fa"
   integrity sha512-AlEKV7TxjeK+jxWVKcCFrfYAk8spX9aCyiToFIiLPtfQbsjmRGLIhb5VZgptQcJdHtLXo7+m0DuurwFgUToQuA==
+
+"@date-io/date-fns@^1.1.0":
+  version "1.3.13"
+  resolved "https://registry.yarnpkg.com/@date-io/date-fns/-/date-fns-1.3.13.tgz#7798844041640ab393f7e21a7769a65d672f4735"
+  integrity sha512-yXxGzcRUPcogiMj58wVgFjc9qUYrCnnU9eLcyNbsQCmae4jPuZCDoIBR21j8ZURsM7GRtU62VOw5yNd4dDHunA==
+  dependencies:
+    "@date-io/core" "^1.3.13"
 
 "@date-io/moment@1.3.13":
   version "1.3.13"
@@ -1942,6 +1957,18 @@
     "@material-ui/utils" "^4.5.2"
     clsx "^1.0.4"
     prop-types "^15.7.2"
+
+"@material-ui/pickers@^3.2.2":
+  version "3.2.10"
+  resolved "https://registry.yarnpkg.com/@material-ui/pickers/-/pickers-3.2.10.tgz#19df024895876eb0ec7cd239bbaea595f703f0ae"
+  integrity sha512-B8G6Obn5S3RCl7hwahkQj9sKUapwXWFjiaz/Bsw1fhYFdNMnDUolRiWQSoKPb1/oKe37Dtfszoywi1Ynbo3y8w==
+  dependencies:
+    "@babel/runtime" "^7.6.0"
+    "@date-io/core" "1.x"
+    "@types/styled-jsx" "^2.2.8"
+    clsx "^1.0.2"
+    react-transition-group "^4.0.0"
+    rifm "^0.7.0"
 
 "@material-ui/pickers@^3.2.5":
   version "3.2.7"
@@ -6495,7 +6522,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.2.5:
+classnames@^2.2.5, classnames@^2.2.6:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
 
@@ -6919,6 +6946,11 @@ core-js@^2.4.0, core-js@^2.5.0:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.9.tgz#6b4b214620c834152e179323727fc19741b084f2"
 
+core-js@^2.6.5:
+  version "2.6.11"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
+  integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
+
 core-js@^3.0.1, core-js@^3.0.4:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.2.1.tgz#cd41f38534da6cc59f7db050fe67307de9868b09"
@@ -7085,6 +7117,13 @@ crypto-browserify@^3.11.0:
     public-encrypt "^4.0.0"
     randombytes "^2.0.0"
     randomfill "^1.0.3"
+
+css-box-model@^1.1.2:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/css-box-model/-/css-box-model-1.2.0.tgz#3a26377b4162b3200d2ede4b064ec5b6a75186d0"
+  integrity sha512-lri0br+jSNV0kkkiGEp9y9y3Njq2PmpqbeGWRFQJuZteZzY9iC9GZhQ8Y4WpPwM/2YocjHePxy14igJY7YKzkA==
+  dependencies:
+    tiny-invariant "^1.0.6"
 
 css-color-keywords@^1.0.0:
   version "1.0.0"
@@ -7299,9 +7338,19 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
+date-fns@^2.0.0-alpha.27:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.10.0.tgz#abd10604d8bafb0bcbd2ba2e9b0563b922ae4b6b"
+  integrity sha512-EhfEKevYGWhWlZbNeplfhIU/+N+x0iCIx7VzKlXma2EdQyznVlZhCptXUY+BegNpPW2kjdx15Rvq503YcXXrcA==
+
 date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
+
+debounce@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.0.tgz#44a540abc0ea9943018dc0eaa95cce87f65cd131"
+  integrity sha512-mYtLl1xfZLi1m4RtQYlZgJUNQjl4ZxVnHzIR8nLLgi4q1YT8o/WM+MK/f8yfcc9s5Ir5zRaPZyZU6xs1Syoocg==
 
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.6, debug@^2.6.8, debug@^2.6.9:
   version "2.6.9"
@@ -8412,13 +8461,13 @@ extsprintf@^1.2.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
 
+fast-deep-equal@2.0.1, fast-deep-equal@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz#7b05218ddf9667bf7f370bf7fdb2cb15fdd0aa49"
+
 fast-deep-equal@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-1.1.0.tgz#c053477817c86b51daa853c81e059b733d023614"
-
-fast-deep-equal@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz#7b05218ddf9667bf7f370bf7fdb2cb15fdd0aa49"
 
 fast-glob@^2.0.2:
   version "2.2.7"
@@ -8549,6 +8598,11 @@ file-uri-to-path@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz#553a7b8446ff6f684359c445f1e37a05dacc33dd"
   integrity sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==
+
+filefy@0.1.10:
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/filefy/-/filefy-0.1.10.tgz#174677c8e2fa5bc39a3af0ed6fb492f16b8fbf42"
+  integrity sha512-VgoRVOOY1WkTpWH+KBy8zcU1G7uQTVsXqhWEgzryB9A5hg2aqCyZ6aQ/5PSzlqM5+6cnVrX6oYV0XqD3HZSnmQ==
 
 filename-regex@^2.0.0:
   version "2.0.1"
@@ -10899,6 +10953,22 @@ material-colors@^1.2.1:
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/material-colors/-/material-colors-1.2.6.tgz#6d1958871126992ceecc72f4bcc4d8f010865f46"
 
+material-table@^1.57.2:
+  version "1.57.2"
+  resolved "https://registry.yarnpkg.com/material-table/-/material-table-1.57.2.tgz#8854cb4d623b294138c83a0c7ff9f2900267c81f"
+  integrity sha512-hiJdRTrqu8pyYwSxzmcG1TnR4KWG2gtXrFB3XL9h4ij3A68EOJmlss6VH/LXh3NLlUce1TteK6W7fGa7YcnKGg==
+  dependencies:
+    "@date-io/date-fns" "^1.1.0"
+    "@material-ui/pickers" "^3.2.2"
+    classnames "^2.2.6"
+    date-fns "^2.0.0-alpha.27"
+    debounce "^1.2.0"
+    fast-deep-equal "2.0.1"
+    filefy "0.1.10"
+    prop-types "^15.6.2"
+    react-beautiful-dnd "11.0.3"
+    react-double-scrollbar "0.0.15"
+
 math-expression-evaluator@^1.2.14:
   version "1.2.17"
   resolved "https://registry.yarnpkg.com/math-expression-evaluator/-/math-expression-evaluator-1.2.17.tgz#de819fdbcd84dccd8fae59c6aeb79615b9d266ac"
@@ -10965,6 +11035,11 @@ mem@^4.0.0:
 memoize-one@^5.0.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-5.1.0.tgz#ce7af291c0e2fe041b709cac5e8c7b198c994286"
+
+memoize-one@^5.0.4:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-5.1.1.tgz#047b6e3199b508eaec03504de71229b8eb1d75c0"
+  integrity sha512-HKeeBpWvqiVJD57ZUAsJNm71eHTykffzcLZVYWiVfQeI1rJtuEaS7hQiEpWfVVk18donPwJEcFKIkCmPJNOhHA==
 
 memoizerific@^1.11.3:
   version "1.11.3"
@@ -12834,6 +12909,11 @@ quickselect@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/quickselect/-/quickselect-2.0.0.tgz#f19680a486a5eefb581303e023e98faaf25dd018"
 
+raf-schd@^4.0.0:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/raf-schd/-/raf-schd-4.0.2.tgz#bd44c708188f2e84c810bf55fcea9231bcaed8a0"
+  integrity sha512-VhlMZmGy6A6hrkJWHLNTGl5gtgMUm+xfGza6wbwnE914yeQ5Ybm18vgM734RZhMgfw4tacUrWseGZlpUrrakEQ==
+
 raf@^3.4.0:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/raf/-/raf-3.4.1.tgz#0742e99a4a6552f445d73e3ee0328af0ff1ede39"
@@ -12931,6 +13011,20 @@ react-addons-create-fragment@^15.6.2:
     fbjs "^0.8.4"
     loose-envify "^1.3.1"
     object-assign "^4.1.0"
+
+react-beautiful-dnd@11.0.3:
+  version "11.0.3"
+  resolved "https://registry.yarnpkg.com/react-beautiful-dnd/-/react-beautiful-dnd-11.0.3.tgz#5678bb3e725d8b56cb7cf57f56e952105fc4f2af"
+  integrity sha512-2FX2SnOlKMmfn90xUHCav7cxRWXwY7FeRa6TzdxWeX7DdP5JTvVQcsWgiOkdbJSj+J+1q1nA9QO4/HQ52D0DAA==
+  dependencies:
+    "@babel/runtime-corejs2" "^7.4.4"
+    css-box-model "^1.1.2"
+    memoize-one "^5.0.4"
+    raf-schd "^4.0.0"
+    react-redux "^7.0.3"
+    redux "^4.0.1"
+    tiny-invariant "^1.0.4"
+    use-memo-one "^1.1.0"
 
 react-clientside-effect@^1.2.0:
   version "1.2.2"
@@ -13035,6 +13129,11 @@ react-dom@^16.8.3, react-dom@^16.9.0:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.15.0"
+
+react-double-scrollbar@0.0.15:
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/react-double-scrollbar/-/react-double-scrollbar-0.0.15.tgz#e915ab8cb3b959877075f49436debfdb04288fe4"
+  integrity sha1-6RWrjLO5WYdwdfSUNt6/2wQoj+Q=
 
 react-draggable@^4.0.3:
   version "4.1.0"
@@ -13157,6 +13256,17 @@ react-popper@^1.3.3:
     prop-types "^15.6.1"
     typed-styles "^0.0.7"
     warning "^4.0.2"
+
+react-redux@^7.0.3:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-7.2.0.tgz#f970f62192b3981642fec46fd0db18a074fe879d"
+  integrity sha512-EvCAZYGfOLqwV7gh849xy9/pt55rJXPwmYvI4lilPM5rUT/1NxuuN59ipdBksRVSvz0KInbPnp4IfoXJXCqiDA==
+  dependencies:
+    "@babel/runtime" "^7.5.5"
+    hoist-non-react-statics "^3.3.0"
+    loose-envify "^1.4.0"
+    prop-types "^15.7.2"
+    react-is "^16.9.0"
 
 react-redux@^7.1.0:
   version "7.1.0"
@@ -13440,6 +13550,14 @@ reduce-function-call@^1.0.1:
 redux-thunk@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.3.0.tgz#51c2c19a185ed5187aaa9a2d08b666d0d6467622"
+
+redux@^4.0.1:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.5.tgz#4db5de5816e17891de8a80c424232d06f051d93f"
+  integrity sha512-VSz1uMAH24DM6MF72vcojpYPtrTUu3ByVWfPL1nPfVRb5mZVTve5GnNCUV53QM/BZ66xfWrm0CTWoM+Xlz8V1w==
+  dependencies:
+    loose-envify "^1.4.0"
+    symbol-observable "^1.2.0"
 
 redux@^4.0.4:
   version "4.0.4"
@@ -15036,6 +15154,11 @@ tiny-invariant@^1.0.2:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-1.0.6.tgz#b3f9b38835e36a41c843a3b0907a5a7b3755de73"
 
+tiny-invariant@^1.0.4, tiny-invariant@^1.0.6:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-1.1.0.tgz#634c5f8efdc27714b7f386c35e6760991d230875"
+  integrity sha512-ytxQvrb1cPc9WBEI/HSeYYoGD0kWnGEOR8RY6KomWLBVhqz0RgTwVO9dLrGz7dC+nN9llyI7OKAgRq8Vq4ZBSw==
+
 tiny-warning@^1.0.0, tiny-warning@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/tiny-warning/-/tiny-warning-1.0.3.tgz#94a30db453df4c643d0fd566060d60a875d84754"
@@ -15476,6 +15599,11 @@ url@^0.11.0:
   dependencies:
     punycode "1.3.2"
     querystring "0.2.0"
+
+use-memo-one@^1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/use-memo-one/-/use-memo-one-1.1.1.tgz#39e6f08fe27e422a7d7b234b5f9056af313bd22c"
+  integrity sha512-oFfsyun+bP7RX8X2AskHNTxu+R3QdE/RC5IefMbqptmACAA/gfol1KDD5KRzPsGMa62sWxGZw+Ui43u6x4ddoQ==
 
 use@^3.1.0:
   version "3.1.1"
