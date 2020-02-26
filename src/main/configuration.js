@@ -2,8 +2,10 @@ const url = require('url')
 const defaultDdfUrl = 'https://localhost:8993'
 
 const parsableAttributes = {
-  FETCH_ORIGIN: () => url.parse(process.env['FETCH_ORIGIN']),
-  DDF_LOCATION: () => url.parse(process.env['DDF_LOCATION']),
+  FETCH_ORIGIN: () =>
+    process.env['FETCH_ORIGIN'] && url.parse(process.env['FETCH_ORIGIN']),
+  DDF_LOCATION: () =>
+    process.env['DDF_LOCATION'] && url.parse(process.env['DDF_LOCATION']),
 }
 
 const defaultConfig = {
