@@ -18,6 +18,7 @@ import moment from 'moment'
 
 import ConfirmDelete from '../confirm-delete'
 import SharingModal from '../sharing/sharing-modal'
+import Tooltip from '@material-ui/core/Tooltip'
 
 const onClick = action => e => {
   e.preventDefault()
@@ -39,7 +40,9 @@ export const DuplicateAction = props => {
   const { onDuplicate } = props
   return (
     <IconButton onClick={onClick(onDuplicate)}>
-      <FileCopyIcon />
+      <Tooltip title="Duplicate" aria-label="add">
+        <FileCopyIcon />
+      </Tooltip>
     </IconButton>
   )
 }
