@@ -80,7 +80,7 @@ const loadDynamicRoute = route => {
     }),
     'simple-search': loadable({
       loader: () =>
-        import(/* webpackChunkName: "simple-search" */ './simple-search'),
+        import(/* webpackChunkName: "simple-search" */ './components/simple-search'),
       loading: LoadingComponent,
     }),
     search: loadable({

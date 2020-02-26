@@ -1,5 +1,5 @@
 import { action } from '@connexta/ace/@storybook/addon-actions'
-import { storiesOf } from '../@storybook/react'
+import { storiesOf } from '../../@storybook/react'
 import { select } from '@connexta/ace/@storybook/addon-knobs'
 import React, { useState, useEffect } from 'react'
 import withDrawMenu from './with-draw-menu'

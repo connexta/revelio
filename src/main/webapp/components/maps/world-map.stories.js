@@ -1,4 +1,4 @@
-import { storiesOf } from '../@storybook/react'
+import { storiesOf } from '../../@storybook/react'
 import { select } from '@connexta/ace/@storybook/addon-knobs'
 import React from 'react'
 import WorldMap from './world-map'

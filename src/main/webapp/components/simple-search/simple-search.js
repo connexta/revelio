@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 
-import BasicSearch from './components/basic-search'
-import ResultTable from './components/results/results'
-import QueryStatus from './components/query-status/query-status'
+import BasicSearch from '../basic-search'
+import ResultTable from '../results'
+import QueryStatus from '../query-status/query-status'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
@@ -10,9 +10,9 @@ import Dialog from '@material-ui/core/Dialog'
 import Typography from '@material-ui/core/Typography'
 import TablePagination from '@material-ui/core/TablePagination'
 
-import Inspector from './components/inspector'
+import Inspector from '../inspector'
 
-import { useSelectionInterface, useQueryExecutor } from './react-hooks'
+import { useSelectionInterface, useQueryExecutor } from '../../react-hooks'
 
 const getPageWindow = (data, pageIndex, pageSize) => {
   const i = pageIndex * pageSize

@@ -19,7 +19,7 @@ import {
   RENDERER_STYLE,
   DRAWING_STYLE,
   withDrawMenu,
-} from '../../maps'
+} from '../maps'
 import WKT from 'ol/format/WKT'
 import GeoJSON from 'ol/format/GeoJSON'
 import { geoJSONToGeometryJSON } from 'geospatialdraw/bin/geometry/utilities'

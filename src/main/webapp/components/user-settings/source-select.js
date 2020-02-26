@@ -9,7 +9,7 @@ import HomeIcon from '@material-ui/icons/Home'
 import WarningIcon from '@material-ui/icons/Warning'
 import { get } from 'immutable'
 import React from 'react'
-import OutlinedSelect from '../../input/outlined-select'
+import OutlinedSelect from '../input/outlined-select'
 import { useApolloFallback } from '../../react-hooks'
 import gql from 'graphql-tag'
 

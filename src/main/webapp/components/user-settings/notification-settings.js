@@ -2,7 +2,7 @@ import FormControl from '@material-ui/core/FormControl'
 import MenuItem from '@material-ui/core/MenuItem'
 import { Map } from 'immutable'
 import React from 'react'
-import OutlinedSelect from '../../input/outlined-select'
+import OutlinedSelect from '../input/outlined-select'
 
 const millisecondsInDay = 24 * 60 * 60 * 1000
 const durations = [

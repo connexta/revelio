@@ -1,7 +1,7 @@
 import React from 'react'
 import gql from 'graphql-tag'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import { useApolloFallback } from '../react-hooks'
+import { useApolloFallback } from '../../react-hooks'
 import Sharing from './sharing'
 import LinearProgress from '@material-ui/core/LinearProgress'
 

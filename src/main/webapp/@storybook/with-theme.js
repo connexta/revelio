@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { dark, light } from './theme'
+import { dark, light } from '../theme/theme'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 
 const { boolean } = require('@connexta/ace/@storybook/addon-knobs')

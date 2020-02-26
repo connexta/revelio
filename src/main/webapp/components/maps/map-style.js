@@ -11,7 +11,7 @@ import {
   HIDDEN_CLASSNAME,
 } from 'geospatialdraw/bin/geometry/geometry'
 import { POINT_RADIUS, POLYGON } from 'geospatialdraw/bin/shapes/shape'
-import { getIconText } from '../icons/map-pin'
+import { getIconText } from '../../icons/map-pin'
 
 const LINE_WIDTH = 1.8
 const POINT_SIZE = 4
