@@ -24,6 +24,7 @@ import {
   TEXT_KEY,
   TIME_RANGE_KEY,
   toFilterTree,
+  populateDefaultQuery,
 } from './basic-search-helper'
 import FacetedDropdown from '../faceted-dropdown'
 import { Location } from '../location'
@@ -59,15 +60,6 @@ const TextSearch = ({ text, handleChange }) => {
     />
   )
 }
-
-const defaultSorts = [
-  {
-    propertyName: 'modified',
-    sortOrder: 'descending',
-  },
-]
-
-const defaultSources = ['ddf.distribution']
 
 const AddButton = ({ addFilter }) => {
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -123,20 +115,6 @@ const SearchButton = props => (
     Search
   </Button>
 )
-
-export const populateDefaultQuery = (
-  filterTree,
-  srcs = defaultSources,
-  sortPolicy = defaultSorts
-) => ({
-  srcs,
-  startIndex: 1,
-  pageSize: 250,
-  filterTree,
-  sortPolicy,
-  spellcheck: false,
-  phonetics: false,
-})
 
 const MatchTypes = ({
   state = [],

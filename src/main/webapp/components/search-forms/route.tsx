@@ -118,7 +118,7 @@ const Route = (props: RouteProps) => {
   const [message, setMessage] = useState<string | null>(null)
 
   const { loading, error, forms, onDelete, onSave, onCreate, refetch } = props
-  if (loading === true) return <Loading />
+  if (loading === true) return <LinearProgress />
 
   if (error)
     return (
@@ -185,19 +185,4 @@ const Notification = (props: NotificationProps) => {
   )
 }
 
-const Loading = () => {
-  return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <LinearProgress style={{ width: '25vw', height: 10 }} />
-    </div>
-  )
-}
 export default Route

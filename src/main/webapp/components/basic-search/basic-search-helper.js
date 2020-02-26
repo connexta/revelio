@@ -27,6 +27,27 @@ export const uglyMap = {
   months: howMany => `RELATIVE(P${howMany}M)`,
   years: howMany => `RELATIVE(P${howMany}Y)`,
 }
+const defaultSorts = [
+  {
+    propertyName: 'modified',
+    sortOrder: 'descending',
+  },
+]
+
+const defaultSources = ['ddf.distribution']
+export const populateDefaultQuery = (
+  filterTree,
+  srcs = defaultSources,
+  sortPolicy = defaultSorts
+) => ({
+  srcs,
+  startIndex: 1,
+  pageSize: 250,
+  filterTree,
+  sortPolicy,
+  spellcheck: false,
+  phonetics: false,
+})
 
 const relativeUnits = {
   P: {

@@ -5,26 +5,21 @@ import Button from '@material-ui/core/Button'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 
-import { useSelectionInterface, useDrawInterface } from '../react-hooks'
+import { useSelectionInterface, useDrawInterface } from '../../react-hooks'
 
-import {
-  Layout,
-  Provider,
-  AddConfig,
-  DragSource,
-} from '../components/react-golden-layout'
+import { Layout, Provider, AddConfig, DragSource } from '../react-golden-layout'
 
-import Histogram from '../components/histogram/histogram'
-import Inspector from '../components/inspector/inspector'
-import ResultTable from '../components/results/results'
-import Gallery from '../components/gallery'
+import Histogram from '../histogram/histogram'
+import Inspector from '../inspector/inspector'
+import ResultTable from '../results/results'
+import Gallery from '../gallery'
 
 import {
   ClusterMap,
   RENDERER_STYLE,
   DRAWING_STYLE,
   withDrawMenu,
-} from '../maps'
+} from '../../maps'
 import WKT from 'ol/format/WKT'
 import GeoJSON from 'ol/format/GeoJSON'
 import { geoJSONToGeometryJSON } from 'geospatialdraw/bin/geometry/utilities'
@@ -309,4 +304,4 @@ const Visualizations = props => {
   )
 }
 
-export default Visualizations
+export default React.memo(Visualizations)

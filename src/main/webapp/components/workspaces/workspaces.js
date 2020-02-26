@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { useState } from 'react'
 
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Typography from '@material-ui/core/Typography'
@@ -15,39 +15,36 @@ import {
   DeleteAction,
   ShareAction,
   Actions,
-} from '../components/index-cards'
+} from '../index-cards'
 
-import RetryNotification from '../components/network-retry/snackbar-retry'
-
+import { InlineRetry, SnackbarRetry } from '../network-retry'
 import { Link, useParams, Redirect } from 'react-router-dom'
 
-import { useQueryExecutor } from '../react-hooks'
+import { useQueryExecutor } from '../../react-hooks'
 
 import gql from 'graphql-tag'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 
-import QueryStatus from '../components/query-status/query-status'
-import BasicSearch, {
-  populateDefaultQuery,
-} from '../components/basic-search/basic-search'
+import QueryStatus from '../query-status'
+import BasicSearch from '../basic-search'
 import {
   toFilterTree,
   fromFilterTree,
-} from '../components/basic-search/basic-search-helper'
-import QuerySelector from './query-selector'
+  populateDefaultQuery,
+} from '../basic-search/basic-search-helper'
+import QuerySelector from '../query-selector'
 
-import loadable from 'react-loadable'
-import Lists from '../components/lists'
-import ErrorMessage from '../components/network-retry/inline-retry'
+import Lists from '../lists'
 import { getIn } from 'immutable'
-
+import loadable from 'react-loadable'
 const LoadingComponent = () => <LinearProgress />
-let MemoizedVisualizations = () => null
+
+let Visualizations = () => null
 if (typeof window !== 'undefined') {
-  MemoizedVisualizations = loadable({
-    loader: () =>
-      import(/* webpackChunkName: "visualizations" */ './visualizations').then(
-        module => memo(module.default)
+  Visualizations = loadable({
+    loader: async () =>
+      await import(/* webpackChunkName: "visualizations" */ '../visualizations').then(
+        module => module.default
       ),
     loading: LoadingComponent,
   })
@@ -97,7 +94,7 @@ export const Workspace = () => {
   }
 
   if (error) {
-    return <ErrorMessage error={error}>Error Retrieving Workspace</ErrorMessage>
+    return <InlineRetry error={error}>Error Retrieving Workspace</InlineRetry>
   }
 
   const QueryEditor = props => (
@@ -231,7 +228,7 @@ export const Workspace = () => {
         )}
       </div>
       <div style={{ flex: '1' }}>
-        <MemoizedVisualizations results={tab === 0 ? results : listResults} />
+        <Visualizations results={tab === 0 ? results : listResults} />
       </div>
     </div>
   )
@@ -365,7 +362,7 @@ export default () => {
 
   if (error) {
     return (
-      <RetryNotification
+      <SnackbarRetry
         message={'Issue retrieving workspaces, would you like to retry?'}
         onRetry={refetch}
         error={error}

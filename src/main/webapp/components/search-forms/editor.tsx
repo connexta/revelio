@@ -1,38 +1,27 @@
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 import Divider from '@material-ui/core/Divider'
-import LinearProgress from '@material-ui/core/LinearProgress'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'
 import React, { useState } from 'react'
-import loadable from 'react-loadable'
 import { AttributeDefinition, QueryType } from '../query-builder/types'
 const { useQueryExecutor, useApolloFallback } = require('../../react-hooks')
 const genResults = require('../../gen-results').default
-
-const Loading = () => {
-  return (
-    <Paper>
-      <LinearProgress />
-    </Paper>
-  )
-}
-
+import loadable from 'react-loadable'
+import LinearProgress from '@material-ui/core/LinearProgress'
 let Visualizations: any = () => null
-
 if (typeof window !== 'undefined') {
   Visualizations = loadable({
-    loader: () =>
-      import(//prettier-ignore
-      // @ts-ignore
-      /* webpackChunkName: "visualizations" */ '../../workspaces/visualizations').then(
-        module => React.memo(module.default) // React.memo prevents the map from re-rendering when parent does
+    loader: async () =>
+      await import(//prettier-ignore
+      //@ts-ignore
+      /* webpackChunkName: "visualizations" */ '../visualizations').then(
+        module => module.default
       ),
-    loading: Loading,
+    loading: () => <LinearProgress />,
   })
 }
-
 type FooterProps = {
   onSearch: () => void
   onCancel: () => void

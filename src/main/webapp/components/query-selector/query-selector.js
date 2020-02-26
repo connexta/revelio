@@ -7,8 +7,8 @@ import {
   DeleteAction,
   EditAction,
   IndexCardItem,
-} from '../components/index-cards'
-const { useDrawInterface } = require('../react-hooks')
+} from '../index-cards'
+const { useDrawInterface } = require('../../react-hooks')
 
 const useOpenClose = props => {
   const [anchorEl, setAnchorEl] = React.useState(null)
