@@ -1,4 +1,4 @@
-//https://github.com/immutable-js/immutable-js/issues/1452#issuecomment-386162309
+//https://github.com/immutable-js/immutable-js/issues/1452
 import { List } from 'immutable'
 
 const isMergeable = a =>

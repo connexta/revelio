@@ -36,8 +36,8 @@ import { SelectionProvider } from './react-hooks/use-selection-interface'
 import { DrawProvider } from './react-hooks/use-draw-interface'
 import { Link as ReactLink, Route, matchPath } from 'react-router-dom'
 
-import User from './user'
-import UserSettings from './user-settings'
+import User from './components/user/user'
+import UserSettings from './components/user-settings'
 import loadable from 'react-loadable'
 
 import url from 'url'
@@ -62,23 +62,25 @@ const loadDynamicRoute = route => {
   const routes = {
     workspace: loadable({
       loader: async () => {
-        return (await import(/* webpackChunkName: "workspace" */ './workspaces/workspaces'))
+        return (await import(/* webpackChunkName: "workspace" */ './components/workspaces'))
           .Workspace
       },
       loading: LoadingComponent,
     }),
     workspaces: loadable({
-      loader: () =>
-        import(/* webpackChunkName: "workspaces-index" */ './workspaces/workspaces'),
+      loader: async () =>
+        (await import(/* webpackChunkName: "workspaces-index" */ './components/workspaces'))
+          .Workspaces,
       loading: LoadingComponent,
     }),
     sources: loadable({
-      loader: () => import(/* webpackChunkName: "sources" */ './sources'),
+      loader: () =>
+        import(/* webpackChunkName: "sources" */ './components/sources-info'),
       loading: LoadingComponent,
     }),
     'simple-search': loadable({
       loader: () =>
-        import(/* webpackChunkName: "simple-search" */ './simple-search'),
+        import(/* webpackChunkName: "simple-search" */ './components/simple-search'),
       loading: LoadingComponent,
     }),
     search: loadable({
@@ -98,18 +100,19 @@ const loadDynamicRoute = route => {
     }),
     'result-forms': loadable({
       loader: () =>
-        import(/* webpackChunkName: "result-forms" */ './result-forms'),
+        import(/* webpackChunkName: "result-forms" */ './components/result-forms'),
       loading: LoadingComponent,
     }),
     'search-forms': loadable({
       loader: async () => {
-        return (await import(/* webpackChunkName: "search-forms" */ './search-forms'))
+        return (await import(/* webpackChunkName: "search-forms" */ './components/search-forms'))
           .default
       },
       loading: LoadingComponent,
     }),
     about: loadable({
-      loader: () => import(/* webpackChunkName: "about" */ './about'),
+      loader: () =>
+        import(/* webpackChunkName: "about" */ './components/about'),
       loading: LoadingComponent,
     }),
   }

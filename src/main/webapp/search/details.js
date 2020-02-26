@@ -8,8 +8,8 @@ import gql from 'graphql-tag'
 import { getIn } from 'immutable'
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import Thumbnail from '../thumbnail/thumbnail'
-import ErrorMessage from '../error'
+import Thumbnail from '../components/thumbnail/thumbnail'
+import ErrorMessage from '../components/network-retry/inline-retry'
 
 const LoadingComponent = () => <LinearProgress />
 
