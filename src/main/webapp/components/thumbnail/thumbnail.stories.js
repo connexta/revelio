@@ -28,7 +28,7 @@ stories.add('Success', () => {
       Square: 'https://connexta.com/images/work1.jpg',
       Long: 'https://connexta.com/images/logo-ddf2.png',
     },
-    'Square'
+    'https://connexta.com/images/work1.jpg'
   )
   return (
     <div
