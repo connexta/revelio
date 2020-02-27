@@ -1,42 +1,29 @@
-import React, { useState } from 'react'
-
-import LinearProgress from '@material-ui/core/LinearProgress'
-import Typography from '@material-ui/core/Typography'
-
-import TextField from '@material-ui/core/TextField'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import Divider from '@material-ui/core/Divider'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
-
+import Typography from '@material-ui/core/Typography'
+import gql from 'graphql-tag'
+import { getIn } from 'immutable'
+import React, { useState } from 'react'
+import loadable from 'react-loadable'
+import { Link, Redirect, useParams } from 'react-router-dom'
+import { useQueryExecutor } from '../../react-hooks'
 import {
-  IndexCards,
-  IndexCardItem,
+  Actions,
   AddCardItem,
   DeleteAction,
+  IndexCardItem,
+  IndexCards,
   ShareAction,
-  Actions,
 } from '../index-cards'
-
-import { InlineRetry, SnackbarRetry } from '../network-retry'
-import { Link, useParams, Redirect } from 'react-router-dom'
-
-import { useQueryExecutor } from '../../react-hooks'
-
-import gql from 'graphql-tag'
-import { useQuery, useMutation } from '@apollo/react-hooks'
-
-import QueryStatus from '../query-status'
-import BasicSearch from '../basic-search'
-import {
-  toFilterTree,
-  fromFilterTree,
-  populateDefaultQuery,
-} from '../basic-search/basic-search-helper'
-import QuerySelector from '../query-selector'
-
 import Lists from '../lists'
-import { getIn } from 'immutable'
-import loadable from 'react-loadable'
+import { InlineRetry, SnackbarRetry } from '../network-retry'
+import QueryEditor from '../query-editor'
+import QuerySelector from '../query-selector'
+import QueryStatus from '../query-status'
+
 const LoadingComponent = () => <LinearProgress />
 
 let Visualizations = () => null
@@ -73,11 +60,26 @@ const workspaceById = gql`
   }
 `
 
+//TODO add paging
+const Results = ({ results }) =>
+  React.useMemo(
+    () =>
+      results.map(({ metacard }) => (
+        <IndexCardItem
+          key={metacard.attributes.id}
+          title={metacard.attributes.title}
+          subHeader={' '}
+        />
+      )),
+    [results]
+  )
+
 export const Workspace = () => {
   const { id } = useParams()
 
   const [listResults, setListResults] = React.useState([])
-  const [query, setQuery] = useState(null)
+  const [currentQuery, setCurrentQuery] = useState(null)
+  const [queries, setQueries] = useState([])
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
   const [tab, setTab] = React.useState(0)
@@ -85,7 +87,14 @@ export const Workspace = () => {
   const { loading, error, data } = useQuery(workspaceById, {
     variables: { ids: [id] },
     onCompleted: data => {
-      setQuery(data.metacardsById[0].attributes[0].queries[0])
+      const queries = data.metacardsById[0].attributes[0].queries
+      setQueries(
+        queries.map(query => {
+          const { cql, __typename, ...rest } = query // eslint-disable-line no-unused-vars
+          return rest
+        })
+      )
+      setCurrentQuery(queries[0] ? queries[0].id : null)
     },
   })
 
@@ -97,36 +106,9 @@ export const Workspace = () => {
     return <InlineRetry error={error}>Error Retrieving Workspace</InlineRetry>
   }
 
-  const QueryEditor = props => (
-    <div style={{ padding: 20 }}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <TextField
-          style={{ marginBottom: 20 }}
-          label="Query Title"
-          value={props.query.title || ''}
-          fullWidth
-        />
-      </div>
-      <div style={{ overflow: 'hidden', padding: 2 }}>
-        <BasicSearch
-          query={props.query}
-          onSearch={query => {
-            if (typeof props.onSearch === 'function') {
-              props.onSearch(query)
-            }
-            // setPageIndex(0)
-            setQuery(query)
-            onClear()
-            onSearch(query)
-          }}
-        />
-      </div>
-    </div>
-  )
-
   const attributes = data.metacardsById[0].attributes[0]
 
-  const { title, queries, lists } = attributes
+  const { title, lists } = attributes
   const hasQueries = queries && queries.length > 0
 
   return (
@@ -168,25 +150,23 @@ export const Workspace = () => {
               <QuerySelector
                 QueryEditor={QueryEditor}
                 queries={queries}
-                currentQuery={query}
-                onSelect={query => {
+                currentQuery={currentQuery}
+                onSearch={query => {
                   onClear()
-                  setQuery(query)
-                  onSearch(
-                    //toFilterTree / fromFilterTree are needed because queries that have a location filter
-                    //do not have the correct structure to be processed with cql
-                    populateDefaultQuery(
-                      toFilterTree(fromFilterTree(query.filterTree))
-                    )
-                  )
+                  setCurrentQuery(query.id)
+                  onSearch(query)
                 }}
+                onChange={queries => setQueries(queries)}
               />
 
               <QueryStatus
                 sources={status}
                 onRun={srcs => {
                   //setPageIndex(0)
-                  onSearch({ ...query, srcs })
+                  onSearch({
+                    ...queries.find(query => (query.id = currentQuery)),
+                    srcs,
+                  })
                 }}
                 onCancel={srcs => {
                   srcs.forEach(src => {
@@ -194,14 +174,7 @@ export const Workspace = () => {
                   })
                 }}
               />
-              {/* //TODO add paging */}
-              {results.map(({ metacard }) => (
-                <IndexCardItem
-                  key={metacard.attributes.id}
-                  title={metacard.attributes.title}
-                  subHeader={' '}
-                />
-              ))}
+              <Results results={results} />
             </React.Fragment>
           )}
 

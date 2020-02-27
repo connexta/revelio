@@ -1,13 +1,16 @@
+import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 import Popover from '@material-ui/core/Popover'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import React, { useState, useEffect, useRef } from 'react'
+import { set } from 'immutable'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Actions,
   DeleteAction,
   EditAction,
   IndexCardItem,
 } from '../index-cards'
+import AdvancedSearchQueryBuilder from '../query-builder/query-builder'
 const { useDrawInterface } = require('../../react-hooks')
 
 const useOpenClose = props => {
@@ -29,7 +32,7 @@ const useOpenClose = props => {
 }
 
 const QueryCard = props => {
-  const { title, onClick, QueryEditor, query } = props
+  const { onSearch, QueryEditor, onChange } = props
   const [anchorEl, open, handleOpen, handleClose] = useOpenClose(props)
   const [{ active: isDrawing }] = useDrawInterface()
   const [wasDrawing, setWasDrawing] = useState(false)
@@ -52,9 +55,9 @@ const QueryCard = props => {
     <React.Fragment>
       <div ref={drawAnchorEl} />
       <IndexCardItem
-        title={title}
+        title={props.query.title}
         subHeader={'Has not been run'}
-        onClick={onClick}
+        onClick={() => onSearch(props.query)}
       >
         <Actions>
           <EditAction onEdit={handleOpen} />
@@ -77,32 +80,39 @@ const QueryCard = props => {
           horizontal: 'left',
         }}
       >
-        <QueryEditor query={query} onSearch={handleClose} />
+        <Box style={{ margin: '10px' }}>
+          <QueryEditor
+            query={props.query}
+            queryBuilder={AdvancedSearchQueryBuilder}
+            onSearch={query => onSearch({ ...props.query, ...query })}
+            onChange={query => onChange({ ...props.query, ...query })}
+          />
+        </Box>
       </Popover>
     </React.Fragment>
   )
 }
 
 const QuerySelector = props => {
-  const { queries, currentQuery, QueryEditor } = props
-  const [selected, setSelected] = React.useState(null)
+  const { queries, currentQuery, QueryEditor, onSearch } = props
   const [anchorEl, open, handleOpen, handleClose] = useOpenClose(props)
 
-  const onSelect = query => {
-    setSelected(queries.filter(({ id }) => id === query.id)[0])
-    props.onSelect(query)
+  const onChange = query => {
+    const updatedQueries = set(
+      queries,
+      queries.findIndex(q => q.id === query.id),
+      query
+    )
+    props.onChange(updatedQueries)
   }
 
   const queryCards = queries.map(query => (
     <QueryCard
       key={query.id}
       query={query}
-      title={query.title}
-      onClick={() => {
-        onSelect(query)
-      }}
+      onSearch={onSearch}
+      onChange={onChange}
       QueryEditor={QueryEditor}
-      onClose={handleClose}
     />
   ))
 
@@ -111,13 +121,10 @@ const QuerySelector = props => {
       {queries && (
         <div style={{ display: 'flex' }}>
           <QueryCard
-            title={selected ? selected.title : queries[0].title}
-            onClick={() => {
-              props.onSelect(currentQuery)
-            }}
-            query={currentQuery}
+            query={queries.find(query => query.id === currentQuery)}
+            onSearch={onSearch}
+            onChange={onChange}
             QueryEditor={QueryEditor}
-            onClose={handleClose}
           />
 
           <Button
