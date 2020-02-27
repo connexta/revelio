@@ -142,7 +142,6 @@ const BasicSources = ({ state = ['ddf.distribution'], setState }) => {
 
 const BasicSortOrder = props => {
   const { state, setState } = props
-
   return <SortOrder value={state} onChange={setState} />
 }
 
@@ -248,9 +247,9 @@ const getFilterMap = props => {
 }
 
 const createQuery = filterMap => {
-  const srcs = get(filterMap, 'sources')
+  const sourceIds = get(filterMap, 'sources')
   const sorts = get(filterMap, 'sortOrder')
-  return populateDefaultQuery(toFilterTree(filterMap), srcs, sorts)
+  return populateDefaultQuery(toFilterTree(filterMap), sourceIds, sorts)
 }
 
 export const BasicSearchQueryBuilder = props => {

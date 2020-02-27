@@ -118,15 +118,15 @@ const useQueryExecutor = () => {
 
   const onSearch = useCallback(
     async query => {
-      const { filterTree, srcs, ...settings } = query
+      const { filterTree, sourceIds, ...settings } = query
 
-      const status = srcs.reduce((status, src) => {
+      const status = sourceIds.reduce((status, src) => {
         return status.set(src, { type: 'source.pending' })
       }, Map())
 
       dispatch({ type: 'start', status })
 
-      srcs.map(async src => {
+      sourceIds.map(async src => {
         try {
           const { data } = await client.query({
             query: simpleSearch,

@@ -43,7 +43,7 @@ export type AttributeDefinition = {
     | 'DOUBLE'
 }
 export type QuerySettingsType = {
-  sourceIds?: string[] | null
-  sortPolicy?: string[] | null
+  sources?: string[] | null
+  sorts?: string[] | null
   detail_level?: string | null //Result Form title
 }
