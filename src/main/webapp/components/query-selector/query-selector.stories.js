@@ -1,37 +1,26 @@
-import React from 'react'
-
-import { storiesOf } from '../../@storybook/react'
 import { action } from '@connexta/ace/@storybook/addon-actions'
-import useState from '../../@storybook/use-state'
+import React from 'react'
 import QuerySelector from '.'
-import queries from '../../sample-data/sample-queries.json'
-import BasicSearch from '../basic-search'
+import { storiesOf } from '../../@storybook/react'
+import useState from '../../@storybook/use-state'
+import sampleQueries from '../../sample-data/sample-queries.json'
+import QueryEditor from '../query-editor'
 
 const stories = storiesOf('Query Selector', module)
 
-const QueryEditor = ({ query }) => {
-  return (
-    <div style={{ padding: 20 }}>
-      <div style={{ overflow: 'hidden', padding: 2 }}>
-        <BasicSearch
-          query={query}
-          onSearch={query => {
-            action('onChange')(query)
-          }}
-        />
-      </div>
-    </div>
-  )
-}
-
 stories.add('Basic', () => {
-  const [query, setQuery] = useState(queries[0])
+  const [queries, setQueries] = useState(sampleQueries)
+  const [query, setQuery] = useState(sampleQueries[0].id)
   return (
     <QuerySelector
       queries={queries}
       currentQuery={query}
       QueryEditor={QueryEditor}
-      onSelect={setQuery}
+      onChange={queries => setQueries(queries)}
+      onSearch={query => {
+        action('onSearch')(query)
+        setQuery(query.id)
+      }}
     />
   )
 })
