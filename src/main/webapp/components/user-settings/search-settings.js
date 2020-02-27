@@ -29,7 +29,7 @@ const Defaults = props => (
       onChange={newValue => {
         const querySettings = merge(get(props.value, 'querySettings'), {
           federation: newValue !== null ? 'selected' : 'enterprise',
-          sourceIds: [newValue],
+          sourceIds: newValue,
         })
 
         props.onChange(set(props.value, 'querySettings', querySettings))

@@ -63,7 +63,7 @@ const Sources = props => {
         value={props.value || [0]}
         onChange={e => {
           props.onChange(
-            e.target.value.includes(0) && props.value !== null
+            e.target.value.includes(0) && props.value != null
               ? null
               : e.target.value.filter(source => source !== 0)
           )
@@ -73,7 +73,7 @@ const Sources = props => {
         }
       >
         <MenuItem key={'allFields'} value={0}>
-          <Checkbox checked={props.value === null} />
+          <Checkbox checked={props.value == null} />
           <ListItemText primary={`All Sources`} />
         </MenuItem>
 
