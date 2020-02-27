@@ -40,7 +40,7 @@ export const DuplicateAction = props => {
   const { onDuplicate } = props
   return (
     <IconButton onClick={onClick(onDuplicate)}>
-      <Tooltip title="Duplicate" aria-label="add">
+      <Tooltip title="Duplicate">
         <FileCopyIcon />
       </Tooltip>
     </IconButton>
