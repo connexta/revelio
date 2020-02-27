@@ -14,6 +14,7 @@ import {
   AddCardItem,
   DeleteAction,
   ShareAction,
+  DuplicateAction,
   Actions,
 } from '../index-cards'
 
@@ -37,6 +38,7 @@ import QuerySelector from '../query-selector'
 import Lists from '../lists'
 import { getIn } from 'immutable'
 import loadable from 'react-loadable'
+import { clone } from '@turf/turf'
 const LoadingComponent = () => <LinearProgress />
 
 let Visualizations = () => null
@@ -235,7 +237,7 @@ export const Workspace = () => {
 }
 
 const Workspaces = props => {
-  const { workspaces, onCreate, onDelete } = props
+  const { workspaces, onCreate, onDelete, onDuplicate } = props
 
   return (
     <IndexCards>
@@ -258,6 +260,7 @@ const Workspaces = props => {
                   onDelete={() => onDelete(workspace)}
                   message="This will permanently delete the workspace."
                 />
+                <DuplicateAction onDuplicate={() => onDuplicate(workspace)} />
               </Actions>
             </IndexCardItem>
           </Link>
@@ -285,6 +288,39 @@ const workspaceAttributes = gql`
     metacard_type
   }
 `
+const useClone = () => {
+  const cloneWorkspace = gql`
+    mutation CloneWorkspace($id: ID!) {
+      cloneMetacard(id: $id) {
+        ...WorkspaceAttributes
+        id: id
+        owner: metacard_owner
+        modified: metacard_modified
+      }
+    }
+    ${workspaceAttributes}
+  `
+
+  return useMutation(cloneWorkspace, {
+    update: (cache, { data }) => {
+      const query = workspaces
+      const { metacardsByTag } = cache.readQuery({ query })
+      const updatedWorkspaces = [
+        data.cloneMetacard,
+        ...metacardsByTag.attributes,
+      ]
+      cache.writeQuery({
+        query,
+        data: {
+          metacardsByTag: {
+            attributes: updatedWorkspaces,
+            __typename: 'QueryResponse',
+          },
+        },
+      })
+    },
+  })
+}
 
 const useCreate = () => {
   const [redirectId, setRedirectId] = React.useState(null)
@@ -355,6 +391,7 @@ export default () => {
   const { refetch, loading, error, data } = useQuery(workspaces)
   const [create, redirectId] = useCreate()
   const [_delete] = useDelete()
+  const [_clone] = useClone()
 
   if (loading) {
     return <LoadingComponent />
@@ -394,6 +431,14 @@ export default () => {
     })
   }
 
+  const onDuplicate = ({ id }) => {
+    _clone({
+      variables: {
+        id: id,
+      },
+    })
+  }
+
   const workspacesSortedByTime = data.metacardsByTag.attributes.sort(
     (a, b) => (a.modified > b.modified ? -1 : 1)
   )
@@ -402,6 +447,7 @@ export default () => {
       workspaces={workspacesSortedByTime}
       onCreate={onCreate}
       onDelete={onDelete}
+      onDuplicate={onDuplicate}
     />
   )
 }
