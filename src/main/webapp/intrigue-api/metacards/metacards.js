@@ -414,12 +414,27 @@ const createMetacard = async (parent, args, context) => {
     ],
   }
   const res = await catalog.create(metacardsToCreate)
-  return renameKeys(toGraphqlName, {
-    ...res.createdMetacards[0].attributes,
+  const [createdMetacard] = res.createdMetacards
+  const securityAttrKeys = [
+    'security_access_individuals_read',
+    'security_access_individuals',
+    'security_access_administrators',
+    'security_acess_groups_read',
+    'security_access_groups',
+  ]
+  const newMetacard = renameKeys(toGraphqlName, {
+    ...createdMetacard.attributes,
     filterTree:
-      res.createdMetacards[0].attributes.filterTree &&
-      JSON.parse(res.createdMetacards[0].attributes.filterTree),
+      createdMetacard.attributes.filterTree &&
+      JSON.parse(createdMetacard.attributes.filterTree),
   })
+  securityAttrKeys.forEach(attr => {
+    if (newMetacard[attr] === undefined || newMetacard[attr] === null) {
+      newMetacard[attr] = []
+    }
+  })
+  debugger
+  return newMetacard
 }
 
 const saveMetacard = async (parent, args, context) => {

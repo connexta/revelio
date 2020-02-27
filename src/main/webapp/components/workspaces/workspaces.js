@@ -260,7 +260,8 @@ const Workspaces = props => {
         const canWrite = isWritable(
           userAttrs.email,
           userAttrs.roles,
-          securityAttributes
+          securityAttributes,
+          canShare
         )
         const canRead = isReadOnly(
           canWrite,
