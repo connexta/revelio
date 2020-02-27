@@ -38,7 +38,7 @@ import QuerySelector from '../query-selector'
 import Lists from '../lists'
 import { getIn } from 'immutable'
 import loadable from 'react-loadable'
-import { clone } from '@turf/turf'
+
 const LoadingComponent = () => <LinearProgress />
 
 let Visualizations = () => null

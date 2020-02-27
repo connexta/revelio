@@ -4953,6 +4953,33 @@
               "deprecationReason": null
             },
             {
+              "name": "cloneMetacard",
+              "description": "TBD: Should only be used when...\ncreateMetacardFromJson(attrs: Json!): MetacardAttributes\nsaveMetacardFromJson(id: ID!, attrs: Json!): MetacardAttributes",
+              "args": [
+                {
+                  "name": "id",
+                  "description": "",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "ID",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "MetacardAttributes",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "deleteMetacard",
               "description": "",
               "args": [
