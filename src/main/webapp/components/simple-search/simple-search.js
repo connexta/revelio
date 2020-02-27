@@ -74,12 +74,12 @@ const SimpleSearch = props => {
           />
           <QueryStatus
             sources={status}
-            onRun={srcs => {
+            onRun={sourceIds => {
               setPageIndex(0)
-              onSearch({ ...query, srcs })
+              onSearch({ ...query, sourceIds })
             }}
-            onCancel={srcs => {
-              srcs.forEach(src => {
+            onCancel={sourceIds => {
+              sourceIds.forEach(src => {
                 onCancel(src)
               })
             }}

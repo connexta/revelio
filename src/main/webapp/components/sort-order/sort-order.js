@@ -330,16 +330,24 @@ const Container = props => {
         Error Retrieving Attributes
       </ErrorMessage>
     )
-
+  const sortPolicy = getIn(
+    data,
+    ['user', 'preferences', 'querySettings', 'sortPolicy'],
+    undefined
+  )
+  let defaultValue = undefined
+  if (sortPolicy) {
+    defaultValue = sortPolicy.map(sort => {
+      const ret = { ...sort }
+      delete ret.__typename
+      return ret
+    })
+  }
   return (
     <SortOrder
       {...props}
       attributeDescriptors={getIn(data, ['metacardTypes'], [])}
-      defaultValue={getIn(
-        data,
-        ['user', 'preferences', 'querySettings', 'sortPolicy'],
-        undefined
-      )}
+      defaultValue={defaultValue}
     />
   )
 }

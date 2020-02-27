@@ -65,45 +65,45 @@ type QuerySettingsProps = {
 const QuerySettings = (props: QuerySettingsProps) => {
   const { settings = {} } = props
   if (
-    settings.sourceIds == undefined &&
-    settings.sortPolicy == undefined &&
+    settings.sources == undefined &&
+    settings.sorts == undefined &&
     settings.detail_level == undefined
   )
     return null
 
   return (
     <Section title="Search Settings">
-      {settings.sourceIds != undefined && (
+      {settings.sources != undefined && (
         <Box style={{ padding: '0px 16px' }}>
           <FilterCard
             label="Sources"
             onRemove={() => {
-              props.onChange({ ...settings, sourceIds: null })
+              props.onChange({ ...settings, sources: null })
             }}
           >
             <SourcesSelect
-              value={settings.sourceIds}
+              value={settings.sources}
               onChange={(value: any) => {
-                props.onChange({ ...settings, sourceIds: value })
+                props.onChange({ ...settings, sources: value })
               }}
             />
           </FilterCard>
         </Box>
       )}
-      {settings.sortPolicy != undefined && (
+      {settings.sorts != undefined && (
         <Box style={{ padding: '0px 16px' }}>
           <FilterCard
             label="Sorts"
             onRemove={() => {
-              props.onChange({ ...settings, sortPolicy: null })
+              props.onChange({ ...settings, sorts: null })
             }}
           >
             <SortOrder
-              value={getSorts(settings.sortPolicy)}
+              value={getSorts(settings.sorts)}
               onChange={(value: any) => {
                 props.onChange({
                   ...settings,
-                  sortPolicy: value.map(
+                  sorts: value.map(
                     (sort: any) => `${sort.propertyName},${sort.sortOrder}`
                   ),
                 })
