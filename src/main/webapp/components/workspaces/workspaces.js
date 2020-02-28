@@ -11,10 +11,7 @@ import loadable from 'react-loadable'
 import { Link, Redirect, useParams } from 'react-router-dom'
 import { useQueryExecutor } from '../../react-hooks'
 import { Notification } from '../notification/notification'
-import EmailIcon from '@material-ui/icons/Email'
-import IconButton from '@material-ui/core/IconButton'
-import Tooltip from '@material-ui/core/Tooltip'
-
+import Subscribe from './subscribe'
 import {
   Actions,
   AddCardItem,
@@ -217,9 +214,16 @@ const subscribeMutation = gql`
     subscribeToWorkspace(id: $id)
   }
 `
+
+const unsubscribeMutation = gql`
+  mutation Unsubscribe($id: ID!) {
+    unsubscribeFromWorkspace(id: $id)
+  }
+`
 const Workspaces = props => {
   const { workspaces, onCreate, onDelete, setMessage, message } = props
   const [subscribe] = useMutation(subscribeMutation)
+  const [unsubscribe] = useMutation(unsubscribeMutation)
   return (
     <IndexCards>
       {message ? (
@@ -249,22 +253,14 @@ const Workspaces = props => {
                   onDelete={() => onDelete(workspace)}
                   message="This will permanently delete the workspace."
                 />
-                <Tooltip title="Subscribe">
-                  <IconButton
-                    onClick={async e => {
-                      e.stopPropagation()
-                      e.preventDefault()
-                      const res = await subscribe({
-                        variables: { id: workspace.id },
-                      })
-                      res.data.subscribeToWorkspace === 200
-                        ? setMessage(`Subscribed to ${workspace.title}`)
-                        : null
-                    }}
-                  >
-                    <EmailIcon />
-                  </IconButton>
-                </Tooltip>
+                {/*pass in subscribe value*/}
+                <Subscribe
+                  subscribe={subscribe}
+                  unsubscribe={unsubscribe}
+                  id={workspace.id}
+                  title={workspace.title}
+                  setMessage={setMessage}
+                />
               </Actions>
             </IndexCardItem>
           </Link>

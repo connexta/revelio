@@ -129,6 +129,7 @@ const typeDefs = `
 
     deleteMetacard(id: ID!): ID
     subscribeToWorkspace(id: ID!): Int 
+    unsubscribeFromWorkspace(id: ID!): Int 
   }
 `
 
@@ -472,6 +473,12 @@ const subscribeToWorkspace = async (parent, args, { fetch }) => {
   return res.status
 }
 
+const unsubscribeFromWorkspace = async (parent, args, { fetch }) => {
+  const { id } = args
+  const res = await fetch(`${ROOT}/unsubscribe/${id}`, { method: 'POST' })
+  return res.status
+}
+
 const resolvers = {
   Query: {
     metacards,
@@ -484,6 +491,7 @@ const resolvers = {
     saveMetacard,
     deleteMetacard,
     subscribeToWorkspace,
+    unsubscribeFromWorkspace,
   },
 }
 
