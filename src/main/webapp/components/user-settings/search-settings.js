@@ -5,7 +5,7 @@ import { get, getIn, Map, set, setIn, merge } from 'immutable'
 import React from 'react'
 import SortOrder from '../sort-order/sort-order'
 import ResultFormSelect from './result-form-select'
-import SourceSelect from './source-select'
+import SourceSelect from '../sources-select'
 
 const Spacing = () => <div style={{ marginTop: 20 }} />
 const Defaults = props => (

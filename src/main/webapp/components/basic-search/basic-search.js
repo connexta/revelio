@@ -136,7 +136,7 @@ const MatchTypes = ({
   )
 }
 
-const BasicSources = ({ state = ['ddf.distribution'], setState }) => {
+const BasicSources = ({ state, setState }) => {
   return <SourcesSelect value={state} onChange={setState} />
 }
 

@@ -64,32 +64,20 @@ type QuerySettingsProps = {
 
 const QuerySettings = (props: QuerySettingsProps) => {
   const { settings = {} } = props
-  if (
-    settings.sources == undefined &&
-    settings.sorts == undefined &&
-    settings.detail_level == undefined
-  )
-    return null
 
   return (
     <Section title="Search Settings">
-      {settings.sources != undefined && (
-        <Box style={{ padding: '0px 16px' }}>
-          <FilterCard
-            label="Sources"
-            onRemove={() => {
-              props.onChange({ ...settings, sources: null })
+      <Box style={{ padding: '0px 16px' }}>
+        <FilterCard label="Sources">
+          <SourcesSelect
+            value={settings.sources}
+            onChange={(value: any) => {
+              props.onChange({ ...settings, sources: value })
             }}
-          >
-            <SourcesSelect
-              value={settings.sources}
-              onChange={(value: any) => {
-                props.onChange({ ...settings, sources: value })
-              }}
-            />
-          </FilterCard>
-        </Box>
-      )}
+          />
+        </FilterCard>
+      </Box>
+
       {settings.sorts != undefined && (
         <Box style={{ padding: '0px 16px' }}>
           <FilterCard

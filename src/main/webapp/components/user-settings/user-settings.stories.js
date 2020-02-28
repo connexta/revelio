@@ -7,7 +7,6 @@ import useState from '../../@storybook/use-state'
 import HiddenResultsSettings from './hidden-results-settings'
 import NotificationSettings from './notification-settings'
 import SearchSettings from './search-settings'
-import SourceSelect from './source-select'
 import TimeSettings from './time-settings'
 import Settings from './user-settings'
 
@@ -85,27 +84,5 @@ stories.add('Time Settings', () => {
 })
 
 stories.add('Hidden Results Settings', () => <HiddenResults />)
-
-stories.add('Source Select', () => {
-  const sources = [
-    {
-      isAvailable: false,
-      sourceId: 'Source1',
-      local: false,
-    },
-    {
-      isAvailable: true,
-      sourceId: 'ddf.distribution',
-      local: true,
-    },
-    {
-      isAvailable: true,
-      sourceId: 'Source2',
-      local: false,
-    },
-  ]
-  const [value, onChange] = useState(['Source1', 'Source2'])
-  return <SourceSelect value={value} onChange={onChange} sources={sources} />
-})
 
 stories.add('User Settings', () => <UserSettings />)

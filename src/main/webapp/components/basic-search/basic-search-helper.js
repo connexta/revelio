@@ -34,10 +34,9 @@ const defaultSorts = [
   },
 ]
 
-const defaultSources = ['ddf.distribution']
 export const populateDefaultQuery = (
   filterTree,
-  sourceIds = defaultSources,
+  sourceIds,
   sortPolicy = defaultSorts
 ) => ({
   sourceIds,
