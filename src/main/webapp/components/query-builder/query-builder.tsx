@@ -63,15 +63,6 @@ const QueryBuilder = (props: QueryBuilderProps) => {
     props.onChange(setIn(query, ['filterTree'], newFilterTree))
   }
 
-  const addSources = () => {
-    if (querySettings.sources == undefined) {
-      props.onChange({
-        ...query,
-        sources: [],
-      })
-    }
-  }
-
   const addSorts = () => {
     if (querySettings.sorts == undefined) {
       props.onChange({
@@ -89,7 +80,6 @@ const QueryBuilder = (props: QueryBuilderProps) => {
 
   const options = {
     'Field Filter': addFilter,
-    Sources: addSources,
     'Sort Order': addSorts,
     'Result Form': addResultForm,
   }
