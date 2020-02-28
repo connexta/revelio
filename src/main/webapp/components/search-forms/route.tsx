@@ -1,8 +1,6 @@
 import Box from '@material-ui/core/Box'
 import Dialog from '@material-ui/core/Dialog'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import Snackbar from '@material-ui/core/Snackbar'
-import SnackbarContent from '@material-ui/core/SnackbarContent'
 import * as React from 'react'
 import { Fragment, useState } from 'react'
 import { defaultFilter } from '../query-builder/filter/filter-utils'
@@ -11,6 +9,7 @@ import { QueryType } from '../query-builder/types'
 import SearchFormEditor from './editor'
 import { SnackbarRetry as RetryNotification } from '../network-retry'
 import { ApolloError } from 'apollo-client/errors/ApolloError'
+const { Notification } = require('../notification/notification')
 
 const {
   IndexCards,
@@ -159,29 +158,6 @@ const Route = (props: RouteProps) => {
           )
         })}
     </IndexCards>
-  )
-}
-
-type NotificationProps = {
-  onClose: () => void
-  message: string
-  autoHideDuration?: number
-}
-const Notification = (props: NotificationProps) => {
-  const { message, autoHideDuration = 5000, onClose } = props
-
-  return (
-    <Snackbar
-      open
-      autoHideDuration={autoHideDuration}
-      onClose={onClose}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right',
-      }}
-    >
-      <SnackbarContent message={message} />
-    </Snackbar>
   )
 }
 

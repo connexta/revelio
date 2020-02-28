@@ -128,6 +128,7 @@ const typeDefs = `
     # saveMetacardFromJson(id: ID!, attrs: Json!): MetacardAttributes
 
     deleteMetacard(id: ID!): ID
+    subscribeToWorkspace(id: ID!): Int 
   }
 `
 
@@ -422,6 +423,12 @@ const deleteMetacard = async (parent, args, { catalog }) => {
   return id
 }
 
+const subscribeToWorkspace = async (parent, args, { fetch }) => {
+  const { id } = args
+  const res = await fetch(`${ROOT}/subscribe/${id}`, { method: 'POST' })
+  return res.status
+}
+
 const resolvers = {
   Query: {
     metacards,
@@ -433,6 +440,7 @@ const resolvers = {
     createMetacard,
     saveMetacard,
     deleteMetacard,
+    subscribeToWorkspace,
   },
 }
 

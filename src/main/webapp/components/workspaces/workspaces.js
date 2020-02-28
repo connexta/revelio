@@ -10,6 +10,11 @@ import React, { useState } from 'react'
 import loadable from 'react-loadable'
 import { Link, Redirect, useParams } from 'react-router-dom'
 import { useQueryExecutor } from '../../react-hooks'
+import { Notification } from '../notification/notification'
+import EmailIcon from '@material-ui/icons/Email'
+import IconButton from '@material-ui/core/IconButton'
+import Tooltip from '@material-ui/core/Tooltip'
+
 import {
   Actions,
   AddCardItem,
@@ -207,11 +212,24 @@ export const Workspace = () => {
   )
 }
 
+const subscribeMutation = gql`
+  mutation Subscribe($id: ID!) {
+    subscribeToWorkspace(id: $id)
+  }
+`
 const Workspaces = props => {
-  const { workspaces, onCreate, onDelete } = props
-
+  const { workspaces, onCreate, onDelete, setMessage, message } = props
+  const [subscribe] = useMutation(subscribeMutation)
   return (
     <IndexCards>
+      {message ? (
+        <Notification
+          message={message}
+          onClose={() => {
+            setMessage(null)
+          }}
+        />
+      ) : null}
       <AddCardItem onClick={onCreate} />
       {workspaces.map(workspace => {
         return (
@@ -231,6 +249,22 @@ const Workspaces = props => {
                   onDelete={() => onDelete(workspace)}
                   message="This will permanently delete the workspace."
                 />
+                <Tooltip title="Subscribe">
+                  <IconButton
+                    onClick={async e => {
+                      e.stopPropagation()
+                      e.preventDefault()
+                      const res = await subscribe({
+                        variables: { id: workspace.id },
+                      })
+                      res.data.subscribeToWorkspace === 200
+                        ? setMessage(`Subscribed to ${workspace.title}`)
+                        : null
+                    }}
+                  >
+                    <EmailIcon />
+                  </IconButton>
+                </Tooltip>
               </Actions>
             </IndexCardItem>
           </Link>
@@ -328,6 +362,7 @@ export default () => {
   const { refetch, loading, error, data } = useQuery(workspaces)
   const [create, redirectId] = useCreate()
   const [_delete] = useDelete()
+  const [message, setMessage] = React.useState(null)
 
   if (loading) {
     return <LoadingComponent />
@@ -375,6 +410,8 @@ export default () => {
       workspaces={workspacesSortedByTime}
       onCreate={onCreate}
       onDelete={onDelete}
+      setMessage={setMessage}
+      message={message}
     />
   )
 }
