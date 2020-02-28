@@ -268,11 +268,16 @@ const filterResultFormAttributes = (attributes, resultFormAttributes) => {
 
 const metacards = async (parent, args, { catalog, toGraphqlName, fetch }) => {
   const q = { ...args.settings, filterTree: args.filterTree }
-  const json = await catalog.query(processQuery(q))
-  const resultFormAttributes = await getResultFormAttributes(
+  const originalQuery = catalog.query(processQuery(q))
+  const resultFormQuery = getResultFormAttributes(
     args.settings && args.settings.detail_level,
     catalog
   )
+  const [json, resultFormAttributes] = await Promise.all([
+    originalQuery,
+    resultFormQuery,
+  ])
+
   const attributes = json.results.map(result => {
     const attributes = renameKeys(toGraphqlName, result.metacard.attributes)
     const { filterTree } = attributes
@@ -310,7 +315,7 @@ const metacards = async (parent, args, { catalog, toGraphqlName, fetch }) => {
   })
 
   json.status['elapsed'] = json.request_duration_millis
-  return { ...json, attributes, results }
+  return { attributes, ...json, results }
 }
 
 const metacardsByTag = async (parent, args, context) => {
