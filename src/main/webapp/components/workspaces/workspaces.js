@@ -25,10 +25,6 @@ import QueryEditor from '../query-editor'
 import QuerySelector from '../query-selector'
 import QueryStatus from '../query-status'
 
-import Lists from '../lists'
-import { getIn } from 'immutable'
-import loadable from 'react-loadable'
-
 const LoadingComponent = () => <LinearProgress />
 
 let Visualizations = () => null
