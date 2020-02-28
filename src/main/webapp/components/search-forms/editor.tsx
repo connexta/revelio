@@ -77,7 +77,7 @@ const queryToSearch = (query: QueryType) => {
   const { sources, sorts, detail_level, filterTree } = query
   return {
     filterTree,
-    sourceIds: sources || ['ddf.distribution'],
+    sourceIds: sources,
     sortPolicy: (sorts || []).map(sort => {
       //query builder might have sorts in the correct format already
       if (typeof sort !== 'string') {

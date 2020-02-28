@@ -123,17 +123,17 @@ const Container = props => {
       </ErrorMessage>
     )
   }
-  const userPref = getIn(
-    data,
-    ['user', 'preferences', 'querySettings', 'sourceIds'],
-    undefined
-  )
-  const sources = get(data, 'sources', [])
-  const defaultValue =
-    userPref ||
-    sources.filter(source => source.local).map(source => source.sourceId)
+
   return (
-    <SourcesSelect {...props} sources={sources} defaultValue={defaultValue} />
+    <SourcesSelect
+      {...props}
+      sources={get(data, 'sources', [])}
+      defaultValue={getIn(
+        data,
+        ['user', 'preferences', 'querySettings', 'sourceIds'],
+        undefined
+      )}
+    />
   )
 }
 
