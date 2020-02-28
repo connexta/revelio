@@ -1,17 +1,19 @@
-import React, { useEffect } from 'react'
-
 import { useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
-import LinearProgress from '@material-ui/core/LinearProgress'
+import CloudIcon from '@material-ui/icons/Cloud'
+import HomeIcon from '@material-ui/icons/Home'
+import WarningIcon from '@material-ui/icons/Warning'
+import gql from 'graphql-tag'
+import { get, getIn } from 'immutable'
+import React, { useEffect } from 'react'
 import { useApolloFallback } from '../../react-hooks'
+import OutlinedSelect from '../input/outlined-select'
 import ErrorMessage from '../network-retry/inline-retry'
-import { getIn } from 'immutable'
 
 const query = gql`
   query sourcesSelect {
@@ -30,37 +32,90 @@ const query = gql`
   }
 `
 
-export const SourcesSelectComponent = props => {
-  const { sources = [], value = [], onChange, defaultValue } = props
+const sourcesSort = (source1, source2) => {
+  return source1.local ? -1 : source1.id <= source2.id
+}
+
+const Source = props => {
+  const { label, selected, Icon, isAvailable } = props
+  return (
+    <React.Fragment>
+      <Checkbox checked={selected} />
+      <ListItemIcon>{Icon}</ListItemIcon>
+
+      <ListItemText
+        style={{
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}
+        primary={label}
+      />
+
+      {!isAvailable && (
+        <ListItemIcon>
+          <WarningIcon />
+        </ListItemIcon>
+      )}
+    </React.Fragment>
+  )
+}
+
+export const SourcesSelect = props => {
+  const { label = 'Sources' } = props
   useEffect(() => {
-    if ((!value || value.length === 0) && defaultValue) {
-      onChange(defaultValue)
+    if (!props.value && props.defaultValue) {
+      props.onChange(props.defaultValue)
     }
   }, [])
+
   return (
-    <FormControl fullWidth>
-      <InputLabel>Sources</InputLabel>
-      <Select
+    <FormControl fullWidth variant="outlined" margin="normal">
+      <OutlinedSelect
         multiple
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        renderValue={selected => {
-          return selected.join(', ')
+        label={label}
+        value={props.value || [0]}
+        onChange={e => {
+          props.onChange(
+            e.target.value.includes(0) && props.value != null
+              ? null
+              : e.target.value.filter(source => source !== 0)
+          )
         }}
+        renderValue={selected =>
+          selected.includes(0) ? `All Sources` : selected.join(', ')
+        }
       >
-        {sources.map(source => (
-          <MenuItem key={source} value={source}>
-            <Checkbox checked={value.indexOf(source) > -1} />
-            <ListItemText primary={source} />
-          </MenuItem>
-        ))}
-      </Select>
+        <MenuItem value={0}>
+          <Checkbox checked={props.value == null} />
+          <ListItemText primary={`All Sources`} />
+        </MenuItem>
+        {(props.sources || []).sort(sourcesSort).map(source => {
+          const selected = Boolean(
+            props.value && props.value.includes(source.sourceId)
+          )
+          const Icon = source.local ? <HomeIcon /> : <CloudIcon />
+          return (
+            <MenuItem key={source.sourceId} value={source.sourceId}>
+              <Source
+                selected={selected}
+                Icon={Icon}
+                label={source.sourceId}
+                sourceId={source.sourceId}
+                isAvailable={source.isAvailable}
+              />
+            </MenuItem>
+          )
+        })}
+      </OutlinedSelect>
     </FormControl>
   )
 }
 
-const SourcesSelectContainer = props => {
-  const { loading, error, refetch, data } = useQuery(query)
+const Container = props => {
+  const { error, data, loading, refetch } = useQuery(query)
+  if (loading) {
+    return <LinearProgress />
+  }
   if (error) {
     return (
       <ErrorMessage onRetry={refetch} error={error}>
@@ -68,30 +123,21 @@ const SourcesSelectContainer = props => {
       </ErrorMessage>
     )
   }
-  if (loading) {
-    return <LinearProgress />
-  }
 
   return (
-    <SourcesSelectComponent
+    <SourcesSelect
       {...props}
+      sources={get(data, 'sources', [])}
       defaultValue={getIn(
         data,
         ['user', 'preferences', 'querySettings', 'sourceIds'],
         undefined
       )}
-      sources={data.sources
-        .filter(source => source.isAvailable)
-        .map(source => source.sourceId)}
     />
   )
 }
 
 export default props => {
-  const Component = useApolloFallback(
-    SourcesSelectContainer,
-    SourcesSelectComponent
-  )
-
+  const Component = useApolloFallback(Container, SourcesSelect)
   return <Component {...props} />
 }

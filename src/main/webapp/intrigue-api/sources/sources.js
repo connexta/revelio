@@ -29,9 +29,8 @@ const sources = async (parent, args, context) => {
   const res = await catalog.getSourceInfo({ ids: sourceIds })
   //TO-DO: cache this in future, local catalog id doesn't change
   const local = await getLocalCatalogId(parent, args, context)
-
   return res.sourceInfo.map(source =>
-    set(source, 'local', source.id === local['local-catalog-id'])
+    set(source, 'local', source.sourceId === local['local-catalog-id'])
   )
 }
 
