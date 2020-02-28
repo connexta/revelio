@@ -87,7 +87,7 @@ const querySettingsInputKeys = [
   'type',
 ]
 
-const getQuerySettings = async settings => {
+const getQuerySettings = settings => {
   const filteredSettings = Object.keys(settings).reduce((acc, key) => {
     if (querySettingsInputKeys.includes(key)) {
       return { ...acc, [key]: settings[key] }
@@ -149,7 +149,7 @@ const useQueryExecutor = () => {
   const onSearch = useCallback(
     async query => {
       const { filterTree, ...settings } = query
-      const querySettings = await getQuerySettings(settings)
+      const querySettings = getQuerySettings(settings)
       if (!querySettings.sourceIds) {
         const { data } = await client.query({
           query: getSources,
