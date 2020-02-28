@@ -8,7 +8,7 @@ import { getIn } from 'immutable'
 const subscribeToWorkspace = async props => {
   const { id, title, setMessage, subscribe, setSubscribed, subscribed } = props
   const res = await subscribe({ variables: { id } })
-  getIn(res, ['data', 'subscribetoWorkspace'], 0) === 200
+  getIn(res, ['data', 'subscribeToWorkspace'], 0) === 200
     ? setSubscribed({ isSubscribed: true, message: `Subscribed to ${title}` })
     : setSubscribed({
         isSubscribed: false,
@@ -51,7 +51,7 @@ export default props => {
         onClick={async e => {
           e.stopPropagation()
           e.preventDefault()
-          subscribed
+          subscribed.isSubscribed
             ? await unsubscribeFromWorkspace({
                 id,
                 title,
