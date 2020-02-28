@@ -238,10 +238,41 @@ const createThumbnailUrl = result => {
   return 'data:image/jpeg;base64,' + thumbnail
 }
 
+const getResultFormAttributes = async (resultFormID, catalog) => {
+  if (!resultFormID || resultFormID === 'All Fields') return null
+  try {
+    const filterTree = {
+      type: 'AND',
+      filters: [
+        { type: '=', property: 'id', value: resultFormID },
+        { type: 'LIKE', property: 'metacard-tags', value: '%' },
+      ],
+    }
+    const q = { filterTree }
+    const json = await catalog.query(processQuery(q))
+    return json.results[0].metacard.attributes['ui.attribute-group']
+  } catch (e) {
+    return null
+  }
+}
+
+const filterResultFormAttributes = (attributes, resultFormAttributes) => {
+  if (!resultFormAttributes) return attributes
+  return Object.keys(attributes).reduce((acc, current) => {
+    if (resultFormAttributes.includes(current) || current === 'id') {
+      return { ...acc, [current]: attributes[current] }
+    }
+    return acc
+  }, {})
+}
+
 const metacards = async (parent, args, { catalog, toGraphqlName, fetch }) => {
   const q = { ...args.settings, filterTree: args.filterTree }
   const json = await catalog.query(processQuery(q))
-
+  const resultFormAttributes = await getResultFormAttributes(
+    args.settings && args.settings.detail_level,
+    catalog
+  )
   const attributes = json.results.map(result => {
     const attributes = renameKeys(toGraphqlName, result.metacard.attributes)
     const { filterTree } = attributes
@@ -253,28 +284,33 @@ const metacards = async (parent, args, { catalog, toGraphqlName, fetch }) => {
       filterTree: () => filterTree && JSON.parse(filterTree),
     }
   })
-
   const results = json.results.map(result => {
     const withUuidActions = updateIn(result, ['actions'], actions => {
       return actions.map(action =>
         makeActionIdUnique(result.metacard.attributes.id, action)
       )
     })
+
     const thumbnail = createThumbnailUrl(result)
-    if (thumbnail !== undefined) {
-      return setIn(
-        withUuidActions,
-        ['metacard', 'attributes', 'thumbnail'],
-        thumbnail
-      )
-    } else {
-      return withUuidActions
-    }
+
+    const withThumbnail =
+      thumbnail !== undefined
+        ? setIn(
+            withUuidActions,
+            ['metacard', 'attributes', 'thumbnail'],
+            thumbnail
+          )
+        : withUuidActions
+
+    const requestedAttributes = filterResultFormAttributes(
+      withThumbnail.metacard.attributes,
+      resultFormAttributes
+    )
+    return setIn(withThumbnail, ['metacard', 'attributes'], requestedAttributes)
   })
 
   json.status['elapsed'] = json.request_duration_millis
-
-  return { attributes, ...json, results }
+  return { ...json, attributes, results }
 }
 
 const metacardsByTag = async (parent, args, context) => {
