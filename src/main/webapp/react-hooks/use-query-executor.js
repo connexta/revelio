@@ -87,7 +87,7 @@ const querySettingsInputKeys = [
   'type',
 ]
 
-const getQuerySettings = settings => {
+const getQuerySettings = async settings => {
   const filteredSettings = Object.keys(settings).reduce((acc, key) => {
     if (querySettingsInputKeys.includes(key)) {
       return { ...acc, [key]: settings[key] }
@@ -95,14 +95,15 @@ const getQuerySettings = settings => {
     return acc
   }, {})
 
-  const { sortPolicy, detail_level } = filteredSettings
-
-  return {
-    sortPolicy: sortPolicy || [],
-    detail_level: detail_level === 'All Fields' ? undefined : detail_level,
-    ...filteredSettings,
-  }
+  return filteredSettings
 }
+const getSources = gql`
+  query queryExecutorSources {
+    sources {
+      sourceId
+    }
+  }
+`
 
 const useQueryExecutor = () => {
   const client = useApolloClient()
@@ -147,12 +148,16 @@ const useQueryExecutor = () => {
 
   const onSearch = useCallback(
     async query => {
-      const {
-        filterTree,
-        sourceIds = ['ddf.distribution'],
-        ...settings
-      } = query
-      const querySettings = getQuerySettings(settings)
+      const { filterTree, ...settings } = query
+      const querySettings = await getQuerySettings(settings)
+      if (!querySettings.sourceIds) {
+        const { data } = await client.query({
+          query: getSources,
+          fetchPolicy: 'cache-first',
+        })
+        querySettings.sourceIds = data.sources.map(source => source.sourceId)
+      }
+      const { sourceIds } = querySettings
       const status = sourceIds.reduce((status, src) => {
         return status.set(src, { type: 'source.pending' })
       }, Map())
@@ -165,7 +170,7 @@ const useQueryExecutor = () => {
             query: simpleSearch,
             variables: {
               filterTree,
-              settings: { sourceIds: [src], ...querySettings },
+              settings: { ...querySettings, sourceIds: [src] },
             },
             fetchPolicy: 'network-only',
           })
