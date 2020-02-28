@@ -123,9 +123,9 @@ const typeDefs = `
     createMetacard(attrs: MetacardAttributesInput!): MetacardAttributes
     saveMetacard(id: ID!, attributes: MetacardAttributesInput!): MetacardAttributes
 
-    # TBD: Should only be used when...
+    # TBD: Should only be used when updating assocations with IDs
     # createMetacardFromJson(attrs: Json!): MetacardAttributes
-    # saveMetacardFromJson(id: ID!, attrs: Json!): MetacardAttributes
+    saveMetacardFromJson(id: ID!, attributes: Json!): MetacardAttributes
 
     deleteMetacard(id: ID!): ID
   }
@@ -423,6 +423,7 @@ const saveMetacard = async (parent, args, context) => {
   )
   const [oldMetacardAttrs] = oldMetacard.attributes
   const { catalog, fromGraphqlName, toGraphqlName } = context
+
   if (attributes.filterTree) {
     attributes = setIn(
       attributes,
@@ -475,6 +476,7 @@ const resolvers = {
   Mutation: {
     createMetacard,
     saveMetacard,
+    saveMetacardFromJson: saveMetacard,
     deleteMetacard,
   },
 }

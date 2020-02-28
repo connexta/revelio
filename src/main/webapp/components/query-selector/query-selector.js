@@ -11,6 +11,7 @@ import {
   IndexCardItem,
 } from '../index-cards'
 import AdvancedSearchQueryBuilder from '../query-builder/query-builder'
+
 const { useDrawInterface } = require('../../react-hooks')
 
 const useOpenClose = props => {
