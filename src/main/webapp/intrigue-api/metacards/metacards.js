@@ -238,9 +238,46 @@ const createThumbnailUrl = result => {
   return 'data:image/jpeg;base64,' + thumbnail
 }
 
-const metacards = async (parent, args, { catalog, toGraphqlName, fetch }) => {
+const getResultFormAttributes = async (parent, context, resultFormID) => {
+  if (!resultFormID || resultFormID === 'All Fields') return null
+  try {
+    const [resultFormMetacard] = await metacardsById(
+      parent,
+      { ids: [resultFormID] },
+      context
+    )
+    const [resultFormAttributes] = resultFormMetacard.attributes
+    return resultFormAttributes['ui_attribute_group']
+  } catch (e) {
+    //eslint-disable-next-line
+    console.log(e)
+    return null
+  }
+}
+
+const filterResultFormAttributes = (attributes, resultFormAttributes) => {
+  if (!resultFormAttributes) return attributes
+  return Object.keys(attributes).reduce((acc, current) => {
+    if (resultFormAttributes.includes(current) || current === 'id') {
+      return { ...acc, [current]: attributes[current] }
+    }
+    return acc
+  }, {})
+}
+
+const metacards = async (parent, args, context) => {
+  const { catalog, toGraphqlName, fetch } = context
   const q = { ...args.settings, filterTree: args.filterTree }
-  const json = await catalog.query(processQuery(q))
+  const originalQuery = catalog.query(processQuery(q))
+  const resultFormQuery = getResultFormAttributes(
+    parent,
+    context,
+    args.settings && args.settings.detail_level
+  )
+  const [json, resultFormAttributes] = await Promise.all([
+    originalQuery,
+    resultFormQuery,
+  ])
 
   const attributes = json.results.map(result => {
     const attributes = renameKeys(toGraphqlName, result.metacard.attributes)
@@ -260,20 +297,26 @@ const metacards = async (parent, args, { catalog, toGraphqlName, fetch }) => {
         makeActionIdUnique(result.metacard.attributes.id, action)
       )
     })
+
     const thumbnail = createThumbnailUrl(result)
-    if (thumbnail !== undefined) {
-      return setIn(
-        withUuidActions,
-        ['metacard', 'attributes', 'thumbnail'],
-        thumbnail
-      )
-    } else {
-      return withUuidActions
-    }
+
+    const withThumbnail =
+      thumbnail !== undefined
+        ? setIn(
+            withUuidActions,
+            ['metacard', 'attributes', 'thumbnail'],
+            thumbnail
+          )
+        : withUuidActions
+
+    const requestedAttributes = filterResultFormAttributes(
+      withThumbnail.metacard.attributes,
+      resultFormAttributes
+    )
+    return setIn(withThumbnail, ['metacard', 'attributes'], requestedAttributes)
   })
 
   json.status['elapsed'] = json.request_duration_millis
-
   return { attributes, ...json, results }
 }
 
