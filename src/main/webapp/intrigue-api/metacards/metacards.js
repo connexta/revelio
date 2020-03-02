@@ -238,20 +238,19 @@ const createThumbnailUrl = result => {
   return 'data:image/jpeg;base64,' + thumbnail
 }
 
-const getResultFormAttributes = async (resultFormID, catalog) => {
+const getResultFormAttributes = async (parent, context, resultFormID) => {
   if (!resultFormID || resultFormID === 'All Fields') return null
   try {
-    const filterTree = {
-      type: 'AND',
-      filters: [
-        { type: '=', property: 'id', value: resultFormID },
-        { type: 'LIKE', property: 'metacard-tags', value: '%' },
-      ],
-    }
-    const q = { filterTree }
-    const json = await catalog.query(processQuery(q))
-    return json.results[0].metacard.attributes['ui.attribute-group']
+    const [resultFormMetacard] = await metacardsById(
+      parent,
+      { ids: [resultFormID] },
+      context
+    )
+    const [resultFormAttributes] = resultFormMetacard.attributes
+    return resultFormAttributes['ui_attribute_group']
   } catch (e) {
+    //eslint-disable-next-line
+    console.log(e)
     return null
   }
 }
@@ -266,12 +265,14 @@ const filterResultFormAttributes = (attributes, resultFormAttributes) => {
   }, {})
 }
 
-const metacards = async (parent, args, { catalog, toGraphqlName, fetch }) => {
+const metacards = async (parent, args, context) => {
+  const { catalog, toGraphqlName, fetch } = context
   const q = { ...args.settings, filterTree: args.filterTree }
   const originalQuery = catalog.query(processQuery(q))
   const resultFormQuery = getResultFormAttributes(
-    args.settings && args.settings.detail_level,
-    catalog
+    parent,
+    context,
+    args.settings && args.settings.detail_level
   )
   const [json, resultFormAttributes] = await Promise.all([
     originalQuery,
@@ -289,6 +290,7 @@ const metacards = async (parent, args, { catalog, toGraphqlName, fetch }) => {
       filterTree: () => filterTree && JSON.parse(filterTree),
     }
   })
+
   const results = json.results.map(result => {
     const withUuidActions = updateIn(result, ['actions'], actions => {
       return actions.map(action =>
