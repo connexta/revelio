@@ -69,3 +69,15 @@ To get a deeper look into the system, take a look at the
 ## GraphQL Tools
 
 For information on GraphQL development tools, take a look at the [GraphQL Tools](./src/main/graphql-server) docs.
+
+## How to Publish
+
+First bump the version in the package.json
+
+Then build the library: 
+
+    yarn build:library
+
+Finally publish the library:
+
+    npm publish dist

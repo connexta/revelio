@@ -40,7 +40,7 @@ type QueryScheduleProps = {
 }
 
 const DatePicker = (props: KeyboardDatePickerProps) => {
-  const [inputValue, setInputValue] = useState()
+  const [inputValue, setInputValue] = useState<string | undefined>()
 
   return (
     <KeyboardDatePicker
@@ -51,7 +51,7 @@ const DatePicker = (props: KeyboardDatePickerProps) => {
         } else if (date.isValid()) {
           props.onChange(date)
         }
-        setInputValue(value)
+        setInputValue(value || undefined)
       }}
       inputValue={inputValue}
     />
@@ -59,7 +59,7 @@ const DatePicker = (props: KeyboardDatePickerProps) => {
 }
 
 const TimePicker = (props: KeyboardTimePickerProps) => {
-  const [inputValue, setInputValue] = useState()
+  const [inputValue, setInputValue] = useState<string | undefined>()
 
   return (
     <KeyboardTimePicker
@@ -70,7 +70,7 @@ const TimePicker = (props: KeyboardTimePickerProps) => {
         } else if (date.isValid()) {
           props.onChange(date)
         }
-        setInputValue(value)
+        setInputValue(value || undefined)
       }}
       inputValue={inputValue}
     />

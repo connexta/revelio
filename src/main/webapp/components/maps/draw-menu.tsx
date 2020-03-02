@@ -20,8 +20,9 @@ import {
 import { GeometryJSON } from 'geospatialdraw/bin/geometry/geometry'
 import DrawingToolbox from 'geospatialdraw/bin/drawing/drawing-toolbox'
 import useDrawingMenu from 'geospatialdraw/bin/menu/react-hooks'
+import { BoxProps } from '@material-ui/core/Box'
 
-type Props = React.HTMLProps<HTMLDivElement> & {
+type Props = BoxProps & {
   toolbox: DrawingToolbox
   shape: Shape | null
   isActive: boolean

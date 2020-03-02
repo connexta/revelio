@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "skipLibCheck": true,
+    "outDir": "./dist"
+  },
+  "include": [
+    "src/main/webapp/components/**/index.ts",
+    "src/main/webapp/components/**/index.tsx",
+    "src/main/webapp/components/**/index.js",
+    "src/main/webapp/components/**/index.jsx",
+    "src/main/webapp/react-hooks/**/index.ts",
+    "src/main/webapp/react-hooks/**/index.tsx",
+    "src/main/webapp/react-hooks/**/index.js",
+    "src/main/webapp/react-hooks/**/index.jsx"
+  ],
+  "extends": "./tsconfig"
+}
