@@ -1,28 +1,29 @@
-import * as React from 'react'
+import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
-import Divider from '@material-ui/core/Divider'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
-import Box from '@material-ui/core/Box'
-import TextField from '@material-ui/core/TextField'
 import { getIn, setIn } from 'immutable'
+import * as React from 'react'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
 import { defaultFilter } from './filter/filter-utils'
 import Filter from './filter/individual-filter'
 import QuerySettings from './query-settings'
 import { AttributeDefinition, QueryFilter, QueryType } from './types'
 
+const ReactDOM = require('react-dom')
+
 export type QueryBuilderProps = {
   attributeDefinitions?: AttributeDefinition[]
   onChange: (query: QueryType) => void
   query?: QueryType
+  addOptionsRef: React.MutableRefObject<HTMLDivElement>
 }
 
 const AddButton = (props: { options: any }) => {
   const [anchorEl, open, close] = useAnchorEl()
   return (
     <React.Fragment>
-      <Button variant="outlined" style={{ marginLeft: 10 }} onClick={open}>
+      <Button variant="outlined" onClick={open}>
         Add Option
       </Button>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={close}>
@@ -98,20 +99,10 @@ const QueryBuilder = (props: QueryBuilderProps) => {
       display="flex"
       flexDirection="column"
     >
-      <Box display="flex" style={{ padding: 8 }} alignItems="center">
-        <TextField
-          fullWidth
-          value={query.title}
-          variant="outlined"
-          label="Search Title"
-          onChange={event => {
-            props.onChange(setIn(query, ['title'], event.target.value))
-          }}
-          autoFocus
-        />
-        <AddButton options={options} />
-      </Box>
-      <Divider />
+      {ReactDOM.createPortal(
+        <AddButton options={options} />,
+        props.addOptionsRef.current
+      )}
       {filters.map((filter: QueryFilter, i: number) => (
         <Box key={i} style={{ padding: '0px 16px' }}>
           <Filter
