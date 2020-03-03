@@ -49,7 +49,7 @@ const ResultForms = props => {
 
         {props.resultForms &&
           props.resultForms.map(resultForm => (
-            <MenuItem key={resultForm.id} value={resultForm.title}>
+            <MenuItem key={resultForm.id} value={resultForm.id}>
               {resultForm.title}
             </MenuItem>
           ))}
