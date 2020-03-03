@@ -6,44 +6,33 @@ import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined'
 import { getIn } from 'immutable'
 
 const subscribeToWorkspace = async props => {
-  const { id, title, setMessage, subscribe, setSubscribed, subscribed } = props
+  const { id, title, setMessage, subscribe, setSubscribed } = props
   const res = await subscribe({ variables: { id } })
-  getIn(res, ['data', 'subscribeToWorkspace'], 0) === 200
-    ? setSubscribed({ isSubscribed: true, message: `Subscribed to ${title}` })
-    : setSubscribed({
-        isSubscribed: false,
-        message: `Could not subscribe to ${title}`,
-      })
-  setMessage(subscribed.message)
+  if (getIn(res, ['data', 'subscribeToWorkspace'], 0) === 200) {
+    setSubscribed(true)
+    setMessage(`Subscribed to ${title}`)
+  } else {
+    setSubscribed(false)
+    setMessage(`Could not subscribed to ${title}`)
+  }
 }
 
 const unsubscribeFromWorkspace = async props => {
-  const {
-    id,
-    title,
-    setMessage,
-    unsubscribe,
-    setSubscribed,
-    subscribed,
-  } = props
+  const { id, title, setMessage, unsubscribe, setSubscribed } = props
   const res = await unsubscribe({ variables: { id } })
-  getIn(res, ['data', 'unsubscribeFromWorkspace'], 0) === 200
-    ? setSubscribed({
-        isSubscribed: false,
-        message: `Unsubscribed from ${title}`,
-      })
-    : setSubscribed({
-        isSubscribed: true,
-        message: `Could not unsubscribe from ${title}`,
-      })
-  setMessage(subscribed.message)
+
+  if (getIn(res, ['data', 'unsubscribeFromWorkspace'], 0) === 200) {
+    setSubscribed(false)
+    setMessage(`Unsubscribed from ${title}`)
+  } else {
+    setSubscribed(true)
+    setMessage(`Could not unsubscribe from ${title}`)
+  }
 }
+
 export default props => {
   const { subscribe, unsubscribe, id, title, setMessage } = props
-  const [subscribed, setSubscribed] = React.useState({
-    isSubscribed: props.isSubscribed,
-    message: null,
-  })
+  const [subscribed, setSubscribed] = React.useState(props.isSubscribed)
 
   return (
     <Tooltip title={subscribed.isSubscribed ? 'Unsubscribe' : 'Subscribe'}>
@@ -51,14 +40,13 @@ export default props => {
         onClick={async e => {
           e.stopPropagation()
           e.preventDefault()
-          subscribed.isSubscribed
+          subscribed
             ? await unsubscribeFromWorkspace({
                 id,
                 title,
                 setMessage,
                 unsubscribe,
                 setSubscribed,
-                subscribed,
               })
             : await subscribeToWorkspace({
                 id,
@@ -66,11 +54,10 @@ export default props => {
                 setMessage,
                 subscribe,
                 setSubscribed,
-                subscribed,
               })
         }}
       >
-        {subscribed.isSubscribed ? <EmailOutlinedIcon /> : <EmailIcon />}
+        {subscribed ? <EmailOutlinedIcon /> : <EmailIcon />}
       </IconButton>
     </Tooltip>
   )

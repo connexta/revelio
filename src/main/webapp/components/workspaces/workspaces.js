@@ -257,7 +257,6 @@ const Workspaces = props => {
                   onDelete={() => onDelete(workspace)}
                   message="This will permanently delete the workspace."
                 />
-                {/*pass in subscribe value*/}
                 <Subscribe
                   subscribe={subscribe}
                   unsubscribe={unsubscribe}
