@@ -6,7 +6,7 @@
   "devDependencies": {
     "@apollo/react-hooks": "^3.1.3",
     "@apollo/react-ssr": "^3.1.3",
-    "@connexta/ace": "https://github.com/willwill96/ace.git#413a42f10203ab5d9cdeb188ecbbd29672f38f9e",
+    "@connexta/ace": "https://github.com/connexta/ace.git#60c7481d6372dfd1a2ec661e7de0a0bbde90ff50",
     "@date-io/moment": "1.3.13",
     "@material-ui/core": "^4.6.1",
     "@material-ui/icons": "^4.2.1",
