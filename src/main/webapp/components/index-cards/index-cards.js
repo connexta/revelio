@@ -17,7 +17,7 @@ import moment from 'moment'
 
 import ConfirmDelete from '../confirm-delete'
 import SharingModal from '../sharing/sharing-modal'
-
+import StarIcon from '@material-ui/icons/Star'
 const onClick = action => e => {
   e.preventDefault()
   e.stopPropagation()
@@ -43,6 +43,14 @@ export const DeleteAction = props => {
 export const ShareAction = props => {
   const { id, title, metacardType } = props
   return <SharingModal id={id} title={title} metacardType={metacardType} />
+}
+
+export const MakeDefaultAction = props => {
+  return (
+    <IconButton onClick={onClick(props.onClick)}>
+      <StarIcon />
+    </IconButton>
+  )
 }
 
 export const Actions = CardActions
@@ -87,6 +95,7 @@ export const AddCardItem = props => {
 
 export const IndexCardItem = props => {
   const {
+    starred,
     title,
     subHeader,
     metacard_owner,
@@ -101,6 +110,13 @@ export const IndexCardItem = props => {
         <CardHeader
           title={title}
           subheader={subHeader || moment(modified).fromNow()}
+          action={
+            starred && (
+              <IconButton disabled>
+                <StarIcon color="primary" />
+              </IconButton>
+            )
+          }
         />
         <CardContent>
           {metacard_owner && (
