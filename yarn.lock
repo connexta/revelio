@@ -4064,56 +4064,6 @@
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
 
-a-test-of-revelio@^1.0.40, a-test-of-revelio@^1.0.47:
-  version "1.0.47"
-  resolved "https://registry.yarnpkg.com/a-test-of-revelio/-/a-test-of-revelio-1.0.47.tgz#de3902a70813342fd9fe0f1434bc243bfd3f2362"
-  integrity sha512-MGhFVegnDCzTMp15AFL/vFSL/FiZnIqqDzrcF5pYsVeHqo/3E0az4Hl+JxZD8MyOWxQrkcSzg5al+cMOAgya0Q==
-  dependencies:
-    "@apollo/react-hooks" "^3.1.3"
-    "@apollo/react-ssr" "^3.1.3"
-    "@date-io/moment" "1.3.13"
-    "@material-ui/core" "^4.6.1"
-    "@material-ui/icons" "^4.2.1"
-    "@material-ui/lab" "^4.0.0-alpha.32"
-    "@material-ui/pickers" "^3.2.5"
-    a-test-of-revelio "^1.0.40"
-    abort-controller "^3.0.0"
-    apollo-cache-inmemory "^1.6.3"
-    apollo-client "^2.6.4"
-    apollo-link "^1.2.13"
-    apollo-link-batch-http "^1.2.13"
-    apollo-link-error "^1.1.12"
-    apollo-link-http "^1.5.16"
-    apollo-link-schema "^1.2.4"
-    apollo-server-express "^2.9.7"
-    compression "^1.7.4"
-    express "4.17.1"
-    geospatialdraw "0.5.5"
-    golden-layout "^1.5.9"
-    graphql "^14.5.8"
-    graphql-tag "^2.10.1"
-    graphql-tools "^4.0.5"
-    immutable "^4.0.0-rc.12"
-    lodash.throttle "^4.1.1"
-    moment "^2.24.0"
-    moment-timezone "^0.5.16"
-    ol "^6.0.1"
-    on-finished "^2.3.0"
-    polished "^3.4.1"
-    qs "^6.9.1"
-    react "^16.9.0"
-    react-dom "^16.9.0"
-    react-loadable "^5.5.0"
-    react-redux "^7.1.0"
-    react-router "^5.1.2"
-    react-router-dom "^5.1.2"
-    redux "^4.0.4"
-    redux-thunk "^2.3.0"
-    styled-components "^4.3.2"
-    universal-cookie "^4.0.2"
-    uuid "^3.3.3"
-    winston "^3.2.1"
-
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -11232,14 +11182,6 @@ minipass@^2.2.1, minipass@^2.3.5:
     safe-buffer "^5.1.2"
     yallist "^3.0.0"
 
-minipass@^2.8.6:
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/minipass/-/minipass-2.9.0.tgz#e713762e7d3e32fed803115cf93e04bca9fcc9a6"
-  integrity sha512-wxfUjg9WebH+CUDX/CdbRlh5SmfZiy/hpkxaRI16Y9W56Pa75sWgd/rvFilSgrauD9NyFymP/+JFV3KwzIsJeg==
-  dependencies:
-    safe-buffer "^5.1.2"
-    yallist "^3.0.0"
-
 minizlib@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/minizlib/-/minizlib-1.2.1.tgz#dd27ea6136243c7c880684e8672bb3a45fd9b614"
@@ -11527,22 +11469,6 @@ node-libs-browser@^2.0.0, node-libs-browser@^2.2.1:
     url "^0.11.0"
     util "^0.11.0"
     vm-browserify "^1.0.1"
-
-node-pre-gyp@*:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.14.0.tgz#9a0596533b877289bcad4e143982ca3d904ddc83"
-  integrity sha512-+CvDC7ZttU/sSt9rFjix/P05iS43qHCOOGzcr3Ry99bXG7VX953+vFyEuph/tfqoYu8dttBkE86JSKBO2OzcxA==
-  dependencies:
-    detect-libc "^1.0.2"
-    mkdirp "^0.5.1"
-    needle "^2.2.1"
-    nopt "^4.0.1"
-    npm-packlist "^1.1.6"
-    npmlog "^4.0.2"
-    rc "^1.2.7"
-    rimraf "^2.6.1"
-    semver "^5.3.0"
-    tar "^4.4.2"
 
 node-pre-gyp@^0.12.0:
   version "0.12.0"
@@ -14980,19 +14906,6 @@ tar@^4:
     chownr "^1.1.1"
     fs-minipass "^1.2.5"
     minipass "^2.3.5"
-    minizlib "^1.2.1"
-    mkdirp "^0.5.0"
-    safe-buffer "^5.1.2"
-    yallist "^3.0.3"
-
-tar@^4.4.2:
-  version "4.4.13"
-  resolved "https://registry.yarnpkg.com/tar/-/tar-4.4.13.tgz#43b364bc52888d555298637b10d60790254ab525"
-  integrity sha512-w2VwSrBoHa5BsSyH+KxEqeQBAllHhccyMFVHtGtdMpF4W7IRWfZjFiQceJPChOeTsSDVUpER2T8FA93pr0L+QA==
-  dependencies:
-    chownr "^1.1.1"
-    fs-minipass "^1.2.5"
-    minipass "^2.8.6"
     minizlib "^1.2.1"
     mkdirp "^0.5.0"
     safe-buffer "^5.1.2"
