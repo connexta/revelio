@@ -75,6 +75,7 @@ const typeDefs = `
 
   type QueryResponseResult {
     actions: [MetacardAction]
+    isSubscribed: Boolean
     # All known metacard attributes with raw attributes names.
     # This is intended for views that are interested in:
     # 1. Using raw attribute names.

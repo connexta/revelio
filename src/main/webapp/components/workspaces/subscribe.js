@@ -41,7 +41,7 @@ const unsubscribeFromWorkspace = async props => {
 export default props => {
   const { subscribe, unsubscribe, id, title, setMessage } = props
   const [subscribed, setSubscribed] = React.useState({
-    isSubscribed: false,
+    isSubscribed: props.isSubscribed,
     message: null,
   })
 

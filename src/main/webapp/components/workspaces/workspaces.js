@@ -220,10 +220,12 @@ const unsubscribeMutation = gql`
     unsubscribeFromWorkspace(id: $id)
   }
 `
+
 const Workspaces = props => {
-  const { workspaces, onCreate, onDelete, setMessage, message } = props
+  const { workspaces, onCreate, onDelete } = props
   const [subscribe] = useMutation(subscribeMutation)
   const [unsubscribe] = useMutation(unsubscribeMutation)
+  const [message, setMessage] = React.useState(null)
   return (
     <IndexCards>
       {message ? (
@@ -236,6 +238,8 @@ const Workspaces = props => {
       ) : null}
       <AddCardItem onClick={onCreate} />
       {workspaces.map(workspace => {
+        const isSubscribed = workspace.userIsSubscribed
+        workspace = workspace.attributes
         return (
           <Link
             key={workspace.id}
@@ -260,6 +264,7 @@ const Workspaces = props => {
                   id={workspace.id}
                   title={workspace.title}
                   setMessage={setMessage}
+                  isSubscribed={isSubscribed}
                 />
               </Actions>
             </IndexCardItem>
@@ -278,9 +283,13 @@ const workspaces = gql`
         owner: metacard_owner
         modified: metacard_modified
       }
+      results {
+        isSubscribed
+      }
     }
   }
 `
+
 const workspaceAttributes = gql`
   fragment WorkspaceAttributes on MetacardAttributes {
     title
@@ -358,7 +367,6 @@ export default () => {
   const { refetch, loading, error, data } = useQuery(workspaces)
   const [create, redirectId] = useCreate()
   const [_delete] = useDelete()
-  const [message, setMessage] = React.useState(null)
 
   if (loading) {
     return <LoadingComponent />
@@ -397,17 +405,22 @@ export default () => {
       },
     })
   }
-
-  const workspacesSortedByTime = data.metacardsByTag.attributes.sort(
-    (a, b) => (a.modified > b.modified ? -1 : 1)
+  const workspacesWithSubscriptions = data.metacardsByTag.attributes.map(
+    (metacard, index) => {
+      return {
+        attributes: metacard,
+        userIsSubscribed: data.metacardsByTag.results[index].isSubscribed,
+      }
+    }
+  )
+  const workspacesSortedByTime = workspacesWithSubscriptions.sort(
+    (a, b) => (a.attributes.modified > b.attributes.modified ? -1 : 1)
   )
   return (
     <Workspaces
       workspaces={workspacesSortedByTime}
       onCreate={onCreate}
       onDelete={onDelete}
-      setMessage={setMessage}
-      message={message}
     />
   )
 }
