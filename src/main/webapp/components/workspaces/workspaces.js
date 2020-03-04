@@ -363,7 +363,7 @@ export default () => {
   const { refetch, loading, error, data } = useQuery(workspaces)
   const [create, redirectId] = useCreate()
   const [_delete] = useDelete()
-  const [_clone] = useClone()
+  const [clone] = useClone()
 
   if (loading) {
     return <LoadingComponent />
@@ -404,7 +404,7 @@ export default () => {
   }
 
   const onDuplicate = ({ id }) => {
-    _clone({
+    clone({
       variables: {
         id: id,
       },
