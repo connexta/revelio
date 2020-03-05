@@ -10,7 +10,8 @@ import SearchFormEditor from './editor'
 import { SnackbarRetry as RetryNotification } from '../network-retry'
 import { ApolloError } from 'apollo-client/errors/ApolloError'
 const { Notification } = require('../notification/notification')
-
+import IconButton from '@material-ui/core/IconButton'
+import StarIcon from '@material-ui/icons/Star'
 const {
   IndexCards,
   AddCardItem,
@@ -26,6 +27,12 @@ type SearchFormProps = {
   form?: QueryType
   isDefault?: boolean
 }
+
+const DefaultSearchFormIndicator = () => (
+  <IconButton disabled>
+    <StarIcon color="primary" />
+  </IconButton>
+)
 
 const SearchForm = (props: SearchFormProps) => {
   const [editing, setEditing] = useState(false)
@@ -53,7 +60,7 @@ const SearchForm = (props: SearchFormProps) => {
       ) : null}
       <IndexCardItem
         {...props.form}
-        starred={props.isDefault}
+        headerAction={props.isDefault && <DefaultSearchFormIndicator />}
         onClick={() => setEditing(true)}
       >
         <Actions>

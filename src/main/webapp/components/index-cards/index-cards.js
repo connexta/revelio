@@ -95,7 +95,7 @@ export const AddCardItem = props => {
 
 export const IndexCardItem = props => {
   const {
-    starred,
+    headerAction,
     title,
     subHeader,
     metacard_owner,
@@ -110,13 +110,7 @@ export const IndexCardItem = props => {
         <CardHeader
           title={title}
           subheader={subHeader || moment(modified).fromNow()}
-          action={
-            starred && (
-              <IconButton disabled>
-                <StarIcon color="primary" />
-              </IconButton>
-            )
-          }
+          action={headerAction}
         />
         <CardContent>
           {metacard_owner && (
