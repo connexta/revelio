@@ -45,14 +45,6 @@ export const ShareAction = props => {
   return <SharingModal id={id} title={title} metacardType={metacardType} />
 }
 
-export const MakeDefaultAction = props => {
-  return (
-    <IconButton onClick={onClick(props.onClick)}>
-      <StarIcon />
-    </IconButton>
-  )
-}
-
 export const Actions = CardActions
 
 const ItemContainer = props => {
