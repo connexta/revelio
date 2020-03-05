@@ -10,17 +10,25 @@ import React from 'react'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
 import { AttributeDefinition, QueryType } from '../query-builder/types'
 
-const Header = (props: any) => {
-  const [anchorEl, handleOpen, handleClose, open] = useAnchorEl(props)
+type HeaderProps = {
+  queryInteractions?: React.FunctionComponent<{}>
+  query?: QueryType
+  addOptionsRef?: (el: HTMLDivElement) => void
+  onChange: (query: QueryType) => void
+}
+
+const Header = (props: HeaderProps) => {
+  const { query = {} } = props
+  const [anchorEl, handleOpen, handleClose, open] = useAnchorEl()
   return (
     <Box display="flex" style={{ padding: 8 }} alignItems="center">
       <TextField
         fullWidth
-        value={props.query.title}
+        value={query.title}
         variant="outlined"
         label="Search Title"
         onChange={event => {
-          props.onChange(set(props.query, 'title', event.target.value))
+          props.onChange(set(query, 'title', event.target.value))
         }}
         autoFocus
       />
@@ -40,6 +48,7 @@ const Header = (props: any) => {
     </Box>
   )
 }
+
 type FooterProps = {
   onSearch: () => void
   onSave?: () => void
@@ -82,7 +91,7 @@ type EditorProps = {
   queryBuilder: React.FunctionComponent<{
     query?: QueryType
     onChange: (query: QueryType) => void
-    addOptionsRef?: React.MutableRefObject<HTMLDivElement>
+    addOptionsRef?: HTMLDivElement
   }>
   onChange: (query: QueryType) => void
 }
@@ -113,7 +122,7 @@ export default (props: EditorProps) => {
   const onSearch = () => {
     props.onSearch(queryToSearch(query))
   }
-  const addOptionsRef = React.useRef(document.createElement('div'))
+  const [addOptionsRef, setAddOptionsRef] = React.useState()
 
   return (
     <Box width="100%" display="flex" flexDirection="column" height="100%">
@@ -126,7 +135,7 @@ export default (props: EditorProps) => {
         <Header
           query={query}
           queryInteractions={props.queryInteractions}
-          addOptionsRef={addOptionsRef}
+          addOptionsRef={el => setAddOptionsRef(el)}
           onChange={props.onChange}
         />
       </Box>

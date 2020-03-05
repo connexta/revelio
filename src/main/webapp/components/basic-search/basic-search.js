@@ -291,7 +291,7 @@ export const BasicSearchQueryBuilder = props => {
         {props.addOptionsRef ? (
           ReactDOM.createPortal(
             <AddButton addFilter={addFilter} />,
-            props.addOptionsRef.current
+            props.addOptionsRef
           )
         ) : (
           <AddButton addFilter={addFilter} />

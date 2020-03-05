@@ -16,7 +16,7 @@ export type QueryBuilderProps = {
   attributeDefinitions?: AttributeDefinition[]
   onChange: (query: QueryType) => void
   query?: QueryType
-  addOptionsRef: React.MutableRefObject<HTMLDivElement>
+  addOptionsRef: HTMLDivElement
 }
 
 const AddButton = (props: { options: any }) => {
@@ -99,10 +99,11 @@ const QueryBuilder = (props: QueryBuilderProps) => {
       display="flex"
       flexDirection="column"
     >
-      {ReactDOM.createPortal(
-        <AddButton options={options} />,
-        props.addOptionsRef.current
-      )}
+      {props.addOptionsRef &&
+        ReactDOM.createPortal(
+          <AddButton options={options} />,
+          props.addOptionsRef
+        )}
       {filters.map((filter: QueryFilter, i: number) => (
         <Box key={i} style={{ padding: '0px 16px' }}>
           <Filter
