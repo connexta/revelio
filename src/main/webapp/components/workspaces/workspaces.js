@@ -284,6 +284,7 @@ const workspaces = gql`
       }
       results {
         isSubscribed
+        id
       }
     }
   }
@@ -319,11 +320,20 @@ const useCreate = () => {
         data.createMetacard,
         ...metacardsByTag.attributes,
       ]
+      const updatedResults = [
+        {
+          id: data.createMetacard.id,
+          isSubscribed: false,
+          __typename: 'QueryResponse',
+        },
+        ...metacardsByTag.results,
+      ]
       cache.writeQuery({
         query,
         data: {
           metacardsByTag: {
             attributes: updatedWorkspaces,
+            results: updatedResults,
             __typename: 'QueryResponse',
           },
         },
@@ -348,12 +358,18 @@ const useDelete = () => {
         ['metacardsByTag', 'attributes'],
         []
       ).filter(({ id }) => id !== data.deleteMetacard)
+      const results = getIn(
+        cache.readQuery({ query }),
+        ['metacardsByTag', 'results'],
+        []
+      ).filter(({ id }) => id !== data.deleteMetacard)
 
       cache.writeQuery({
         query,
         data: {
           metacardsByTag: {
             attributes,
+            results,
             __typename: 'QueryResponse',
           },
         },

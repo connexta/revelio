@@ -82,6 +82,7 @@ const typeDefs = `
     # 2. Attribute aliasing that require raw attribute names.
     # 3. Getting all the possible attributes.
     metacard: Json
+    id: ID
   }
 
   type QueryResponse {
@@ -295,6 +296,7 @@ const metacards = async (parent, args, context) => {
   })
 
   const results = json.results.map(result => {
+    result = setIn(result, ['id'], result.metacard.attributes.id)
     const withUuidActions = updateIn(result, ['actions'], actions => {
       return actions.map(action =>
         makeActionIdUnique(result.metacard.attributes.id, action)
