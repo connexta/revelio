@@ -48,6 +48,7 @@ const timeAttributes = [
   'metacard.version.versioned-on',
   'modified',
 ]
+import ReactDOM from 'react-dom'
 
 const TextSearch = ({ text, handleChange }) => {
   return (
@@ -265,6 +266,14 @@ export const BasicSearchQueryBuilder = props => {
 
   const text = filterMap.get('text')
 
+  const addFilter = filter => {
+    onChange(
+      filterMap.merge({
+        [filter]: defaultFilters[filter],
+      })
+    )
+  }
+
   return (
     <React.Fragment>
       <Paper
@@ -279,15 +288,14 @@ export const BasicSearchQueryBuilder = props => {
           text={text}
           handleChange={e => onChange(filterMap.set(TEXT_KEY, e.target.value))}
         />
-        <AddButton
-          addFilter={filter => {
-            onChange(
-              filterMap.merge({
-                [filter]: defaultFilters[filter],
-              })
-            )
-          }}
-        />
+        {props.addOptionsRef ? (
+          ReactDOM.createPortal(
+            <AddButton addFilter={addFilter} />,
+            props.addOptionsRef
+          )
+        ) : (
+          <AddButton addFilter={addFilter} />
+        )}
       </Paper>
 
       {remove(filterMap, 'text')
