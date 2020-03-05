@@ -17,7 +17,6 @@ import moment from 'moment'
 
 import ConfirmDelete from '../confirm-delete'
 import SharingModal from '../sharing/sharing-modal'
-import StarIcon from '@material-ui/icons/Star'
 const onClick = action => e => {
   e.preventDefault()
   e.stopPropagation()
