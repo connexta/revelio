@@ -24,6 +24,7 @@ type SearchFormProps = {
   onDelete: (form: QueryType) => void
   onSave: (form: QueryType) => void
   form?: QueryType
+  isDefault?: boolean
 }
 
 const SearchForm = (props: SearchFormProps) => {
@@ -50,7 +51,11 @@ const SearchForm = (props: SearchFormProps) => {
           </Box>
         </Dialog>
       ) : null}
-      <IndexCardItem {...props.form} onClick={() => setEditing(true)}>
+      <IndexCardItem
+        {...props.form}
+        starred={props.isDefault}
+        onClick={() => setEditing(true)}
+      >
         <Actions>
           <ShareAction {...props.form} metacardType="query-template" />
           <DeleteAction
@@ -110,6 +115,7 @@ type RouteProps = {
   loading?: boolean
   error?: ApolloError
   forms: QueryType[]
+  userDefaultForm?: string
   refetch?: () => void
 }
 
@@ -145,6 +151,7 @@ const Route = (props: RouteProps) => {
           return (
             <SearchForm
               key={form.id}
+              isDefault={form.id === props.userDefaultForm}
               form={form}
               onDelete={() => {
                 onDelete(form)

@@ -43,6 +43,10 @@ const typeDefs = `
     type: String
   }
 
+  type DefaultSearchForm {
+    id: ID!
+  }
+
   type QuerySettings {
     sourceIds: [String]
     federation: String
@@ -51,6 +55,7 @@ const typeDefs = `
     spellcheck: Boolean
     detail_level: String
     type: String
+    template: DefaultSearchForm
   }
 
   input QueryRequest {

@@ -24,6 +24,15 @@ const searchForms = gql`
         ...SearchFormAttributes
       }
     }
+    user {
+      preferences {
+        querySettings {
+          template {
+            id
+          }
+        }
+      }
+    }
   }
   ${fragment}
 `
@@ -153,7 +162,11 @@ export default () => {
   }
 
   const forms = getIn(data, ['metacardsByTag', 'attributes'], [])
-
+  const userDefaultForm = getIn(
+    data,
+    ['user', 'preferences', 'querySettings', 'template', 'id'],
+    null
+  )
   return (
     <SearchFormsRoute
       onCreate={onCreate}
@@ -162,6 +175,7 @@ export default () => {
       error={error}
       onDelete={onDelete}
       forms={forms}
+      userDefaultForm={userDefaultForm}
       refetch={refetch}
     />
   )
