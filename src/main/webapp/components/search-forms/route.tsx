@@ -30,7 +30,7 @@ type SearchFormProps = {
 
 const DefaultSearchFormIndicator = () => (
   <IconButton disabled>
-    <StarIcon color="primary" />
+    <StarIcon style={{ color: '#FFBF00' }} />
   </IconButton>
 )
 
