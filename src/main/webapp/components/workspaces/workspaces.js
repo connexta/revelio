@@ -279,7 +279,7 @@ const workspaces = gql`
       attributes {
         id
         title
-        owner: metacard_owner
+        metacard_owner
         modified: metacard_modified
       }
       results {
@@ -305,7 +305,7 @@ const useCreate = () => {
       createMetacard(attrs: $attrs) {
         ...WorkspaceAttributes
         id: id
-        owner: metacard_owner
+        metacard_owner
         modified: metacard_modified
       }
     }

@@ -17,7 +17,6 @@ import moment from 'moment'
 
 import ConfirmDelete from '../confirm-delete'
 import SharingModal from '../sharing/sharing-modal'
-
 const onClick = action => e => {
   e.preventDefault()
   e.stopPropagation()
@@ -87,6 +86,7 @@ export const AddCardItem = props => {
 
 export const IndexCardItem = props => {
   const {
+    headerAction,
     title,
     subHeader,
     metacard_owner,
@@ -101,6 +101,7 @@ export const IndexCardItem = props => {
         <CardHeader
           title={title}
           subheader={subHeader || moment(modified).fromNow()}
+          action={headerAction}
         />
         <CardContent>
           {metacard_owner && (

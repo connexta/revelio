@@ -43,7 +43,7 @@ stories.add('basic usage', () => {
       <AddCardItem onClick={action('onCreate')} />
       {items.map(item => {
         return (
-          <IndexCardItem key={item.id} {...item}>
+          <IndexCardItem starred key={item.id} {...item}>
             <Actions>
               <ShareAction onShare={action('onShare')} />
               <DeleteAction onDelete={action('onDelete')} />
