@@ -6,7 +6,10 @@ import Typography from '@material-ui/core/Typography'
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'
 import React, { useState } from 'react'
 import { AttributeDefinition, QueryType } from '../query-builder/types'
+import TextField from '@material-ui/core/TextField'
 const { useQueryExecutor, useApolloFallback } = require('../../react-hooks')
+import { set } from 'immutable'
+
 const genResults = require('../../gen-results').default
 import loadable from 'react-loadable'
 import LinearProgress from '@material-ui/core/LinearProgress'
@@ -21,6 +24,31 @@ if (typeof window !== 'undefined') {
       ),
     loading: () => <LinearProgress />,
   })
+}
+
+type HeaderProps = {
+  query?: QueryType
+  addOptionsRef?: (el: HTMLDivElement) => void
+  onChange: (query: QueryType) => void
+}
+
+const Header = (props: HeaderProps) => {
+  const { query = {} } = props
+  return (
+    <Box display="flex" style={{ padding: 8 }} alignItems="center">
+      <TextField
+        fullWidth
+        value={query.title || ''}
+        variant="outlined"
+        label="Search Title"
+        onChange={event => {
+          props.onChange(set(query, 'title', event.target.value))
+        }}
+        autoFocus
+      />
+      <div style={{ marginLeft: 10 }} ref={props.addOptionsRef} />
+    </Box>
+  )
 }
 type FooterProps = {
   onSearch: () => void
@@ -68,6 +96,7 @@ type EditorProps = {
   queryBuilder: React.FunctionComponent<{
     query?: QueryType
     onChange: (query: QueryType) => void
+    addOptionsRef?: HTMLDivElement
   }>
   onChange: (query: QueryType) => void
   results?: Array<any>
@@ -100,6 +129,8 @@ export const QueryEditor = (props: EditorProps) => {
     props.onSearch(queryToSearch(query))
   }
 
+  const [addOptionsRef, setAddOptionsRef] = React.useState()
+
   return (
     <Box width="100%" display="flex" flexDirection="column" height="100%">
       <Typography
@@ -112,8 +143,18 @@ export const QueryEditor = (props: EditorProps) => {
       </Typography>
       <Divider />
       <Box width="100%" display="flex" flexDirection="row" height="100%">
-        <Box style={{ height: `calc(100% - 60px)`, width: 500 }}>
-          <QueryBuilder query={query} onChange={props.onChange} />
+        <Box style={{ height: `calc(100% - 134px)`, width: 500 }}>
+          <Header
+            query={query}
+            addOptionsRef={el => setAddOptionsRef(el)}
+            onChange={props.onChange}
+          />
+          <Divider />
+          <QueryBuilder
+            query={query}
+            onChange={props.onChange}
+            addOptionsRef={addOptionsRef}
+          />
           <Divider style={{ marginTop: '5px' }} />
           <Box width="100%" height="50px">
             <Footer
