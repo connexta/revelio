@@ -74,12 +74,8 @@ const AddButton = ({ addFilter }) => {
 
   return (
     <React.Fragment>
-      <Button
-        variant="outlined"
-        onClick={handleClick}
-        style={{ marginLeft: '20px' }}
-      >
-        Add Options
+      <Button variant="outlined" onClick={handleClick}>
+        Add Option
       </Button>
 
       <Menu
@@ -254,7 +250,7 @@ const createQuery = filterMap => {
 }
 
 export const BasicSearchQueryBuilder = props => {
-  const { submitted = true } = props
+  const { submitted = true, addOptionsRef } = props
   const [filterMap, setFilterMap] = useState(getFilterMap(props))
 
   const onChange = filterMap => {
@@ -274,6 +270,19 @@ export const BasicSearchQueryBuilder = props => {
     )
   }
 
+  const AddOptions = () =>
+    addOptionsRef ? (
+      ReactDOM.createPortal(
+        <AddButton addFilter={addFilter} />,
+        props.addOptionsRef
+      )
+    ) : (
+      <React.Fragment>
+        <div style={{ marginLeft: '10px' }} />
+        <AddButton addFilter={addFilter} />
+      </React.Fragment>
+    )
+
   return (
     <React.Fragment>
       <Paper
@@ -288,14 +297,7 @@ export const BasicSearchQueryBuilder = props => {
           text={text}
           handleChange={e => onChange(filterMap.set(TEXT_KEY, e.target.value))}
         />
-        {props.addOptionsRef ? (
-          ReactDOM.createPortal(
-            <AddButton addFilter={addFilter} />,
-            props.addOptionsRef
-          )
-        ) : (
-          <AddButton addFilter={addFilter} />
-        )}
+        <AddOptions />
       </Paper>
 
       {remove(filterMap, 'text')
