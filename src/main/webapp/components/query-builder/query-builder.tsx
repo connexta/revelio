@@ -46,7 +46,7 @@ const AddButton = (props: { options: any }) => {
 }
 
 const QueryBuilder = (props: QueryBuilderProps) => {
-  const { query = {} } = props
+  const { query = {}, addOptionsRef } = props
   const {
     title,
     filterTree = { type: 'AND', filters: [] },
@@ -85,6 +85,11 @@ const QueryBuilder = (props: QueryBuilderProps) => {
     'Result Form': addResultForm,
   }
 
+  const AddOptions = () =>
+    addOptionsRef
+      ? ReactDOM.createPortal(<AddButton options={options} />, addOptionsRef)
+      : null
+
   const filters = getIn(filterTree, ['filters'], [])
 
   return (
@@ -99,11 +104,7 @@ const QueryBuilder = (props: QueryBuilderProps) => {
       display="flex"
       flexDirection="column"
     >
-      {props.addOptionsRef &&
-        ReactDOM.createPortal(
-          <AddButton options={options} />,
-          props.addOptionsRef
-        )}
+      <AddOptions />
       {filters.map((filter: QueryFilter, i: number) => (
         <Box key={i} style={{ padding: '0px 16px' }}>
           <Filter
