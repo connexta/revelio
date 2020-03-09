@@ -13,9 +13,12 @@ import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import moment from 'moment'
-import ConfirmDelete from '../confirm-delete'
-import SharingModal from '../sharing/sharing-modal'
-import { CustomTooltip } from '../tooltip'
+
+import Tooltip from '@material-ui/core/Tooltip'
+
+import { ShareAction } from '../sharing/sharing-modal'
+
+import { ConfirmDeleteAction as DeleteAction } from '../confirm-delete'
 
 const onClick = action => e => {
   e.preventDefault()
@@ -44,19 +47,7 @@ export const DuplicateAction = props => {
   )
 }
 
-export const DeleteAction = props => {
-  const { onDelete, message, isWritable } = props
-  return isWritable ? (
-    <ConfirmDelete onDelete={onDelete}>{message}</ConfirmDelete>
-  ) : null
-}
-
-export const ShareAction = props => {
-  const { id, title, metacardType, isAdmin } = props
-  return isAdmin ? (
-    <SharingModal id={id} title={title} metacardType={metacardType} />
-  ) : null
-}
+export { ShareAction, DeleteAction }
 
 export const Actions = CardActions
 

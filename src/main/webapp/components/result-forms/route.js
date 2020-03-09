@@ -25,6 +25,13 @@ import {
 } from '../index-cards'
 import RetryComponent from '../network-retry/snackbar-retry'
 
+import {
+  MetacardInteractionsDropdown,
+  ShareMetacardInteraction,
+  ConfirmDeleteMetacardInteraction,
+  EditMetacardInteraction,
+} from '../index-cards/metacard-interactions'
+
 const Loading = () => {
   return <LinearProgress />
 }
@@ -97,6 +104,20 @@ const Item = props => {
             isWritable={canWrite}
           />
           <ReadOnly isReadOnly={readOnly} indexCardType="Result Form" />
+          <MetacardInteractionsDropdown>
+            <ShareMetacardInteraction
+              {...form}
+              metacardType="attribute-group"
+            />
+            <EditMetacardInteraction
+              itemName="Result Form"
+              onEdit={() => setEditing(true)}
+            />
+            <ConfirmDeleteMetacardInteraction
+              itemName="Result Form"
+              onDelete={onDelete}
+            />
+          </MetacardInteractionsDropdown>
         </Actions>
       </IndexCardItem>
     </Fragment>

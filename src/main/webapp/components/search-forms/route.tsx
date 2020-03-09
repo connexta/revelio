@@ -9,9 +9,10 @@ import { QueryType } from '../query-builder/types'
 import SearchFormEditor from './editor'
 import { SnackbarRetry as RetryNotification } from '../network-retry'
 import { ApolloError } from 'apollo-client/errors/ApolloError'
-const { Notification } = require('../notification/notification')
 import IconButton from '@material-ui/core/IconButton'
 import StarIcon from '@material-ui/icons/Star'
+
+const { Notification } = require('../notification/notification')
 const {
   getSecurityAttributesFromMetacard,
   getPermissions,
@@ -26,6 +27,12 @@ const {
   DeleteAction,
   ReadOnly,
 } = require('../index-cards')
+import {
+  MetacardInteractionsDropdown,
+  ShareMetacardInteraction,
+  ConfirmDeleteMetacardInteraction,
+  EditMetacardInteraction,
+} from '../index-cards/metacard-interactions'
 
 type SearchFormProps = {
   onDelete: (form: QueryType) => void
@@ -84,6 +91,22 @@ const SearchForm = (props: SearchFormProps) => {
             isWritable={props.canWrite}
           />
           <ReadOnly isReadOnly={props.readOnly} indexCardType="Search Form" />
+          <ShareAction {...props.form} metacardType="query-template" />
+          <DeleteAction itemName="Search Form" onDelete={props.onDelete} />
+          <MetacardInteractionsDropdown>
+            <ShareMetacardInteraction
+              {...props.form}
+              metacardType="query-template"
+            />
+            <EditMetacardInteraction
+              itemName="Search Form"
+              onEdit={() => setEditing(true)}
+            />
+            <ConfirmDeleteMetacardInteraction
+              itemName="Search Form"
+              onDelete={props.onDelete}
+            />
+          </MetacardInteractionsDropdown>
         </Actions>
       </IndexCardItem>
     </Fragment>

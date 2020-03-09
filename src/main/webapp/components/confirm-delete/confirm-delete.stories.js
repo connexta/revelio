@@ -8,10 +8,12 @@ import { action } from '@connexta/ace/@storybook/addon-actions'
 
 const stories = storiesOf('ConfirmDelete', module)
 
-import ConfirmDelete from '.'
+import { ConfirmDeleteAction } from '.'
 
 stories.add('basic usage', () => {
-  const message = text('Message', 'This will permanently do a thing')
+  const itemName = text('Item Name', 'thing')
 
-  return <ConfirmDelete onDelete={action('onDelete')}>{message}</ConfirmDelete>
+  return (
+    <ConfirmDeleteAction itemName={itemName} onDelete={action('onDelete')} />
+  )
 })
