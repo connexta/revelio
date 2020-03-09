@@ -24,7 +24,7 @@ const Header = (props: HeaderProps) => {
     <Box display="flex" style={{ padding: 8 }} alignItems="center">
       <TextField
         fullWidth
-        value={query.title}
+        value={query.title || ''}
         variant="outlined"
         label="Search Title"
         onChange={event => {

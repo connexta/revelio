@@ -1,8 +1,6 @@
 import Box from '@material-ui/core/Box'
 import Dialog from '@material-ui/core/Dialog'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import Snackbar from '@material-ui/core/Snackbar'
-import SnackbarContent from '@material-ui/core/SnackbarContent'
 import * as React from 'react'
 import { Fragment, useState } from 'react'
 import { defaultFilter } from '../query-builder/filter/filter-utils'
@@ -11,7 +9,9 @@ import { QueryType } from '../query-builder/types'
 import SearchFormEditor from './editor'
 import { SnackbarRetry as RetryNotification } from '../network-retry'
 import { ApolloError } from 'apollo-client/errors/ApolloError'
-
+const { Notification } = require('../notification/notification')
+import IconButton from '@material-ui/core/IconButton'
+import StarIcon from '@material-ui/icons/Star'
 const {
   IndexCards,
   AddCardItem,
@@ -25,7 +25,14 @@ type SearchFormProps = {
   onDelete: (form: QueryType) => void
   onSave: (form: QueryType) => void
   form?: QueryType
+  isDefault?: boolean
 }
+
+const DefaultSearchFormIndicator = () => (
+  <IconButton disabled>
+    <StarIcon style={{ color: '#FFBF00' }} />
+  </IconButton>
+)
 
 const SearchForm = (props: SearchFormProps) => {
   const [editing, setEditing] = useState(false)
@@ -51,7 +58,11 @@ const SearchForm = (props: SearchFormProps) => {
           </Box>
         </Dialog>
       ) : null}
-      <IndexCardItem {...props.form} onClick={() => setEditing(true)}>
+      <IndexCardItem
+        {...props.form}
+        headerAction={props.isDefault && <DefaultSearchFormIndicator />}
+        onClick={() => setEditing(true)}
+      >
         <Actions>
           <ShareAction {...props.form} metacardType="query-template" />
           <DeleteAction
@@ -111,6 +122,7 @@ type RouteProps = {
   loading?: boolean
   error?: ApolloError
   forms: QueryType[]
+  userDefaultForm?: string
   refetch?: () => void
 }
 
@@ -146,6 +158,7 @@ const Route = (props: RouteProps) => {
           return (
             <SearchForm
               key={form.id}
+              isDefault={form.id === props.userDefaultForm}
               form={form}
               onDelete={() => {
                 onDelete(form)
@@ -159,29 +172,6 @@ const Route = (props: RouteProps) => {
           )
         })}
     </IndexCards>
-  )
-}
-
-type NotificationProps = {
-  onClose: () => void
-  message: string
-  autoHideDuration?: number
-}
-const Notification = (props: NotificationProps) => {
-  const { message, autoHideDuration = 5000, onClose } = props
-
-  return (
-    <Snackbar
-      open
-      autoHideDuration={autoHideDuration}
-      onClose={onClose}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right',
-      }}
-    >
-      <SnackbarContent message={message} />
-    </Snackbar>
   )
 }
 

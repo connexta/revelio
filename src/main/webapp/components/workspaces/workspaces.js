@@ -8,8 +8,10 @@ import gql from 'graphql-tag'
 import { getIn } from 'immutable'
 import React, { useState } from 'react'
 import loadable from 'react-loadable'
-import { Link, Redirect, useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { useQueryExecutor } from '../../react-hooks'
+import { Notification } from '../notification/notification'
+import Subscribe from './subscribe'
 import {
   Actions,
   AddCardItem,
@@ -208,34 +210,66 @@ export const Workspace = () => {
   )
 }
 
+const subscribeMutation = gql`
+  mutation Subscribe($id: ID!) {
+    subscribeToWorkspace(id: $id)
+  }
+`
+
+const unsubscribeMutation = gql`
+  mutation Unsubscribe($id: ID!) {
+    unsubscribeFromWorkspace(id: $id)
+  }
+`
+
 const Workspaces = props => {
   const { workspaces, onCreate, onDelete, onDuplicate } = props
+  const [subscribe] = useMutation(subscribeMutation)
+  const [unsubscribe] = useMutation(unsubscribeMutation)
+  const [message, setMessage] = React.useState(null)
+  const history = useHistory()
 
   return (
     <IndexCards>
+      {message ? (
+        <Notification
+          message={message}
+          onClose={() => {
+            setMessage(null)
+          }}
+        />
+      ) : null}
       <AddCardItem onClick={onCreate} />
       {workspaces.map(workspace => {
+        const isSubscribed = workspace.userIsSubscribed
+        workspace = workspace.attributes
         return (
-          <Link
+          <IndexCardItem
+            {...workspace}
             key={workspace.id}
-            to={`/workspaces/${workspace.id}`}
-            style={{ textDecoration: 'none' }}
+            onClick={() => history.push(`/workspaces/${workspace.id}`)}
           >
-            <IndexCardItem {...workspace}>
-              <Actions>
-                <ShareAction
-                  id={workspace.id}
-                  title={workspace.title}
-                  metacardType="workspace"
-                />
-                <DeleteAction
-                  onDelete={() => onDelete(workspace)}
-                  message="This will permanently delete the workspace."
-                />
-                <DuplicateAction onDuplicate={() => onDuplicate(workspace)} />
-              </Actions>
-            </IndexCardItem>
-          </Link>
+            <Actions>
+              <ShareAction
+                id={workspace.id}
+                title={workspace.title}
+                metacardType="workspace"
+              />
+              <DeleteAction
+                onDelete={() => onDelete(workspace)}
+                message="This will permanently delete the workspace."
+              />
+              <Subscribe
+                subscribe={subscribe}
+                unsubscribe={unsubscribe}
+                id={workspace.id}
+                title={workspace.title}
+                setMessage={setMessage}
+                isSubscribed={isSubscribed}
+              />
+              <DuplicateAction onDuplicate={() => onDuplicate(workspace)} />
+            </Actions>
+          </IndexCardItem>
         )
       })}
     </IndexCards>
@@ -247,12 +281,17 @@ const workspaces = gql`
       attributes {
         id
         title
-        owner: metacard_owner
+        metacard_owner
         modified: metacard_modified
+      }
+      results {
+        isSubscribed
+        id
       }
     }
   }
 `
+
 const workspaceAttributes = gql`
   fragment WorkspaceAttributes on MetacardAttributes {
     title
@@ -295,20 +334,20 @@ const useClone = () => {
 }
 
 const useCreate = () => {
-  const [redirectId, setRedirectId] = React.useState(null)
+  const history = useHistory()
   const mutation = gql`
     mutation CreateWorkspace($attrs: MetacardAttributesInput!) {
       createMetacard(attrs: $attrs) {
         ...WorkspaceAttributes
         id: id
-        owner: metacard_owner
+        metacard_owner
         modified: metacard_modified
       }
     }
     ${workspaceAttributes}
   `
 
-  const [create] = useMutation(mutation, {
+  return useMutation(mutation, {
     update: (cache, { data }) => {
       const query = workspaces
       const { metacardsByTag } = cache.readQuery({ query })
@@ -316,19 +355,28 @@ const useCreate = () => {
         data.createMetacard,
         ...metacardsByTag.attributes,
       ]
+      const updatedResults = [
+        {
+          id: data.createMetacard.id,
+          isSubscribed: false,
+          __typename: 'QueryResponse',
+        },
+        ...metacardsByTag.results,
+      ]
       cache.writeQuery({
         query,
         data: {
           metacardsByTag: {
             attributes: updatedWorkspaces,
+            results: updatedResults,
             __typename: 'QueryResponse',
           },
         },
       })
-      setRedirectId(data.createMetacard.id)
+
+      history.push(`/workspaces/${data.createMetacard.id}`)
     },
   })
-  return [create, redirectId]
 }
 
 const useDelete = () => {
@@ -345,12 +393,18 @@ const useDelete = () => {
         ['metacardsByTag', 'attributes'],
         []
       ).filter(({ id }) => id !== data.deleteMetacard)
+      const results = getIn(
+        cache.readQuery({ query }),
+        ['metacardsByTag', 'results'],
+        []
+      ).filter(({ id }) => id !== data.deleteMetacard)
 
       cache.writeQuery({
         query,
         data: {
           metacardsByTag: {
             attributes,
+            results,
             __typename: 'QueryResponse',
           },
         },
@@ -361,7 +415,7 @@ const useDelete = () => {
 
 export default () => {
   const { refetch, loading, error, data } = useQuery(workspaces)
-  const [create, redirectId] = useCreate()
+  const [create] = useCreate()
   const [_delete] = useDelete()
   const [clone] = useClone()
 
@@ -377,10 +431,6 @@ export default () => {
         error={error}
       />
     )
-  }
-
-  if (redirectId) {
-    return <Redirect push to={`/workspaces/${redirectId}`} />
   }
 
   const onCreate = () => {
@@ -411,8 +461,16 @@ export default () => {
     })
   }
 
-  const workspacesSortedByTime = data.metacardsByTag.attributes.sort(
-    (a, b) => (a.modified > b.modified ? -1 : 1)
+  const workspacesWithSubscriptions = data.metacardsByTag.attributes.map(
+    (metacard, index) => {
+      return {
+        attributes: metacard,
+        userIsSubscribed: data.metacardsByTag.results[index].isSubscribed,
+      }
+    }
+  )
+  const workspacesSortedByTime = workspacesWithSubscriptions.sort(
+    (a, b) => (a.attributes.modified > b.attributes.modified ? -1 : 1)
   )
   return (
     <Workspaces
