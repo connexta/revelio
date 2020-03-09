@@ -40,35 +40,15 @@ export const getSecurityAttributesFromMetacard = attributes => {
   return sharingAttributes
 }
 
-export const isWritable = (email, roles, securityAttributes, isAdmin) => {
-  return (
+export const getPermissions = (email, roles, securityAttributes, owner) => {
+  const canShare =
+    securityAttributes.security_access_administrators.includes(email) ||
+    owner === email
+  const canWrite =
     securityAttributes.security_access_individuals.includes(email) ||
     securityAttributes.security_access_groups.some(item =>
       roles.includes(item)
     ) ||
-    isAdmin
-  )
-}
-export const isAdmin = (email, securityAttributes, owner) => {
-  return (
-    securityAttributes.security_access_administrators.includes(email) ||
-    owner === email
-  )
-}
-
-export const isReadOnly = (
-  isWritable,
-  isAdmin,
-  securityAttributes,
-  email,
-  roles
-) => {
-  return (
-    !isWritable &&
-    !isAdmin &&
-    (securityAttributes.security_access_individuals_read.includes(email) ||
-      securityAttributes.security_access_groups_read.some(item =>
-        roles.includes(item)
-      ))
-  )
+    canShare
+  return { canShare, canWrite, readOnly: !canWrite }
 }

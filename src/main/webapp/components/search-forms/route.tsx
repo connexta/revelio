@@ -14,10 +14,9 @@ import IconButton from '@material-ui/core/IconButton'
 import StarIcon from '@material-ui/icons/Star'
 const {
   getSecurityAttributesFromMetacard,
-  isWritable,
-  isAdmin,
-  isReadOnly,
+  getPermissions,
 } = require('../sharing/sharing-utils')
+
 const {
   IndexCards,
   AddCardItem,
@@ -186,23 +185,11 @@ const Route = (props: RouteProps) => {
         .sort((a: any, b: any) => (a.modified > b.modified ? -1 : 1))
         .map(form => {
           const securityAttributes = getSecurityAttributesFromMetacard(form)
-          const canShare = isAdmin(
-            userAttributes.email,
-            securityAttributes,
-            form.metacard_owner
-          )
-          const canWrite = isWritable(
+          const { canShare, canWrite, readOnly } = getPermissions(
             userAttributes.email,
             userAttributes.roles,
             securityAttributes,
-            canShare
-          )
-          const readOnly = isReadOnly(
-            canWrite,
-            canShare,
-            securityAttributes,
-            userAttributes.email,
-            userAttributes.roles
+            form.metacard_owner
           )
           return (
             <SearchForm

@@ -10,10 +10,8 @@ import Dialog from '@material-ui/core/Dialog'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { Notification } from '../notification/notification'
 import {
-  isWritable,
-  isAdmin,
-  isReadOnly,
   getSecurityAttributesFromMetacard,
+  getPermissions,
 } from '../sharing/sharing-utils'
 
 import {
@@ -61,19 +59,11 @@ const Item = props => {
   const { form, Editor, onDelete, user } = props
 
   const securityAttributes = getSecurityAttributesFromMetacard(form)
-  const canShare = isAdmin(user.email, securityAttributes, form.owner)
-  const canWrite = isWritable(
+  const { canShare, canWrite, readOnly } = getPermissions(
     user.email,
     user.roles,
     securityAttributes,
-    canShare
-  )
-  const readOnly = isReadOnly(
-    canWrite,
-    canShare,
-    securityAttributes,
-    user.email,
-    user.roles
+    form.owner
   )
   const [editing, setEditing] = useState(false)
 
@@ -219,7 +209,6 @@ const useCreate = () => {
     mutation CreateResultForms($attrs: MetacardAttributesInput!) {
       createMetacard(attrs: $attrs) {
         ...ResultFormAttributes
-        security_access_administrators
       }
     }
     ${fragment}

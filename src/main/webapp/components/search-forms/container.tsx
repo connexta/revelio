@@ -90,7 +90,6 @@ const useCreate = () => {
     mutation CreateSearchForm($attrs: MetacardAttributesInput!) {
       createMetacard(attrs: $attrs) {
         ...SearchFormAttributes
-        security_access_administrators
       }
     }
     ${fragment}

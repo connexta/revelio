@@ -13,9 +13,7 @@ import { useQueryExecutor } from '../../react-hooks'
 import { Notification } from '../notification/notification'
 import Subscribe from './subscribe'
 const {
-  isWritable,
-  isAdmin,
-  isReadOnly,
+  getPermissions,
   getSecurityAttributesFromMetacard,
 } = require('../sharing/sharing-utils')
 
@@ -231,7 +229,7 @@ const unsubscribeMutation = gql`
 `
 
 const Workspaces = props => {
-  const { workspaces, onCreate, onDelete, onDuplicate, userAttrs } = props
+  const { workspaces, onCreate, onDelete, onDuplicate, userAttributes } = props
   const [subscribe] = useMutation(subscribeMutation)
   const [unsubscribe] = useMutation(unsubscribeMutation)
   const [message, setMessage] = React.useState(null)
@@ -252,23 +250,11 @@ const Workspaces = props => {
         const isSubscribed = workspace.userIsSubscribed
         workspace = workspace.attributes
         const securityAttributes = getSecurityAttributesFromMetacard(workspace)
-        const canShare = isAdmin(
-          userAttrs.email,
+        const { canShare, canWrite, readOnly } = getPermissions(
+          userAttributes.email,
+          userAttributes.roles,
           securityAttributes,
           workspace.owner
-        )
-        const canWrite = isWritable(
-          userAttrs.email,
-          userAttrs.roles,
-          securityAttributes,
-          canShare
-        )
-        const readOnly = isReadOnly(
-          canWrite,
-          canShare,
-          securityAttributes,
-          userAttrs.email,
-          userAttrs.roles
         )
         return (
           <IndexCardItem
@@ -359,17 +345,32 @@ const useClone = () => {
   return useMutation(cloneWorkspace, {
     update: (cache, { data }) => {
       const query = workspaces
-      const { metacardsByTag } = cache.readQuery({ query })
+      const { metacardsByTag, user } = cache.readQuery({ query })
       const updatedWorkspaces = [
         data.cloneMetacard,
         ...metacardsByTag.attributes,
       ]
+      const updatedResults = [
+        {
+          id: data.cloneMetacard.id,
+          isSubscribed: false,
+          __typename: 'QueryResponse',
+        },
+        ...metacardsByTag.results,
+      ]
+      const { email, roles } = user
       cache.writeQuery({
         query,
         data: {
           metacardsByTag: {
             attributes: updatedWorkspaces,
+            results: updatedResults,
             __typename: 'QueryResponse',
+          },
+          user: {
+            email,
+            roles,
+            __typename: 'User',
           },
         },
       })
@@ -528,7 +529,7 @@ export default () => {
       onCreate={onCreate}
       onDelete={onDelete}
       onDuplicate={onDuplicate}
-      userAttrs={data.user}
+      userAttributes={data.user}
     />
   )
 }
