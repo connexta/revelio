@@ -19,6 +19,7 @@ import {
   IndexCardItem,
   IndexCards,
   ShareAction,
+  DuplicateAction,
 } from '../index-cards'
 import Lists from '../lists'
 import { InlineRetry, SnackbarRetry } from '../network-retry'
@@ -222,7 +223,7 @@ const unsubscribeMutation = gql`
 `
 
 const Workspaces = props => {
-  const { workspaces, onCreate, onDelete } = props
+  const { workspaces, onCreate, onDelete, onDuplicate } = props
   const [subscribe] = useMutation(subscribeMutation)
   const [unsubscribe] = useMutation(unsubscribeMutation)
   const [message, setMessage] = React.useState(null)
@@ -266,6 +267,7 @@ const Workspaces = props => {
                 setMessage={setMessage}
                 isSubscribed={isSubscribed}
               />
+              <DuplicateAction onDuplicate={() => onDuplicate(workspace)} />
             </Actions>
           </IndexCardItem>
         )
@@ -297,6 +299,39 @@ const workspaceAttributes = gql`
     metacard_type
   }
 `
+const useClone = () => {
+  const cloneWorkspace = gql`
+    mutation CloneWorkspace($id: ID!) {
+      cloneMetacard(id: $id) {
+        ...WorkspaceAttributes
+        id: id
+        owner: metacard_owner
+        modified: metacard_modified
+      }
+    }
+    ${workspaceAttributes}
+  `
+
+  return useMutation(cloneWorkspace, {
+    update: (cache, { data }) => {
+      const query = workspaces
+      const { metacardsByTag } = cache.readQuery({ query })
+      const updatedWorkspaces = [
+        data.cloneMetacard,
+        ...metacardsByTag.attributes,
+      ]
+      cache.writeQuery({
+        query,
+        data: {
+          metacardsByTag: {
+            attributes: updatedWorkspaces,
+            __typename: 'QueryResponse',
+          },
+        },
+      })
+    },
+  })
+}
 
 const useCreate = () => {
   const history = useHistory()
@@ -382,6 +417,7 @@ export default () => {
   const { refetch, loading, error, data } = useQuery(workspaces)
   const [create] = useCreate()
   const [_delete] = useDelete()
+  const [clone] = useClone()
 
   if (loading) {
     return <LoadingComponent />
@@ -416,6 +452,15 @@ export default () => {
       },
     })
   }
+
+  const onDuplicate = ({ id }) => {
+    clone({
+      variables: {
+        id: id,
+      },
+    })
+  }
+
   const workspacesWithSubscriptions = data.metacardsByTag.attributes.map(
     (metacard, index) => {
       return {
@@ -432,6 +477,7 @@ export default () => {
       workspaces={workspacesSortedByTime}
       onCreate={onCreate}
       onDelete={onDelete}
+      onDuplicate={onDuplicate}
     />
   )
 }

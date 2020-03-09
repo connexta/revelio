@@ -133,7 +133,7 @@ const typeDefs = `
     # TBD: Should only be used when...
     # createMetacardFromJson(attrs: Json!): MetacardAttributes
     # saveMetacardFromJson(id: ID!, attrs: Json!): MetacardAttributes
-
+    cloneMetacard(id: ID!): MetacardAttributes
     deleteMetacard(id: ID!): ID
     subscribeToWorkspace(id: ID!): Int 
     unsubscribeFromWorkspace(id: ID!): Int 
@@ -469,6 +469,18 @@ const saveMetacard = async (parent, args, context) => {
   }
 }
 
+const cloneMetacard = async (parent, args, context) => {
+  const { catalog, toGraphqlName } = context
+  const { id } = args
+  const res = await catalog.clone({ id })
+  return renameKeys(toGraphqlName, {
+    ...res.createdMetacards[0].attributes,
+    filterTree:
+      res.createdMetacards[0].attributes.filterTree &&
+      JSON.parse(res.createdMetacards[0].attributes.filterTree),
+  })
+}
+
 const deleteMetacard = async (parent, args, { catalog }) => {
   const { id } = args
   await catalog.delete({ ids: [id] })
@@ -498,6 +510,7 @@ const resolvers = {
     createMetacard,
     saveMetacard,
     deleteMetacard,
+    cloneMetacard,
     subscribeToWorkspace,
     unsubscribeFromWorkspace,
   },

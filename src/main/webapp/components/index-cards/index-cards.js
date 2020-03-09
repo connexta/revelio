@@ -6,6 +6,7 @@ import IconButton from '@material-ui/core/IconButton'
 
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import EditIcon from '@material-ui/icons/Edit'
+import FileCopyIcon from '@material-ui/icons/FileCopy'
 
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
@@ -17,6 +18,8 @@ import moment from 'moment'
 
 import ConfirmDelete from '../confirm-delete'
 import SharingModal from '../sharing/sharing-modal'
+import Tooltip from '@material-ui/core/Tooltip'
+
 const onClick = action => e => {
   e.preventDefault()
   e.stopPropagation()
@@ -30,6 +33,16 @@ export const EditAction = props => {
   return (
     <IconButton onClick={onClick(onEdit)}>
       <EditIcon />
+    </IconButton>
+  )
+}
+export const DuplicateAction = props => {
+  const { onDuplicate } = props
+  return (
+    <IconButton onClick={onClick(onDuplicate)}>
+      <Tooltip title="Duplicate">
+        <FileCopyIcon />
+      </Tooltip>
     </IconButton>
   )
 }

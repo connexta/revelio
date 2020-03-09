@@ -72,6 +72,7 @@ const withAuth = (fetch, req) => async (url, opts = {}) => {
 
 const catalogMethods = {
   create: 'ddf.catalog/create',
+  clone: 'ddf.catalog/clone',
   query: 'ddf.catalog/query',
   update: 'ddf.catalog/update',
   delete: 'ddf.catalog/delete',
