@@ -49,12 +49,16 @@ const QueryCard = props => {
   const [{ active: isDrawing }] = useDrawInterface()
   const [wasDrawing, setWasDrawing] = useState(false)
   const drawAnchorEl = useRef(null)
+  const popoverActions = useRef()
   const queryBuilder = defaultSearchForms.hasOwnProperty(query.type)
     ? query.type
     : 'advanced'
 
   const onChange = query => {
     props.onChange(query)
+    if (popoverActions.current) {
+      popoverActions.current.updatePosition()
+    }
   }
 
   const queryInteractions = [
@@ -94,6 +98,7 @@ const QueryCard = props => {
         </Actions>
       </IndexCardItem>
       <Popover
+        action={popoverActions}
         open={open}
         anchorEl={anchorEl}
         onClose={() => {

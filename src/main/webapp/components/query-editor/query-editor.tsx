@@ -20,6 +20,9 @@ type HeaderProps = {
 const Header = (props: HeaderProps) => {
   const { query = {} } = props
   const [anchorEl, handleOpen, handleClose, open] = useAnchorEl()
+  //closes menu when different search form is selected
+  React.useEffect(handleClose, [props.query])
+
   return (
     <Box display="flex" style={{ padding: 8 }} alignItems="center">
       <TextField
