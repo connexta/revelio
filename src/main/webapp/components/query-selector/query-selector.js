@@ -1,12 +1,12 @@
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 import ListItemText from '@material-ui/core/ListItemText'
-import MenuItem from '@material-ui/core/MenuItem'
 import Popover from '@material-ui/core/Popover'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import SearchIcon from '@material-ui/icons/Search'
-import { set } from 'immutable'
+import { getIn, set } from 'immutable'
 import React, { useEffect, useRef, useState } from 'react'
+import useAnchorEl from '../../react-hooks/use-anchor-el'
 import { BasicSearchQueryBuilder } from '../basic-search/basic-search'
 import {
   Actions,
@@ -16,16 +16,16 @@ import {
 } from '../index-cards'
 import AdvancedSearchQueryBuilder from '../query-builder/query-builder'
 const { useDrawInterface } = require('../../react-hooks')
-import useAnchorEl from '../../react-hooks/use-anchor-el'
 
 const defaultSearchForms = {
-  basic: BasicSearchQueryBuilder,
-  advanced: AdvancedSearchQueryBuilder,
-}
-
-const defaultSearchFormLabels = {
-  basic: 'Basic Search',
-  advanced: 'Advanced Search',
+  basic: {
+    label: 'Basic Search',
+    queryBuilder: BasicSearchQueryBuilder,
+  },
+  advanced: {
+    label: 'Advanced Search',
+    queryBuilder: AdvancedSearchQueryBuilder,
+  },
 }
 
 const getBaseQueryFields = query => {
@@ -33,14 +33,20 @@ const getBaseQueryFields = query => {
   return { id, title, type }
 }
 
-const defaultSearchFormInteractions = onChange => {
+const defaultSearchFormInteractions = onSelect => {
   return Object.keys(defaultSearchForms).map(key => {
-    return (
-      <MenuItem key={key} onClick={() => onChange(key)}>
-        <SearchIcon style={{ marginRight: 10 }} />
-        <ListItemText>{defaultSearchFormLabels[key]}</ListItemText>
-      </MenuItem>
-    )
+    return {
+      id: key,
+      onSelect: () => onSelect(key),
+      interaction: () => (
+        <React.Fragment>
+          <SearchIcon style={{ marginRight: 10 }} />
+          <ListItemText>
+            {getIn(defaultSearchForms, [key, 'label'])}
+          </ListItemText>
+        </React.Fragment>
+      ),
+    }
   })
 }
 const QueryCard = props => {
@@ -117,7 +123,10 @@ const QueryCard = props => {
         <Box style={{ margin: '10px' }}>
           <QueryEditor
             query={query}
-            queryBuilder={defaultSearchForms[queryBuilder]}
+            queryBuilder={getIn(defaultSearchForms, [
+              queryBuilder,
+              'queryBuilder',
+            ])}
             queryInteractions={queryInteractions}
             onSearch={query =>
               onSearch({ ...getBaseQueryFields(props.query), ...query })
