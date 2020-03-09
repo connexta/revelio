@@ -7,18 +7,16 @@ import IconButton from '@material-ui/core/IconButton'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import EditIcon from '@material-ui/icons/Edit'
 import FileCopyIcon from '@material-ui/icons/FileCopy'
-import ErrorIcon from '@material-ui/icons/Error'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import moment from 'moment'
-import { CustomTooltip } from '../tooltip'
 import ConfirmDelete from '../confirm-delete'
 import SharingModal from '../sharing/sharing-modal'
-import Tooltip from '@material-ui/core/Tooltip'
-
+import { CustomTooltip } from '../tooltip'
+import { ReadOnly } from './read-only'
 const onClick = action => e => {
   e.preventDefault()
   e.stopPropagation()
@@ -39,9 +37,9 @@ export const DuplicateAction = props => {
   const { onDuplicate } = props
   return (
     <IconButton onClick={onClick(onDuplicate)}>
-      <Tooltip title="Duplicate">
+      <CustomTooltip title="Duplicate">
         <FileCopyIcon />
-      </Tooltip>
+      </CustomTooltip>
     </IconButton>
   )
 }
@@ -57,50 +55,6 @@ export const ShareAction = props => {
   const { id, title, metacardType, isAdmin } = props
   return isAdmin ? (
     <SharingModal id={id} title={title} metacardType={metacardType} />
-  ) : null
-}
-
-export const ReadOnly = props => {
-  const { isReadOnly, indexCardType } = props
-  const readOnlyMessage =
-    'This ' +
-    indexCardType +
-    ' is Read Only. This means you cannot change, delete or share this ' +
-    indexCardType +
-    '. Please duplicate this ' +
-    indexCardType +
-    ' or ask the owner for permissions to make changes.'
-  return isReadOnly ? (
-    <IconButton style={{ fontSize: '1.3rem' }}>
-      <CustomTooltip
-        title={
-          <React.Fragment>
-            <Typography color="inherit">
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <ErrorIcon
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    paddingTop: '.1rem',
-                  }}
-                />{' '}
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    padding: '.3rem',
-                  }}
-                >
-                  {readOnlyMessage}
-                </div>
-              </div>
-            </Typography>
-          </React.Fragment>
-        }
-      >
-        <div>Read Only</div>
-      </CustomTooltip>
-    </IconButton>
   ) : null
 }
 
