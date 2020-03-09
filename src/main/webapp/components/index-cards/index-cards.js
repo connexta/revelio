@@ -16,7 +16,7 @@ import moment from 'moment'
 import ConfirmDelete from '../confirm-delete'
 import SharingModal from '../sharing/sharing-modal'
 import { CustomTooltip } from '../tooltip'
-import { ReadOnly } from './read-only'
+
 const onClick = action => e => {
   e.preventDefault()
   e.stopPropagation()

@@ -2,7 +2,6 @@ import React from 'react'
 import Typography from '@material-ui/core/Typography'
 import { CustomTooltip } from '../tooltip'
 import ErrorIcon from '@material-ui/icons/Error'
-import IconButton from '@material-ui/core/IconButton'
 
 export const ReadOnly = props => {
   const { isReadOnly, indexCardType } = props
