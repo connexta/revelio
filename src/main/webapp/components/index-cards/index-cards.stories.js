@@ -46,8 +46,8 @@ stories.add('basic usage', () => {
         return (
           <IndexCardItem starred key={item.id} {...item}>
             <Actions>
-              <ShareAction onShare={action('onShare')} />
-              <DeleteAction onDelete={action('onDelete')} />
+              <ShareAction isAdmin={true} onShare={action('onShare')} />
+              <DeleteAction isWritable={true} onDelete={action('onDelete')} />
               <DuplicateAction onDuplicate={action('onDuplicate')} />
             </Actions>
           </IndexCardItem>

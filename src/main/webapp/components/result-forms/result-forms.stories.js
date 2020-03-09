@@ -78,12 +78,19 @@ const MockEditor = props => {
   return <Editor attributes={attributes} {...props} />
 }
 
+const userAttributes = {
+  email: 'email@test.com',
+  roles: ['admin'],
+}
+
 stories.add('route', () => {
   const loading = boolean('Loading', false)
 
   const [forms, setForms] = useState([])
 
   const onCreate = form => {
+    form['security_access_administrators'] = 'email@test.com'
+    form['metacard_owner'] = 'email@test.com'
     setForms(forms.concat(form))
   }
 
@@ -111,6 +118,7 @@ stories.add('route', () => {
     onCreate,
     onSave,
     onDelete,
+    userAttributes,
   }
 
   return <Route {...props} />
