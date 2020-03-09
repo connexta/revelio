@@ -8,7 +8,7 @@ import gql from 'graphql-tag'
 import { getIn } from 'immutable'
 import React, { useState } from 'react'
 import loadable from 'react-loadable'
-import { Link, Redirect, useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { useQueryExecutor } from '../../react-hooks'
 import { Notification } from '../notification/notification'
 import Subscribe from './subscribe'
@@ -226,6 +226,8 @@ const Workspaces = props => {
   const [subscribe] = useMutation(subscribeMutation)
   const [unsubscribe] = useMutation(unsubscribeMutation)
   const [message, setMessage] = React.useState(null)
+  const history = useHistory()
+
   return (
     <IndexCards>
       {message ? (
@@ -241,33 +243,31 @@ const Workspaces = props => {
         const isSubscribed = workspace.userIsSubscribed
         workspace = workspace.attributes
         return (
-          <Link
+          <IndexCardItem
+            {...workspace}
             key={workspace.id}
-            to={`/workspaces/${workspace.id}`}
-            style={{ textDecoration: 'none' }}
+            onClick={() => history.push(`/workspaces/${workspace.id}`)}
           >
-            <IndexCardItem {...workspace}>
-              <Actions>
-                <ShareAction
-                  id={workspace.id}
-                  title={workspace.title}
-                  metacardType="workspace"
-                />
-                <DeleteAction
-                  onDelete={() => onDelete(workspace)}
-                  message="This will permanently delete the workspace."
-                />
-                <Subscribe
-                  subscribe={subscribe}
-                  unsubscribe={unsubscribe}
-                  id={workspace.id}
-                  title={workspace.title}
-                  setMessage={setMessage}
-                  isSubscribed={isSubscribed}
-                />
-              </Actions>
-            </IndexCardItem>
-          </Link>
+            <Actions>
+              <ShareAction
+                id={workspace.id}
+                title={workspace.title}
+                metacardType="workspace"
+              />
+              <DeleteAction
+                onDelete={() => onDelete(workspace)}
+                message="This will permanently delete the workspace."
+              />
+              <Subscribe
+                subscribe={subscribe}
+                unsubscribe={unsubscribe}
+                id={workspace.id}
+                title={workspace.title}
+                setMessage={setMessage}
+                isSubscribed={isSubscribed}
+              />
+            </Actions>
+          </IndexCardItem>
         )
       })}
     </IndexCards>
@@ -299,7 +299,7 @@ const workspaceAttributes = gql`
 `
 
 const useCreate = () => {
-  const [redirectId, setRedirectId] = React.useState(null)
+  const history = useHistory()
   const mutation = gql`
     mutation CreateWorkspace($attrs: MetacardAttributesInput!) {
       createMetacard(attrs: $attrs) {
@@ -312,7 +312,7 @@ const useCreate = () => {
     ${workspaceAttributes}
   `
 
-  const [create] = useMutation(mutation, {
+  return useMutation(mutation, {
     update: (cache, { data }) => {
       const query = workspaces
       const { metacardsByTag } = cache.readQuery({ query })
@@ -338,10 +338,10 @@ const useCreate = () => {
           },
         },
       })
-      setRedirectId(data.createMetacard.id)
+
+      history.push(`/workspaces/${data.createMetacard.id}`)
     },
   })
-  return [create, redirectId]
 }
 
 const useDelete = () => {
@@ -380,7 +380,7 @@ const useDelete = () => {
 
 export default () => {
   const { refetch, loading, error, data } = useQuery(workspaces)
-  const [create, redirectId] = useCreate()
+  const [create] = useCreate()
   const [_delete] = useDelete()
 
   if (loading) {
@@ -395,10 +395,6 @@ export default () => {
         error={error}
       />
     )
-  }
-
-  if (redirectId) {
-    return <Redirect push to={`/workspaces/${redirectId}`} />
   }
 
   const onCreate = () => {
