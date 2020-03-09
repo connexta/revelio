@@ -3,6 +3,7 @@ import Button from '@material-ui/core/Button'
 import Divider from '@material-ui/core/Divider'
 import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import { set } from 'immutable'
@@ -10,8 +11,14 @@ import React from 'react'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
 import { AttributeDefinition, QueryType } from '../query-builder/types'
 
+type QueryInteraction = {
+  id: string
+  onSelect: () => void
+  interaction: React.FunctionComponent<{}>
+}
+
 type HeaderProps = {
-  queryInteractions?: React.FunctionComponent<{}>
+  queryInteractions?: QueryInteraction[]
   query?: QueryType
   addOptionsRef?: (el: HTMLDivElement) => void
   onChange: (query: QueryType) => void
@@ -20,6 +27,7 @@ type HeaderProps = {
 const Header = (props: HeaderProps) => {
   const { query = {} } = props
   const [anchorEl, handleOpen, handleClose, open] = useAnchorEl()
+
   return (
     <Box display="flex" style={{ padding: 8 }} alignItems="center">
       <TextField
@@ -43,7 +51,21 @@ const Header = (props: HeaderProps) => {
       </IconButton>
 
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        {props.queryInteractions}
+        {props.queryInteractions &&
+          props.queryInteractions.map(interaction => {
+            const { id, onSelect, interaction: Interaction } = interaction
+            return (
+              <MenuItem
+                key={id}
+                onClick={() => {
+                  handleClose()
+                  onSelect()
+                }}
+              >
+                <Interaction />
+              </MenuItem>
+            )
+          })}
       </Menu>
     </Box>
   )
@@ -84,7 +106,7 @@ const Footer = (props: FooterProps) => {
 
 type EditorProps = {
   attributeDefinitions?: AttributeDefinition[]
-  queryInteractions?: React.FunctionComponent<{}>
+  queryInteractions?: QueryInteraction[]
   query?: QueryType
   onSave: (query: QueryType) => void
   onSearch: (query: any) => void

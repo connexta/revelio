@@ -1,9 +1,13 @@
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
+import ListItemText from '@material-ui/core/ListItemText'
 import Popover from '@material-ui/core/Popover'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import { set } from 'immutable'
+import SearchIcon from '@material-ui/icons/Search'
+import { getIn, set } from 'immutable'
 import React, { useEffect, useRef, useState } from 'react'
+import useAnchorEl from '../../react-hooks/use-anchor-el'
+import { BasicSearchQueryBuilder } from '../basic-search/basic-search'
 import {
   Actions,
   DeleteAction,
@@ -13,30 +17,64 @@ import {
 import AdvancedSearchQueryBuilder from '../query-builder/query-builder'
 const { useDrawInterface } = require('../../react-hooks')
 
-const useOpenClose = props => {
-  const [anchorEl, setAnchorEl] = React.useState(null)
-
-  const handleOpen = event => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null)
-    if (props.onClose) {
-      props.onClose()
-    }
-  }
-
-  const open = Boolean(anchorEl)
-  return [anchorEl, open, handleOpen, handleClose]
+const defaultSearchForms = {
+  basic: {
+    label: 'Basic Search',
+    queryBuilder: BasicSearchQueryBuilder,
+  },
+  advanced: {
+    label: 'Advanced Search',
+    queryBuilder: AdvancedSearchQueryBuilder,
+  },
 }
 
+const getBaseQueryFields = query => {
+  const { id, title, type } = query
+  return { id, title, type }
+}
+
+const defaultSearchFormInteractions = onSelect => {
+  return Object.keys(defaultSearchForms).map(key => {
+    return {
+      id: key,
+      onSelect: () => onSelect(key),
+      interaction: () => (
+        <React.Fragment>
+          <SearchIcon style={{ marginRight: 10 }} />
+          <ListItemText>
+            {getIn(defaultSearchForms, [key, 'label'])}
+          </ListItemText>
+        </React.Fragment>
+      ),
+    }
+  })
+}
 const QueryCard = props => {
-  const { onSearch, QueryEditor, onChange } = props
-  const [anchorEl, open, handleOpen, handleClose] = useOpenClose(props)
+  const { onSearch, QueryEditor, query } = props
+  const [anchorEl, handleOpen, handleClose, open] = useAnchorEl()
   const [{ active: isDrawing }] = useDrawInterface()
   const [wasDrawing, setWasDrawing] = useState(false)
   const drawAnchorEl = useRef(null)
+  const popoverActions = useRef()
+  const queryBuilder = defaultSearchForms.hasOwnProperty(query.type)
+    ? query.type
+    : 'advanced'
+
+  const onChange = query => {
+    props.onChange(query)
+    if (popoverActions.current) {
+      popoverActions.current.updatePosition()
+    }
+  }
+
+  const queryInteractions = [
+    ...defaultSearchFormInteractions(key => {
+      if (key !== query.type) {
+        onChange(set(getBaseQueryFields(query), 'type', key))
+      }
+    }),
+  ]
+
   useEffect(
     () => {
       if (isDrawing) {
@@ -51,13 +89,14 @@ const QueryCard = props => {
     },
     [isDrawing]
   )
+
   return (
     <React.Fragment>
       <div ref={drawAnchorEl} />
       <IndexCardItem
-        title={props.query.title}
+        title={query.title}
         subHeader={'Has not been run'}
-        onClick={() => onSearch(props.query)}
+        onClick={() => onSearch(query)}
       >
         <Actions>
           <EditAction onEdit={handleOpen} />
@@ -65,6 +104,7 @@ const QueryCard = props => {
         </Actions>
       </IndexCardItem>
       <Popover
+        action={popoverActions}
         open={open}
         anchorEl={anchorEl}
         onClose={() => {
@@ -82,10 +122,18 @@ const QueryCard = props => {
       >
         <Box style={{ margin: '10px' }}>
           <QueryEditor
-            query={props.query}
-            queryBuilder={AdvancedSearchQueryBuilder}
-            onSearch={query => onSearch({ ...props.query, ...query })}
-            onChange={query => onChange({ ...props.query, ...query })}
+            query={query}
+            queryBuilder={getIn(defaultSearchForms, [
+              queryBuilder,
+              'queryBuilder',
+            ])}
+            queryInteractions={queryInteractions}
+            onSearch={query =>
+              onSearch({ ...getBaseQueryFields(props.query), ...query })
+            }
+            onChange={query =>
+              onChange({ ...getBaseQueryFields(props.query), ...query })
+            }
           />
         </Box>
       </Popover>
@@ -95,7 +143,7 @@ const QueryCard = props => {
 
 const QuerySelector = props => {
   const { queries, currentQuery, QueryEditor, onSearch } = props
-  const [anchorEl, open, handleOpen, handleClose] = useOpenClose(props)
+  const [anchorEl, handleOpen, handleClose, open] = useAnchorEl()
 
   const onChange = query => {
     const updatedQueries = set(

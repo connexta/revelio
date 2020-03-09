@@ -49,8 +49,8 @@ const workspaceById = gql`
         queries {
           id
           title
-          cql
           filterTree
+          type
         }
         lists {
           list_bookmarks
@@ -93,7 +93,7 @@ export const Workspace = () => {
       const queries = data.metacardsById[0].attributes[0].queries
       setQueries(
         queries.map(query => {
-          const { cql, __typename, ...rest } = query // eslint-disable-line no-unused-vars
+          const { __typename, ...rest } = query // eslint-disable-line no-unused-vars
           return rest
         })
       )
