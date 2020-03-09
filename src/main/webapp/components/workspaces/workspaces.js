@@ -336,6 +336,11 @@ const workspaceAttributes = gql`
     title
     metacard_tags
     metacard_type
+    security_access_individuals_read
+    security_access_individuals
+    security_access_administrators
+    security_access_groups_read
+    security_access_groups
   }
 `
 const useClone = () => {
@@ -372,19 +377,12 @@ const useClone = () => {
   })
 }
 
-const securityAttributes = [
-  'security_access_individuals_read',
-  'security_access_individuals',
-  'security_access_groups_read',
-  'security_access_groups',
-]
 const useCreate = () => {
   const history = useHistory()
   const mutation = gql`
     mutation CreateWorkspace($attrs: MetacardAttributesInput!) {
       createMetacard(attrs: $attrs) {
         ...WorkspaceAttributes
-        security_access_administrators
         id: id
         metacard_owner
         modified: metacard_modified
@@ -397,9 +395,6 @@ const useCreate = () => {
     update: (cache, { data }) => {
       const query = workspaces
       const { metacardsByTag, user } = cache.readQuery({ query })
-      securityAttributes.forEach(securityAttr => {
-        data.createMetacard[securityAttr] = []
-      })
       const updatedWorkspaces = [
         data.createMetacard,
         ...metacardsByTag.attributes,

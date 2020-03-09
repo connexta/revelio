@@ -190,6 +190,11 @@ const fragment = gql`
     description
     modified: metacard_modified
     metacard_owner
+    security_access_individuals_read
+    security_access_individuals
+    security_access_administrators
+    security_access_groups_read
+    security_access_groups
     attributes: ui_attribute_group
   }
 `
@@ -198,11 +203,6 @@ const resultForms = gql`
   query ResultForms {
     metacardsByTag(tag: "attribute-group") {
       attributes {
-        security_access_individuals_read
-        security_access_individuals
-        security_access_administrators
-        security_access_groups_read
-        security_access_groups
         ...ResultFormAttributes
       }
     }
@@ -213,13 +213,6 @@ const resultForms = gql`
   }
   ${fragment}
 `
-
-const securityAttributes = [
-  'security_access_individuals_read',
-  'security_access_individuals',
-  'security_access_groups_read',
-  'security_access_groups',
-]
 
 const useCreate = () => {
   const mutation = gql`
@@ -235,10 +228,6 @@ const useCreate = () => {
   return useMutation(mutation, {
     update: (cache, { data }) => {
       const query = resultForms
-
-      securityAttributes.forEach(securityAttr => {
-        data.createMetacard[securityAttr] = []
-      })
       const { metacardsByTag, user } = cache.readQuery({ query })
       const attributes = metacardsByTag.attributes
         .filter(({ id }) => id !== data.createMetacard.id)

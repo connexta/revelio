@@ -14,6 +14,11 @@ const fragment = gql`
     sorts
     sources
     detail_level
+    security_access_administrators
+    security_access_individuals
+    security_access_individuals_read
+    security_access_groups
+    security_access_groups_read
   }
 `
 
@@ -21,11 +26,6 @@ const searchForms = gql`
   query SearchForms {
     metacardsByTag(tag: "query-template") {
       attributes {
-        security_access_administrators
-        security_access_individuals
-        security_access_individuals_read
-        security_access_groups
-        security_access_groups_read
         ...SearchFormAttributes
       }
     }
@@ -85,13 +85,6 @@ const useSave = () => {
   return useMutation(mutation)
 }
 
-const securityAttributes = [
-  'security_access_individuals_read',
-  'security_access_individuals',
-  'security_access_groups_read',
-  'security_access_groups',
-]
-
 const useCreate = () => {
   const mutation = gql`
     mutation CreateSearchForm($attrs: MetacardAttributesInput!) {
@@ -106,9 +99,6 @@ const useCreate = () => {
     update: (cache, { data }) => {
       const query = searchForms
 
-      securityAttributes.forEach(securityAttr => {
-        data.createMetacard[securityAttr] = []
-      })
       const attributes = getIn(
         cache.readQuery({ query }),
         ['metacardsByTag', 'attributes'],
