@@ -1,7 +1,7 @@
 import React from 'react'
 import EmailIcon from '@material-ui/icons/Email'
 import IconButton from '@material-ui/core/IconButton'
-import Tooltip from '@material-ui/core/Tooltip'
+import { CustomTooltip } from '../tooltip/tooltip'
 import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined'
 import { getIn } from 'immutable'
 
@@ -35,7 +35,7 @@ export default props => {
   const [subscribed, setSubscribed] = React.useState(props.isSubscribed)
 
   return (
-    <Tooltip title={subscribed.isSubscribed ? 'Unsubscribe' : 'Subscribe'}>
+    <CustomTooltip title={subscribed ? 'Unsubscribe' : 'Subscribe'}>
       <IconButton
         onClick={async e => {
           e.stopPropagation()
@@ -59,6 +59,6 @@ export default props => {
       >
         {subscribed ? <EmailOutlinedIcon /> : <EmailIcon />}
       </IconButton>
-    </Tooltip>
+    </CustomTooltip>
   )
 }

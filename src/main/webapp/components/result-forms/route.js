@@ -68,7 +68,7 @@ const Item = props => {
     securityAttributes,
     canShare
   )
-  const canRead = isReadOnly(
+  const readOnly = isReadOnly(
     canWrite,
     canShare,
     securityAttributes,
@@ -106,7 +106,7 @@ const Item = props => {
             onDelete={onDelete}
             isWritable={canWrite}
           />
-          <ReadOnly isReadOnly={canRead} indexCardType="Result Form" />
+          <ReadOnly isReadOnly={readOnly} indexCardType="Result Form" />
         </Actions>
       </IndexCardItem>
     </Fragment>
@@ -214,11 +214,19 @@ const resultForms = gql`
   ${fragment}
 `
 
+const securityAttributes = [
+  'security_access_individuals_read',
+  'security_access_individuals',
+  'security_access_groups_read',
+  'security_access_groups',
+]
+
 const useCreate = () => {
   const mutation = gql`
     mutation CreateResultForms($attrs: MetacardAttributesInput!) {
       createMetacard(attrs: $attrs) {
         ...ResultFormAttributes
+        security_access_administrators
       }
     }
     ${fragment}
@@ -228,17 +236,25 @@ const useCreate = () => {
     update: (cache, { data }) => {
       const query = resultForms
 
-      const { metacardsByTag } = cache.readQuery({ query })
+      securityAttributes.forEach(securityAttr => {
+        data.createMetacard[securityAttr] = []
+      })
+      const { metacardsByTag, user } = cache.readQuery({ query })
       const attributes = metacardsByTag.attributes
         .filter(({ id }) => id !== data.createMetacard.id)
         .concat(data.createMetacard)
-
+      const { email, roles } = user
       cache.writeQuery({
         query,
         data: {
           metacardsByTag: {
             attributes,
             __typename: 'QueryResponse',
+          },
+          user: {
+            email,
+            roles,
+            __typename: 'User',
           },
         },
       })

@@ -85,11 +85,19 @@ const useSave = () => {
   return useMutation(mutation)
 }
 
+const securityAttributes = [
+  'security_access_individuals_read',
+  'security_access_individuals',
+  'security_access_groups_read',
+  'security_access_groups',
+]
+
 const useCreate = () => {
   const mutation = gql`
     mutation CreateSearchForm($attrs: MetacardAttributesInput!) {
       createMetacard(attrs: $attrs) {
         ...SearchFormAttributes
+        security_access_administrators
       }
     }
     ${fragment}
@@ -98,6 +106,9 @@ const useCreate = () => {
     update: (cache, { data }) => {
       const query = searchForms
 
+      securityAttributes.forEach(securityAttr => {
+        data.createMetacard[securityAttr] = []
+      })
       const attributes = getIn(
         cache.readQuery({ query }),
         ['metacardsByTag', 'attributes'],
@@ -106,12 +117,19 @@ const useCreate = () => {
         .filter(({ id }: { id: string }) => id !== data.createMetacard.id)
         .concat(data.createMetacard)
 
+      const user = getIn(cache.readQuery({ query }), ['user'], {})
+      const { email, roles } = user
       cache.writeQuery({
         query,
         data: {
           metacardsByTag: {
             attributes,
             __typename: 'QueryResponse',
+          },
+          user: {
+            email,
+            roles,
+            __typename: 'User',
           },
         },
       })

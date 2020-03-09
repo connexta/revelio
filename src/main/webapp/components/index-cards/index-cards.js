@@ -8,15 +8,13 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import EditIcon from '@material-ui/icons/Edit'
 import FileCopyIcon from '@material-ui/icons/FileCopy'
 import ErrorIcon from '@material-ui/icons/Error'
-import { withStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardActionArea from '@material-ui/core/CardActionArea'
-import Tooltip from '@material-ui/core/Tooltip'
 import moment from 'moment'
-
+import { CustomTooltip } from '../tooltip'
 import ConfirmDelete from '../confirm-delete'
 import SharingModal from '../sharing/sharing-modal'
 import Tooltip from '@material-ui/core/Tooltip'
@@ -62,16 +60,6 @@ export const ShareAction = props => {
   ) : null
 }
 
-const LightTooltip = withStyles(theme => ({
-  tooltip: {
-    backgroundColor: theme.palette.common.white,
-    color: 'rgba(0, 0, 0, 0.87)',
-    boxShadow: theme.shadows[1],
-    fontSize: 11,
-    border: '1px solid #D3D3D3',
-  },
-}))(Tooltip)
-
 export const ReadOnly = props => {
   const { isReadOnly, indexCardType } = props
   const readOnlyMessage =
@@ -84,7 +72,7 @@ export const ReadOnly = props => {
     ' or ask the owner for permissions to make changes.'
   return isReadOnly ? (
     <IconButton style={{ fontSize: '1.3rem' }}>
-      <LightTooltip
+      <CustomTooltip
         title={
           <React.Fragment>
             <Typography color="inherit">
@@ -111,7 +99,7 @@ export const ReadOnly = props => {
         }
       >
         <div>Read Only</div>
-      </LightTooltip>
+      </CustomTooltip>
     </IconButton>
   ) : null
 }

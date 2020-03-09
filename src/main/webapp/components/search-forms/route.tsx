@@ -17,7 +17,7 @@ const {
   isWritable,
   isAdmin,
   isReadOnly,
-} = require('../sharing')
+} = require('../sharing/sharing-utils')
 const {
   IndexCards,
   AddCardItem,
@@ -33,7 +33,7 @@ type SearchFormProps = {
   onSave: (form: QueryType) => void
   form?: QueryType
   isDefault?: boolean
-  canRead: boolean
+  readOnly: boolean
   canWrite: boolean
   canShare: boolean
 }
@@ -84,7 +84,7 @@ const SearchForm = (props: SearchFormProps) => {
             onDelete={props.onDelete}
             isWritable={props.canWrite}
           />
-          <ReadOnly isReadOnly={props.canRead} indexCardType="Search Form" />
+          <ReadOnly isReadOnly={props.readOnly} indexCardType="Search Form" />
         </Actions>
       </IndexCardItem>
     </Fragment>
@@ -159,7 +159,7 @@ const Route = (props: RouteProps) => {
     refetch,
     userAttributes,
   } = props
-  if (loading === true) return <Loading />
+  if (loading) return <LinearProgress />
 
   if (error)
     return (
@@ -197,7 +197,7 @@ const Route = (props: RouteProps) => {
             securityAttributes,
             canShare
           )
-          const canRead = isReadOnly(
+          const readOnly = isReadOnly(
             canWrite,
             canShare,
             securityAttributes,
@@ -217,7 +217,7 @@ const Route = (props: RouteProps) => {
                 onSave(newForm)
                 setMessage('Search Form Saved')
               }}
-              canRead={canRead}
+              readOnly={readOnly}
               canWrite={canWrite}
               canShare={canShare}
             />

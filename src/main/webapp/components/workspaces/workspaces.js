@@ -12,12 +12,12 @@ import { useParams, useHistory } from 'react-router-dom'
 import { useQueryExecutor } from '../../react-hooks'
 import { Notification } from '../notification/notification'
 import Subscribe from './subscribe'
-import {
+const {
   isWritable,
   isAdmin,
   isReadOnly,
   getSecurityAttributesFromMetacard,
-} from '../sharing/sharing-utils'
+} = require('../sharing/sharing-utils')
 
 import {
   Actions,
@@ -249,9 +249,9 @@ const Workspaces = props => {
       ) : null}
       <AddCardItem onClick={onCreate} />
       {workspaces.map(workspace => {
-        const securityAttributes = getSecurityAttributesFromMetacard(workspace)
         const isSubscribed = workspace.userIsSubscribed
         workspace = workspace.attributes
+        const securityAttributes = getSecurityAttributesFromMetacard(workspace)
         const canShare = isAdmin(
           userAttrs.email,
           securityAttributes,
@@ -263,14 +263,13 @@ const Workspaces = props => {
           securityAttributes,
           canShare
         )
-        const canRead = isReadOnly(
+        const readOnly = isReadOnly(
           canWrite,
           canShare,
           securityAttributes,
           userAttrs.email,
           userAttrs.roles
         )
-        const isReadOnly = !isAdmin && !isWritable
         return (
           <IndexCardItem
             {...workspace}
@@ -298,7 +297,7 @@ const Workspaces = props => {
                 isSubscribed={isSubscribed}
               />
               <DuplicateAction onDuplicate={() => onDuplicate(workspace)} />
-              <ReadOnly isReadOnly={isReadOnly} indexCardType="workspace" />
+              <ReadOnly isReadOnly={readOnly} indexCardType="workspace" />
             </Actions>
           </IndexCardItem>
         )
@@ -373,12 +372,19 @@ const useClone = () => {
   })
 }
 
+const securityAttributes = [
+  'security_access_individuals_read',
+  'security_access_individuals',
+  'security_access_groups_read',
+  'security_access_groups',
+]
 const useCreate = () => {
   const history = useHistory()
   const mutation = gql`
     mutation CreateWorkspace($attrs: MetacardAttributesInput!) {
       createMetacard(attrs: $attrs) {
         ...WorkspaceAttributes
+        security_access_administrators
         id: id
         metacard_owner
         modified: metacard_modified
@@ -390,7 +396,10 @@ const useCreate = () => {
   return useMutation(mutation, {
     update: (cache, { data }) => {
       const query = workspaces
-      const { metacardsByTag } = cache.readQuery({ query })
+      const { metacardsByTag, user } = cache.readQuery({ query })
+      securityAttributes.forEach(securityAttr => {
+        data.createMetacard[securityAttr] = []
+      })
       const updatedWorkspaces = [
         data.createMetacard,
         ...metacardsByTag.attributes,
@@ -403,6 +412,7 @@ const useCreate = () => {
         },
         ...metacardsByTag.results,
       ]
+      const { email, roles } = user
       cache.writeQuery({
         query,
         data: {
@@ -410,6 +420,11 @@ const useCreate = () => {
             attributes: updatedWorkspaces,
             results: updatedResults,
             __typename: 'QueryResponse',
+          },
+          user: {
+            email,
+            roles,
+            __typename: 'User',
           },
         },
       })
