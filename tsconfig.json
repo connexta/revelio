@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "jsx": "react",
-    "allowJs": false,
+    "allowJs": true,
     "sourceMap": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
@@ -14,6 +14,6 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
   "exclude": ["node_modules"]
 }
