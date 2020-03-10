@@ -15,9 +15,14 @@ import {
   IndexCardItem,
 } from '../index-cards'
 import AdvancedSearchQueryBuilder from '../query-builder/query-builder'
+import TextSearchQueryBuilder from '../text-search'
 const { useDrawInterface } = require('../../react-hooks')
 
 const defaultSearchForms = {
+  text: {
+    label: 'Text Search',
+    queryBuilder: TextSearchQueryBuilder,
+  },
   basic: {
     label: 'Basic Search',
     queryBuilder: BasicSearchQueryBuilder,
@@ -58,7 +63,7 @@ const QueryCard = props => {
   const popoverActions = useRef()
   const queryBuilder = defaultSearchForms.hasOwnProperty(query.type)
     ? query.type
-    : 'advanced'
+    : 'text'
 
   const onChange = query => {
     props.onChange(query)

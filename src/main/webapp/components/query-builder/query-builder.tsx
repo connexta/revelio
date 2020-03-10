@@ -16,8 +16,11 @@ export type QueryBuilderProps = {
   attributeDefinitions?: AttributeDefinition[]
   onChange: (query: QueryType) => void
   query?: QueryType
-  addOptionsRef: HTMLDivElement
 }
+
+type AdvancedQueryBuilderProps = {
+  addOptionsRef: HTMLDivElement
+} & QueryBuilderProps
 
 const AddButton = (props: { options: any }) => {
   const [anchorEl, open, close] = useAnchorEl()
@@ -45,7 +48,7 @@ const AddButton = (props: { options: any }) => {
   )
 }
 
-const QueryBuilder = (props: QueryBuilderProps) => {
+const QueryBuilder = (props: AdvancedQueryBuilderProps) => {
   const { query = {}, addOptionsRef } = props
   const {
     title,

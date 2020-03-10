@@ -271,17 +271,17 @@ export const BasicSearchQueryBuilder = props => {
   }
 
   const AddOptions = () =>
-    addOptionsRef ? (
-      ReactDOM.createPortal(
-        <AddButton addFilter={addFilter} />,
-        props.addOptionsRef
-      )
-    ) : (
-      <React.Fragment>
-        <div style={{ marginLeft: '10px' }} />
-        <AddButton addFilter={addFilter} />
-      </React.Fragment>
-    )
+    addOptionsRef
+      ? ReactDOM.createPortal(
+          <AddButton addFilter={addFilter} />,
+          props.addOptionsRef
+        )
+      : addOptionsRef !== null && (
+          <React.Fragment>
+            <div style={{ marginLeft: '10px' }} />
+            <AddButton addFilter={addFilter} />
+          </React.Fragment>
+        )
 
   return (
     <React.Fragment>

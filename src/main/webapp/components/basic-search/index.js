@@ -1,3 +1,6 @@
-import BasicSearchGQL, { BasicSearch } from './basic-search'
+import BasicSearchGQL, {
+  BasicSearch,
+  BasicSearchQueryBuilder,
+} from './basic-search'
 
-export { BasicSearchGQL as default, BasicSearch }
+export { BasicSearchGQL as default, BasicSearch, BasicSearchQueryBuilder }
