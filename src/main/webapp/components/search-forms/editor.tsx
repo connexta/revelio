@@ -129,7 +129,7 @@ export const QueryEditor = (props: EditorProps) => {
     props.onSearch(queryToSearch(query))
   }
 
-  const [addOptionsRef, setAddOptionsRef] = React.useState()
+  const [addOptionsRef, setAddOptionsRef] = React.useState<HTMLDivElement>()
 
   return (
     <Box width="100%" display="flex" flexDirection="column" height="100%">
