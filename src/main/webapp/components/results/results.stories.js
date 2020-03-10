@@ -13,7 +13,7 @@ const attributes = [
   'created',
   'modified',
   'checksum',
-  //  'id',
+  'id',
 ]
 
 stories.add('Basic', () => {

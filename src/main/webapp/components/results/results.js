@@ -1,6 +1,10 @@
 import React, { useState, forwardRef } from 'react'
-import { Set, fromJS } from 'immutable'
+import { Set, fromJS, getIn } from 'immutable'
 import { useKeyPressed, useSelectionInterface } from '../../react-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
+
+import { mergeDeepOverwriteLists } from '../../utils'
 
 import Typography from '@material-ui/core/Typography'
 import More from '@material-ui/icons/UnfoldMore'
@@ -10,6 +14,7 @@ import Button from '@material-ui/core/Button'
 
 import MaterialTable from 'material-table'
 
+import LinearProgress from '@material-ui/core/LinearProgress'
 import AddBox from '@material-ui/icons/AddBox'
 import ArrowDownward from '@material-ui/icons/ArrowDownward'
 import Check from '@material-ui/icons/Check'
@@ -25,6 +30,7 @@ import Remove from '@material-ui/icons/Remove'
 import SaveAlt from '@material-ui/icons/SaveAlt'
 import Search from '@material-ui/icons/Search'
 import ViewColumn from '@material-ui/icons/ViewColumn'
+import ErrorMessage from '../network-retry/inline-retry'
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -177,8 +183,14 @@ const getAttributeKeysFromResults = results => {
   }, Set())
 }
 
+const mutation = gql`
+  mutation updateUserPreferences($userPreferences: Json) {
+    updateUserPreferences(userPreferences: $userPreferences)
+  }
+`
+
 const Results = props => {
-  const { results, attributes, onSelect } = props
+  const { results, attributes, onSelect, onColumnUpdate } = props
   const selection = Set(props.selection)
   const [lastSelected, setLastSelected] = useState(null)
   const allowTextSelect = !useKeyPressed('Shift')
@@ -220,6 +232,19 @@ const Results = props => {
     setLastSelected(e.shiftKey ? lastSelected : rowId)
   }
 
+  const onColumnDragged = () => {
+    if (onColumnUpdate instanceof Function) {
+      const columnOrder = columns
+        .filter(column => !column.hidden)
+        .sort((a, b) => {
+          return a.tableData.columnOrder - b.tableData.columnOrder
+        })
+        .map(column => column.title)
+
+      onColumnUpdate(columnOrder)
+    }
+  }
+
   return (
     <div style={{ maxWidth: '100%' }}>
       <MaterialTable
@@ -232,12 +257,85 @@ const Results = props => {
         style={{
           userSelect: allowTextSelect ? 'auto' : 'none',
         }}
+        onColumnDragged={onColumnDragged}
       />
     </div>
   )
 }
 
+const query = gql`
+  query UserPreferences {
+    user {
+      preferences {
+        columnOrder
+      }
+    }
+  }
+`
+
+const LoadingComponent = () => <LinearProgress />
+
 const Container = props => {
+  const { loading, error, data = {}, refetch } = useQuery(query)
+  const [updateUserPreferences] = useMutation(mutation, {
+    update: (cache, { data: { updateUserPreferences } }) => {
+      cache.readQuery({ query })
+      cache.writeQuery({
+        query,
+        data: {
+          user: {
+            preferences: {
+              columnOrder: updateUserPreferences.columnOrder,
+              __typename: 'UserPreferences',
+            },
+            __typename: 'User',
+          },
+        },
+      })
+    },
+  })
+  if (loading) {
+    return <LoadingComponent />
+  }
+  if (error) {
+    return (
+      <ErrorMessage onRetry={refetch} error={error}>
+        Error Retrieving Column Order
+      </ErrorMessage>
+    )
+  }
+
+  const attributes = getIn(
+    data,
+    ['user', 'preferences', 'columnOrder'],
+    props.attributes
+  )
+
+  return (
+    <WithSelectionInterface
+      {...props}
+      attributes={attributes}
+      onColumnUpdate={columnOrder => {
+        const newPreferences = mergeDeepOverwriteLists(
+          fromJS(data.user.preferences),
+          fromJS({ columnOrder })
+        )
+
+        if (!fromJS(data.user.preferences).equals(newPreferences)) {
+          const userPreferences = newPreferences.toJS()
+          updateUserPreferences({
+            variables: { userPreferences },
+            optimisticResponse: {
+              updateUserPreferences: userPreferences,
+            },
+          })
+        }
+      }}
+    />
+  )
+}
+
+const WithSelectionInterface = props => {
   const [selection, onSelect] = useSelectionInterface()
   return <Results {...props} selection={selection} onSelect={onSelect} />
 }
