@@ -35,7 +35,6 @@
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-react-hooks": "^2.1.2",
     "express": "4.17.1",
-    "geospatialdraw": "0.5.5",
     "golden-layout": "^1.5.9",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
@@ -87,7 +86,6 @@
     "apollo-server-express": "^2.9.7",
     "compression": "^1.7.4",
     "express": "4.17.1",
-    "geospatialdraw": "0.5.5",
     "golden-layout": "^1.5.9",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
@@ -112,6 +110,9 @@
     "universal-cookie": "^4.0.2",
     "uuid": "^3.3.3",
     "winston": "^3.2.1"
+  },
+  "dependencies": {
+    "geospatialdraw": "0.5.7"
   },
   "scripts": {
     "start": "cross-env NODE_OPTIONS=\"--inspect --max_old_space_size=8192\" ace start --middleware src/main/graphql-server/middleware.js",
