@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { List, Map, Set, fromJS } from 'immutable'
 
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import Tooltip from '@material-ui/core/Tooltip'
+import { CustomTooltip } from '../tooltip'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import { formatDateString, getFileSize, isValidDate } from '../../utils'
@@ -221,7 +221,7 @@ const BarLabels = props => {
 const BarLabel = props => {
   const { label } = props
   return (
-    <Tooltip title={label}>
+    <CustomTooltip title={label}>
       <Typography
         align="center"
         style={{
@@ -234,7 +234,7 @@ const BarLabel = props => {
       >
         {label}
       </Typography>
-    </Tooltip>
+    </CustomTooltip>
   )
 }
 

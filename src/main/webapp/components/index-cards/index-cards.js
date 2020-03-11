@@ -7,18 +7,15 @@ import IconButton from '@material-ui/core/IconButton'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import EditIcon from '@material-ui/icons/Edit'
 import FileCopyIcon from '@material-ui/icons/FileCopy'
-
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardActionArea from '@material-ui/core/CardActionArea'
-
 import moment from 'moment'
-
 import ConfirmDelete from '../confirm-delete'
 import SharingModal from '../sharing/sharing-modal'
-import Tooltip from '@material-ui/core/Tooltip'
+import { CustomTooltip } from '../tooltip'
 
 const onClick = action => e => {
   e.preventDefault()
@@ -40,21 +37,25 @@ export const DuplicateAction = props => {
   const { onDuplicate } = props
   return (
     <IconButton onClick={onClick(onDuplicate)}>
-      <Tooltip title="Duplicate">
+      <CustomTooltip title="Duplicate">
         <FileCopyIcon />
-      </Tooltip>
+      </CustomTooltip>
     </IconButton>
   )
 }
 
 export const DeleteAction = props => {
-  const { onDelete, message } = props
-  return <ConfirmDelete onDelete={onDelete}>{message}</ConfirmDelete>
+  const { onDelete, message, isWritable } = props
+  return isWritable ? (
+    <ConfirmDelete onDelete={onDelete}>{message}</ConfirmDelete>
+  ) : null
 }
 
 export const ShareAction = props => {
-  const { id, title, metacardType } = props
-  return <SharingModal id={id} title={title} metacardType={metacardType} />
+  const { id, title, metacardType, isAdmin } = props
+  return isAdmin ? (
+    <SharingModal id={id} title={title} metacardType={metacardType} />
+  ) : null
 }
 
 export const Actions = CardActions

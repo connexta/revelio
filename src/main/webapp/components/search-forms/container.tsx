@@ -14,6 +14,11 @@ const fragment = gql`
     sorts
     sources
     detail_level
+    security_access_administrators
+    security_access_individuals
+    security_access_individuals_read
+    security_access_groups
+    security_access_groups_read
   }
 `
 
@@ -32,6 +37,8 @@ const searchForms = gql`
           }
         }
       }
+      email
+      roles
     }
   }
   ${fragment}
@@ -99,12 +106,19 @@ const useCreate = () => {
         .filter(({ id }: { id: string }) => id !== data.createMetacard.id)
         .concat(data.createMetacard)
 
+      const user = getIn(cache.readQuery({ query }), ['user'], {})
+      const { email, roles } = user
       cache.writeQuery({
         query,
         data: {
           metacardsByTag: {
             attributes,
             __typename: 'QueryResponse',
+          },
+          user: {
+            email,
+            roles,
+            __typename: 'User',
           },
         },
       })
@@ -167,6 +181,7 @@ export default () => {
     ['user', 'preferences', 'querySettings', 'template', 'id'],
     null
   )
+  const userAttributes = getIn(data, ['user'], [])
   return (
     <SearchFormsRoute
       onCreate={onCreate}
@@ -177,6 +192,7 @@ export default () => {
       forms={forms}
       userDefaultForm={userDefaultForm}
       refetch={refetch}
+      userAttributes={userAttributes}
     />
   )
 }

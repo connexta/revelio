@@ -4,17 +4,17 @@ const stories = storiesOf('Sharing', module)
 import Sharing from './sharing'
 
 const storyIndividuals = {
-  read: ['user1', 'user2'],
-  write: ['user3', 'user4'],
-  admin: ['user5', 'user6'],
+  security_access_individuals_read: ['user1', 'user2'],
+  security_access_individuals: ['user3', 'user4'],
+  security_access_administrators: ['user5', 'user6'],
 }
 
 const storyGroups = {
-  read: ['group1', 'group2'],
-  write: ['group3', 'group4'],
+  security_access_groups_read: ['group1', 'group2'],
+  security_access_groups: ['group3', 'group4'],
 }
 
-const storyRoles = ['role1', 'role2', 'role3']
+const storyRoles = ['group1', 'group2', 'group3', 'group4']
 
 const storySave = () => [() => {}]
 

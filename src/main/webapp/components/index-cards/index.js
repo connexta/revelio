@@ -8,3 +8,5 @@ export {
   EditAction,
   Actions,
 } from './index-cards'
+
+export { ReadOnly } from './read-only'

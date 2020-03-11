@@ -24,13 +24,30 @@ const startingForms = [
       type: 'AND',
       filters: [{ ...defaultFilter }],
     },
+    metacard_owner: 'admin@test.com',
+    security_access_individuals_read: [],
+    security_access_individuals: [],
+    security_access_administrators: ['admin@test.com'],
+    security_access_groups: [],
+    security_access_groups_read: [],
   },
   {
     id: '2',
     title: 'Title 2',
     modified: new Date().toISOString(),
+    metacard_owner: 'not_admin@test.com',
+    security_access_individuals_read: ['admin@test.com'],
+    security_access_individuals: [],
+    security_access_administrators: [],
+    security_access_groups: [],
+    security_access_groups_read: [],
   },
 ]
+
+const userAttributes = {
+  email: 'admin@test.com',
+  roles: ['admin'],
+}
 
 stories.add('route', () => {
   const [searchForms, setSearchForms]: any = useState(startingForms)
@@ -70,6 +87,7 @@ stories.add('route', () => {
         forms={searchForms}
         onDelete={onDelete}
         loading={loading}
+        userAttributes={userAttributes}
       />
     </SelectionProvider>
   )

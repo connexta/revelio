@@ -9,6 +9,10 @@ import Dialog from '@material-ui/core/Dialog'
 
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { Notification } from '../notification/notification'
+import {
+  getSecurityAttributesFromMetacard,
+  getPermissions,
+} from '../sharing/sharing-utils'
 
 import {
   IndexCards,
@@ -17,6 +21,7 @@ import {
   DeleteAction,
   ShareAction,
   Actions,
+  ReadOnly,
 } from '../index-cards'
 import RetryComponent from '../network-retry/snackbar-retry'
 
@@ -51,8 +56,15 @@ const AddItem = props => {
 }
 
 const Item = props => {
-  const { form, Editor, onDelete } = props
+  const { form, Editor, onDelete, user } = props
 
+  const securityAttributes = getSecurityAttributesFromMetacard(form)
+  const { canShare, canWrite, readOnly } = getPermissions(
+    user.email,
+    user.roles,
+    securityAttributes,
+    form.owner
+  )
   const [editing, setEditing] = useState(false)
 
   const onSave = data => {
@@ -77,11 +89,14 @@ const Item = props => {
             id={form.id}
             title={form.title}
             metacardType="attribute-group"
+            isAdmin={canShare}
           />
           <DeleteAction
             message="This will permanently delete the result form."
             onDelete={onDelete}
+            isWritable={canWrite}
           />
+          <ReadOnly isReadOnly={readOnly} indexCardType="Result Form" />
         </Actions>
       </IndexCardItem>
     </Fragment>
@@ -100,6 +115,7 @@ export const Route = props => {
     onSave,
     onDelete,
     refetch,
+    userAttributes,
   } = props
 
   if (loading) {
@@ -145,6 +161,7 @@ export const Route = props => {
                 setMessage('Result Form Deleted')
               }}
               form={form}
+              user={userAttributes}
             />
           )
         })}
@@ -163,6 +180,11 @@ const fragment = gql`
     description
     modified: metacard_modified
     metacard_owner
+    security_access_individuals_read
+    security_access_individuals
+    security_access_administrators
+    security_access_groups_read
+    security_access_groups
     attributes: ui_attribute_group
   }
 `
@@ -173,6 +195,10 @@ const resultForms = gql`
       attributes {
         ...ResultFormAttributes
       }
+    }
+    user {
+      email
+      roles
     }
   }
   ${fragment}
@@ -191,18 +217,22 @@ const useCreate = () => {
   return useMutation(mutation, {
     update: (cache, { data }) => {
       const query = resultForms
-
-      const { metacardsByTag } = cache.readQuery({ query })
+      const { metacardsByTag, user } = cache.readQuery({ query })
       const attributes = metacardsByTag.attributes
         .filter(({ id }) => id !== data.createMetacard.id)
         .concat(data.createMetacard)
-
+      const { email, roles } = user
       cache.writeQuery({
         query,
         data: {
           metacardsByTag: {
             attributes,
             __typename: 'QueryResponse',
+          },
+          user: {
+            email,
+            roles,
+            __typename: 'User',
           },
         },
       })
@@ -352,6 +382,7 @@ export default () => {
   }
 
   const forms = data.metacardsByTag.attributes
+  const user = data.user
 
   return (
     <Route
@@ -361,6 +392,7 @@ export default () => {
       onSave={onSave}
       onDelete={onDelete}
       refetch={refetch}
+      userAttributes={user}
     />
   )
 }

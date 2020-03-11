@@ -12,6 +12,11 @@ import { useParams, useHistory } from 'react-router-dom'
 import { useQueryExecutor } from '../../react-hooks'
 import { Notification } from '../notification/notification'
 import Subscribe from './subscribe'
+const {
+  getPermissions,
+  getSecurityAttributesFromMetacard,
+} = require('../sharing/sharing-utils')
+
 import {
   Actions,
   AddCardItem,
@@ -20,6 +25,7 @@ import {
   IndexCards,
   ShareAction,
   DuplicateAction,
+  ReadOnly,
 } from '../index-cards'
 import Lists from '../lists'
 import { InlineRetry, SnackbarRetry } from '../network-retry'
@@ -223,7 +229,7 @@ const unsubscribeMutation = gql`
 `
 
 const Workspaces = props => {
-  const { workspaces, onCreate, onDelete, onDuplicate } = props
+  const { workspaces, onCreate, onDelete, onDuplicate, userAttributes } = props
   const [subscribe] = useMutation(subscribeMutation)
   const [unsubscribe] = useMutation(unsubscribeMutation)
   const [message, setMessage] = React.useState(null)
@@ -243,6 +249,13 @@ const Workspaces = props => {
       {workspaces.map(workspace => {
         const isSubscribed = workspace.userIsSubscribed
         workspace = workspace.attributes
+        const securityAttributes = getSecurityAttributesFromMetacard(workspace)
+        const { canShare, canWrite, readOnly } = getPermissions(
+          userAttributes.email,
+          userAttributes.roles,
+          securityAttributes,
+          workspace.owner
+        )
         return (
           <IndexCardItem
             {...workspace}
@@ -254,10 +267,12 @@ const Workspaces = props => {
                 id={workspace.id}
                 title={workspace.title}
                 metacardType="workspace"
+                isAdmin={canShare}
               />
               <DeleteAction
                 onDelete={() => onDelete(workspace)}
                 message="This will permanently delete the workspace."
+                isWritable={canWrite}
               />
               <Subscribe
                 subscribe={subscribe}
@@ -268,6 +283,7 @@ const Workspaces = props => {
                 isSubscribed={isSubscribed}
               />
               <DuplicateAction onDuplicate={() => onDuplicate(workspace)} />
+              <ReadOnly isReadOnly={readOnly} indexCardType="workspace" />
             </Actions>
           </IndexCardItem>
         )
@@ -282,12 +298,21 @@ const workspaces = gql`
         id
         title
         metacard_owner
+        security_access_individuals_read
+        security_access_individuals
+        security_access_administrators
+        security_access_groups_read
+        security_access_groups
         modified: metacard_modified
       }
       results {
         isSubscribed
         id
       }
+    }
+    user {
+      email
+      roles
     }
   }
 `
@@ -297,6 +322,11 @@ const workspaceAttributes = gql`
     title
     metacard_tags
     metacard_type
+    security_access_individuals_read
+    security_access_individuals
+    security_access_administrators
+    security_access_groups_read
+    security_access_groups
   }
 `
 const useClone = () => {
@@ -315,17 +345,32 @@ const useClone = () => {
   return useMutation(cloneWorkspace, {
     update: (cache, { data }) => {
       const query = workspaces
-      const { metacardsByTag } = cache.readQuery({ query })
+      const { metacardsByTag, user } = cache.readQuery({ query })
       const updatedWorkspaces = [
         data.cloneMetacard,
         ...metacardsByTag.attributes,
       ]
+      const updatedResults = [
+        {
+          id: data.cloneMetacard.id,
+          isSubscribed: false,
+          __typename: 'QueryResponse',
+        },
+        ...metacardsByTag.results,
+      ]
+      const { email, roles } = user
       cache.writeQuery({
         query,
         data: {
           metacardsByTag: {
             attributes: updatedWorkspaces,
+            results: updatedResults,
             __typename: 'QueryResponse',
+          },
+          user: {
+            email,
+            roles,
+            __typename: 'User',
           },
         },
       })
@@ -350,7 +395,7 @@ const useCreate = () => {
   return useMutation(mutation, {
     update: (cache, { data }) => {
       const query = workspaces
-      const { metacardsByTag } = cache.readQuery({ query })
+      const { metacardsByTag, user } = cache.readQuery({ query })
       const updatedWorkspaces = [
         data.createMetacard,
         ...metacardsByTag.attributes,
@@ -363,6 +408,7 @@ const useCreate = () => {
         },
         ...metacardsByTag.results,
       ]
+      const { email, roles } = user
       cache.writeQuery({
         query,
         data: {
@@ -370,6 +416,11 @@ const useCreate = () => {
             attributes: updatedWorkspaces,
             results: updatedResults,
             __typename: 'QueryResponse',
+          },
+          user: {
+            email,
+            roles,
+            __typename: 'User',
           },
         },
       })
@@ -478,6 +529,7 @@ export default () => {
       onCreate={onCreate}
       onDelete={onDelete}
       onDuplicate={onDuplicate}
+      userAttributes={data.user}
     />
   )
 }
