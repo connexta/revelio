@@ -1,6 +1,6 @@
 {
   "name": "@connexta/revelio",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "src/main/webapp/main.js",
   "license": "MIT",
   "devDependencies": {
