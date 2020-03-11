@@ -10,7 +10,7 @@ import TextField from '@material-ui/core/TextField'
 const { useQueryExecutor, useApolloFallback } = require('../../react-hooks')
 import { set } from 'immutable'
 
-const genResults = require('../../gen-results').default
+const genResults = require('../../sample-data/gen-results').default
 import loadable from 'react-loadable'
 import LinearProgress from '@material-ui/core/LinearProgress'
 let Visualizations: any = () => null

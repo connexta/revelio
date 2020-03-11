@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Results } from './results'
 import { storiesOf } from '../../@storybook/react'
 
-import genResults from '../../gen-results'
+import genResults from '../../sample-data/gen-results'
 
 const stories = storiesOf('Result', module)
 

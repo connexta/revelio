@@ -12,7 +12,10 @@
     "src/main/webapp/react-hooks/**/index.ts",
     "src/main/webapp/react-hooks/**/index.tsx",
     "src/main/webapp/react-hooks/**/index.js",
-    "src/main/webapp/react-hooks/**/index.jsx"
+    "src/main/webapp/react-hooks/**/index.jsx",
+    "src/main/webapp/intrigue-api/**/*",
+    "src/main/webapp/create-client-apollo.js"
   ],
+  "exclude": ["node_modules"],
   "extends": "./tsconfig"
 }

@@ -30,7 +30,7 @@ const Content = props => {
   return (
     <CardContent>
       <Typography variant="h4" component="h1">
-        {branding} {product}
+        {branding} {product} bye from link
       </Typography>
       <Divider style={{ marginBottom: 15, marginTop: 10 }} />
 

@@ -1,4 +1,4 @@
-import genResults from '../../gen-results'
+import genResults from '../../sample-data/gen-results'
 import Visualizations from './visualizations'
 import { SelectionProvider } from '../../react-hooks/use-selection-interface'
 import React from 'react'

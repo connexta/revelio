@@ -1,7 +1,7 @@
 import React from 'react'
 import Routes from './routes'
 import { BrowserRouter } from 'react-router-dom'
-import createClientApollo from './intrigue-api/create-client-apollo'
+import createClientApollo from './create-client-apollo'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { MuiPickersUtilsProvider } from '@material-ui/pickers'
 import MomentUtils from '@date-io/moment'
