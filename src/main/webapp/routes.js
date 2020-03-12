@@ -62,7 +62,7 @@ const loadDynamicRoute = route => {
   const routes = {
     workspace: loadable({
       loader: async () => {
-        return (await import(/* webpackChunkName: "workspace" */ './components/workspaces'))
+        return (await import(/* webpackChunkName: "workspace" */ './components/workspace'))
           .Workspace
       },
       loading: LoadingComponent,

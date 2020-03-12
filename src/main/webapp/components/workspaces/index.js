@@ -1,3 +1,5 @@
-import Workspaces, { Workspace } from './workspaces'
-
-export { Workspaces, Workspace }
+export {
+  default as Workspaces,
+  workspaces,
+  workspaceAttributes,
+} from './workspaces'
