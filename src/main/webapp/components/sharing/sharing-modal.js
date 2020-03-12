@@ -13,6 +13,9 @@ import {
 } from '../metacard-interaction'
 
 const ShareMetacardInteraction = props => {
+  if (!props.isAdmin) {
+    return null
+  }
   const { setDialogProps } = useContext(MetacardInteractionsDialogContext)
   return (
     <Box

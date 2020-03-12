@@ -39,7 +39,17 @@ const MetacardInteractionsDropdown = (
         </IconButton>
         <Menu anchorEl={anchorEl} open={isOpen} onClose={close}>
           {React.Children.map(props.children, child => {
-            return <MenuItem onClick={() => close()}>{child}</MenuItem>
+            return (
+              <MenuItem
+                disableGutters
+                // Set the padding to 0 because if the child is null (i.e. metacard interaction not enabled),
+                // the item will still be visible because of the default padding on menu items
+                style={{ padding: 0 }}
+                onClick={() => close()}
+              >
+                {child}
+              </MenuItem>
+            )
           })}
         </Menu>
       </Box>

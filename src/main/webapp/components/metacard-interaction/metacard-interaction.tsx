@@ -11,7 +11,12 @@ type MetacardInteractionProps = {
 const MetacardInteraction = (props: MetacardInteractionProps) => {
   const { Icon } = props
   return (
-    <Box display="flex" justifyContent="center" onClick={props.onClick}>
+    <Box
+      display="flex"
+      justifyContent="center"
+      onClick={props.onClick}
+      style={{ padding: 10 }}
+    >
       <Icon style={{ marginRight: 15 }} /> {props.message}
     </Box>
   )

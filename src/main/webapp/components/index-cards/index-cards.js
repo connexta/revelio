@@ -40,9 +40,9 @@ export const DuplicateAction = props => {
   const { onDuplicate } = props
   return (
     <IconButton onClick={onClick(onDuplicate)}>
-      <CustomTooltip title="Duplicate">
+      <Tooltip title="Duplicate">
         <FileCopyIcon />
-      </CustomTooltip>
+      </Tooltip>
     </IconButton>
   )
 }
