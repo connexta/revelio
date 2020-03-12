@@ -1,5 +1,3 @@
-export {
-  default as Workspaces,
-  workspaces,
-  workspaceAttributes,
-} from './workspaces'
+export { default } from './workspaces'
+
+export { workspaces, workspaceAttributes } from './gql-workspaces'
