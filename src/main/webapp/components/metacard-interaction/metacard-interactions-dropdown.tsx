@@ -3,8 +3,9 @@ import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Menu from '@material-ui/core/Menu'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
-import { MenuItem, Box, Dialog } from '@material-ui/core'
-import { DialogProps } from '@material-ui/core/Dialog'
+import MenuItem from '@material-ui/core/MenuItem'
+import Box from '@material-ui/core/Box'
+import Dialog, { DialogProps } from '@material-ui/core/Dialog'
 
 const MetacardInteractionsDialogContext = createContext<any>({
   setProps: () => {
