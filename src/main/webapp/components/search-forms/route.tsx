@@ -91,11 +91,10 @@ const SearchForm = (props: SearchFormProps) => {
             isWritable={props.canWrite}
           />
           <ReadOnly isReadOnly={props.readOnly} indexCardType="Search Form" />
-          <ShareAction {...props.form} metacardType="query-template" />
-          <DeleteAction itemName="Search Form" onDelete={props.onDelete} />
           <MetacardInteractionsDropdown>
             <ShareMetacardInteraction
               {...props.form}
+              isAdmin={props.canShare}
               metacardType="query-template"
             />
             <EditMetacardInteraction
@@ -105,6 +104,7 @@ const SearchForm = (props: SearchFormProps) => {
             <ConfirmDeleteMetacardInteraction
               itemName="Search Form"
               onDelete={props.onDelete}
+              isWritable={props.canWrite}
             />
           </MetacardInteractionsDropdown>
         </Actions>

@@ -19,6 +19,9 @@ import {
 
 const ConfirmDeleteAction = props => {
   const [open, setOpen] = useState(false)
+  if (!props.isWritable) {
+    return null
+  }
   return (
     <Box
       onClick={e => {
@@ -38,6 +41,9 @@ const ConfirmDeleteAction = props => {
 
 const ConfirmDeleteMetacardInteraction = props => {
   const { setDialogProps } = useContext(MetacardInteractionsDialogContext)
+  if (!props.isWritable) {
+    return null
+  }
   const { itemName } = props
   return (
     <Box

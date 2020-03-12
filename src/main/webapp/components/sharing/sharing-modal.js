@@ -41,6 +41,9 @@ const ShareMetacardInteraction = props => {
 
 const ShareAction = props => {
   const [open, setOpen] = useState(false)
+  if (!props.isAdmin) {
+    return null
+  }
   return (
     <Box
       onClick={e => {

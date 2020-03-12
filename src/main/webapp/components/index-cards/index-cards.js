@@ -14,7 +14,7 @@ import CardHeader from '@material-ui/core/CardHeader'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import moment from 'moment'
 
-import Tooltip from '@material-ui/core/Tooltip'
+import { CustomTooltip } from '../tooltip'
 
 import { ShareAction } from '../sharing/sharing-modal'
 
@@ -40,9 +40,9 @@ export const DuplicateAction = props => {
   const { onDuplicate } = props
   return (
     <IconButton onClick={onClick(onDuplicate)}>
-      <Tooltip title="Duplicate">
+      <CustomTooltip title="Duplicate">
         <FileCopyIcon />
-      </Tooltip>
+      </CustomTooltip>
     </IconButton>
   )
 }

@@ -106,8 +106,10 @@ const Item = props => {
           <ReadOnly isReadOnly={readOnly} indexCardType="Result Form" />
           <MetacardInteractionsDropdown>
             <ShareMetacardInteraction
-              {...form}
+              id={form.id}
+              title={form.title}
               metacardType="attribute-group"
+              isAdmin={canShare}
             />
             <EditMetacardInteraction
               itemName="Result Form"
@@ -116,6 +118,7 @@ const Item = props => {
             <ConfirmDeleteMetacardInteraction
               itemName="Result Form"
               onDelete={onDelete}
+              isWritable={canWrite}
             />
           </MetacardInteractionsDropdown>
         </Actions>

@@ -6,7 +6,7 @@ type EditMetacardInteractionsProps = {
   itemName: string
 }
 
-const EditMetacardInteractions = (props: EditMetacardInteractionsProps) => {
+const EditMetacardInteraction = (props: EditMetacardInteractionsProps) => {
   const { onEdit, itemName } = props
   return (
     <MetacardInteraction
@@ -17,4 +17,4 @@ const EditMetacardInteractions = (props: EditMetacardInteractionsProps) => {
   )
 }
 
-export default EditMetacardInteractions
+export default EditMetacardInteraction
