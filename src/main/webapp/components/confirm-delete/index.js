@@ -1,1 +1,4 @@
-export { default } from './confirm-delete'
+export {
+  ConfirmDeleteAction,
+  ConfirmDeleteMetacardInteraction,
+} from './confirm-delete'
