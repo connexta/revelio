@@ -19,16 +19,16 @@ const query = gql`
   }
 `
 
-const useTheme = () => {
+const useTheme = ({ darkTheme = dark, lightTheme = light }) => {
   const { data } = useQuery(query)
 
   const theme = getIn(data, ['user', 'preferences', 'theme', 'theme'], 'light')
 
-  return theme === 'dark' ? dark : light
+  return theme === 'dark' ? darkTheme : lightTheme
 }
 
-export default ({ children }) => {
-  const theme = useTheme()
+export default ({ children, darkTheme, lightTheme }) => {
+  const theme = useTheme({ darkTheme, lightTheme })
 
   return <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
 }

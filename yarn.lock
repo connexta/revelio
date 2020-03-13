@@ -8870,13 +8870,12 @@ geojson-rbush@2.1.0:
     "@turf/meta" "*"
     rbush "*"
 
-geospatialdraw@0.5.5:
-  version "0.5.5"
-  resolved "https://registry.yarnpkg.com/geospatialdraw/-/geospatialdraw-0.5.5.tgz#ecc862dad8f0d086e1c55766e5a102de2d7771a9"
-  integrity sha512-FL58sw+qaYHcUExa0jLiTeI+3INuzi7c5Nf2nTcvE7bf3MWVo/9TYFhOKBUFkq1QsWG3OemFufmIrBRvVcduIw==
+geospatialdraw@0.5.7:
+  version "0.5.7"
+  resolved "https://registry.yarnpkg.com/geospatialdraw/-/geospatialdraw-0.5.7.tgz#40cff351b73336c12f3bc2d5ae127ed403a2e932"
+  integrity sha512-UJoR1dwOgujgX08knBdXlYhkwb3+7GtGmFoB+Lri3tGxhUChwB55w1WleVpiHMSzgTzcfZGZHmpiWpM2tvVWPQ==
   dependencies:
     "@turf/turf" "5.1.6"
-    react "16.9.0"
     usng.js "0.4.2"
 
 get-caller-file@^1.0.1:
@@ -13276,15 +13275,6 @@ react-transition-group@^4.3.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react@16.9.0, react@^16.8.3, react@^16.9.0:
-  version "16.9.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.9.0.tgz#40ba2f9af13bc1a38d75dbf2f4359a5185c4f7aa"
-  integrity sha512-+7LQnFBwkiw+BobzOF6N//BdoNw0ouwmSJTEm9cglOOmsg/TMiFHZLe2sEoN5M7LgJTj9oHH0gxklfnQe66S1w==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.2"
-
 react@^0.14.0:
   version "0.14.9"
   resolved "https://registry.yarnpkg.com/react/-/react-0.14.9.tgz#9110a6497c49d44ba1c0edd317aec29c2e0d91d1"
@@ -13292,6 +13282,15 @@ react@^0.14.0:
   dependencies:
     envify "^3.0.0"
     fbjs "^0.6.1"
+
+react@^16.8.3, react@^16.9.0:
+  version "16.9.0"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.9.0.tgz#40ba2f9af13bc1a38d75dbf2f4359a5185c4f7aa"
+  integrity sha512-+7LQnFBwkiw+BobzOF6N//BdoNw0ouwmSJTEm9cglOOmsg/TMiFHZLe2sEoN5M7LgJTj9oHH0gxklfnQe66S1w==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
 
 reactcss@^1.2.0:
   version "1.2.3"
