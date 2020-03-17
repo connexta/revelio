@@ -36,19 +36,19 @@ const onSubscribe = async (props, subscribed, setSubscribed) => {
 
   subscribed
     ? await unsubscribeFromWorkspace({
-      id,
-      title,
-      setMessage,
-      unsubscribe,
-      setSubscribed,
-    })
+        id,
+        title,
+        setMessage,
+        unsubscribe,
+        setSubscribed,
+      })
     : await subscribeToWorkspace({
-      id,
-      title,
-      setMessage,
-      subscribe,
-      setSubscribed,
-    })
+        id,
+        title,
+        setMessage,
+        subscribe,
+        setSubscribed,
+      })
 }
 
 export default props => {
@@ -70,9 +70,9 @@ export default props => {
   )
 }
 
-export const SubscribeMetacardInteraction = (props) => {
+export const SubscribeMetacardInteraction = props => {
   const [subscribed, setSubscribed] = React.useState(props.isSubscribed)
-  
+
   return (
     <MetacardInteraction
       Icon={subscribed ? EmailOutlinedIcon : EmailIcon}
@@ -81,7 +81,7 @@ export const SubscribeMetacardInteraction = (props) => {
         e.preventDefault()
         onSubscribe(props, subscribed, setSubscribed)
       }}
-      message={subscribed ? "Unsubscribe Workspace" : "Subscribe Workspace"}
+      message={subscribed ? 'Unsubscribe Workspace' : 'Subscribe Workspace'}
     />
   )
 }

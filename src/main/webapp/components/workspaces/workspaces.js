@@ -18,12 +18,12 @@ import {
   ShareMetacardInteraction,
   ConfirmDeleteMetacardInteraction,
   EditMetacardInteraction,
-  DuplicateMetacardInteraction
+  DuplicateMetacardInteraction,
 } from '../index-cards/metacard-interactions'
 import { SnackbarRetry } from '../network-retry'
 import { Notification } from '../notification/notification'
 import { useClone, useCreate, useDelete, useSubscribe } from './hooks/'
-import Subscribe, {SubscribeMetacardInteraction} from './subscribe'
+import Subscribe, { SubscribeMetacardInteraction } from './subscribe'
 const {
   getPermissions,
   getSecurityAttributesFromMetacard,
@@ -95,7 +95,8 @@ const Workspaces = props => {
                 />
                 <EditMetacardInteraction
                   itemName="Workspace"
-                  onEdit={() => history.push(`/workspaces/${workspace.id}`)}/>
+                  onEdit={() => history.push(`/workspaces/${workspace.id}`)}
+                />
                 <ConfirmDeleteMetacardInteraction
                   itemName="Workspace"
                   onDelete={() => onDelete(workspace)}

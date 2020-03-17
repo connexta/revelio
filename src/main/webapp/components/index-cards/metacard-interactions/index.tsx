@@ -10,5 +10,5 @@ export {
   ShareMetacardInteraction,
   EditMetacardInteraction,
   ConfirmDeleteMetacardInteraction,
-  DuplicateMetacardInteraction
+  DuplicateMetacardInteraction,
 }
