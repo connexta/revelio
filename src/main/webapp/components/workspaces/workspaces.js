@@ -13,10 +13,17 @@ import {
   ReadOnly,
   ShareAction,
 } from '../index-cards'
+import {
+  MetacardInteractionsDropdown,
+  ShareMetacardInteraction,
+  ConfirmDeleteMetacardInteraction,
+  EditMetacardInteraction,
+  DuplicateMetacardInteraction
+} from '../index-cards/metacard-interactions'
 import { SnackbarRetry } from '../network-retry'
 import { Notification } from '../notification/notification'
 import { useClone, useCreate, useDelete, useSubscribe } from './hooks/'
-import Subscribe from './subscribe'
+import Subscribe, {SubscribeMetacardInteraction} from './subscribe'
 const {
   getPermissions,
   getSecurityAttributesFromMetacard,
@@ -79,6 +86,34 @@ const Workspaces = props => {
               />
               <DuplicateAction onDuplicate={() => onDuplicate(workspace)} />
               <ReadOnly isReadOnly={readOnly} indexCardType="workspace" />
+              <MetacardInteractionsDropdown>
+                <ShareMetacardInteraction
+                  id={workspace.id}
+                  title={workspace.title}
+                  metacardType="workspace"
+                  isAdmin={canShare}
+                />
+                <EditMetacardInteraction
+                  itemName="Workspace"
+                  onEdit={() => history.push(`/workspaces/${workspace.id}`)}/>
+                <ConfirmDeleteMetacardInteraction
+                  itemName="Workspace"
+                  onDelete={() => onDelete(workspace)}
+                  isWritable={canWrite}
+                />
+                <DuplicateMetacardInteraction
+                  onDuplicate={() => onDuplicate(workspace)}
+                  itemName="Workspace"
+                />
+                <SubscribeMetacardInteraction
+                  subscribe={subscribe}
+                  unsubscribe={unsubscribe}
+                  id={workspace.id}
+                  title={workspace.title}
+                  setMessage={setMessage}
+                  isSubscribed={isSubscribed}
+                />
+              </MetacardInteractionsDropdown>
             </Actions>
           </IndexCardItem>
         )
