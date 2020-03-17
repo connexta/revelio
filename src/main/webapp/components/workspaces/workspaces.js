@@ -23,7 +23,7 @@ import {
 import { SnackbarRetry } from '../network-retry'
 import { Notification } from '../notification/notification'
 import { useClone, useCreate, useDelete, useSubscribe } from './hooks/'
-import Subscribe, { SubscribeMetacardInteraction } from './subscribe'
+import { SubscribeAction, SubscribeMetacardInteraction } from './subscribe'
 const {
   getPermissions,
   getSecurityAttributesFromMetacard,
@@ -76,7 +76,7 @@ const Workspaces = props => {
                 message="This will permanently delete the workspace."
                 isWritable={canWrite}
               />
-              <Subscribe
+              <SubscribeAction
                 subscribe={subscribe}
                 unsubscribe={unsubscribe}
                 id={workspace.id}

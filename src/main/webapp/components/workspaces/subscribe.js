@@ -51,7 +51,7 @@ const onSubscribe = async (props, subscribed, setSubscribed) => {
       })
 }
 
-export default props => {
+const SubscribeAction = props => {
   const { subscribe, unsubscribe, id, title, setMessage } = props
   const [subscribed, setSubscribed] = React.useState(props.isSubscribed)
 
@@ -70,7 +70,7 @@ export default props => {
   )
 }
 
-export const SubscribeMetacardInteraction = props => {
+const SubscribeMetacardInteraction = props => {
   const [subscribed, setSubscribed] = React.useState(props.isSubscribed)
 
   return (
@@ -85,3 +85,5 @@ export const SubscribeMetacardInteraction = props => {
     />
   )
 }
+
+export { SubscribeAction, SubscribeMetacardInteraction }
