@@ -142,6 +142,33 @@
               "deprecationReason": null
             },
             {
+              "name": "metacardById",
+              "description": "",
+              "args": [
+                {
+                  "name": "id",
+                  "description": "",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "ID",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "NewQueryResponse",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "facet",
               "description": "Get known values for a given attribute.\n\nNOTE: attributes need to be **whitelisted by an Admin** before they can be faceted",
               "args": [
@@ -2499,6 +2526,53 @@
               "type": {
                 "kind": "SCALAR",
                 "name": "Boolean",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "NewQueryResponse",
+          "description": "",
+          "fields": [
+            {
+              "name": "results",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "QueryResponseResult",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "attributes",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "MetacardAttributes",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "status",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "QueryResponseStatus",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -7489,7 +7563,11 @@
         {
           "name": "cacheControl",
           "description": "",
-          "locations": ["FIELD_DEFINITION", "OBJECT", "INTERFACE"],
+          "locations": [
+            "FIELD_DEFINITION",
+            "OBJECT",
+            "INTERFACE"
+          ],
           "args": [
             {
               "name": "maxAge",
@@ -7516,7 +7594,11 @@
         {
           "name": "skip",
           "description": "Directs the executor to skip this field or fragment when the `if` argument is true.",
-          "locations": ["FIELD", "FRAGMENT_SPREAD", "INLINE_FRAGMENT"],
+          "locations": [
+            "FIELD",
+            "FRAGMENT_SPREAD",
+            "INLINE_FRAGMENT"
+          ],
           "args": [
             {
               "name": "if",
@@ -7537,7 +7619,11 @@
         {
           "name": "include",
           "description": "Directs the executor to include this field or fragment only when the `if` argument is true.",
-          "locations": ["FIELD", "FRAGMENT_SPREAD", "INLINE_FRAGMENT"],
+          "locations": [
+            "FIELD",
+            "FRAGMENT_SPREAD",
+            "INLINE_FRAGMENT"
+          ],
           "args": [
             {
               "name": "if",
@@ -7558,7 +7644,10 @@
         {
           "name": "deprecated",
           "description": "Marks an element of a GraphQL schema as no longer supported.",
-          "locations": ["FIELD_DEFINITION", "ENUM_VALUE"],
+          "locations": [
+            "FIELD_DEFINITION",
+            "ENUM_VALUE"
+          ],
           "args": [
             {
               "name": "reason",
