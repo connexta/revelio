@@ -39,6 +39,7 @@ import { Link as ReactLink, Route, matchPath } from 'react-router-dom'
 import User from './components/user/user'
 import UserSettings from './components/user-settings'
 import loadable from 'react-loadable'
+import { NavigationBarContext } from './nav-bar-context'
 
 import url from 'url'
 
@@ -175,7 +176,7 @@ const routes = [
 
 const otherRoutes = [
   {
-    title: 'Workspace',
+    title: '',
     path: '/workspaces/:id',
     component: loadDynamicRoute('workspace'),
   },
@@ -217,10 +218,10 @@ const NavBar = props => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" noWrap style={{ flexGrow: 1 }}>
+        <Typography variant="h6" noWrap>
           {title}
         </Typography>
-
+        <div style={{ marginLeft: 10, flexGrow: 1 }} ref={props.navLeftRef} />
         <UserSettings />
         <User />
       </Toolbar>
@@ -288,6 +289,7 @@ const NavMenu = props => {
 
 const AppRouter = () => {
   const [open, setOpen] = React.useState(false)
+  const [navLeftRef, setNavLeftRef] = React.useState()
   const { palette } = useTheme()
 
   const handleDrawerOpen = () => {
@@ -315,8 +317,12 @@ const AppRouter = () => {
             const { title, path, component: Component } = route
             const render = () => {
               return (
-                <React.Fragment>
-                  <NavBar title={title} onMenuOpen={handleDrawerOpen} />
+                <NavigationBarContext.Provider value={navLeftRef}>
+                  <NavBar
+                    title={title}
+                    onMenuOpen={handleDrawerOpen}
+                    navLeftRef={el => setNavLeftRef(el)}
+                  />
                   <div
                     style={{
                       overflow: 'auto',
@@ -325,7 +331,7 @@ const AppRouter = () => {
                   >
                     <Component />
                   </div>
-                </React.Fragment>
+                </NavigationBarContext.Provider>
               )
             }
             return <Route key={path} exact path={path} render={render} />

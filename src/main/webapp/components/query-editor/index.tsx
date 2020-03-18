@@ -1,1 +1,1 @@
-export { default } from './query-editor'
+export { default, EditorProps } from './query-editor'
