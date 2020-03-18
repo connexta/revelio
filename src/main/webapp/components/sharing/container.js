@@ -49,8 +49,6 @@ const Container = props => {
   if (error) {
     return <div>Error</div>
   }
-  console.log(data)
-
   const sharingAttributes = data.metacardById
   const {
     security_access_individuals_read = [],

@@ -349,8 +349,7 @@ const metacardsByTag = async (parent, args, context) => {
 
 const metacardById = async (parent, args, context) => {
   const [metacard] = await metacardsById(parent, { ids: [args.id] }, context)
-  const [attributes] = metacard.attributes
-  return attributes
+  return metacard.attributes
 }
 
 const metacardsById = async (parent, args, context) => {

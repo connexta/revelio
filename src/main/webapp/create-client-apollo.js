@@ -3,7 +3,6 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import { BatchHttpLink } from 'apollo-link-batch-http'
 import { onError } from 'apollo-link-error'
 import { ApolloLink } from 'apollo-link'
-import { toIdValue } from 'apollo-utilities'
 
 const clientErrorLink = onAuthentication =>
   onError(({ graphQLErrors, networkError, operation, forward }) => {
