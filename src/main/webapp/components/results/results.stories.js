@@ -7,13 +7,13 @@ import genResults from '../../sample-data/gen-results'
 const stories = storiesOf('Result', module)
 
 const attributes = [
-  'Title',
-  'Thumbnail',
-  'Description',
-  'Created',
-  'Modified',
-  'Checksum',
-  'ID',
+  'title',
+  'thumbnail',
+  'description',
+  'created',
+  'modified',
+  'checksum',
+  'id',
 ]
 
 stories.add('Basic', () => {

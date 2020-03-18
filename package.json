@@ -92,6 +92,7 @@
     "graphql-tools": "^4.0.5",
     "immutable": "^4.0.0-rc.12",
     "lodash.throttle": "^4.1.1",
+    "material-table": "^1.57.2",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.16",
     "ol": "^6.0.1",
@@ -112,7 +113,8 @@
     "winston": "^3.2.1"
   },
   "dependencies": {
-    "geospatialdraw": "0.5.7"
+    "geospatialdraw": "0.5.7",
+    "material-table": "^1.57.2"
   },
   "scripts": {
     "start": "cross-env NODE_OPTIONS=\"--inspect --max_old_space_size=8192\" ace start --middleware src/main/graphql-server/middleware.js",
