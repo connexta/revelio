@@ -162,7 +162,7 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "NewQueryResponse",
+                "name": "MetacardAttributes",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -2526,53 +2526,6 @@
               "type": {
                 "kind": "SCALAR",
                 "name": "Boolean",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "NewQueryResponse",
-          "description": "",
-          "fields": [
-            {
-              "name": "results",
-              "description": "",
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "QueryResponseResult",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "attributes",
-              "description": "",
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "MetacardAttributes",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "status",
-              "description": "",
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "QueryResponseStatus",
                 "ofType": null
               },
               "isDeprecated": false,
