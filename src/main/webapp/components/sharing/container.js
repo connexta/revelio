@@ -25,11 +25,9 @@ const mutation = gql`
 `
 
 const getMetacardSharing = gql`
-  query Sharing($ids: [ID]!) {
-    metacardsById(ids: $ids) {
-      attributes {
-        ...SharingAttributes
-      }
+  query Sharing($id: ID!) {
+    metacardById(id: $id) {
+      ...SharingAttributes
     }
     user {
       roles
@@ -42,7 +40,7 @@ const Container = props => {
   const { id, metacardType } = props
   const [save] = useMutation(mutation)
   const { loading, error, data } = useQuery(getMetacardSharing, {
-    variables: { ids: [id] },
+    variables: { id: id },
   })
 
   if (loading) {
@@ -51,7 +49,9 @@ const Container = props => {
   if (error) {
     return <div>Error</div>
   }
-  const [sharingAttributes] = data.metacardsById[0].attributes
+  console.log(data)
+
+  const sharingAttributes = data.metacardById
   const {
     security_access_individuals_read = [],
     security_access_individuals = [],
@@ -66,7 +66,6 @@ const Container = props => {
   }
   const groups = { security_access_groups_read, security_access_groups }
   const userRoles = data.user.roles
-
   return (
     <Sharing
       loading={loading}

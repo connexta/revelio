@@ -119,6 +119,8 @@ const typeDefs = `
 
     metacardsByTag(tag: String!, settings: QuerySettingsInput): QueryResponse
     metacardsById(ids: [ID]!, settings: QuerySettingsInput): [QueryResponse]
+    metacardById(id: ID!): MetacardAttributes
+
 
     # Get known values for a given attribute.
     #
@@ -345,6 +347,12 @@ const metacardsByTag = async (parent, args, context) => {
   )
 }
 
+const metacardById = async (parent, args, context) => {
+  const [metacard] = await metacardsById(parent, { ids: [args.id] }, context)
+  const [attributes] = metacard.attributes
+  return attributes
+}
+
 const metacardsById = async (parent, args, context) => {
   return await Promise.all(
     args.ids.map(id =>
@@ -516,6 +524,7 @@ const resolvers = {
     metacards,
     metacardsByTag,
     metacardsById,
+    metacardById,
     facet,
   },
   Mutation: {
