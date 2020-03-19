@@ -52,7 +52,6 @@ const onSubscribe = async (props, subscribed, setSubscribed) => {
 }
 
 const SubscribeAction = props => {
-  const { subscribe, unsubscribe, id, title, setMessage } = props
   const [subscribed, setSubscribed] = React.useState(props.isSubscribed)
 
   return (
