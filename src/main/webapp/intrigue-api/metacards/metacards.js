@@ -44,7 +44,7 @@ const typeDefs = `
   }
 
   type DefaultSearchForm {
-    id: ID!
+    id: ID
   }
 
   type QuerySettings {

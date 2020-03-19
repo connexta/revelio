@@ -78,7 +78,7 @@ stories.add('route', () => {
       })
     )
   }
-
+  const [defaultForm, setDefaultForm] = useState()
   return (
     <SelectionProvider>
       <SearchFormRoute
@@ -87,6 +87,10 @@ stories.add('route', () => {
         forms={searchForms}
         onDelete={onDelete}
         loading={loading}
+        userDefaultForm={defaultForm}
+        toggleDefaultForm={id => {
+          setDefaultForm(id === defaultForm ? null : id)
+        }}
         userAttributes={userAttributes}
       />
     </SelectionProvider>
