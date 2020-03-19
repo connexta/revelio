@@ -221,7 +221,10 @@ const NavBar = props => {
         <Typography variant="h6" noWrap>
           {title}
         </Typography>
-        <div style={{ marginLeft: 10, flexGrow: 1 }} ref={props.navLeftRef} />
+        <div
+          style={{ marginLeft: 10, flexGrow: 1 }}
+          ref={props.navBarLeftRef}
+        />
         <UserSettings />
         <User />
       </Toolbar>
@@ -289,7 +292,7 @@ const NavMenu = props => {
 
 const AppRouter = () => {
   const [open, setOpen] = React.useState(false)
-  const [navLeftRef, setNavLeftRef] = React.useState()
+  const [navBarLeftRef, setNavBarLeftRef] = React.useState()
   const { palette } = useTheme()
 
   const handleDrawerOpen = () => {
@@ -317,11 +320,11 @@ const AppRouter = () => {
             const { title, path, component: Component } = route
             const render = () => {
               return (
-                <NavigationBarContext.Provider value={navLeftRef}>
+                <NavigationBarContext.Provider value={navBarLeftRef}>
                   <NavBar
                     title={title}
                     onMenuOpen={handleDrawerOpen}
-                    navLeftRef={el => setNavLeftRef(el)}
+                    navBarLeftRef={el => setNavBarLeftRef(el)}
                   />
                   <div
                     style={{

@@ -13,7 +13,10 @@ import { button } from '@storybook/addon-knobs'
 stories.add('Basic', () => {
   const [queries, setQueries] = useState(sampleQueries)
   const [query, setQuery] = useState(sampleQueries[0].id)
-  const [navLeftRef, setNavLeftRef] = React.useState<HTMLDivElement | null>()
+  const [
+    navBarLeftRef,
+    setNavBarLeftRef,
+  ] = React.useState<HTMLDivElement | null>()
 
   const label = 'Clear Queries'
   const onClear = () => {
@@ -24,8 +27,8 @@ stories.add('Basic', () => {
   button(label, onClear)
 
   return (
-    <NavigationBarContext.Provider value={navLeftRef}>
-      <div ref={el => setNavLeftRef(el)} />
+    <NavigationBarContext.Provider value={navBarLeftRef}>
+      <div ref={el => setNavBarLeftRef(el)} />
       <QueryManager
         queries={queries}
         currentQuery={query}
