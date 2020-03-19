@@ -92,7 +92,7 @@ type EditorProps = {
   query?: QueryType
   onCancel: () => void
   onSave: (query: QueryType) => void
-  onSearch: (query: any) => void
+  onSearch: (query: QueryType) => void
   queryBuilder: React.FunctionComponent<{
     query?: QueryType
     onChange: (query: QueryType) => void

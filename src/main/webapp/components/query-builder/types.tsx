@@ -6,6 +6,7 @@ export type QueryType = QuerySettingsType & {
   id?: string
   metacard_modified?: string
   metacard_owner?: string
+  type?: string
 }
 
 export type QueryFilter = {

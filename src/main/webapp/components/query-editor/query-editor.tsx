@@ -73,22 +73,11 @@ const Header = (props: HeaderProps) => {
 
 type FooterProps = {
   onSearch: () => void
-  onSave?: () => void
 }
 
 const Footer = (props: FooterProps) => {
   return (
     <Box display="flex" height="100%">
-      {props.onSave && (
-        <Button
-          fullWidth
-          variant="contained"
-          color="primary"
-          onClick={props.onSave}
-        >
-          Save
-        </Button>
-      )}
       <Box style={{ width: 10, display: 'inline-block' }} />
       {props.onSearch && (
         <Button
@@ -104,12 +93,11 @@ const Footer = (props: FooterProps) => {
   )
 }
 
-type EditorProps = {
+export type EditorProps = {
   attributeDefinitions?: AttributeDefinition[]
   queryInteractions?: QueryInteraction[]
   query?: QueryType
-  onSave: (query: QueryType) => void
-  onSearch: (query: any) => void
+  onSearch: (query: QueryType) => void
   queryBuilder: React.FunctionComponent<{
     query?: QueryType
     onChange: (query: QueryType) => void
@@ -174,12 +162,7 @@ export default (props: EditorProps) => {
           marginTop: '10px',
         }}
       >
-        <Footer
-          onSave={() => {
-            props.onSave(query)
-          }}
-          onSearch={onSearch}
-        />
+        <Footer onSearch={onSearch} />
       </Box>
     </Box>
   )

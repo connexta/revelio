@@ -13,7 +13,7 @@ import { IndexCardItem } from '../index-cards'
 import Lists from '../lists'
 import { InlineRetry } from '../network-retry'
 import QueryEditor from '../query-editor'
-import QuerySelector from '../query-selector'
+import QueryManager from '../query-manager'
 import QueryStatus from '../query-status'
 
 const LoadingComponent = () => <LinearProgress />
@@ -71,7 +71,7 @@ export default () => {
 
   const [listResults, setListResults] = React.useState([])
   const [currentQuery, setCurrentQuery] = useState(null)
-  const [queries, setQueries] = useState([])
+  const [queries, setQueries] = useState()
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
   const [tab, setTab] = React.useState(0)
@@ -101,7 +101,6 @@ export default () => {
   const attributes = data.metacardsById[0].attributes[0]
 
   const { title, lists } = attributes
-  const hasQueries = queries && queries.length > 0
 
   return (
     <div
@@ -136,10 +135,10 @@ export default () => {
         </Tabs>
 
         {tab === 0 &&
-          hasQueries && (
+          queries && (
             <React.Fragment>
               {/* //TODO mutate cache on search so that the queries reflect edits made in queryEditor */}
-              <QuerySelector
+              <QueryManager
                 QueryEditor={QueryEditor}
                 queries={queries}
                 currentQuery={currentQuery}
