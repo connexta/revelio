@@ -34,10 +34,13 @@ import {
   EditMetacardInteraction,
 } from '../index-cards/metacard-interactions'
 
+import DefaultFormInteraction from './default-form-interaction'
+
 type SearchFormProps = {
   onDelete: (form: QueryType) => void
   onSave: (form: QueryType) => void
   form?: QueryType
+  toggleDefaultForm: () => void
   isDefault?: boolean
   readOnly: boolean
   canWrite: boolean
@@ -106,6 +109,10 @@ const SearchForm = (props: SearchFormProps) => {
               onDelete={props.onDelete}
               isWritable={props.canWrite}
             />
+            <DefaultFormInteraction
+              isDefault={props.isDefault}
+              onToggle={props.toggleDefaultForm}
+            />
           </MetacardInteractionsDropdown>
         </Actions>
       </IndexCardItem>
@@ -165,6 +172,7 @@ type RouteProps = {
   error?: ApolloError
   forms: QueryType[]
   userDefaultForm?: string
+  toggleDefaultForm: (id?: string) => void
   refetch?: () => void
   userAttributes: UserAttributes
 }
@@ -227,6 +235,7 @@ const Route = (props: RouteProps) => {
                 onSave(newForm)
                 setMessage('Search Form Saved')
               }}
+              toggleDefaultForm={() => props.toggleDefaultForm(form.id)}
               readOnly={readOnly}
               canWrite={canWrite}
               canShare={canShare}

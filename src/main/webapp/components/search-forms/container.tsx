@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import { getIn } from 'immutable'
 import SearchFormsRoute from './route'
-
+import useUserPrefs from '../../react-hooks/use-user-prefs'
 const fragment = gql`
   fragment SearchFormAttributes on MetacardAttributes {
     id
@@ -30,13 +30,6 @@ const searchForms = gql`
       }
     }
     user {
-      preferences {
-        querySettings {
-          template {
-            id
-          }
-        }
-      }
       email
       roles
     }
@@ -176,21 +169,34 @@ export default () => {
   }
 
   const forms = getIn(data, ['metacardsByTag', 'attributes'], [])
+  const [userPrefs, updateUserPrefs, prefProperties] = useUserPrefs()
   const userDefaultForm = getIn(
-    data,
-    ['user', 'preferences', 'querySettings', 'template', 'id'],
+    userPrefs,
+    ['querySettings', 'template', 'id'],
     null
   )
+  const toggleDefaultForm = (id: string) => {
+    const userPreferences = {
+      querySettings: {
+        template: {
+          id: id === userDefaultForm ? null : id,
+        },
+      },
+    }
+    updateUserPrefs(userPreferences)
+  }
+
   const userAttributes = getIn(data, ['user'], [])
   return (
     <SearchFormsRoute
       onCreate={onCreate}
       onSave={onSave}
-      loading={loading}
-      error={error}
+      loading={loading || prefProperties.loading}
+      error={error || prefProperties.error}
       onDelete={onDelete}
       forms={forms}
       userDefaultForm={userDefaultForm}
+      toggleDefaultForm={toggleDefaultForm}
       refetch={refetch}
       userAttributes={userAttributes}
     />
