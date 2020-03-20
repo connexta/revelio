@@ -15,7 +15,7 @@ import ScheduleIcon from '@material-ui/icons/Schedule'
 import SearchIcon from '@material-ui/icons/Search'
 import SettingsIcon from '@material-ui/icons/Settings'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
-import { fromJS } from 'immutable'
+import { fromJS, Map } from 'immutable'
 import React from 'react'
 import { useApolloFallback, useUserPrefs } from '../../react-hooks'
 import { mergeDeepOverwriteLists } from '../../utils'
@@ -192,26 +192,27 @@ const UserSettings = props => {
 
 const Container = () => {
   const [
-    userPreferences,
-    updateUserPreferences,
-    { error, data, loading, refetch },
+    userPrefs,
+    updateUserPrefs,
+    { error, loading, refetch },
   ] = useUserPrefs()
   return (
     <UserSettings
       error={error}
       loading={loading}
       refetch={refetch}
-      value={userPreferences}
+      value={Map(userPrefs)}
       onSave={userPreferences => {
+        const oldUserPrefs = userPrefs
         //preserve __typename fields
         const newPreferences = mergeDeepOverwriteLists(
-          fromJS(data.user.preferences),
+          fromJS(oldUserPrefs),
           fromJS(userPreferences)
         )
 
-        if (!fromJS(data.user.preferences).equals(newPreferences)) {
+        if (!fromJS(oldUserPrefs).equals(newPreferences)) {
           const userPreferences = newPreferences.toJS()
-          updateUserPreferences(userPreferences)
+          updateUserPrefs(userPreferences)
         }
       }}
     />
