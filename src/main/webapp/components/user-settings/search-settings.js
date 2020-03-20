@@ -6,6 +6,11 @@ import React from 'react'
 import SortOrder from '../sort-order/sort-order'
 import ResultFormSelect from './result-form-select'
 import SourceSelect from '../sources-select'
+import gql from 'graphql-tag'
+import { useQuery } from '@apollo/react-hooks'
+import { LinearProgress } from '@material-ui/core'
+import InlineRetry from '../network-retry/inline-retry'
+import { useApolloFallback } from '../../react-hooks'
 
 const Spacing = () => <div style={{ marginTop: 20 }} />
 const Defaults = props => (
@@ -48,11 +53,27 @@ const Defaults = props => (
 )
 
 const SearchSettings = (props = {}) => {
-  const { value = Map(), systemProperties = {}, onChange } = props
+  const {
+    value = Map(),
+    systemProperties = {},
+    onChange,
+    loading,
+    error,
+    refetch,
+  } = props
   const resultCount = get(value, 'resultCount')
 
   const onSliderChange = (_, newValue) => {
     onChange(set(value, 'resultCount', newValue))
+  }
+
+  if (loading) return <LinearProgress />
+  if (error) {
+    return (
+      <InlineRetry onRetry={refetch}>
+        Error Retriving Search Settings
+      </InlineRetry>
+    )
   }
 
   return (
@@ -72,4 +93,28 @@ const SearchSettings = (props = {}) => {
   )
 }
 
-export default SearchSettings
+const query = gql`
+  query SearchSettings {
+    systemProperties {
+      resultCount
+    }
+  }
+`
+
+const Container = props => {
+  const { data, loading, error, refetch } = useQuery(query)
+  return (
+    <SearchSettings
+      {...props}
+      loading={loading}
+      error={error}
+      refetch={refetch}
+      systemProperties={getIn(data, ['systemProperties'], {})}
+    />
+  )
+}
+
+export default props => {
+  const Component = useApolloFallback(Container, SearchSettings)
+  return <Component {...props} />
+}
