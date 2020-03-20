@@ -22,7 +22,14 @@ const clientErrorLink = onAuthentication =>
 
 const createApolloClient = params => {
   const { onAuthentication } = params
-  const cache = new InMemoryCache()
+  const cache = new InMemoryCache({
+    cacheRedirects: {
+      Query: {
+        metacardById: (_, args, { getCacheKey }) =>
+          getCacheKey({ __typename: 'MetacardAttributes', id: args.id }),
+      },
+    },
+  })
   cache.restore(window.__APOLLO_STATE__)
   return new ApolloClient({
     link: ApolloLink.from([
