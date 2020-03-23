@@ -4,6 +4,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { CustomTooltip } from '../tooltip/tooltip'
 import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined'
 import { getIn } from 'immutable'
+import { MetacardInteraction } from '../metacard-interaction'
 
 const subscribeToWorkspace = async props => {
   const { id, title, setMessage, subscribe, setSubscribed } = props
@@ -30,8 +31,27 @@ const unsubscribeFromWorkspace = async props => {
   }
 }
 
-export default props => {
+const onSubscribe = async (props, subscribed, setSubscribed) => {
   const { subscribe, unsubscribe, id, title, setMessage } = props
+
+  subscribed
+    ? await unsubscribeFromWorkspace({
+        id,
+        title,
+        setMessage,
+        unsubscribe,
+        setSubscribed,
+      })
+    : await subscribeToWorkspace({
+        id,
+        title,
+        setMessage,
+        subscribe,
+        setSubscribed,
+      })
+}
+
+const SubscribeAction = props => {
   const [subscribed, setSubscribed] = React.useState(props.isSubscribed)
 
   return (
@@ -40,21 +60,7 @@ export default props => {
         onClick={async e => {
           e.stopPropagation()
           e.preventDefault()
-          subscribed
-            ? await unsubscribeFromWorkspace({
-                id,
-                title,
-                setMessage,
-                unsubscribe,
-                setSubscribed,
-              })
-            : await subscribeToWorkspace({
-                id,
-                title,
-                setMessage,
-                subscribe,
-                setSubscribed,
-              })
+          onSubscribe(props, subscribed, setSubscribed)
         }}
       >
         {subscribed ? <EmailOutlinedIcon /> : <EmailIcon />}
@@ -62,3 +68,21 @@ export default props => {
     </CustomTooltip>
   )
 }
+
+const SubscribeMetacardInteraction = props => {
+  const [subscribed, setSubscribed] = React.useState(props.isSubscribed)
+
+  return (
+    <MetacardInteraction
+      Icon={subscribed ? EmailOutlinedIcon : EmailIcon}
+      onClick={async e => {
+        e.stopPropagation()
+        e.preventDefault()
+        onSubscribe(props, subscribed, setSubscribed)
+      }}
+      message={subscribed ? 'Unsubscribe Workspace' : 'Subscribe Workspace'}
+    />
+  )
+}
+
+export { SubscribeAction, SubscribeMetacardInteraction }
