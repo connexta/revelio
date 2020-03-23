@@ -1,4 +1,3 @@
-import { useMutation, useQuery } from '@apollo/react-hooks'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
 import IconButton from '@material-ui/core/IconButton'
@@ -16,10 +15,9 @@ import ScheduleIcon from '@material-ui/icons/Schedule'
 import SearchIcon from '@material-ui/icons/Search'
 import SettingsIcon from '@material-ui/icons/Settings'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
-import gql from 'graphql-tag'
-import { fromJS, Map, getIn } from 'immutable'
+import { fromJS, Map } from 'immutable'
 import React from 'react'
-import { useApolloFallback } from '../../react-hooks'
+import { useApolloFallback, useUserPrefs } from '../../react-hooks'
 import { mergeDeepOverwriteLists } from '../../utils'
 import HiddenResultsSettings from './hidden-results-settings'
 import NotificationSettings from './notification-settings'
@@ -27,7 +25,7 @@ import SearchSettings from './search-settings'
 import TimeSettings from './time-settings'
 import ThemeSettings from './theme-settings'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import ErrorMessage from '../network-retry/inline-retry'
+import InlineRetry from '../network-retry/inline-retry'
 
 const generateSetting = (title, Icon = AccessibleForwardIcon, component) => {
   return {
@@ -135,7 +133,9 @@ const UserSettings = props => {
   const [open, setOpen] = React.useState(props.open)
   const [selected, setSelected] = React.useState({})
   const [preferences, setPreferences] = React.useState(props.value)
-
+  if (props.loading) {
+    return <LinearProgress />
+  }
   const handleDrawerOpen = () => {
     setOpen(true)
   }
@@ -169,9 +169,9 @@ const UserSettings = props => {
           }}
         >
           {props.error ? (
-            <ErrorMessage onRetry={props.refetch}>
+            <InlineRetry onRetry={props.refetch}>
               Error Retrieving User Preferences
-            </ErrorMessage>
+            </InlineRetry>
           ) : (
             Component && (
               <Component
@@ -190,88 +190,29 @@ const UserSettings = props => {
   )
 }
 
-const mutation = gql`
-  mutation updateUserPreferences($userPreferences: Json) {
-    updateUserPreferences(userPreferences: $userPreferences)
-  }
-`
-
-const query = gql`
-  query UserPreferences {
-    user {
-      preferences {
-        alertExpiration
-        alertPersistence
-        dateTimeFormat {
-          datetimefmt
-          timefmt
-        }
-        resultBlacklist {
-          id
-          title
-        }
-        resultCount
-        theme {
-          theme
-        }
-        timeZone
-        querySettings {
-          sourceIds
-          federation
-          sortPolicy {
-            propertyName
-            sortOrder
-          }
-          detail_level
-        }
-      }
-    }
-    systemProperties {
-      resultCount
-    }
-  }
-`
-
 const Container = () => {
-  const { error, data, loading, refetch } = useQuery(query)
-  const [updateUserPreferences] = useMutation(mutation, {
-    update: (cache, { data: { updateUserPreferences } }) => {
-      const { systemProperties } = cache.readQuery({ query })
-
-      cache.writeQuery({
-        query,
-        data: {
-          user: {
-            preferences: updateUserPreferences,
-            __typename: 'UserPreferences',
-          },
-          systemProperties,
-        },
-      })
-    },
-  })
-  if (loading) return <LinearProgress />
+  const [
+    userPrefs,
+    updateUserPrefs,
+    { error, loading, refetch },
+  ] = useUserPrefs()
   return (
     <UserSettings
       error={error}
+      loading={loading}
       refetch={refetch}
-      value={Map(getIn(data, ['user', 'preferences'], {}))}
-      systemProperties={getIn(data, ['systemProperties'], {})}
+      value={Map(userPrefs)}
       onSave={userPreferences => {
+        const oldUserPrefs = userPrefs
         //preserve __typename fields
         const newPreferences = mergeDeepOverwriteLists(
-          fromJS(data.user.preferences),
+          fromJS(oldUserPrefs),
           fromJS(userPreferences)
         )
 
-        if (!fromJS(data.user.preferences).equals(newPreferences)) {
+        if (!fromJS(oldUserPrefs).equals(newPreferences)) {
           const userPreferences = newPreferences.toJS()
-          updateUserPreferences({
-            variables: { userPreferences },
-            optimisticResponse: {
-              updateUserPreferences: userPreferences,
-            },
-          })
+          updateUserPrefs(userPreferences)
         }
       }}
     />
