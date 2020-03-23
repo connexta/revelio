@@ -1,63 +1,6 @@
-import { mergeDeep } from 'immutable'
 import context from './context'
-
-const ensureArray = value => {
-  if (value === undefined) {
-    return []
-  }
-
-  if (Array.isArray(value)) {
-    return value
-  }
-
-  return [value]
-}
-
-const ensureObject = (value, args) => {
-  if (typeof value === 'function') {
-    return value(...args)
-  }
-  return value
-}
-
-const mergeModules = (a, b) => {
-  const resolvers = mergeDeep(a.resolvers, b.resolvers)
-  const typeDefs = mergeDeep(ensureArray(a.typeDefs), ensureArray(b.typeDefs))
-
-  const context = (...args) => {
-    return {
-      ...ensureObject(a.context, args),
-      ...ensureObject(b.context, args),
-    }
-  }
-
-  return {
-    resolvers,
-    typeDefs,
-    context,
-  }
-}
-
-const typeDefs = `
-  # Arbitrary Json
-  scalar Json
-  # Binary content embedded as a base64 String
-  scalar Binary
-  # WKT embedded as a String
-  scalar Geometry
-  # XML embedded as a String
-  scalar XML
-  # ISO 8601 Data Time embedded as a String
-  scalar Date
-
-  type Query {
-    root: String
-  }
-
-  type Mutation {
-    root: String
-  }
-`
+import mergeModules from './merge-modules'
+import typeDefs from './base-typedefs'
 
 export default [
   { resolvers: {}, typeDefs, context },
