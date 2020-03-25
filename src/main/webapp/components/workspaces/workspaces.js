@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/react-hooks'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import React from 'react'
+import React, {useState} from 'react'
 import { useHistory } from 'react-router-dom'
 import { workspaces } from '.'
 import {
@@ -24,6 +24,7 @@ import { SnackbarRetry } from '../network-retry'
 import { Notification } from '../notification/notification'
 import { useClone, useCreate, useDelete, useSubscribe } from './hooks/'
 import { SubscribeAction, SubscribeMetacardInteraction } from './subscribe'
+import FilterWorkspaces from './filter-workspaces'
 const {
   getPermissions,
   getSecurityAttributesFromMetacard,
@@ -154,13 +155,23 @@ export default () => {
   const workspacesSortedByTime = workspacesWithSubscriptions.sort(
     (a, b) => (a.attributes.modified > b.attributes.modified ? -1 : 1)
   )
+
+  const [filteredWorkspaces, setFilteredWorkspaces] = useState(workspacesSortedByTime)
+  const onFilter = filter => setFilteredWorkspaces(filter(workspacesSortedByTime))
+
   return (
-    <Workspaces
-      workspaces={workspacesSortedByTime}
-      onCreate={onCreate}
-      onDelete={onDelete}
-      onDuplicate={onDuplicate}
-      userAttributes={data.user}
-    />
+    <React.Fragment>
+      <FilterWorkspaces 
+        userAttributes={data.user}
+        onFilter={onFilter} 
+      />
+      <Workspaces
+        workspaces={filteredWorkspaces}
+        onCreate={onCreate}
+        onDelete={onDelete}
+        onDuplicate={onDuplicate}
+        userAttributes={data.user}
+      />
+    </React.Fragment>
   )
 }
