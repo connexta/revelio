@@ -1,5 +1,9 @@
 import React, { useState } from 'react'
-import { List, ListItem, ListItemText, Menu, MenuItem } from '@material-ui/core'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 
 const FilterWorkspaces = ({ onFilter, userAttributes }) => {
   const [anchorEl, setAnchorEl] = React.useState(null)
