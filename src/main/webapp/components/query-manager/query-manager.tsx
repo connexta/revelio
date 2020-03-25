@@ -44,7 +44,7 @@ const QueryCard = (props: QueryCardProps) => {
       <IndexCardItem
         title={query.title}
         subHeader={'Has not been run'}
-        onClick={() => onSearch(query)}
+        onClick={onSearch}
       >
         <Actions>
           <EditAction onEdit={handleOpen} />
@@ -64,12 +64,17 @@ const QueryCard = (props: QueryCardProps) => {
 }
 
 const QuerySelector = (props: QuerySelectorProps) => {
-  const { queries, currentQuery } = props
+  const { queries, currentQuery, onSearch } = props
   const hasQueries = queries && queries.length > 0
   const [anchorEl, handleOpen, handleClose, open] = useAnchorEl()
 
   const queryCards = queries.map(query => (
-    <QueryCard {...props} query={query} key={query.id} />
+    <QueryCard
+      {...props}
+      query={query}
+      key={query.id}
+      onSearch={() => onSearch(query.id!)}
+    />
   ))
 
   return hasQueries ? (
@@ -77,6 +82,7 @@ const QuerySelector = (props: QuerySelectorProps) => {
       <QueryCard
         {...props}
         query={queries.find(query => query.id === currentQuery)}
+        onSearch={() => onSearch(currentQuery)}
       />
       <Button
         color="primary"
@@ -107,7 +113,7 @@ const QuerySelector = (props: QuerySelectorProps) => {
 }
 
 const QueryManager = (props: QueryManagerProps) => {
-  const { queries, QueryEditor, onSearch } = props
+  const { queries } = props
 
   const onChange = (query: QueryType) => {
     const index = queries.findIndex(q => q.id === query.id)
@@ -115,18 +121,10 @@ const QueryManager = (props: QueryManagerProps) => {
       index !== -1 ? set(queries, index, query) : merge([query], queries)
     props.onChange(updatedQueries)
   }
-  const hasQueries = queries && queries.length > 0
 
   return (
     <React.Fragment>
-      <AddQuery
-        onSearch={query => {
-          onChange(query)
-          onSearch(query)
-        }}
-        QueryEditor={QueryEditor}
-        hasQueries={hasQueries}
-      />
+      <AddQuery {...props} onChange={onChange} />
       <QuerySelector {...props} onChange={onChange} />
     </React.Fragment>
   )

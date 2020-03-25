@@ -97,7 +97,7 @@ export type EditorProps = {
   attributeDefinitions?: AttributeDefinition[]
   queryInteractions?: QueryInteraction[]
   query?: QueryType
-  onSearch: (query: QueryType) => void
+  onSearch: () => void
   queryBuilder: React.FunctionComponent<{
     query?: QueryType
     onChange: (query: QueryType) => void
@@ -106,32 +106,9 @@ export type EditorProps = {
   onChange: (query: QueryType) => void
 }
 
-const queryToSearch = (query: QueryType) => {
-  const { sources, sorts, detail_level, filterTree } = query
-  return {
-    filterTree,
-    sourceIds: sources || ['ddf.distribution'],
-    sortPolicy: (sorts || []).map(sort => {
-      //query builder might have sorts in the correct format already
-      if (typeof sort !== 'string') {
-        return sort
-      }
-      const splitIndex = sort.lastIndexOf(',')
-      return {
-        propertyName: sort.substring(0, splitIndex),
-        sortOrder: sort.substring(splitIndex + 1, sort.length),
-      }
-    }),
-    detail_level: detail_level === 'All Fields' ? undefined : detail_level,
-  }
-}
-
 export default (props: EditorProps) => {
   const query = props.query || {}
   const QueryBuilder = props.queryBuilder
-  const onSearch = () => {
-    props.onSearch(queryToSearch(query))
-  }
   const [addOptionsRef, setAddOptionsRef] = React.useState<HTMLDivElement>()
 
   return (
@@ -162,7 +139,7 @@ export default (props: EditorProps) => {
           marginTop: '10px',
         }}
       >
-        <Footer onSearch={onSearch} />
+        <Footer onSearch={props.onSearch} />
       </Box>
     </Box>
   )

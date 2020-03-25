@@ -12,7 +12,7 @@ import { button } from '@storybook/addon-knobs'
 
 stories.add('Basic', () => {
   const [queries, setQueries] = useState(sampleQueries)
-  const [query, setQuery] = useState(sampleQueries[0].id)
+  const [query, setQuery] = React.useState(sampleQueries[0].id)
   const [
     navBarLeftRef,
     setNavBarLeftRef,
@@ -33,10 +33,12 @@ stories.add('Basic', () => {
         queries={queries}
         currentQuery={query}
         QueryEditor={QueryEditor}
-        onChange={queries => setQueries(queries)}
-        onSearch={query => {
-          action('onSearch')(query)
-          setQuery(query.id)
+        onChange={queries => {
+          setQueries(queries)
+        }}
+        onSearch={id => {
+          action('onSearch')(id)
+          setQuery(id)
         }}
       />
     </NavigationBarContext.Provider>

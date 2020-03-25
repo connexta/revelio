@@ -86,7 +86,7 @@ export default (props: QueryEditorPopoverProps) => {
             AdvancedSearchQueryBuilder
           )}
           queryInteractions={queryInteractions}
-          onSearch={q => onSearch({ ...getBaseQueryFields(query), ...q })}
+          onSearch={onSearch}
           onChange={q => onChange({ ...getBaseQueryFields(query), ...q })}
         />
       </Box>
