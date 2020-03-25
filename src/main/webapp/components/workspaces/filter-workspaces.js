@@ -55,7 +55,6 @@ const FilterWorkspaces = ({ onFilter, userAttributes }) => {
         </ListItem>
       </List>
       <Menu
-        id="lock-menu"
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
