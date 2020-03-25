@@ -1,22 +1,24 @@
 import React, { useState } from 'react'
 import { List, ListItem, ListItemText, Menu, MenuItem } from '@material-ui/core'
 
-const FilterWorkspaces = ({onFilter, userAttributes}) => {
+const FilterWorkspaces = ({ onFilter, userAttributes }) => {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [selectedIndex, setSelectedIndex] = React.useState(0)
 
-  const options = [
-    "Owned by anyone",
-    "Owned by me",
-    "Not owned by me"
-  ];
+  const options = ['Owned by anyone', 'Owned by me', 'Not owned by me']
 
   const filterByAnyone = workspaces => workspaces
-  const filterByMe = workspaces => workspaces.filter(workspace => workspace.attributes.metacard_owner === userAttributes.email)
-  const filterByNotMe = workspaces => workspaces.filter(workspace => workspace.attributes.metacard_owner !== userAttributes.email)
+  const filterByMe = workspaces =>
+    workspaces.filter(
+      workspace => workspace.attributes.metacard_owner === userAttributes.email
+    )
+  const filterByNotMe = workspaces =>
+    workspaces.filter(
+      workspace => workspace.attributes.metacard_owner !== userAttributes.email
+    )
 
   const filter = index => {
-    switch(index) {
+    switch (index) {
       case 0:
         return onFilter(filterByAnyone)
       case 1:
@@ -29,12 +31,12 @@ const FilterWorkspaces = ({onFilter, userAttributes}) => {
   }
 
   const handleClickListItem = e => {
-    setAnchorEl(e.currentTarget);
+    setAnchorEl(e.currentTarget)
   }
 
   const handleMenuItemClick = (e, index) => {
     setSelectedIndex(index)
-    setAnchorEl(null);
+    setAnchorEl(null)
     filter(index)
   }
 
@@ -45,11 +47,11 @@ const FilterWorkspaces = ({onFilter, userAttributes}) => {
   return (
     <React.Fragment>
       <List component="nav">
-        <ListItem
-          button
-          onClick={handleClickListItem}
-        >
-          <ListItemText primary="Filter workspaces" secondary={options[selectedIndex]} />
+        <ListItem button onClick={handleClickListItem}>
+          <ListItemText
+            primary="Filter workspaces"
+            secondary={options[selectedIndex]}
+          />
         </ListItem>
       </List>
       <Menu
@@ -70,7 +72,7 @@ const FilterWorkspaces = ({onFilter, userAttributes}) => {
         ))}
       </Menu>
     </React.Fragment>
- );
+  )
 }
 
 export default FilterWorkspaces

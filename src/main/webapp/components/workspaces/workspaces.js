@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/react-hooks'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { workspaces } from '.'
 import {
@@ -156,15 +156,15 @@ export default () => {
     (a, b) => (a.attributes.modified > b.attributes.modified ? -1 : 1)
   )
 
-  const [filteredWorkspaces, setFilteredWorkspaces] = useState(workspacesSortedByTime)
-  const onFilter = filter => setFilteredWorkspaces(filter(workspacesSortedByTime))
+  const [filteredWorkspaces, setFilteredWorkspaces] = useState(
+    workspacesSortedByTime
+  )
+  const onFilter = filter =>
+    setFilteredWorkspaces(filter(workspacesSortedByTime))
 
   return (
     <React.Fragment>
-      <FilterWorkspaces 
-        userAttributes={data.user}
-        onFilter={onFilter} 
-      />
+      <FilterWorkspaces userAttributes={data.user} onFilter={onFilter} />
       <Workspaces
         workspaces={filteredWorkspaces}
         onCreate={onCreate}
