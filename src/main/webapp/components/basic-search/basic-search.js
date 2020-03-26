@@ -244,9 +244,17 @@ const getFilterMap = props => {
 }
 
 const createQuery = filterMap => {
-  const sourceIds = get(filterMap, 'sources')
-  const sorts = get(filterMap, 'sortOrder')
-  return populateDefaultQuery(toFilterTree(filterMap), sourceIds, sorts)
+  let sorts = get(filterMap, 'sortOrder')
+  if (sorts) {
+    sorts = sorts.map(
+      ({ propertyName, sortOrder }) => `${propertyName},${sortOrder}`
+    )
+  }
+  return {
+    filterTree: toFilterTree(filterMap),
+    sources: get(filterMap, 'sources'),
+    sorts,
+  }
 }
 
 export const BasicSearchQueryBuilder = props => {

@@ -18,7 +18,9 @@ export type QuerySelectorProps = Overwrite<
   currentQuery: string
 }
 
-export type AddQueryProps = QuerySelectorProps
+export type AddQueryProps = QuerySelectorProps & {
+  onCreate: (query: QueryType) => void
+}
 
 export type QueryEditorPopoverProps = QueryCardProps & {
   anchorEl: HTMLDivElement
@@ -28,4 +30,6 @@ export type QueryEditorPopoverProps = QueryCardProps & {
 export type QueryManagerProps = Overwrite<
   QuerySelectorProps,
   { onChange: (queries: QueryType[]) => void }
->
+> & {
+  onCreate: (query: QueryType) => void
+}

@@ -40,6 +40,9 @@ stories.add('Basic', () => {
           action('onSearch')(id)
           setQuery(id)
         }}
+        onCreate={() => {
+          action('onCreate')
+        }}
       />
     </NavigationBarContext.Provider>
   )
