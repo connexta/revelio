@@ -66,6 +66,26 @@ const Results = ({ results }) =>
     [results]
   )
 
+const queryToSearch = query => {
+  const { sources, sorts, detail_level, filterTree } = query
+  return {
+    filterTree,
+    sourceIds: sources || ['ddf.distribution'],
+    sortPolicy: (sorts || []).map(sort => {
+      //query builder might have sorts in the correct format already
+      if (typeof sort !== 'string') {
+        return sort
+      }
+      const splitIndex = sort.lastIndexOf(',')
+      return {
+        propertyName: sort.substring(0, splitIndex),
+        sortOrder: sort.substring(splitIndex + 1, sort.length),
+      }
+    }),
+    detail_level: detail_level === 'All Fields' ? undefined : detail_level,
+  }
+}
+
 export default () => {
   const { id } = useParams()
 
@@ -73,6 +93,23 @@ export default () => {
   const [currentQuery, setCurrentQuery] = useState(null)
   const [queries, setQueries] = useState()
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
+
+  const [queuedSearch, setQueuedSearch] = useState('')
+
+  React.useEffect(
+    () => {
+      if (queuedSearch === '') {
+        return
+      }
+      const index = queries.findIndex(query => query.id === queuedSearch)
+      if (index !== -1) {
+        const search = queryToSearch(queries[index])
+        onSearch(search)
+        setQueuedSearch('')
+      }
+    },
+    [queries, queuedSearch]
+  )
 
   const [tab, setTab] = React.useState(0)
 
@@ -142,10 +179,17 @@ export default () => {
                 QueryEditor={QueryEditor}
                 queries={queries}
                 currentQuery={currentQuery}
-                onSearch={query => {
+                onSearch={id => {
                   onClear()
-                  setCurrentQuery(query.id)
-                  onSearch(query)
+                  setCurrentQuery(id)
+
+                  const index = queries.findIndex(query => query.id === id)
+                  if (index !== -1) {
+                    const search = queryToSearch(queries[index])
+                    onSearch(search)
+                  } else {
+                    setQueuedSearch(id)
+                  }
                 }}
                 onChange={queries => setQueries(queries)}
               />
@@ -155,7 +199,7 @@ export default () => {
                 onRun={srcs => {
                   //setPageIndex(0)
                   onSearch({
-                    ...queries.find(query => (query.id = currentQuery)),
+                    ...queries.find(query => query.id === currentQuery),
                     srcs,
                   })
                 }}
