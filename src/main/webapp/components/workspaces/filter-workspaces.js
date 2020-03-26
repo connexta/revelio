@@ -20,13 +20,16 @@ const FilterWorkspaces = ({ onFilter, userAttributes }) => {
   const filter = index => {
     switch (index) {
       case 0:
-        return onFilter(filterByAnyone)
+        onFilter(filterByAnyone)
+        break
       case 1:
-        return onFilter(filterByMe)
+        onFilter(filterByMe)
+        break
       case 2:
-        return onFilter(filterByNotMe)
+        onFilter(filterByNotMe)
+        break
       default:
-        return onFilter(filterByAnyone)
+        onFilter(filterByAnyone)
     }
   }
 
