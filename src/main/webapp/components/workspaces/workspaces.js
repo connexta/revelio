@@ -129,6 +129,8 @@ export default () => {
   const onCreate = useCreate()
   const onDelete = useDelete()
   const onDuplicate = useClone()
+  const [filterFunction, setFilterFunction] = useState(() => workspace => true)
+  const onFilter = filter => setFilterFunction(() => filter)
 
   if (loading) {
     return <LoadingComponent />
@@ -156,11 +158,7 @@ export default () => {
     (a, b) => (a.attributes.modified > b.attributes.modified ? -1 : 1)
   )
 
-  const [filteredWorkspaces, setFilteredWorkspaces] = useState(
-    workspacesSortedByTime
-  )
-  const onFilter = filter =>
-    setFilteredWorkspaces(filter(workspacesSortedByTime))
+  const filteredWorkspaces = workspacesSortedByTime.filter(filterFunction)
 
   return (
     <React.Fragment>

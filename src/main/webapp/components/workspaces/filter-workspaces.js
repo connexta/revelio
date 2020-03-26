@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -11,15 +11,11 @@ const FilterWorkspaces = ({ onFilter, userAttributes }) => {
 
   const options = ['Owned by anyone', 'Owned by me', 'Not owned by me']
 
-  const filterByAnyone = workspaces => workspaces
-  const filterByMe = workspaces =>
-    workspaces.filter(
-      workspace => workspace.attributes.metacard_owner === userAttributes.email
-    )
-  const filterByNotMe = workspaces =>
-    workspaces.filter(
-      workspace => workspace.attributes.metacard_owner !== userAttributes.email
-    )
+  const filterByAnyone = workspace => true
+  const filterByMe = workspace =>
+    workspace.attributes.metacard_owner === userAttributes.email
+  const filterByNotMe = workspace =>
+    workspace.attributes.metacard_owner !== userAttributes.email
 
   const filter = index => {
     switch (index) {
