@@ -38,12 +38,11 @@ export default () => {
   })
   let listOfSources = []
   if (!loading) {
-    listOfsources = data.sources.map(source => {
+    listOfSources = data.sources.map(source => {
       source.Icon = source.isAvailable ? OnlineIcon : OfflineIcon
       return source
     })
     const facetSources = data.facet
-
     listOfSources = listOfSources.concat(
       facetSources.map(facetSource => {
         facetSource.Icon = StorageIcon
