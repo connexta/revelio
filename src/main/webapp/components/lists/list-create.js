@@ -11,7 +11,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import ButtonGroup from '@material-ui/core/ButtonGroup'
 import Button from '@material-ui/core/Button'
 import FormLabel from '@material-ui/core/FormLabel'
-
+import { RadioButton } from '../input'
 const iconList = {
   Folder: <FolderIcon />,
   Code: <CodeIcon />,
@@ -36,7 +36,7 @@ const ListType = props => {
 
 export const ListCreate = props => {
   const [listIcon, setListIcon] = React.useState('Folder')
-  const [useFilter, setUseFilter] = React.useState(false)
+  const [useFilter, setUseFilter] = React.useState(0)
   const { anchorEl, onClose, title = '' } = props
   const handleChange = event => {
     setListIcon(event.target.value)
@@ -55,50 +55,13 @@ export const ListCreate = props => {
           flexDirection: 'column',
           alignItems: 'left',
         }}
-      >
-        <FormLabel style={{ marginBottom: '10px' }}>
-          Limit based on filter
-        </FormLabel>
-        {useFilter ? (
-          <ButtonGroup style={{ marginBottom: '20px' }}>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                setUseFilter(true)
-              }}
-            >
-              Yes
-            </Button>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => {
-                setUseFilter(false)
-              }}
-            >
-              No
-            </Button>
-          </ButtonGroup>
-        ) : (
-          <ButtonGroup style={{ marginBottom: '20px' }}>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => setUseFilter(true)}
-            >
-              Yes
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => setUseFilter(false)}
-            >
-              No
-            </Button>
-          </ButtonGroup>
-        )}
-      </div>
+      />
+      <RadioButton
+        label="Limit based on filter"
+        buttonText={['No', 'Yes']}
+        defaultButton={0}
+        onChange={e => setUseFilter(e)}
+      />
       <TextField
         select
         variant="outlined"
