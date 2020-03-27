@@ -67,6 +67,14 @@ const Lists = props => {
   const [selected, setSelected] = React.useState(null)
   const [anchorEl, setAnchorEl] = React.useState(null)
 
+  if (lists.length === 0) {
+    return (
+      <div>
+        You don't have any lists. Search for somethine and add it to a list or
+        create a new list.
+      </div>
+    )
+  }
   const handleOpen = event => {
     setAnchorEl(event.currentTarget)
   }
@@ -97,7 +105,20 @@ const Lists = props => {
           </ListTitle>
         )
 
-        return (
+        return list['list_bookmarks'] == undefined ? (
+          <IndexCardItem
+            key={list.id}
+            title={<Title />}
+            subHeader={<div>Empty</div>}
+            onClick={() => {
+              handleClick(list)
+            }}
+          >
+            <Actions>
+              <DeleteAction />
+            </Actions>
+          </IndexCardItem>
+        ) : (
           <IndexCardItem
             key={list.id}
             title={<Title />}
