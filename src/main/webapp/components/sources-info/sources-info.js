@@ -40,7 +40,7 @@ const sourcesMessage = offlineCount => {
 
 export const SourcesInfo = props => {
   const sources = props.sources === undefined ? [] : props.sources
-    const { error } = props
+  const { error } = props
   const getIcon = source => (source.isAvailable ? OnlineIcon : OfflineIcon)
   const offlineCount = sources.filter(source => !source.isAvailable).length
   if (props.loading) {
