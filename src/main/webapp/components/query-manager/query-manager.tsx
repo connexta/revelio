@@ -122,10 +122,15 @@ const QueryManager = (props: QueryManagerProps) => {
     props.onChange(updatedQueries)
   }
 
+  const onSearch = (id: string) => {
+    props.onSave(id)
+    props.onSearch(id)
+  }
+
   return (
     <React.Fragment>
       <AddQuery {...props} onChange={onChange} />
-      <QuerySelector {...props} onChange={onChange} />
+      <QuerySelector {...props} onChange={onChange} onSearch={onSearch} />
     </React.Fragment>
   )
 }
