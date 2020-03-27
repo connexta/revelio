@@ -129,7 +129,8 @@ export default () => {
   const onCreate = useCreate()
   const onDelete = useDelete()
   const onDuplicate = useClone()
-  const [filterFunction, setFilterFunction] = useState(() => workspace => true)
+
+  const [filterFunction, setFilterFunction] = useState(() => () => true)
   const onFilter = filter => setFilterFunction(() => filter)
 
   if (loading) {

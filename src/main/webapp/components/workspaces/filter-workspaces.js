@@ -11,7 +11,7 @@ const FilterWorkspaces = ({ onFilter, userAttributes }) => {
 
   const options = ['Owned by anyone', 'Owned by me', 'Not owned by me']
 
-  const filterByAnyone = workspace => true
+  const filterByAnyone = () => true
   const filterByMe = workspace =>
     workspace.attributes.metacard_owner === userAttributes.email
   const filterByNotMe = workspace =>
