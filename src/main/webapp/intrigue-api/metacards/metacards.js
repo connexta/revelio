@@ -460,6 +460,11 @@ const saveMetacard = async (parent, args, context) => {
     )
   }
 
+  if (attributes.queries) {
+    const queries = attributes.queries.map(query => query.id)
+    attributes = setIn(attributes, ['queries'], queries)
+  }
+
   const newMetacardAttrs = merge(oldMetacardAttrs, attributes)
 
   const body = {

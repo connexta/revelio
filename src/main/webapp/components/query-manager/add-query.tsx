@@ -8,10 +8,8 @@ import { AddQueryProps } from './types'
 const ReactDOM = require('react-dom')
 
 export default (props: AddQueryProps) => {
-  const [query, setQuery] = React.useState<{ id?: string }>({
-    id: new Date().toString(),
-  })
-  const { onSearch, QueryEditor, queries, onChange } = props
+  const [query, setQuery] = React.useState({})
+  const { QueryEditor, queries, onCreate } = props
 
   const navBarLeftRef = React.useContext(NavigationBarContext)
   const [anchorEl, setAnchorEl] = React.useState<any>(null)
@@ -54,10 +52,9 @@ export default (props: AddQueryProps) => {
         query={query}
         QueryEditor={QueryEditor}
         onSearch={() => {
-          onChange(query)
-          onSearch(query.id!)
+          onCreate(query)
           handleClose()
-          setQuery({ id: new Date().toString() })
+          setQuery({})
         }}
         onChange={query => setQuery(query)}
         anchorEl={anchorEl}

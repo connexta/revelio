@@ -15,6 +15,7 @@ import { InlineRetry } from '../network-retry'
 import QueryEditor from '../query-editor'
 import QueryManager from '../query-manager'
 import QueryStatus from '../query-status'
+import { useCreateQuery, useSaveWorkspace } from './hooks'
 
 const LoadingComponent = () => <LinearProgress />
 
@@ -94,22 +95,13 @@ export default () => {
   const [queries, setQueries] = useState()
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
-  const [queuedSearch, setQueuedSearch] = useState('')
-
-  React.useEffect(
-    () => {
-      if (queuedSearch === '') {
-        return
-      }
-      const index = queries.findIndex(query => query.id === queuedSearch)
-      if (index !== -1) {
-        const search = queryToSearch(queries[index])
-        onSearch(search)
-        setQueuedSearch('')
-      }
-    },
-    [queries, queuedSearch]
-  )
+  const saveWorkspace = useSaveWorkspace()
+  const createQuery = useCreateQuery(query => {
+    setQueries([query, ...queries])
+    setCurrentQuery(query.id)
+    saveWorkspace({ queries: [query, ...queries] })
+    onSearch(queryToSearch(query))
+  })
 
   const [tab, setTab] = React.useState(0)
 
@@ -182,15 +174,11 @@ export default () => {
                 onSearch={id => {
                   onClear()
                   setCurrentQuery(id)
-
-                  const index = queries.findIndex(query => query.id === id)
-                  if (index !== -1) {
-                    const search = queryToSearch(queries[index])
-                    onSearch(search)
-                  } else {
-                    setQueuedSearch(id)
-                  }
+                  onSearch(
+                    queryToSearch(queries.find(query => query.id === id))
+                  )
                 }}
+                onCreate={createQuery}
                 onChange={queries => setQueries(queries)}
               />
 
