@@ -3,13 +3,12 @@ import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import Popover from '@material-ui/core/Popover'
-import Box from '@material-ui/core/Box'
 import Typography from '@material-ui/core/Typography'
 import ArchiveIcon from '@material-ui/icons/Archive'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import FolderIcon from '@material-ui/icons/Folder'
 import gql from 'graphql-tag'
-import { ListCreate, ListCreatePopover } from './list-create'
+import { ListCreatePopover } from './list-create'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
 import React from 'react'
 import { ConfirmDeleteAction as DeleteAction } from '../confirm-delete'
@@ -76,8 +75,8 @@ const Lists = props => {
     return (
       <div style={{ textAlign: 'center', marginTop: '10px' }}>
         <Typography color="textSecondary">
-          You don't have any lists. Search for something and add it to a list or
-          create a
+          You don&apos;t have any lists. Search for something and add it to a
+          list or create a
           <Button
             variant="contained"
             color="primary"
