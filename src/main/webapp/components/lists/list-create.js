@@ -96,6 +96,7 @@ export const ListCreate = props => {
         defaultButton={1}
         onChange={e => setList({ ...list, useFilter: e })}
       />
+      {/*TODO Add Filtering capablities*/}
       <TextField
         select
         variant="outlined"

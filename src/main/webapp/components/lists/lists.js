@@ -12,12 +12,8 @@ import gql from 'graphql-tag'
 import { ListCreate, ListCreatePopover } from './list-create'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
 import React from 'react'
-import {
-  Actions,
-  DeleteAction,
-  EditAction,
-  IndexCardItem,
-} from '../index-cards'
+import { ConfirmDeleteAction as DeleteAction } from '../confirm-delete'
+import { Actions, EditAction, IndexCardItem } from '../index-cards'
 import { useApolloFallback } from '../../react-hooks'
 
 const searchByID = gql`
@@ -155,7 +151,7 @@ const Lists = props => {
             >
               <Actions>
                 <EditAction onEdit={handleEditorOpen} />
-                <DeleteAction />
+                <DeleteAction itemName="list" isWritable={true} />
               </Actions>
             </IndexCardItem>
             <ListCreatePopover
