@@ -3,11 +3,14 @@ import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import Popover from '@material-ui/core/Popover'
+import Box from '@material-ui/core/Box'
 import Typography from '@material-ui/core/Typography'
 import ArchiveIcon from '@material-ui/icons/Archive'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import FolderIcon from '@material-ui/icons/Folder'
 import gql from 'graphql-tag'
+import { ListCreate, ListCreatePopover } from './list-create'
+import useAnchorEl from '../../react-hooks/use-anchor-el'
 import React from 'react'
 import {
   Actions,
@@ -66,12 +69,34 @@ const Lists = props => {
   const { onSelect, lists, isLoading } = props
   const [selected, setSelected] = React.useState(null)
   const [anchorEl, setAnchorEl] = React.useState(null)
+  const [
+    editorAnchorEl,
+    handleEditorOpen,
+    handleEditorClose,
+    isEditorOpen,
+  ] = useAnchorEl()
 
-  if (lists.length === 0) {
+  if (lists == undefined) {
     return (
-      <div>
-        You don't have any lists. Search for somethine and add it to a list or
-        create a new list.
+      <div style={{ textAlign: 'center', marginTop: '10px' }}>
+        <Typography color="textSecondary">
+          You don't have any lists. Search for something and add it to a list or
+          create a
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleEditorOpen}
+            style={{ marginLeft: '5px' }}
+          >
+            new list
+          </Button>
+          .
+        </Typography>
+        <ListCreatePopover
+          anchorEl={editorAnchorEl}
+          onClose={handleEditorClose}
+          open={isEditorOpen}
+        />
       </div>
     )
   }
@@ -119,19 +144,27 @@ const Lists = props => {
             </Actions>
           </IndexCardItem>
         ) : (
-          <IndexCardItem
-            key={list.id}
-            title={<Title />}
-            subHeader={<ListInfo listSize={list['list_bookmarks'].length} />}
-            onClick={() => {
-              handleClick(list)
-            }}
-          >
-            <Actions>
-              <EditAction />
-              <DeleteAction />
-            </Actions>
-          </IndexCardItem>
+          <React.Fragment>
+            <IndexCardItem
+              key={list.id}
+              title={<Title />}
+              subHeader={<ListInfo listSize={list['list_bookmarks'].length} />}
+              onClick={() => {
+                handleClick(list)
+              }}
+            >
+              <Actions>
+                <EditAction onEdit={handleEditorOpen} />
+                <DeleteAction />
+              </Actions>
+            </IndexCardItem>
+            <ListCreatePopover
+              title={list.title}
+              anchorEl={editorAnchorEl}
+              onClose={handleEditorClose}
+              open={isEditorOpen}
+            />
+          </React.Fragment>
         )
       })
     : []

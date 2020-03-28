@@ -22,26 +22,24 @@ export const RadioButton = props => {
               variant="contained"
               color="secondary"
               key={index}
-              index={index}
               onClick={() => {
-                setSelectedButton(index)
-                onChange(index)
+                setSelectedButton(item.index)
+                onChange(item.index)
               }}
             >
-              {item}
+              {item.text}
             </Button>
           ) : (
             <Button
               variant="outlined"
               color="primary"
               key={index}
-              index={index}
               onClick={() => {
-                setSelectedButton(index)
-                onChange(index)
+                setSelectedButton(item.index)
+                onChange(item.index)
               }}
             >
-              {item}
+              {item.text}
             </Button>
           )
         })}

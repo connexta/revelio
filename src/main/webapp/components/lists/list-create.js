@@ -12,14 +12,17 @@ import ButtonGroup from '@material-ui/core/ButtonGroup'
 import Button from '@material-ui/core/Button'
 import FormLabel from '@material-ui/core/FormLabel'
 import { RadioButton } from '../input'
+import Popover from '@material-ui/core/Popover'
+import Box from '@material-ui/core/Box'
+
 const iconList = {
-  Folder: <FolderIcon />,
-  Code: <CodeIcon />,
-  Archive: <ArchiveIcon />,
-  Tasks: <ListIcon />,
+  folder: <FolderIcon />,
+  code: <CodeIcon />,
+  archive: <ArchiveIcon />,
+  tasks: <ListIcon />,
 }
 
-const ListType = props => {
+const ListIconType = props => {
   const { label } = props
   return (
     <div
@@ -34,12 +37,42 @@ const ListType = props => {
   )
 }
 
+export const ListCreatePopover = props => {
+  const { title = '', anchorEl, onClose, open } = props
+  return (
+    <Popover
+      open={open}
+      anchorEl={anchorEl}
+      onClose={onClose}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'left',
+      }}
+    >
+      <Box style={{ margin: '10px' }}>
+        <ListCreate title={title} onClose={onClose} />
+      </Box>
+    </Popover>
+  )
+}
+
 export const ListCreate = props => {
-  const [listIcon, setListIcon] = React.useState('Folder')
-  const [useFilter, setUseFilter] = React.useState(0)
-  const { anchorEl, onClose, title = '' } = props
-  const handleChange = event => {
-    setListIcon(event.target.value)
+  const { title = '', onClose } = props
+  const [list, setList] = React.useState({
+    icon: 'folder',
+    useFilter: 1,
+    filterTree: {},
+    title: title,
+  })
+  const handleIconChange = event => {
+    setList({ ...list, icon: event.target.value })
+  }
+  const handleTitleChange = event => {
+    setList({ ...list, title: event.target.value })
   }
   return (
     <FormControl fullWidth variant="outlined" margin="normal">
@@ -47,7 +80,8 @@ export const ListCreate = props => {
         style={{ marginBottom: '20px' }}
         variant="outlined"
         label="Title"
-        value={title}
+        value={list.title}
+        onChange={handleTitleChange}
       />
       <div
         style={{
@@ -58,22 +92,22 @@ export const ListCreate = props => {
       />
       <RadioButton
         label="Limit based on filter"
-        buttonText={['No', 'Yes']}
-        defaultButton={0}
-        onChange={e => setUseFilter(e)}
+        buttonText={[{ text: 'Yes', index: 0 }, { text: 'No', index: 1 }]}
+        defaultButton={1}
+        onChange={e => setList({ ...list, useFilter: e })}
       />
       <TextField
         select
         variant="outlined"
         label="List Icon"
-        value={listIcon}
-        onChange={handleChange}
+        value={list.icon}
+        onChange={handleIconChange}
         style={{ marginBottom: '20px' }}
       >
         {Object.keys(iconList).map(item => {
           return (
             <MenuItem key={item} value={item}>
-              <ListType label={item} />
+              <ListIconType label={item} />
             </MenuItem>
           )
         })}
@@ -86,7 +120,12 @@ export const ListCreate = props => {
           justifyContent: 'space-between',
         }}
       >
-        <Button variant="outlined" color="primary" style={{ width: '49%' }}>
+        <Button
+          variant="outlined"
+          color="primary"
+          style={{ width: '49%' }}
+          onClick={() => onClose()}
+        >
           Cancel
         </Button>
         <Button variant="contained" color="secondary" style={{ width: '49%' }}>
