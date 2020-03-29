@@ -4,18 +4,23 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 import Typography from '@material-ui/core/Typography'
+import AddIcon from '@material-ui/icons/Add'
 import gql from 'graphql-tag'
 import React, { useState } from 'react'
 import loadable from 'react-loadable'
 import { useParams } from 'react-router-dom'
 import { useQueryExecutor } from '../../react-hooks'
-import { IndexCardItem } from '../index-cards'
+import useAnchorEl from '../../react-hooks/use-anchor-el'
+import { IndexCardItem, Actions, EditAction } from '../index-cards'
 import Lists from '../lists'
+import IconButton from '@material-ui/core/IconButton'
 import { InlineRetry } from '../network-retry'
 import QueryEditor from '../query-editor'
 import QueryManager from '../query-manager'
 import QueryStatus from '../query-status'
 import { useCreateQuery, useSaveQuery, useSaveWorkspace } from './hooks'
+import { ResultListInteraction } from '../lists/result-list-interaction'
+import Popover from '@material-ui/core/Popover'
 
 const LoadingComponent = () => <LinearProgress />
 
@@ -55,16 +60,23 @@ const workspaceById = gql`
   }
 `
 
-//TODO add paging
-const Results = ({ results }) =>
+const Results = ({ results, handleOpen }) =>
   React.useMemo(
     () =>
-      results.map(({ metacard }) => (
-        <IndexCardItem
-          key={metacard.attributes.id}
-          title={metacard.attributes.title}
-          subHeader={' '}
-        />
+      results.map(({ metacard }, index) => (
+        <React.Fragment>
+          <IndexCardItem
+            key={metacard.attributes.id}
+            title={metacard.attributes.title}
+            subHeader={' '}
+          >
+            <Actions>
+              <IconButton onClick={handleOpen}>
+                <AddIcon />
+              </IconButton>
+            </Actions>
+          </IndexCardItem>
+        </React.Fragment>
       )),
     [results]
   )
@@ -96,6 +108,8 @@ export default () => {
   const [currentQuery, setCurrentQuery] = useState(null)
   const [lists, setLists] = React.useState(null)
   const [queries, setQueries] = useState()
+
+  const [anchorEl, handleOpen, handleClose, isOpen] = useAnchorEl()
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
   const saveQuery = useSaveQuery()
@@ -217,7 +231,22 @@ export default () => {
                   })
                 }}
               />
-              <Results results={results} />
+              <Results results={results} handleOpen={handleOpen} />
+              <Popover
+                open={isOpen}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'center',
+                  horizontal: 'center',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+              >
+                <ResultListInteraction lists={lists} />
+              </Popover>
             </React.Fragment>
           )}
 
