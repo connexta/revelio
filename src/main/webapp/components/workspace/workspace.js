@@ -64,19 +64,17 @@ const Results = ({ results, handleOpen }) =>
   React.useMemo(
     () =>
       results.map(({ metacard }, index) => (
-        <React.Fragment>
-          <IndexCardItem
-            key={metacard.attributes.id}
-            title={metacard.attributes.title}
-            subHeader={' '}
-          >
-            <Actions>
-              <IconButton onClick={handleOpen}>
-                <AddIcon />
-              </IconButton>
-            </Actions>
-          </IndexCardItem>
-        </React.Fragment>
+        <IndexCardItem
+          key={metacard.attributes.id}
+          title={metacard.attributes.title}
+          subHeader={' '}
+        >
+          <Actions>
+            <IconButton onClick={handleOpen}>
+              <AddIcon />
+            </IconButton>
+          </Actions>
+        </IndexCardItem>
       )),
     [results]
   )
