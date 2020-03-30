@@ -69,7 +69,13 @@ const MetacardInteractionsDialog = (props: MetacardInteractionsDialogProps) => {
   })
 
   return (
-    <MetacardInteractionsDialogContext.Provider value={{ setDialogProps }}>
+    <MetacardInteractionsDialogContext.Provider
+      value={{
+        setDialogProps: (props: DialogProps) => {
+          setDialogProps({ ...props, children: props.children || null })
+        },
+      }}
+    >
       {props.children}
       <Dialog
         {...dialogProps}

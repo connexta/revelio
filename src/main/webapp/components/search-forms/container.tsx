@@ -52,12 +52,17 @@ const useDelete = () => {
         ['metacardsByTag', 'attributes'],
         []
       ).filter(({ id }: { id: string }) => id !== data.deleteMetacard)
-
+      const results = getIn(
+        cache.readQuery({ query }),
+        ['metacardsByTag', 'results'],
+        []
+      ).filter(({ id }: { id: string }) => id !== data.deleteMetacard)
       cache.writeQuery({
         query,
         data: {
           metacardsByTag: {
             attributes,
+            results,
             __typename: 'QueryResponse',
           },
         },
