@@ -281,7 +281,7 @@ const Container = props => {
   return (
     <WithSelectionInterface
       {...props}
-      attributes={userPrefs.columnOrder || []}
+      attributes={userPrefs.columnOrder || props.attributes || []}
       onColumnUpdate={columnOrder => {
         const newPreferences = mergeDeepOverwriteLists(
           fromJS(userPrefs),
