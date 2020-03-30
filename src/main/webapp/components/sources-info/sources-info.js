@@ -14,6 +14,8 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Typography from '@material-ui/core/Typography'
 import OnlineIcon from '@material-ui/icons/CloudDoneOutlined'
 import OfflineIcon from '@material-ui/icons/OfflineBoltOutlined'
+import { SnackbarRetry } from '../network-retry'
+import { useSourcePollInterval } from './poll-interval'
 
 const sources = gql`
   query SourcesInfo {
@@ -24,15 +26,6 @@ const sources = gql`
     }
   }
 `
-
-const pollInterval = gql`
-  query SourcePollInterval {
-    systemProperties {
-      sourcePollInterval
-    }
-  }
-`
-
 const sourcesMessage = offlineCount => {
   if (offlineCount === 0) {
     return 'All sources are currently up'
@@ -47,12 +40,13 @@ const sourcesMessage = offlineCount => {
 
 export const SourcesInfo = props => {
   const sources = props.sources === undefined ? [] : props.sources
-  const offlineCount = sources.filter(source => !source.isAvailable).length
+  const { error } = props
   const getIcon = source => (source.isAvailable ? OnlineIcon : OfflineIcon)
+  const offlineCount = sources.filter(source => !source.isAvailable).length
   if (props.loading) {
     return <LinearProgress />
   }
-  return (
+  const SourcesDropDown = (
     <div style={{ maxWidth: 600, margin: '20px auto' }}>
       <Card>
         <CardContent>
@@ -63,7 +57,6 @@ export const SourcesInfo = props => {
           <List>
             {sources.map(source => {
               const Icon = getIcon(source)
-
               return (
                 <ListItem key={source.sourceId}>
                   <ListItemIcon>
@@ -80,18 +73,21 @@ export const SourcesInfo = props => {
       </Card>
     </div>
   )
-}
 
-const useSourcePollInterval = init => {
-  const { data, loading, error } = useQuery(pollInterval)
-
-  if (loading || error) {
-    return init
+  if (error) {
+    return (
+      <div>
+        <SnackbarRetry
+          message={'Issue retrieving Local Sources, would you like to retry?'}
+          onRetry={props.refetch}
+          error={error}
+        />
+      </div>
+    )
   }
 
-  return data.systemProperties.sourcePollInterval
+  return <div>{SourcesDropDown}</div>
 }
-
 export default () => {
   const pollInterval = useSourcePollInterval(60000)
 
