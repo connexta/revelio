@@ -40,6 +40,9 @@ stories.add('Basic', () => {
           action('onSearch')(id)
           setQuery(id)
         }}
+        onSave={id => {
+          action('onSave')(id)
+        }}
         onCreate={() => {
           action('onCreate')
         }}
