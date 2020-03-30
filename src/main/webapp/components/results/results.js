@@ -1,8 +1,10 @@
 import React, { useState, forwardRef } from 'react'
-import { Set, fromJS, getIn } from 'immutable'
-import { useKeyPressed, useSelectionInterface } from '../../react-hooks'
-import { useMutation, useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
+import { Set, fromJS } from 'immutable'
+import {
+  useKeyPressed,
+  useSelectionInterface,
+  useUserPrefs,
+} from '../../react-hooks'
 
 import { mergeDeepOverwriteLists } from '../../utils'
 
@@ -183,12 +185,6 @@ const getAttributeKeysFromResults = results => {
   }, Set())
 }
 
-const mutation = gql`
-  mutation updateUserPreferences($userPreferences: Json) {
-    updateUserPreferences(userPreferences: $userPreferences)
-  }
-`
-
 const Results = props => {
   const { results, attributes, onSelect, onColumnUpdate } = props
   const selection = Set(props.selection)
@@ -263,37 +259,14 @@ const Results = props => {
   )
 }
 
-const query = gql`
-  query UserPreferences {
-    user {
-      preferences {
-        columnOrder
-      }
-    }
-  }
-`
-
 const LoadingComponent = () => <LinearProgress />
 
 const Container = props => {
-  const { loading, error, data = {}, refetch } = useQuery(query)
-  const [updateUserPreferences] = useMutation(mutation, {
-    update: (cache, { data: { updateUserPreferences } }) => {
-      cache.readQuery({ query })
-      cache.writeQuery({
-        query,
-        data: {
-          user: {
-            preferences: {
-              columnOrder: updateUserPreferences.columnOrder,
-              __typename: 'UserPreferences',
-            },
-            __typename: 'User',
-          },
-        },
-      })
-    },
-  })
+  const [
+    userPrefs,
+    updateUserPrefs,
+    { error, loading, refetch },
+  ] = useUserPrefs()
   if (loading) {
     return <LoadingComponent />
   }
@@ -305,30 +278,19 @@ const Container = props => {
     )
   }
 
-  const attributes = getIn(
-    data,
-    ['user', 'preferences', 'columnOrder'],
-    props.attributes
-  )
-
   return (
     <WithSelectionInterface
       {...props}
-      attributes={attributes}
+      attributes={userPrefs.columnOrder || props.attributes || []}
       onColumnUpdate={columnOrder => {
         const newPreferences = mergeDeepOverwriteLists(
-          fromJS(data.user.preferences),
+          fromJS(userPrefs),
           fromJS({ columnOrder })
         )
 
-        if (!fromJS(data.user.preferences).equals(newPreferences)) {
+        if (!fromJS(userPrefs).equals(newPreferences)) {
           const userPreferences = newPreferences.toJS()
-          updateUserPreferences({
-            variables: { userPreferences },
-            optimisticResponse: {
-              updateUserPreferences: userPreferences,
-            },
-          })
+          updateUserPrefs(userPreferences)
         }
       }}
     />
