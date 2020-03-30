@@ -32,4 +32,5 @@ export type QueryManagerProps = Overwrite<
   { onChange: (queries: QueryType[]) => void }
 > & {
   onCreate: (query: QueryType) => void
+  onSave: (id: string) => void
 }

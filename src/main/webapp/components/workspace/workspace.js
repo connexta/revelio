@@ -15,7 +15,7 @@ import { InlineRetry } from '../network-retry'
 import QueryEditor from '../query-editor'
 import QueryManager from '../query-manager'
 import QueryStatus from '../query-status'
-import { useCreateQuery, useSaveWorkspace } from './hooks'
+import { useCreateQuery, useSaveQuery, useSaveWorkspace } from './hooks'
 
 const LoadingComponent = () => <LinearProgress />
 
@@ -41,6 +41,8 @@ const workspaceById = gql`
           title
           filterTree
           type
+          sorts
+          sources
         }
         lists {
           list_bookmarks
@@ -95,8 +97,10 @@ export default () => {
   const [queries, setQueries] = useState()
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
+  const saveQuery = useSaveQuery()
   const saveWorkspace = useSaveWorkspace()
   const createQuery = useCreateQuery(query => {
+    onClear()
     setQueries([query, ...queries])
     setCurrentQuery(query.id)
     saveWorkspace({ queries: [query, ...queries] })
@@ -166,7 +170,6 @@ export default () => {
         {tab === 0 &&
           queries && (
             <React.Fragment>
-              {/* //TODO mutate cache on search so that the queries reflect edits made in queryEditor */}
               <QueryManager
                 QueryEditor={QueryEditor}
                 queries={queries}
@@ -179,6 +182,9 @@ export default () => {
                   )
                 }}
                 onCreate={createQuery}
+                onSave={id => {
+                  saveQuery(queries.find(query => query.id === id))
+                }}
                 onChange={queries => setQueries(queries)}
               />
 
