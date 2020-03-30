@@ -60,8 +60,27 @@ const ListInfo = props => {
   return <Typography>{`${listSize} results`}</Typography>
 }
 
+const saveLists = (lists, listToAdd, isNewList) => {
+  if (isNewList && lists) {
+    lists.forEach(list => {
+      delete list['__typename']
+    })
+    return [...lists, listToAdd]
+  } else if (isNewList && lists == undefined) {
+    return [listToAdd]
+  } else {
+    lists.forEach(list => {
+      if (list.id === listToAdd.id) {
+        Object.assign(list, listToAdd)
+      }
+      delete list['__typename']
+    })
+    return lists
+  }
+}
+
 const Lists = props => {
-  const { onSelect, lists, isLoading } = props
+  const { onSelect, lists, isLoading, onSave } = props
   const [selected, setSelected] = React.useState(null)
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [
@@ -91,6 +110,9 @@ const Lists = props => {
           anchorEl={editorAnchorEl}
           onClose={handleEditorClose}
           open={isEditorOpen}
+          onSave={(list, isNewList) => {
+            onSave(saveLists(props.lists, list, isNewList))
+          }}
         />
       </div>
     )
@@ -111,7 +133,7 @@ const Lists = props => {
   const open = Boolean(anchorEl)
 
   const ListCards = lists
-    ? lists.map(list => {
+    ? lists.map((list, index) => {
         const isSelected = list.id === selected
 
         const Title = () => (
@@ -154,10 +176,14 @@ const Lists = props => {
               </Actions>
             </IndexCardItem>
             <ListCreatePopover
-              title={list.title}
+              key={index}
+              list={list}
               anchorEl={editorAnchorEl}
               onClose={handleEditorClose}
               open={isEditorOpen}
+              onSave={(list, isNewList) => {
+                onSave(saveLists(props.lists, list, isNewList))
+              }}
             />
           </React.Fragment>
         )

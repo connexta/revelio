@@ -12,6 +12,7 @@ import Button from '@material-ui/core/Button'
 import { RadioButton } from '../input'
 import Popover from '@material-ui/core/Popover'
 import Box from '@material-ui/core/Box'
+import { v4 as newUuid } from 'uuid'
 
 const iconList = {
   folder: <FolderIcon />,
@@ -36,7 +37,7 @@ const ListIconType = props => {
 }
 
 export const ListCreatePopover = props => {
-  const { title = '', anchorEl, onClose, open } = props
+  const { list, anchorEl, onClose, open, onSave } = props
   return (
     <Popover
       open={open}
@@ -52,26 +53,31 @@ export const ListCreatePopover = props => {
       }}
     >
       <Box style={{ margin: '10px' }}>
-        <ListCreate title={title} onClose={onClose} />
+        <ListCreate prevList={list} onClose={onClose} onSave={onSave} />
       </Box>
     </Popover>
   )
 }
 
 export const ListCreate = props => {
-  const { title = '', onClose } = props
+  const { prevList, onClose, onSave } = props
+  const isNewList = prevList === undefined
+
   const [list, setList] = React.useState({
-    icon: 'folder',
-    useFilter: 1,
-    filterTree: {},
-    title: title,
+    id: isNewList ? newUuid().replace(/-/g, '') : prevList.id,
+    list_icon: isNewList ? 'folder' : prevList.list_icon,
+    list_bookmarks: isNewList ? [] : prevList.list_bookmarks,
+    query: isNewList ? undefined : prevList.query,
+    title: isNewList ? 'Untitled List' : prevList.title,
   })
+
   const handleIconChange = event => {
-    setList({ ...list, icon: event.target.value })
+    setList({ ...list, list_icon: event.target.value })
   }
   const handleTitleChange = event => {
     setList({ ...list, title: event.target.value })
   }
+
   return (
     <FormControl fullWidth variant="outlined" margin="normal">
       <TextField
@@ -90,8 +96,11 @@ export const ListCreate = props => {
       />
       <RadioButton
         label="Limit based on filter"
-        buttonText={[{ text: 'Yes', index: 0 }, { text: 'No', index: 1 }]}
-        defaultButton={1}
+        buttonText={[
+          { label: 'Yes', value: true },
+          { label: 'No', value: false },
+        ]}
+        value={list.useFilter === true}
         onChange={e => setList({ ...list, useFilter: e })}
       />
       {/*TODO Add Filtering capablities*/}
@@ -99,7 +108,7 @@ export const ListCreate = props => {
         select
         variant="outlined"
         label="List Icon"
-        value={list.icon}
+        value={list.list_icon}
         onChange={handleIconChange}
         style={{ marginBottom: '20px' }}
       >
@@ -127,7 +136,15 @@ export const ListCreate = props => {
         >
           Cancel
         </Button>
-        <Button variant="contained" color="secondary" style={{ width: '49%' }}>
+        <Button
+          variant="contained"
+          color="secondary"
+          style={{ width: '49%' }}
+          onClick={() => {
+            onSave(list, isNewList)
+            onClose()
+          }}
+        >
           Save
         </Button>
       </div>

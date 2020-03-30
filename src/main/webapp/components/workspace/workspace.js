@@ -94,6 +94,7 @@ export default () => {
 
   const [listResults, setListResults] = React.useState([])
   const [currentQuery, setCurrentQuery] = useState(null)
+  const [listState, setListState] = React.useState([])
   const [queries, setQueries] = useState()
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
@@ -106,6 +107,9 @@ export default () => {
     saveWorkspace({ queries: [query, ...queries] })
     onSearch(queryToSearch(query))
   })
+  const saveListsToWorkspace = lists => {
+    saveWorkspace({ lists })
+  }
 
   const [tab, setTab] = React.useState(0)
 
@@ -134,7 +138,6 @@ export default () => {
   const attributes = data.metacardsById[0].attributes[0]
 
   const { title, lists } = attributes
-
   return (
     <div
       style={{
@@ -216,6 +219,10 @@ export default () => {
                   return acc.concat(metacard.results)
                 }, [])
                 setListResults(results)
+              }}
+              onSave={lists => {
+                setListState(lists)
+                saveListsToWorkspace(lists)
               }}
             />
 

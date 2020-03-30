@@ -4,8 +4,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup'
 import Button from '@material-ui/core/Button'
 
 export const RadioButton = props => {
-  const { label, buttonText, defaultButton, onChange } = props
-  const [selectedButton, setSelectedButton] = React.useState(defaultButton)
+  const { label, buttonText, value, onChange } = props
   return (
     <div
       style={{
@@ -17,17 +16,16 @@ export const RadioButton = props => {
       <FormLabel style={{ marginBottom: '10px' }}>{label}</FormLabel>
       <ButtonGroup style={{ marginBottom: '20px' }}>
         {buttonText.map((item, index) => {
-          return index === selectedButton ? (
+          return item.value === value ? (
             <Button
               variant="contained"
               color="secondary"
               key={index}
               onClick={() => {
-                setSelectedButton(item.index)
-                onChange(item.index)
+                onChange(item.value)
               }}
             >
-              {item.text}
+              {item.label}
             </Button>
           ) : (
             <Button
@@ -35,11 +33,10 @@ export const RadioButton = props => {
               color="primary"
               key={index}
               onClick={() => {
-                setSelectedButton(item.index)
-                onChange(item.index)
+                onChange(item.value)
               }}
             >
-              {item.text}
+              {item.label}
             </Button>
           )
         })}
