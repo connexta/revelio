@@ -124,6 +124,9 @@ const getDefaultPreferences = async fetch => {
           sortOrder: 'descending',
         },
       ],
+      template: {
+        id: null,
+      },
     },
   }
 }
