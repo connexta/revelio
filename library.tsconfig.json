@@ -2,7 +2,8 @@
   "compilerOptions": {
     "declaration": true,
     "skipLibCheck": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "downlevelIteration": true
   },
   "include": [
     "src/main/webapp/components/**/*",
