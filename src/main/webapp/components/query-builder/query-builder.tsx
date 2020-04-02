@@ -16,7 +16,7 @@ export type QueryBuilderProps = {
   attributeDefinitions?: AttributeDefinition[]
   onChange: (query: QueryType) => void
   query?: QueryType
-  addOptionsRef: HTMLDivElement
+  addOptionsRef?: HTMLDivElement
 }
 
 const AddButton = (props: { options: any }) => {

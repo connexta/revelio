@@ -6,10 +6,15 @@ import { getIn, set } from 'immutable'
 import React, { useRef } from 'react'
 import { BasicSearchQueryBuilder } from '../basic-search/basic-search'
 import AdvancedSearchQueryBuilder from '../query-builder/query-builder'
+import TextSearchQueryBuilder from '../text-search'
 import { QueryType } from '../query-builder/types'
 import { QueryEditorPopoverProps } from './types'
 
 const defaultSearchForms = {
+  text: {
+    label: 'Text Search',
+    queryBuilder: TextSearchQueryBuilder,
+  },
   basic: {
     label: 'Basic Search',
     queryBuilder: BasicSearchQueryBuilder,
@@ -83,7 +88,7 @@ export default (props: QueryEditorPopoverProps) => {
           queryBuilder={getIn(
             defaultSearchForms,
             [queryBuilder, 'queryBuilder'],
-            AdvancedSearchQueryBuilder
+            TextSearchQueryBuilder
           )}
           queryInteractions={queryInteractions}
           onSearch={onSearch}
