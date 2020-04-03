@@ -9,6 +9,7 @@ const query = gql`
         alertExpiration
         alertPersistence
         columnOrder
+        columnHide
         dateTimeFormat {
           datetimefmt
           timefmt
