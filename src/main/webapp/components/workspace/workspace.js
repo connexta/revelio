@@ -16,7 +16,6 @@ import QueryEditor from '../query-editor'
 import QueryManager from '../query-manager'
 import QueryStatus from '../query-status'
 import { useCreateQuery, useSaveQuery, useSaveWorkspace } from './hooks'
-import { makeDefaultSearchGeo } from '../query-builder/filter'
 
 const LoadingComponent = () => <LinearProgress />
 
@@ -109,7 +108,8 @@ export default () => {
     onSearch(queryToSearch(query))
   })
   const saveListsToWorkspace = lists => {
-    saveWorkspace({ lists })
+    // TO-DO Implement save functionality
+    // saveWorkspace({ lists })
   }
 
   const [tab, setTab] = React.useState(0)
@@ -122,8 +122,8 @@ export default () => {
       lists &&
         setLists(
           lists.map(list => {
-            const { __typename, ...rest } = list
-            return list
+            const { __typename, ...rest } = list // eslint-disable-line no-unused-vars
+            return rest
           })
         )
       setQueries(
@@ -230,8 +230,7 @@ export default () => {
                 setListResults(results)
               }}
               onSave={() => {
-                // TO-DO Implement save functionality
-                // saveListsToWorkspace(listState)
+                saveListsToWorkspace(lists)
               }}
               setList={list => {
                 let isNewList = true
@@ -242,7 +241,7 @@ export default () => {
                   }
                 })
                 if (isNewList) {
-                  setLists([...listState, list])
+                  setLists([...lists, list])
                 }
               }}
             />

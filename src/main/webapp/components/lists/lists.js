@@ -60,25 +60,6 @@ const ListInfo = props => {
   return <Typography>{`${listSize} results`}</Typography>
 }
 
-const saveLists = (lists, listToAdd, isNewList) => {
-  if (isNewList && lists) {
-    lists.forEach(list => {
-      delete list['__typename']
-    })
-    return [...lists, listToAdd]
-  } else if (isNewList && lists == undefined) {
-    return [listToAdd]
-  } else {
-    lists.forEach(list => {
-      if (list.id === listToAdd.id) {
-        Object.assign(list, listToAdd)
-      }
-      delete list['__typename']
-    })
-    return lists
-  }
-}
-
 const Lists = props => {
   const { onSelect, lists, isLoading, onSave, setList } = props
   const [selected, setSelected] = React.useState(null)
@@ -106,7 +87,7 @@ const Lists = props => {
   const open = Boolean(anchorEl)
 
   const ListCards = lists
-    ? lists.map((list, index) => {
+    ? lists.map(list => {
         const isSelected = list.id === selected
 
         const Title = () => (
@@ -134,9 +115,8 @@ const Lists = props => {
             </Actions>
           </IndexCardItem>
         ) : (
-          <React.Fragment>
+          <React.Fragment key={list.id}>
             <IndexCardItem
-              key={list.id}
               title={<Title />}
               subHeader={<ListInfo listSize={list['list_bookmarks'].length} />}
               onClick={() => {
@@ -149,7 +129,6 @@ const Lists = props => {
               </Actions>
             </IndexCardItem>
             <ListCreatePopover
-              key={index}
               list={list}
               anchorEl={editorAnchorEl}
               onClose={handleEditorClose}
@@ -166,8 +145,8 @@ const Lists = props => {
     <React.Fragment>
       <div style={{ display: 'flex' }}>
         {selected
-          ? ListCards.filter(list => list.props.children[0].key === selected)[0]
-          : ListCards[0].props.children}
+          ? ListCards.filter(list => list.key === selected)[0]
+          : ListCards[0]}
         <Button
           color="primary"
           variant="contained"
