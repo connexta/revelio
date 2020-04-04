@@ -37,7 +37,7 @@ const ListIconType = props => {
 }
 
 export const ListCreatePopover = props => {
-  const { list, anchorEl, onClose, open, onSave } = props
+  const { list, anchorEl, onClose, open, onSave, setList } = props
   return (
     <Popover
       open={open}
@@ -53,23 +53,29 @@ export const ListCreatePopover = props => {
       }}
     >
       <Box style={{ margin: '10px' }}>
-        <ListCreate prevList={list} onClose={onClose} onSave={onSave} />
+        <ListCreate
+          list={list}
+          onClose={onClose}
+          onSave={onSave}
+          setList={setList}
+        />
       </Box>
     </Popover>
   )
 }
 
 export const ListCreate = props => {
-  const { prevList, onClose, onSave } = props
-  const isNewList = prevList === undefined
+  const { onClose, onSave } = props
 
-  const [list, setList] = React.useState({
-    id: isNewList ? newUuid().replace(/-/g, '') : prevList.id,
-    list_icon: isNewList ? 'folder' : prevList.list_icon,
-    list_bookmarks: isNewList ? [] : prevList.list_bookmarks,
-    query: isNewList ? undefined : prevList.query,
-    title: isNewList ? 'Untitled List' : prevList.title,
-  })
+  const [list, setList] = React.useState(
+    props.list || {
+      id: newUuid().replace(/-/g, ''),
+      list_icon: 'folder',
+      list_bookmarks: [],
+      query: undefined,
+      title: 'Untitled List',
+    }
+  )
 
   const handleIconChange = event => {
     setList({ ...list, list_icon: event.target.value })
@@ -141,7 +147,8 @@ export const ListCreate = props => {
           color="secondary"
           style={{ width: '49%' }}
           onClick={() => {
-            onSave(list, isNewList)
+            props.setList(list)
+            onSave()
             onClose()
           }}
         >

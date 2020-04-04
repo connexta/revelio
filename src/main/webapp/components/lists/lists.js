@@ -80,7 +80,7 @@ const saveLists = (lists, listToAdd, isNewList) => {
 }
 
 const Lists = props => {
-  const { onSelect, lists, isLoading, onSave } = props
+  const { onSelect, lists, isLoading, onSave, setList } = props
   const [selected, setSelected] = React.useState(null)
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [
@@ -90,33 +90,6 @@ const Lists = props => {
     isEditorOpen,
   ] = useAnchorEl()
 
-  if (lists == undefined) {
-    return (
-      <div style={{ textAlign: 'center', marginTop: '10px' }}>
-        <Typography color="textSecondary">
-          You don&apos;t have any lists. Search for something and add it to a
-          list or create a
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleEditorOpen}
-            style={{ marginLeft: '5px' }}
-          >
-            new list
-          </Button>
-          .
-        </Typography>
-        <ListCreatePopover
-          anchorEl={editorAnchorEl}
-          onClose={handleEditorClose}
-          open={isEditorOpen}
-          onSave={(list, isNewList) => {
-            onSave(saveLists(props.lists, list, isNewList))
-          }}
-        />
-      </div>
-    )
-  }
   const handleOpen = event => {
     setAnchorEl(event.currentTarget)
   }
@@ -181,49 +154,69 @@ const Lists = props => {
               anchorEl={editorAnchorEl}
               onClose={handleEditorClose}
               open={isEditorOpen}
-              onSave={(list, isNewList) => {
-                onSave(saveLists(props.lists, list, isNewList))
-              }}
+              setList={setList}
+              onSave={onSave}
             />
           </React.Fragment>
         )
       })
     : []
 
-  return (
-    lists && (
-      <React.Fragment>
-        <div style={{ display: 'flex' }}>
-          {selected
-            ? ListCards.filter(list => list.key === selected)[0]
-            : ListCards[0]}
-          <Button
-            color="primary"
-            variant="contained"
-            style={{ marginTop: 20, marginBottom: 20, marginRight: 20 }}
-            onClick={handleOpen}
-          >
-            <ExpandMoreIcon />
-          </Button>
-        </div>
-
-        <Popover
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'left',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'left',
-          }}
+  return lists ? (
+    <React.Fragment>
+      <div style={{ display: 'flex' }}>
+        {selected
+          ? ListCards.filter(list => list.props.children[0].key === selected)[0]
+          : ListCards[0].props.children}
+        <Button
+          color="primary"
+          variant="contained"
+          style={{ marginTop: 20, marginBottom: 20, marginRight: 20 }}
+          onClick={handleOpen}
         >
-          {ListCards}
-        </Popover>
-      </React.Fragment>
-    )
+          <ExpandMoreIcon />
+        </Button>
+      </div>
+
+      <Popover
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+      >
+        {ListCards}
+      </Popover>
+    </React.Fragment>
+  ) : (
+    <div style={{ textAlign: 'center', marginTop: '10px' }}>
+      <Typography color="textSecondary">
+        You don&apos;t have any lists. Search for something and add it to a list
+        or create a
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleEditorOpen}
+          style={{ marginLeft: '5px' }}
+        >
+          new list
+        </Button>
+        .
+      </Typography>
+      <ListCreatePopover
+        anchorEl={editorAnchorEl}
+        onClose={handleEditorClose}
+        open={isEditorOpen}
+        setList={setList}
+        onSave={onSave}
+      />
+    </div>
   )
 }
 
