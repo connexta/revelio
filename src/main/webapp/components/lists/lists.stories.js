@@ -48,9 +48,20 @@ stories.add('List Create', () => {
 })
 
 stories.add('Add result to list', () => {
-  return <ResultListInteraction lists={lists} />
+  return (
+    <ResultListInteraction
+      lists={lists}
+      id="91208b8337bd4d61a061849b2f6c2068"
+      setList={() => {}}
+    />
+  )
 })
 
 stories.add('Result no lists', () => {
-  return <ResultListInteraction />
+  return (
+    <ResultListInteraction
+      id="91208b8337bd4d61a061849b2f6c2068"
+      setList={() => {}}
+    />
+  )
 })

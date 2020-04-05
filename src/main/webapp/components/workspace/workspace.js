@@ -63,7 +63,7 @@ const workspaceById = gql`
 const Results = ({ results, handleOpen, setResult }) =>
   React.useMemo(
     () =>
-      results.map(({ metacard }, index) => (
+      results.map(({ metacard }) => (
         <IndexCardItem
           key={metacard.attributes.id}
           title={metacard.attributes.title}
