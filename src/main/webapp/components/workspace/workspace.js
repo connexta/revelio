@@ -108,7 +108,7 @@ export default () => {
     onSearch(queryToSearch(query))
   })
 
-  //esline-disable-next-line no-unused-vars
+  //eslint-disable-next-line no-unused-vars
   const saveListsToWorkspace = lists => {
     // TO-DO Implement save functionality
     // saveWorkspace({ lists })
