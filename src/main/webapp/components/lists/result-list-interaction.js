@@ -1,5 +1,4 @@
 import React from 'react'
-import Popover from '@material-ui/core/Popover'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 import { ListCreatePopover } from './list-create'
@@ -38,14 +37,6 @@ const CreateNewList = props => {
   )
 }
 
-const setListBookmarks = ({ list, id, setList }) => {
-  const indexOfId = list.list_bookmarks.indexOf(id)
-  indexOfId === -1
-    ? list.list_bookmarks.push(id)
-    : list.list_bookmarks.splice(indexOfId, 1)
-  setList(list)
-}
-
 const List = props => {
   const { list, selected, setList, id } = props
   const [checked, setChecked] = React.useState(selected)
@@ -55,7 +46,10 @@ const List = props => {
         checked={checked}
         onClick={() => {
           setChecked(!checked)
-          setListBookmarks({ list, id, setList })
+          const indexOfId = list.list_bookmarks.indexOf(id)
+          indexOfId === -1
+            ? list.list_bookmarks.push(id)
+            : list.list_bookmarks.splice(indexOfId, 1)
           setList(list)
         }}
       />
