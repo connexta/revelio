@@ -2,7 +2,7 @@ import React from 'react'
 import Popover from '@material-ui/core/Popover'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
-import { ListCreate } from './list-create'
+import { ListCreatePopover } from './list-create'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -13,6 +13,7 @@ import CodeIcon from '@material-ui/icons/Code'
 import ArchiveIcon from '@material-ui/icons/Archive'
 import ListIcon from '@material-ui/icons/List'
 import FormLabel from '@material-ui/core/FormLabel'
+import useAnchorEl from '../../react-hooks/use-anchor-el'
 
 const iconList = {
   folder: <FolderIcon />,
@@ -22,7 +23,19 @@ const iconList = {
 }
 
 const CreateNewList = props => {
-  return <Button>{'+ Create new list'}</Button>
+  const [anchorEl, handleOpen, handleClose, isOpen] = useAnchorEl()
+  return (
+    <React.Fragment>
+      {' '}
+      <Button onClick={handleOpen}>{'+ Create new list'}</Button>
+      <ListCreatePopover
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        open={isOpen}
+        setList={props.setList}
+      />
+    </React.Fragment>
+  )
 }
 
 const setListBookmarks = ({ list, id, setList }) => {
@@ -54,9 +67,8 @@ const List = props => {
 
 export const ResultListInteraction = props => {
   const { lists, id, setList } = props
-
   if (lists == undefined) {
-    return <CreateNewList />
+    return <CreateNewList setList={setList} />
   } else {
     return (
       <Box style={{ margin: '15px' }}>
@@ -75,7 +87,7 @@ export const ResultListInteraction = props => {
           )
         })}
         <Divider />
-        <CreateNewList />
+        <CreateNewList setList={setList} />
       </Box>
     )
   }
