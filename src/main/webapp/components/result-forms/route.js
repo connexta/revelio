@@ -99,7 +99,7 @@ const Item = props => {
             isAdmin={canShare}
           />
           <DeleteAction
-            message="This will permanently delete the result form."
+            itemName="result form"
             onDelete={onDelete}
             isWritable={canWrite}
           />

@@ -8,13 +8,11 @@ import ArchiveIcon from '@material-ui/icons/Archive'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import FolderIcon from '@material-ui/icons/Folder'
 import gql from 'graphql-tag'
+import { ListCreatePopover } from './list-create'
+import useAnchorEl from '../../react-hooks/use-anchor-el'
 import React from 'react'
-import {
-  Actions,
-  DeleteAction,
-  EditAction,
-  IndexCardItem,
-} from '../index-cards'
+import { ConfirmDeleteAction as DeleteAction } from '../confirm-delete'
+import { Actions, EditAction, IndexCardItem } from '../index-cards'
 import { useApolloFallback } from '../../react-hooks'
 
 const searchByID = gql`
@@ -63,9 +61,15 @@ const ListInfo = props => {
 }
 
 const Lists = props => {
-  const { onSelect, lists, isLoading } = props
+  const { onSelect, lists, isLoading, onSave, setList } = props
   const [selected, setSelected] = React.useState(null)
   const [anchorEl, setAnchorEl] = React.useState(null)
+  const [
+    editorAnchorEl,
+    handleEditorOpen,
+    handleEditorClose,
+    isEditorOpen,
+  ] = useAnchorEl()
 
   const handleOpen = event => {
     setAnchorEl(event.currentTarget)
@@ -97,58 +101,101 @@ const Lists = props => {
           </ListTitle>
         )
 
-        return (
+        return list['list_bookmarks'] == undefined ? (
           <IndexCardItem
             key={list.id}
             title={<Title />}
-            subHeader={<ListInfo listSize={list['list_bookmarks'].length} />}
+            subHeader={<div>Empty</div>}
             onClick={() => {
               handleClick(list)
             }}
           >
             <Actions>
-              <EditAction />
               <DeleteAction />
             </Actions>
           </IndexCardItem>
+        ) : (
+          <React.Fragment key={list.id}>
+            <IndexCardItem
+              title={<Title />}
+              subHeader={<ListInfo listSize={list['list_bookmarks'].length} />}
+              onClick={() => {
+                handleClick(list)
+              }}
+            >
+              <Actions>
+                <EditAction onEdit={handleEditorOpen} />
+                <DeleteAction itemName="list" isWritable={true} />
+              </Actions>
+            </IndexCardItem>
+            <ListCreatePopover
+              list={list}
+              anchorEl={editorAnchorEl}
+              onClose={handleEditorClose}
+              open={isEditorOpen}
+              setList={setList}
+              onSave={onSave}
+            />
+          </React.Fragment>
         )
       })
     : []
 
-  return (
-    lists && (
-      <React.Fragment>
-        <div style={{ display: 'flex' }}>
-          {selected
-            ? ListCards.filter(list => list.key === selected)[0]
-            : ListCards[0]}
-          <Button
-            color="primary"
-            variant="contained"
-            style={{ marginTop: 20, marginBottom: 20, marginRight: 20 }}
-            onClick={handleOpen}
-          >
-            <ExpandMoreIcon />
-          </Button>
-        </div>
-
-        <Popover
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'left',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'left',
-          }}
+  return lists ? (
+    <React.Fragment>
+      <div style={{ display: 'flex' }}>
+        {selected
+          ? ListCards.filter(list => list.key === selected)[0]
+          : ListCards[0]}
+        <Button
+          color="primary"
+          variant="contained"
+          style={{ marginTop: 20, marginBottom: 20, marginRight: 20 }}
+          onClick={handleOpen}
         >
-          {ListCards}
-        </Popover>
-      </React.Fragment>
-    )
+          <ExpandMoreIcon />
+        </Button>
+      </div>
+
+      <Popover
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+      >
+        {ListCards}
+      </Popover>
+    </React.Fragment>
+  ) : (
+    <div style={{ textAlign: 'center', marginTop: '10px' }}>
+      <Typography color="textSecondary">
+        You don&apos;t have any lists. Search for something and add it to a list
+        or create a
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleEditorOpen}
+          style={{ marginLeft: '5px' }}
+        >
+          new list
+        </Button>
+        .
+      </Typography>
+      <ListCreatePopover
+        anchorEl={editorAnchorEl}
+        onClose={handleEditorClose}
+        open={isEditorOpen}
+        setList={setList}
+        onSave={onSave}
+      />
+    </div>
   )
 }
 

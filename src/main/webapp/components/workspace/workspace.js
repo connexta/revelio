@@ -94,6 +94,7 @@ export default () => {
 
   const [listResults, setListResults] = React.useState([])
   const [currentQuery, setCurrentQuery] = useState(null)
+  const [lists, setLists] = React.useState(null)
   const [queries, setQueries] = useState()
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
@@ -107,12 +108,26 @@ export default () => {
     onSearch(queryToSearch(query))
   })
 
+  //eslint-disable-next-line no-unused-vars
+  const saveListsToWorkspace = lists => {
+    // TO-DO Implement save functionality
+    // saveWorkspace({ lists })
+  }
+
   const [tab, setTab] = React.useState(0)
 
   const { loading, error, data } = useQuery(workspaceById, {
     variables: { ids: [id] },
     onCompleted: data => {
       const queries = data.metacardsById[0].attributes[0].queries
+      const lists = data.metacardsById[0].attributes[0].lists
+      lists &&
+        setLists(
+          lists.map(list => {
+            const { __typename, ...rest } = list // eslint-disable-line no-unused-vars
+            return rest
+          })
+        )
       setQueries(
         queries.map(query => {
           const { __typename, ...rest } = query // eslint-disable-line no-unused-vars
@@ -133,8 +148,7 @@ export default () => {
 
   const attributes = data.metacardsById[0].attributes[0]
 
-  const { title, lists } = attributes
-
+  const { title } = attributes
   return (
     <div
       style={{
@@ -216,6 +230,21 @@ export default () => {
                   return acc.concat(metacard.results)
                 }, [])
                 setListResults(results)
+              }}
+              onSave={() => {
+                saveListsToWorkspace(lists)
+              }}
+              setList={list => {
+                let isNewList = true
+                lists.forEach(item => {
+                  if (list.id === item.id) {
+                    Object.assign(item, list)
+                    isNewList = false
+                  }
+                })
+                if (isNewList) {
+                  setLists([...lists, list])
+                }
               }}
             />
 

@@ -74,7 +74,7 @@ const Workspaces = props => {
               />
               <DeleteAction
                 onDelete={() => onDelete(workspace)}
-                message="This will permanently delete the workspace."
+                itemName="workspace"
                 isWritable={canWrite}
               />
               <SubscribeAction

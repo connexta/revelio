@@ -2,6 +2,7 @@ import React from 'react'
 import { storiesOf } from '../../@storybook/react'
 import useState from '../../@storybook/use-state'
 import List from './lists'
+import { ListCreate } from './list-create'
 
 const stories = storiesOf('Lists', module)
 stories.addDecorator(Story => <Story />)
@@ -39,4 +40,8 @@ stories.add('List Select', () => {
   ]
   const [, onSelect] = useState(null)
   return <List onSelect={onSelect} lists={lists} />
+})
+
+stories.add('List Create', () => {
+  return <ListCreate />
 })

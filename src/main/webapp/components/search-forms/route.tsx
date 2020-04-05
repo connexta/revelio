@@ -89,7 +89,7 @@ const SearchForm = (props: SearchFormProps) => {
             isAdmin={props.canShare}
           />
           <DeleteAction
-            message="This will permanently delete the search form."
+            itemName="search form"
             onDelete={props.onDelete}
             isWritable={props.canWrite}
           />
