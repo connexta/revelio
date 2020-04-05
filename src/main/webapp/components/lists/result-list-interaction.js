@@ -13,6 +13,7 @@ import CodeIcon from '@material-ui/icons/Code'
 import ArchiveIcon from '@material-ui/icons/Archive'
 import ListIcon from '@material-ui/icons/List'
 import FormLabel from '@material-ui/core/FormLabel'
+
 const iconList = {
   folder: <FolderIcon />,
   code: <CodeIcon />,
@@ -24,8 +25,36 @@ const CreateNewList = props => {
   return <Button>{'+ Create new list'}</Button>
 }
 
+const setListBookmarks = ({ list, id, setList }) => {
+  const indexOfId = list.list_bookmarks.indexOf(id)
+  indexOfId === -1
+    ? list.list_bookmarks.push(id)
+    : list.list_bookmarks.splice(indexOfId, 1)
+  setList(list)
+}
+
+const List = props => {
+  const { list, selected, setList, id } = props
+  const [checked, setChecked] = React.useState(selected)
+  return (
+    <MenuItem>
+      <Checkbox
+        checked={checked}
+        onClick={() => {
+          setChecked(!checked)
+          setListBookmarks({ list, id, setList })
+          setList(list)
+        }}
+      />
+      <ListItemIcon>{iconList[list.list_icon]}</ListItemIcon>
+      <ListItemText primary={list.title} />
+    </MenuItem>
+  )
+}
+
 export const ResultListInteraction = props => {
-  const { lists } = props
+  const { lists, id, setList } = props
+
   if (lists == undefined) {
     return <CreateNewList />
   } else {
@@ -33,13 +62,16 @@ export const ResultListInteraction = props => {
       <Box style={{ margin: '15px' }}>
         <FormLabel>Add/Remove from lists</FormLabel>
         <Divider />
-        {lists.map(list => {
+        {lists.map((list, index) => {
+          const selected = list.list_bookmarks.includes(id)
           return (
-            <MenuItem key={list.id}>
-              <Checkbox />
-              <ListItemIcon>{iconList[list.list_icon]}</ListItemIcon>
-              <ListItemText primary={list.title} />
-            </MenuItem>
+            <List
+              key={index}
+              selected={selected}
+              list={list}
+              setList={setList}
+              id={id}
+            />
           )
         })}
         <Divider />

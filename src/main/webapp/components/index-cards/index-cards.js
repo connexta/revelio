@@ -108,13 +108,13 @@ export const IndexCardItem = props => {
           subheader={subHeader || moment(modified).fromNow()}
           action={headerAction}
         />
-        <CardContent>
-          {metacard_owner && (
+        {metacard_owner && (
+          <CardContent>
             <Typography variant="body2" color="textSecondary" component="p">
               Owner: {metacard_owner}
             </Typography>
-          )}
-        </CardContent>
+          </CardContent>
+        )}
       </CardActionArea>
       {children}
     </ItemContainer>

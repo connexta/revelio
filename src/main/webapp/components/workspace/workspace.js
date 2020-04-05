@@ -60,7 +60,7 @@ const workspaceById = gql`
   }
 `
 
-const Results = ({ results, handleOpen }) =>
+const Results = ({ results, handleOpen, setResult }) =>
   React.useMemo(
     () =>
       results.map(({ metacard }, index) => (
@@ -69,8 +69,14 @@ const Results = ({ results, handleOpen }) =>
           title={metacard.attributes.title}
           subHeader={' '}
         >
-          <Actions>
-            <IconButton onClick={handleOpen}>
+          <Actions disableSpacing={true}>
+            <IconButton
+              onClick={e => {
+                setResult(metacard.attributes.id)
+                handleOpen(e)
+              }}
+              size="small"
+            >
               <AddIcon />
             </IconButton>
           </Actions>
@@ -106,6 +112,7 @@ export default () => {
   const [currentQuery, setCurrentQuery] = useState(null)
   const [lists, setLists] = React.useState(null)
   const [queries, setQueries] = useState()
+  const [selectedResult, setSelectedResult] = useState(null)
 
   const [anchorEl, handleOpen, handleClose, isOpen] = useAnchorEl()
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
@@ -229,7 +236,11 @@ export default () => {
                   })
                 }}
               />
-              <Results results={results} handleOpen={handleOpen} />
+              <Results
+                results={results}
+                handleOpen={handleOpen}
+                setResult={setSelectedResult}
+              />
               <Popover
                 open={isOpen}
                 anchorEl={anchorEl}
@@ -243,7 +254,23 @@ export default () => {
                   horizontal: 'left',
                 }}
               >
-                <ResultListInteraction lists={lists} />
+                <ResultListInteraction
+                  lists={lists}
+                  id={selectedResult}
+                  setList={list => {
+                    let isNewList = true
+                    lists.forEach(item => {
+                      if (list.id === item.id) {
+                        Object.assign(item, list)
+                        isNewList = false
+                        setLists(lists)
+                      }
+                    })
+                    if (isNewList) {
+                      setLists([...lists, list])
+                    }
+                  }}
+                />
               </Popover>
             </React.Fragment>
           )}
