@@ -213,7 +213,6 @@ const filters = {
   [LOCATION_KEY]: BasicLocation,
   timeRange: BasicTimeRange,
   [MATCHTYPE_KEY]: MatchTypes,
-  //sources: BasicSources,
   sortOrder: BasicSortOrder,
 }
 
@@ -221,7 +220,6 @@ const filterLabels = {
   [LOCATION_KEY]: 'Location',
   timeRange: 'Time Range',
   [MATCHTYPE_KEY]: 'Match Types',
-  //sources: 'Sources',
   sortOrder: 'Sort Order',
 }
 
@@ -235,12 +233,12 @@ const defaultFilters = {
 
 const getFilterMap = ({ query, basicSearchMatchType }) => {
   if (!query) {
-    return Map({ text: '*', sources: undefined })
+    return Map({ text: '*' })
   }
 
   let filterMap = query.filterTree
     ? fromFilterTree(query.filterTree, {
-        basicSearchMatchType: basicSearchMatchType,
+        basicSearchMatchType,
       })
     : Map({ text: '*' })
 
@@ -264,11 +262,11 @@ const createQuery = filterMap => {
   sorts = sorts
     ? sorts.map(({ propertyName, sortOrder }) => `${propertyName},${sortOrder}`)
     : null
-  let sources = get(filterMap, 'sources')
+  const sources = get(filterMap, 'sources')
 
   return {
     filterTree: toFilterTree(filterMap),
-    sources: sources ? sources : null,
+    sources: sources || null,
     sorts,
   }
 }
