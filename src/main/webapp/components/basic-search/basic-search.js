@@ -14,29 +14,30 @@ import Paper from '@material-ui/core/Paper'
 import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
 import gql from 'graphql-tag'
-import { get, getIn, Map, remove } from 'immutable'
+import { get, getIn, Map, remove, set } from 'immutable'
 import React, { useState } from 'react'
-import {
-  APPLY_TO_KEY,
-  fromFilterTree,
-  LOCATION_KEY,
-  MATCHTYPE_KEY,
-  TEXT_KEY,
-  TIME_RANGE_KEY,
-  toFilterTree,
-  populateDefaultQuery,
-} from './basic-search-helper'
+import ReactDOM from 'react-dom'
+import { useApolloFallback } from '../../react-hooks'
+import FilterCard from '../containers/filter-card'
 import FacetedDropdown from '../faceted-dropdown'
 import { Location } from '../location'
 import { makeDefaultSearchGeo } from '../query-builder/filter'
-import { useApolloFallback } from '../../react-hooks'
 import SortOrder from '../sort-order/sort-order'
 import SourcesSelect from '../sources-select'
 import TimeRange, {
   createTimeRange,
   validate as validateTimeRange,
 } from '../time-range/time-range'
-import FilterCard from '../containers/filter-card'
+import {
+  APPLY_TO_KEY,
+  fromFilterTree,
+  LOCATION_KEY,
+  MATCHTYPE_KEY,
+  populateDefaultQuery,
+  TEXT_KEY,
+  TIME_RANGE_KEY,
+  toFilterTree,
+} from './basic-search-helper'
 const timeAttributes = [
   'created',
   'datetime.end',
@@ -48,7 +49,6 @@ const timeAttributes = [
   'metacard.version.versioned-on',
   'modified',
 ]
-import ReactDOM from 'react-dom'
 
 const TextSearch = ({ text, handleChange }) => {
   return (
@@ -213,7 +213,6 @@ const filters = {
   [LOCATION_KEY]: BasicLocation,
   timeRange: BasicTimeRange,
   [MATCHTYPE_KEY]: MatchTypes,
-  sources: BasicSources,
   sortOrder: BasicSortOrder,
 }
 
@@ -221,7 +220,6 @@ const filterLabels = {
   [LOCATION_KEY]: 'Location',
   timeRange: 'Time Range',
   [MATCHTYPE_KEY]: 'Match Types',
-  sources: 'Sources',
   sortOrder: 'Sort Order',
 }
 
@@ -233,26 +231,42 @@ const defaultFilters = {
   [LOCATION_KEY]: makeDefaultSearchGeo(),
 }
 
-const getFilterMap = props => {
-  if (props.query && props.query.filterTree) {
-    return fromFilterTree(props.query.filterTree, {
-      basicSearchMatchType: props.basicSearchMatchType,
-    })
+const getFilterMap = ({ query, basicSearchMatchType }) => {
+  if (!query) {
+    return Map({ text: '*' })
   }
 
-  return Map({ text: '*' })
+  let filterMap = query.filterTree
+    ? fromFilterTree(query.filterTree, {
+        basicSearchMatchType,
+      })
+    : Map({ text: '*' })
+
+  if (query.sorts) {
+    const sorts = query.sorts.map(sort => {
+      const splitIndex = sort.lastIndexOf(',')
+      return {
+        propertyName: sort.substring(0, splitIndex),
+        sortOrder: sort.substring(splitIndex + 1, sort.length),
+      }
+    })
+    filterMap = set(filterMap, 'sortOrder', sorts)
+  }
+
+  filterMap = set(filterMap, 'sources', query.sources)
+  return filterMap
 }
 
 const createQuery = filterMap => {
   let sorts = get(filterMap, 'sortOrder')
-  if (sorts) {
-    sorts = sorts.map(
-      ({ propertyName, sortOrder }) => `${propertyName},${sortOrder}`
-    )
-  }
+  sorts = sorts
+    ? sorts.map(({ propertyName, sortOrder }) => `${propertyName},${sortOrder}`)
+    : null
+  const sources = get(filterMap, 'sources')
+
   return {
     filterTree: toFilterTree(filterMap),
-    sources: get(filterMap, 'sources'),
+    sources: sources || null,
     sorts,
   }
 }
@@ -308,7 +322,7 @@ export const BasicSearchQueryBuilder = props => {
         <AddOptions />
       </Paper>
 
-      {remove(filterMap, 'text')
+      {remove(remove(filterMap, 'text'), 'sources')
         .map((state, filter) => {
           const Component = filters[filter]
           const label = filterLabels[filter]
@@ -335,6 +349,14 @@ export const BasicSearchQueryBuilder = props => {
           )
         })
         .valueSeq()}
+      <FilterCard label="Sources">
+        <BasicSources
+          state={filterMap.get('sources')}
+          setState={state => {
+            onChange(filterMap.set('sources', state))
+          }}
+        />
+      </FilterCard>
 
       <Divider />
     </React.Fragment>
