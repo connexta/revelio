@@ -108,7 +108,7 @@ export const IndexCardItem = props => {
           title={title}
           subheader={subHeader || moment(modified).fromNow()}
           action={headerAction}
-          titleTypographyProps={titleTypographyProps || ''}
+          titleTypographyProps={titleTypographyProps}
         />
         {metacard_owner && (
           <CardContent>
