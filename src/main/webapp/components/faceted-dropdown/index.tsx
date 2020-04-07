@@ -56,7 +56,9 @@ const FacetedDropdown = (props: Props) => {
     )
   }
 
-  const facetEnums = getIn(data, ['facet'], []).map((facet: any) => facet.value)
+  const facetEnums = (getIn(data, ['facet'], undefined) || []).map(
+    (facet: any) => facet.value
+  )
   let enums = facetEnums
   const attributeDefinitions = getIn(data, ['metacardTypes'], [])
   if (enums.length === 0) {
