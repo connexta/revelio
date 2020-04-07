@@ -98,6 +98,7 @@ export const IndexCardItem = props => {
     modified,
     children,
     onClick,
+    titleTypographyProps,
   } = props
 
   return (
@@ -107,14 +108,15 @@ export const IndexCardItem = props => {
           title={title}
           subheader={subHeader || moment(modified).fromNow()}
           action={headerAction}
+          titleTypographyProps={titleTypographyProps}
         />
-        <CardContent>
-          {metacard_owner && (
+        {metacard_owner && (
+          <CardContent>
             <Typography variant="body2" color="textSecondary" component="p">
               Owner: {metacard_owner}
             </Typography>
-          )}
-        </CardContent>
+          </CardContent>
+        )}
       </CardActionArea>
       {children}
     </ItemContainer>
