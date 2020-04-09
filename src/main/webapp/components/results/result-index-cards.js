@@ -27,17 +27,19 @@ export default props => {
             >
               <AddIcon />
             </IconButton>
-            <IconButton
-              onClick={() => {
-                window.open(
-                  metacard.attributes['resource-download-url'],
-                  '_blank'
-                )
-              }}
-              size="small"
-            >
-              <GetAppIcon />
-            </IconButton>
+            {metacard.attributes['resource-download-url'] ? (
+              <IconButton
+                onClick={() => {
+                  window.open(
+                    metacard.attributes['resource-download-url'],
+                    '_blank'
+                  )
+                }}
+                size="small"
+              >
+                <GetAppIcon />
+              </IconButton>
+            ) : null}
             {props.actions ? props.actions : null}
           </Actions>
         </IndexCardItem>
