@@ -9,7 +9,6 @@ import React, { useState } from 'react'
 import loadable from 'react-loadable'
 import { useParams } from 'react-router-dom'
 import { useQueryExecutor } from '../../react-hooks'
-import useAnchorEl from '../../react-hooks/use-anchor-el'
 import { IndexCardItem } from '../index-cards'
 import Lists from '../lists'
 import { InlineRetry } from '../network-retry'
@@ -17,9 +16,7 @@ import QueryEditor from '../query-editor'
 import QueryManager from '../query-manager'
 import QueryStatus from '../query-status'
 import { useCreateQuery, useSaveQuery, useSaveWorkspace } from './hooks'
-import { ResultListInteraction } from '../lists/result-list-interaction'
 import { ResultIndexCards } from '../results'
-import Popover from '@material-ui/core/Popover'
 
 const LoadingComponent = () => <LinearProgress />
 
@@ -86,9 +83,7 @@ export default () => {
   const [currentQuery, setCurrentQuery] = useState(null)
   const [lists, setLists] = React.useState(null)
   const [queries, setQueries] = useState()
-  const [selectedResult, setSelectedResult] = useState(null)
 
-  const [anchorEl, handleOpen, handleClose, isOpen] = useAnchorEl()
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
   const saveQuery = useSaveQuery()
@@ -212,40 +207,9 @@ export default () => {
               />
               <ResultIndexCards
                 results={results}
-                handleOpen={handleOpen}
-                setResult={setSelectedResult}
+                setLists={setLists}
+                lists={lists}
               />
-              <Popover
-                open={isOpen}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: 'center',
-                  horizontal: 'center',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
-                }}
-              >
-                <ResultListInteraction
-                  lists={lists}
-                  id={selectedResult}
-                  setList={list => {
-                    let isNewList = true
-                    lists.forEach(item => {
-                      if (list.id === item.id) {
-                        Object.assign(item, list)
-                        isNewList = false
-                        setLists(lists)
-                      }
-                    })
-                    if (isNewList) {
-                      setLists([...lists, list])
-                    }
-                  }}
-                />
-              </Popover>
             </React.Fragment>
           )}
 
