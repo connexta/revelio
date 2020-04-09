@@ -11,7 +11,7 @@ import loadable from 'react-loadable'
 import { useParams } from 'react-router-dom'
 import { useQueryExecutor } from '../../react-hooks'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
-import { IndexCardItem, Actions } from '../index-cards'
+import { IndexCardItem } from '../index-cards'
 import Lists from '../lists'
 import IconButton from '@material-ui/core/IconButton'
 import { InlineRetry } from '../network-retry'
@@ -20,6 +20,7 @@ import QueryManager from '../query-manager'
 import QueryStatus from '../query-status'
 import { useCreateQuery, useSaveQuery, useSaveWorkspace } from './hooks'
 import { ResultListInteraction } from '../lists/result-list-interaction'
+import { ResultIndexCards } from '../results'
 import Popover from '@material-ui/core/Popover'
 
 const LoadingComponent = () => <LinearProgress />
@@ -59,31 +60,6 @@ const workspaceById = gql`
     }
   }
 `
-
-const Results = ({ results, handleOpen, setResult }) =>
-  React.useMemo(
-    () =>
-      results.map(({ metacard }) => (
-        <IndexCardItem
-          key={metacard.attributes.id}
-          title={metacard.attributes.title}
-          subHeader={' '}
-        >
-          <Actions disableSpacing={true}>
-            <IconButton
-              onClick={e => {
-                setResult(metacard.attributes.id)
-                handleOpen(e)
-              }}
-              size="small"
-            >
-              <AddIcon />
-            </IconButton>
-          </Actions>
-        </IndexCardItem>
-      )),
-    [results]
-  )
 
 const queryToSearch = query => {
   const { sources, sorts, detail_level, filterTree } = query
@@ -236,7 +212,7 @@ export default () => {
                   })
                 }}
               />
-              <Results
+              <ResultIndexCards
                 results={results}
                 handleOpen={handleOpen}
                 setResult={setSelectedResult}
