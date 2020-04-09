@@ -32,7 +32,7 @@ const ExportModal = props => {
     <React.Fragment>
       <DialogTitle style={{ textAlign: 'center' }}>Export Results</DialogTitle>
       <DialogContent>
-        <Container handleClose={closeDialog} />
+        <Container handleClose={() => closeDialog()} />
       </DialogContent>
     </React.Fragment>
   )

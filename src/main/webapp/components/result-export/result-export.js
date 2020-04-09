@@ -71,7 +71,9 @@ const ResultExport = props => {
       </TextField>
       <Button
         fullWidth
-        onClick={() => {}}
+        onClick={() => {
+          props.handleClose()
+        }}
         color="primary"
         variant="contained"
         style={{ marginBottom: '10px' }}
