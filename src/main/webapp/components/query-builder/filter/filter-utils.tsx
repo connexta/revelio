@@ -6,6 +6,11 @@ export const defaultFilter = {
   value: '',
 }
 
+export const defaultQuery = {
+  type: 'AND',
+  filters: [{ ...defaultFilter, value: '*' }],
+}
+
 export const filterHeaderButtonStyle = {
   margin: 'auto',
   marginLeft: 0,

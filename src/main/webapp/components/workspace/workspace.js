@@ -24,6 +24,8 @@ import {
 } from './hooks'
 import WorkspaceTitle from './workspace-title'
 import { get } from 'immutable'
+import Filters from './filters'
+import { defaultQuery } from '../query-builder/filter/filter-utils'
 
 const LoadingComponent = () => <LinearProgress />
 
@@ -88,12 +90,25 @@ const queryToSearch = query => {
   }
 }
 
+const addFiltersToQuery = (query, filters) => {
+  const { filterTree } = query
+
+  const searchTree = !filterTree ? defaultQuery : filterTree
+
+  const newFilterTree = {
+    ...searchTree,
+    filters: [...searchTree.filters, ...filters],
+  }
+  return { ...query, filterTree: newFilterTree }
+}
+
 export default () => {
   const { id } = useParams()
-  const [listResults, setListResults] = React.useState([])
+  const [listResults, setListResults] = useState([])
   const [currentQuery, setCurrentQuery] = useState(null)
-  const [lists, setLists] = React.useState(null)
+  const [lists, setLists] = useState(null)
   const [queries, setQueries] = useState()
+  const [filters, setFilters] = useState()
 
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
@@ -125,7 +140,7 @@ export default () => {
     // saveWorkspace({ lists })
   }
 
-  const [tab, setTab] = React.useState(0)
+  const [tab, setTab] = useState(0)
 
   const { loading, error, data } = useQuery(workspaceById, {
     variables: { ids: [id] },
@@ -148,6 +163,15 @@ export default () => {
       setCurrentQuery(queries[0] ? queries[0].id : null)
     },
   })
+
+  const onSearchQuery = id => {
+    const query = queries.find(query => query.id === id)
+    const queryWithFilters = addFiltersToQuery(query, filters)
+
+    onClear()
+    setCurrentQuery(id)
+    onSearch(queryToSearch(queryWithFilters))
+  }
 
   if (loading) {
     return <LoadingComponent />
@@ -202,13 +226,7 @@ export default () => {
                   QueryEditor={QueryEditor}
                   queries={queries}
                   currentQuery={currentQuery}
-                  onSearch={id => {
-                    onClear()
-                    setCurrentQuery(id)
-                    onSearch(
-                      queryToSearch(queries.find(query => query.id === id))
-                    )
-                  }}
+                  onSearch={onSearchQuery}
                   onCreate={createQuery}
                   onDelete={deleteQuery}
                   onSave={id => {
@@ -233,6 +251,10 @@ export default () => {
                       onCancel(src)
                     })
                   }}
+                />
+                <Filters
+                  onApply={() => onSearchQuery(currentQuery)}
+                  onChange={filters => setFilters(filters)}
                 />
                 <ResultIndexCards
                   results={results}
