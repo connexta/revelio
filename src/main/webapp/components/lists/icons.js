@@ -1,13 +1,20 @@
 import React from 'react'
 import SvgIcon from '@material-ui/core/SvgIcon'
+import { makeStyles } from '@material-ui/core/styles'
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    stroke: theme.palette.text.primary,
+  },
+}))
 
 export const AudioIcon = props => {
+  const style = useStyles()
   return (
     <SvgIcon {...props}>
       <path
+        className={style.root}
         fill="none"
-        stroke="grey"
-        stroke-width="1"
         d="M 14.85,10.86
            C 15.03,10.94 17.12,11.98 17.33,14.10
              17.48,15.68 16.53,17.21 14.91,18.02M 13.39,12.64
@@ -43,12 +50,12 @@ export const AudioIcon = props => {
 }
 
 export const ImageIcon = props => {
+  const style = useStyles()
   return (
     <SvgIcon {...props}>
       <path
+        className={style.root}
         fill="none"
-        stroke="grey"
-        stroke-width="1"
         d="M 8.01,11.75
            C 8.01,12.36 7.51,12.86 6.90,12.86
              6.29,12.86 5.79,12.36 5.79,11.75
@@ -57,7 +64,6 @@ export const ImageIcon = props => {
            M 18.21,18.90
            C 18.21,18.90 5.79,18.90 5.79,18.90
              5.79,18.90 5.79,15.96 5.79,15.96
-             5.79,15.96 7.46,14.13 7.46,14.13
              7.46,14.13 8.28,15.79 8.28,15.79
              8.28,15.79 14.22,11.22 14.22,11.22
              14.22,11.22 18.13,13.50 18.13,13.50
@@ -81,12 +87,12 @@ export const ImageIcon = props => {
 }
 
 export const TargetIcon = props => {
+  const style = useStyles()
   return (
     <SvgIcon {...props}>
       <path
+        className={style.root}
         fill="none"
-        stroke="grey"
-        stroke-width="1"
         d="M 15.02,12.00
            C 15.02,13.75 13.67,15.16 12.00,15.16
              10.33,15.16 8.98,13.75 8.98,12.00
@@ -108,12 +114,12 @@ export const TargetIcon = props => {
 }
 
 export const VideoIcon = props => {
+  const style = useStyles()
   return (
     <SvgIcon {...props}>
       <path
         fill="none"
-        stroke="grey"
-        stroke-width="1"
+        className={style.root}
         d="M 17.28,13.79
            C 17.28,13.79 17.29,15.73 17.29,15.73
              17.29,15.73 15.97,14.76 15.97,14.76
