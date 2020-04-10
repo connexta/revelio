@@ -53,7 +53,7 @@ const Workspaces = props => {
         const isSubscribed = workspace.userIsSubscribed
         workspace = workspace.attributes
         const securityAttributes = getSecurityAttributesFromMetacard(workspace)
-        const { canShare, canWrite, readOnly } = getPermissions(
+        const { canShare, canWrite } = getPermissions(
           userAttributes.email,
           userAttributes.roles,
           securityAttributes,
@@ -65,17 +65,15 @@ const Workspaces = props => {
             key={workspace.id}
             onClick={() => history.push(`/workspaces/${workspace.id}`)}
           >
-            <Actions>
+            <Actions attributes={workspace}>
               <ShareAction
                 id={workspace.id}
                 title={workspace.title}
                 metacardType="workspace"
-                isAdmin={canShare}
               />
               <DeleteAction
                 onDelete={() => onDelete(workspace)}
                 itemName="workspace"
-                isWritable={canWrite}
               />
               <SubscribeAction
                 subscribe={subscribe}
@@ -86,7 +84,7 @@ const Workspaces = props => {
                 isSubscribed={isSubscribed}
               />
               <DuplicateAction onDuplicate={() => onDuplicate(workspace)} />
-              <ReadOnly isReadOnly={readOnly} indexCardType="workspace" />
+              <ReadOnly indexCardType="workspace" />
               <MetacardInteractionsDropdown>
                 <ShareMetacardInteraction
                   id={workspace.id}

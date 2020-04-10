@@ -66,7 +66,7 @@ const Item = props => {
   const { form, Editor, onDelete, user } = props
 
   const securityAttributes = getSecurityAttributesFromMetacard(form)
-  const { canShare, canWrite, readOnly } = getPermissions(
+  const { canShare, canWrite } = getPermissions(
     user.email,
     user.roles,
     securityAttributes,
@@ -91,19 +91,14 @@ const Item = props => {
         </Dialog>
       ) : null}
       <IndexCardItem {...form} onClick={() => setEditing(true)}>
-        <Actions>
+        <Actions attributes={form} user={user}>
           <ShareAction
             id={form.id}
             title={form.title}
             metacardType="attribute-group"
-            isAdmin={canShare}
           />
-          <DeleteAction
-            itemName="result form"
-            onDelete={onDelete}
-            isWritable={canWrite}
-          />
-          <ReadOnly isReadOnly={readOnly} indexCardType="Result Form" />
+          <DeleteAction itemName="result form" onDelete={onDelete} />
+          <ReadOnly indexCardType="Result Form" />
           <MetacardInteractionsDropdown>
             <ShareMetacardInteraction
               id={form.id}

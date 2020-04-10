@@ -4,7 +4,7 @@ import { CustomTooltip } from '../tooltip'
 import ErrorIcon from '@material-ui/icons/Error'
 
 export const ReadOnly = props => {
-  const { isReadOnly, indexCardType } = props
+  const { permissions, indexCardType } = props
   const readOnlyMessage =
     'This ' +
     indexCardType +
@@ -13,7 +13,7 @@ export const ReadOnly = props => {
     '. Please duplicate this ' +
     indexCardType +
     ' or ask the owner for permissions to make changes.'
-  return isReadOnly ? (
+  return permissions.readOnly ? (
     <CustomTooltip
       title={
         <React.Fragment>

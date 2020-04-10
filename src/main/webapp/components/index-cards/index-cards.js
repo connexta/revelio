@@ -13,6 +13,7 @@ import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import moment from 'moment'
+import { useGetPermissions } from '../../react-hooks'
 
 import { CustomTooltip } from '../tooltip'
 
@@ -49,7 +50,20 @@ export const DuplicateAction = props => {
 
 export { ShareAction, DeleteAction }
 
-export const Actions = CardActions
+export const Actions = props => {
+  const getPermissions = useGetPermissions(props)
+
+  if (!props.attributes) {
+    return null
+  }
+  const actions = React.Children.map(props.children, child => {
+    return React.cloneElement(child, {
+      permissions: getPermissions(props.attributes),
+    })
+  })
+
+  return <CardActions>{actions}</CardActions>
+}
 
 const ItemContainer = props => {
   const { children, style, onClick } = props
