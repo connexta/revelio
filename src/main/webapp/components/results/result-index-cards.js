@@ -14,7 +14,6 @@ export default props => {
 
   return (
     <React.Fragment>
-      {' '}
       {React.useMemo(
         () =>
           results.map(({ metacard }) => (
@@ -49,7 +48,7 @@ export default props => {
                     <GetAppIcon />
                   </IconButton>
                 ) : null}
-                {props.actions ? props.actions : null}
+                {props.actions || null}
               </Actions>
             </IndexCardItem>
           )),
