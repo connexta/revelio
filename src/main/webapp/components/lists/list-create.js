@@ -13,12 +13,17 @@ import { RadioButton } from '../input'
 import Popover from '@material-ui/core/Popover'
 import Box from '@material-ui/core/Box'
 import { v4 as newUuid } from 'uuid'
+import { AudioIcon, ImageIcon, TargetIcon, VideoIcon } from './icons'
 
 const iconList = {
   folder: <FolderIcon />,
   code: <CodeIcon />,
   archive: <ArchiveIcon />,
   tasks: <ListIcon />,
+  audio: <AudioIcon />,
+  image: <ImageIcon />,
+  target: <TargetIcon />,
+  video: <VideoIcon />,
 }
 
 const ListIconType = props => {
