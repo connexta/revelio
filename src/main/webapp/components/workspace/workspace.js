@@ -4,23 +4,19 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 import Typography from '@material-ui/core/Typography'
-import AddIcon from '@material-ui/icons/Add'
 import gql from 'graphql-tag'
 import React, { useState } from 'react'
 import loadable from 'react-loadable'
 import { useParams } from 'react-router-dom'
 import { useQueryExecutor } from '../../react-hooks'
-import useAnchorEl from '../../react-hooks/use-anchor-el'
-import { IndexCardItem, Actions } from '../index-cards'
+import { IndexCardItem } from '../index-cards'
 import Lists from '../lists'
-import IconButton from '@material-ui/core/IconButton'
 import { InlineRetry } from '../network-retry'
 import QueryEditor from '../query-editor'
 import QueryManager from '../query-manager'
 import QueryStatus from '../query-status'
 import { useCreateQuery, useSaveQuery, useSaveWorkspace } from './hooks'
-import { ResultListInteraction } from '../lists/result-list-interaction'
-import Popover from '@material-ui/core/Popover'
+import { ResultIndexCards } from '../results'
 
 const LoadingComponent = () => <LinearProgress />
 
@@ -60,31 +56,6 @@ const workspaceById = gql`
   }
 `
 
-const Results = ({ results, handleOpen, setResult }) =>
-  React.useMemo(
-    () =>
-      results.map(({ metacard }) => (
-        <IndexCardItem
-          key={metacard.attributes.id}
-          title={metacard.attributes.title}
-          subHeader={' '}
-        >
-          <Actions disableSpacing={true}>
-            <IconButton
-              onClick={e => {
-                setResult(metacard.attributes.id)
-                handleOpen(e)
-              }}
-              size="small"
-            >
-              <AddIcon />
-            </IconButton>
-          </Actions>
-        </IndexCardItem>
-      )),
-    [results]
-  )
-
 const queryToSearch = query => {
   const { sources, sorts, detail_level, filterTree } = query
   return {
@@ -112,9 +83,7 @@ export default () => {
   const [currentQuery, setCurrentQuery] = useState(null)
   const [lists, setLists] = React.useState(null)
   const [queries, setQueries] = useState()
-  const [selectedResult, setSelectedResult] = useState(null)
 
-  const [anchorEl, handleOpen, handleClose, isOpen] = useAnchorEl()
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
   const saveQuery = useSaveQuery()
@@ -236,42 +205,11 @@ export default () => {
                   })
                 }}
               />
-              <Results
+              <ResultIndexCards
                 results={results}
-                handleOpen={handleOpen}
-                setResult={setSelectedResult}
+                setLists={setLists}
+                lists={lists}
               />
-              <Popover
-                open={isOpen}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: 'center',
-                  horizontal: 'center',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
-                }}
-              >
-                <ResultListInteraction
-                  lists={lists}
-                  id={selectedResult}
-                  setList={list => {
-                    let isNewList = true
-                    lists.forEach(item => {
-                      if (list.id === item.id) {
-                        Object.assign(item, list)
-                        isNewList = false
-                        setLists(lists)
-                      }
-                    })
-                    if (isNewList) {
-                      setLists([...lists, list])
-                    }
-                  }}
-                />
-              </Popover>
             </React.Fragment>
           )}
 
