@@ -1,5 +1,5 @@
 const genSchema = require('./gen-schema')
-import { setIn, updateIn, merge } from 'immutable'
+import { setIn, updateIn, merge, getIn } from 'immutable'
 
 const ROOT = '/search/catalog/internal'
 
@@ -151,9 +151,17 @@ const WILDCARD_FITLER = {
 }
 
 const getCql = ({ filterTree, cql }) => {
+  const checkForEmptySearch =
+    Array.isArray(getIn(filterTree, ['filters'], 0)) &&
+    getIn(filterTree, ['filters', 'length'], 0) === 0
+
+  if (checkForEmptySearch) {
+    return transformFilterToCQL(WILDCARD_FITLER)
+  }
   if (filterTree != undefined) {
     return transformFilterToCQL(filterTree)
   }
+
   if (cql != undefined) {
     return cql
   }
