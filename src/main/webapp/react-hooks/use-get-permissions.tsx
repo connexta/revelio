@@ -19,7 +19,7 @@ const user = gql`
   }
 `
 
-const useGetPermissions = (user: User) => {
+const usePermissions = (user: User) => {
   return (attributes: any) => {
     const securityAttributes = getSecurityAttributesFromMetacard(attributes)
     return getPermissions(
@@ -31,15 +31,15 @@ const useGetPermissions = (user: User) => {
   }
 }
 
-const useGetPermissionsWithQuery = () => {
+const usePermissionsWithQuery = () => {
   const { loading, error, data } = useQuery(user)
   if (loading || error) {
     return
   }
 
-  return useGetPermissions(data.user)
+  return usePermissions(data.user)
 }
 
 export default ({ user = {} }: { user: User }) => {
-  return useApolloFallback(useGetPermissionsWithQuery, useGetPermissions)(user)
+  return useApolloFallback(usePermissionsWithQuery, usePermissions)(user)
 }
