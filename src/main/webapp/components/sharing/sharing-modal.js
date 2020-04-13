@@ -41,7 +41,8 @@ const ShareMetacardInteraction = props => {
 
 const ShareAction = props => {
   const [open, setOpen] = useState(false)
-  if (!props.isAdmin) {
+  const { permissions } = props
+  if (!permissions.canShare) {
     return null
   }
   return (

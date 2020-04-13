@@ -82,18 +82,10 @@ const SearchForm = (props: SearchFormProps) => {
         headerAction={props.isDefault && <DefaultSearchFormIndicator />}
         onClick={() => setEditing(true)}
       >
-        <Actions>
-          <ShareAction
-            {...props.form}
-            metacardType="query-template"
-            isAdmin={props.canShare}
-          />
-          <DeleteAction
-            itemName="search form"
-            onDelete={props.onDelete}
-            isWritable={props.canWrite}
-          />
-          <ReadOnly isReadOnly={props.readOnly} indexCardType="Search Form" />
+        <Actions attributes={form}>
+          <ShareAction {...props.form} metacardType="query-template" />
+          <DeleteAction itemName="search form" onDelete={props.onDelete} />
+          <ReadOnly indexCardType="Search Form" />
           <MetacardInteractionsDropdown>
             <ShareMetacardInteraction
               {...props.form}
