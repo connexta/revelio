@@ -143,6 +143,7 @@ type ExportFormats {
     # saveMetacardFromJson(id: ID!, attrs: Json!): MetacardAttributes
     cloneMetacard(id: ID!): MetacardAttributes
     deleteMetacard(id: ID!): ID
+    exportResult(source: String!, id: ID!, transformer: String!): Json 
     subscribeToWorkspace(id: ID!): Int 
     unsubscribeFromWorkspace(id: ID!): Int 
   }
@@ -541,6 +542,14 @@ const deleteMetacard = async (parent, args, { catalog }) => {
   return id
 }
 
+const exportResult = async (parent, args, { fetch }) => {
+  const { id, source, transformer } = args
+  const res = await fetch(
+    `/services/catalog/sources/${source}/${id}?transform=${transformer}`
+  )
+  return res
+}
+
 const subscribeToWorkspace = async (parent, args, { fetch }) => {
   const { id } = args
   const res = await fetch(`${ROOT}/subscribe/${id}`, { method: 'POST' })
@@ -567,6 +576,7 @@ const resolvers = {
     saveMetacard,
     deleteMetacard,
     cloneMetacard,
+    exportResult,
     subscribeToWorkspace,
     unsubscribeFromWorkspace,
   },

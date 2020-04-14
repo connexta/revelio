@@ -4,7 +4,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import RedoIcon from '@material-ui/icons/Redo'
 import Dialog from '@material-ui/core/Dialog'
 import Box from '@material-ui/core/Box'
-import { Container } from './result-export'
+import ResultExport from './result-export'
 import IconButton from '@material-ui/core/IconButton'
 
 export const ExportAction = props => {
@@ -16,7 +16,7 @@ export const ExportAction = props => {
         e.preventDefault()
       }}
     >
-      <Dialog fullWidth open={open}>
+      <Dialog fullWidth open={open} onClose={() => setOpen(false)}>
         <ExportModal {...props} closeDialog={() => setOpen(false)} />
       </Dialog>
       <IconButton onClick={() => setOpen(true)}>
@@ -32,7 +32,7 @@ const ExportModal = props => {
     <React.Fragment>
       <DialogTitle style={{ textAlign: 'center' }}>Export Results</DialogTitle>
       <DialogContent>
-        <Container handleClose={() => closeDialog()} />
+        <ResultExport {...props} handleClose={() => closeDialog()} />
       </DialogContent>
     </React.Fragment>
   )

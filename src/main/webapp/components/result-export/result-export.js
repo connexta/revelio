@@ -1,6 +1,6 @@
 import React from 'react'
 import gql from 'graphql-tag'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import ErrorMessage from '../network-retry/inline-retry'
 import { useApolloFallback } from '../../react-hooks'
@@ -18,8 +18,16 @@ const getExportOptions = gql`
     }
   }
 `
+const useExportMutation = () => {
+  const exportMutation = gql`
+    mutation ExportResult($source: String!, $id: ID!, $transformer: String!) {
+      exportResult(source: $source, id: $id, transformer: $transformer)
+    }
+  `
+  return useMutation(exportMutation)
+}
 
-export const Container = props => {
+const Container = props => {
   const { loading, error, data, refetch } = useQuery(getExportOptions, {
     variables: { transformerType: 'metacard' },
   })
@@ -37,6 +45,7 @@ export const Container = props => {
 
   return (
     <ResultExport
+      {...props}
       exportFormats={exportFormats}
       handleClose={props.handleClose}
     />
@@ -44,11 +53,20 @@ export const Container = props => {
 }
 
 const ResultExport = props => {
+  const [exportResultHook] = useExportMutation()
   const { exportFormats } = props
   const [selectedFormat, setSelectedFormat] = React.useState('')
   const handleFormatChange = event => {
     setSelectedFormat(event.target.value)
   }
+
+  const getExportFormatId = format => {
+    const formatToExport = exportFormats.find(
+      form => form.displayName === format
+    )
+    return formatToExport ? encodeURIComponent(formatToExport.id) : undefined
+  }
+
   return (
     <React.Fragment>
       <FormLabel style={{ paddingBottom: '30px' }}>Export Format:</FormLabel>
@@ -70,8 +88,19 @@ const ResultExport = props => {
         })}
       </TextField>
       <Button
+        disabled={selectedFormat === '' ? true : false}
         fullWidth
-        onClick={() => {
+        onClick={async () => {
+          const result = props.result
+          const encodedTransformer = getExportFormatId(selectedFormat)
+          const res = await exportResultHook({
+            variables: {
+              source: result.sourceId,
+              id: result.attributes.id,
+              transformer: encodedTransformer,
+            },
+          })
+          debugger
           props.handleClose()
         }}
         color="primary"
@@ -82,4 +111,9 @@ const ResultExport = props => {
       </Button>
     </React.Fragment>
   )
+}
+
+export default props => {
+  const Component = useApolloFallback(Container, ResultExport)
+  return <Component {...props} />
 }
