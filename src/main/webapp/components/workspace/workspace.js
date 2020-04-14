@@ -8,6 +8,7 @@ import gql from 'graphql-tag'
 import React, { useState } from 'react'
 import loadable from 'react-loadable'
 import { useParams } from 'react-router-dom'
+import { WorkspaceContext } from './workspace-context'
 import { useQueryExecutor } from '../../react-hooks'
 import { IndexCardItem } from '../index-cards'
 import Lists from '../lists'
@@ -15,8 +16,8 @@ import { InlineRetry } from '../network-retry'
 import QueryEditor from '../query-editor'
 import QueryManager from '../query-manager'
 import QueryStatus from '../query-status'
-import { useCreateQuery, useSaveQuery, useSaveWorkspace } from './hooks'
 import { ResultIndexCards } from '../results'
+import { useCreateQuery, useSaveQuery, useSaveWorkspace } from './hooks'
 
 const LoadingComponent = () => <LinearProgress />
 
@@ -35,6 +36,11 @@ const workspaceById = gql`
   query WorkspaceById($ids: [ID]!) {
     metacardsById(ids: $ids) {
       attributes {
+        security_access_individuals_read
+        security_access_individuals
+        security_access_administrators
+        security_access_groups_read
+        security_access_groups
         id
         title
         queries {
@@ -138,121 +144,123 @@ export default () => {
 
   const { title } = attributes
   return (
-    <div
-      style={{
-        display: 'flex',
-        height: 'calc(100vh - 64px)',
-        overflow: 'hidden',
-      }}
-    >
+    <WorkspaceContext.Provider value={attributes}>
       <div
         style={{
-          boxSizing: 'border-box',
-          width: 400,
-          height: '100%',
-          overflow: 'auto',
+          display: 'flex',
+          height: 'calc(100vh - 64px)',
+          overflow: 'hidden',
         }}
       >
-        <Typography variant="h4" component="h1" style={{ padding: 20 }}>
-          {title}
-        </Typography>
-        <Divider />
-
-        <Tabs
-          value={tab}
-          onChange={(_, selectedIndex) => setTab(selectedIndex)}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
+        <div
+          style={{
+            boxSizing: 'border-box',
+            width: 400,
+            height: '100%',
+            overflow: 'auto',
+          }}
         >
-          <Tab label="Search" />
-          <Tab label="Lists" />
-        </Tabs>
+          <Typography variant="h4" component="h1" style={{ padding: 20 }}>
+            {title}
+          </Typography>
+          <Divider />
 
-        {tab === 0 &&
-          queries && (
+          <Tabs
+            value={tab}
+            onChange={(_, selectedIndex) => setTab(selectedIndex)}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+          >
+            <Tab label="Search" />
+            <Tab label="Lists" />
+          </Tabs>
+
+          {tab === 0 &&
+            queries && (
+              <React.Fragment>
+                <QueryManager
+                  QueryEditor={QueryEditor}
+                  queries={queries}
+                  currentQuery={currentQuery}
+                  onSearch={id => {
+                    onClear()
+                    setCurrentQuery(id)
+                    onSearch(
+                      queryToSearch(queries.find(query => query.id === id))
+                    )
+                  }}
+                  onCreate={createQuery}
+                  onSave={id => {
+                    saveQuery(queries.find(query => query.id === id))
+                  }}
+                  onChange={queries => setQueries(queries)}
+                />
+
+                <QueryStatus
+                  sources={status}
+                  onRun={srcs => {
+                    //setPageIndex(0)
+                    onSearch({
+                      ...queries.find(query => query.id === currentQuery),
+                      srcs,
+                    })
+                  }}
+                  onCancel={srcs => {
+                    srcs.forEach(src => {
+                      onCancel(src)
+                    })
+                  }}
+                />
+                <ResultIndexCards
+                  results={results}
+                  setLists={setLists}
+                  lists={lists}
+                />
+              </React.Fragment>
+            )}
+
+          {tab === 1 && (
             <React.Fragment>
-              <QueryManager
-                QueryEditor={QueryEditor}
-                queries={queries}
-                currentQuery={currentQuery}
-                onSearch={id => {
-                  onClear()
-                  setCurrentQuery(id)
-                  onSearch(
-                    queryToSearch(queries.find(query => query.id === id))
-                  )
+              <Lists
+                lists={lists}
+                onSelect={data => {
+                  const results = data.metacardsById.reduce((acc, metacard) => {
+                    return acc.concat(metacard.results)
+                  }, [])
+                  setListResults(results)
                 }}
-                onCreate={createQuery}
-                onSave={id => {
-                  saveQuery(queries.find(query => query.id === id))
+                onSave={() => {
+                  saveListsToWorkspace(lists)
                 }}
-                onChange={queries => setQueries(queries)}
+                setList={list => {
+                  let isNewList = true
+                  lists.forEach(item => {
+                    if (list.id === item.id) {
+                      Object.assign(item, list)
+                      isNewList = false
+                    }
+                  })
+                  if (isNewList) {
+                    setLists([...lists, list])
+                  }
+                }}
               />
 
-              <QueryStatus
-                sources={status}
-                onRun={srcs => {
-                  //setPageIndex(0)
-                  onSearch({
-                    ...queries.find(query => query.id === currentQuery),
-                    srcs,
-                  })
-                }}
-                onCancel={srcs => {
-                  srcs.forEach(src => {
-                    onCancel(src)
-                  })
-                }}
-              />
-              <ResultIndexCards
-                results={results}
-                setLists={setLists}
-                lists={lists}
-              />
+              {listResults.map(({ metacard }) => (
+                <IndexCardItem
+                  key={metacard.attributes.id}
+                  title={metacard.attributes.title}
+                  subHeader={' '}
+                />
+              ))}
             </React.Fragment>
           )}
-
-        {tab === 1 && (
-          <React.Fragment>
-            <Lists
-              lists={lists}
-              onSelect={data => {
-                const results = data.metacardsById.reduce((acc, metacard) => {
-                  return acc.concat(metacard.results)
-                }, [])
-                setListResults(results)
-              }}
-              onSave={() => {
-                saveListsToWorkspace(lists)
-              }}
-              setList={list => {
-                let isNewList = true
-                lists.forEach(item => {
-                  if (list.id === item.id) {
-                    Object.assign(item, list)
-                    isNewList = false
-                  }
-                })
-                if (isNewList) {
-                  setLists([...lists, list])
-                }
-              }}
-            />
-
-            {listResults.map(({ metacard }) => (
-              <IndexCardItem
-                key={metacard.attributes.id}
-                title={metacard.attributes.title}
-                subHeader={' '}
-              />
-            ))}
-          </React.Fragment>
-        )}
+        </div>
+        <div style={{ flex: '1' }}>
+          <Visualizations results={tab === 0 ? results : listResults} />
+        </div>
       </div>
-      <div style={{ flex: '1' }}>
-        <Visualizations results={tab === 0 ? results : listResults} />
-      </div>
-    </div>
+    </WorkspaceContext.Provider>
   )
 }

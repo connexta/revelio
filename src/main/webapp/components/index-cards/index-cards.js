@@ -53,13 +53,15 @@ export { ShareAction, DeleteAction }
 export const Actions = props => {
   const getPermissions = usePermissions(props)
 
-  if (!props.attributes || !getPermissions) {
+  if (!getPermissions) {
     return null
   }
   const actions = React.Children.map(props.children, child => {
-    return React.cloneElement(child, {
-      permissions: getPermissions(props.attributes),
-    })
+    return React.isValidElement(child)
+      ? React.cloneElement(child, {
+          permissions: getPermissions(props.attributes),
+        })
+      : null
   })
 
   return <CardActions>{actions}</CardActions>
