@@ -14,7 +14,8 @@ import {
 
 const ShareMetacardInteraction = props => {
   const { setDialogProps } = useContext(MetacardInteractionsDialogContext)
-  if (!props.isAdmin) {
+  const { permissions } = props
+  if (!permissions.canShare) {
     return null
   }
   return (

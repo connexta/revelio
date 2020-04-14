@@ -1,22 +1,25 @@
 import Box from '@material-ui/core/Box'
 import Dialog from '@material-ui/core/Dialog'
+import IconButton from '@material-ui/core/IconButton'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import StarIcon from '@material-ui/icons/Star'
+import { ApolloError } from 'apollo-client/errors/ApolloError'
 import * as React from 'react'
 import { Fragment, useState } from 'react'
+import {
+  ConfirmDeleteMetacardInteraction,
+  EditMetacardInteraction,
+  MetacardInteractionsDropdown,
+  ShareMetacardInteraction,
+} from '../index-cards/metacard-interactions'
+import { SnackbarRetry as RetryNotification } from '../network-retry'
 import { defaultFilter } from '../query-builder/filter/filter-utils'
 import QueryBuilder from '../query-builder/query-builder'
 import { QueryType } from '../query-builder/types'
+import DefaultFormInteraction from './default-form-interaction'
 import SearchFormEditor from './editor'
-import { SnackbarRetry as RetryNotification } from '../network-retry'
-import { ApolloError } from 'apollo-client/errors/ApolloError'
-import IconButton from '@material-ui/core/IconButton'
-import StarIcon from '@material-ui/icons/Star'
 
 const { Notification } = require('../notification/notification')
-const {
-  getSecurityAttributesFromMetacard,
-  getPermissions,
-} = require('../sharing/sharing-utils')
 
 const {
   IndexCards,
@@ -27,14 +30,6 @@ const {
   DeleteAction,
   ReadOnly,
 } = require('../index-cards')
-import {
-  MetacardInteractionsDropdown,
-  ShareMetacardInteraction,
-  ConfirmDeleteMetacardInteraction,
-  EditMetacardInteraction,
-} from '../index-cards/metacard-interactions'
-
-import DefaultFormInteraction from './default-form-interaction'
 
 type SearchFormProps = {
   onDelete: (form: QueryType) => void
@@ -42,9 +37,6 @@ type SearchFormProps = {
   form?: QueryType
   toggleDefaultForm: () => void
   isDefault?: boolean
-  readOnly: boolean
-  canWrite: boolean
-  canShare: boolean
 }
 
 const DefaultSearchFormIndicator = () => (
@@ -89,7 +81,6 @@ const SearchForm = (props: SearchFormProps) => {
           <MetacardInteractionsDropdown>
             <ShareMetacardInteraction
               {...props.form}
-              isAdmin={props.canShare}
               metacardType="query-template"
             />
             <EditMetacardInteraction
@@ -99,7 +90,6 @@ const SearchForm = (props: SearchFormProps) => {
             <ConfirmDeleteMetacardInteraction
               itemName="Search Form"
               onDelete={props.onDelete}
-              isWritable={props.canWrite}
             />
             <DefaultFormInteraction
               isDefault={props.isDefault}
@@ -152,10 +142,6 @@ const AddSearchForm = (props: AddProps) => {
   )
 }
 
-type UserAttributes = {
-  email: String
-  roles: String[]
-}
 type RouteProps = {
   onDelete: (form: QueryType) => void
   onSave: (form: QueryType) => void
@@ -166,21 +152,11 @@ type RouteProps = {
   userDefaultForm?: string
   toggleDefaultForm: (id?: string) => void
   refetch?: () => void
-  userAttributes: UserAttributes
 }
 
 const Route = (props: RouteProps) => {
   const [message, setMessage] = useState<string | null>(null)
-  const {
-    loading,
-    error,
-    forms,
-    onDelete,
-    onSave,
-    onCreate,
-    refetch,
-    userAttributes,
-  } = props
+  const { loading, error, forms, onDelete, onSave, onCreate, refetch } = props
   if (loading) return <LinearProgress />
 
   if (error)
@@ -207,13 +183,6 @@ const Route = (props: RouteProps) => {
         .slice()
         .sort((a: any, b: any) => (a.modified > b.modified ? -1 : 1))
         .map(form => {
-          const securityAttributes = getSecurityAttributesFromMetacard(form)
-          const { canShare, canWrite, readOnly } = getPermissions(
-            userAttributes.email,
-            userAttributes.roles,
-            securityAttributes,
-            form.metacard_owner
-          )
           return (
             <SearchForm
               key={form.id}
@@ -228,9 +197,6 @@ const Route = (props: RouteProps) => {
                 setMessage('Search Form Saved')
               }}
               toggleDefaultForm={() => props.toggleDefaultForm(form.id)}
-              readOnly={readOnly}
-              canWrite={canWrite}
-              canShare={canShare}
             />
           )
         })}

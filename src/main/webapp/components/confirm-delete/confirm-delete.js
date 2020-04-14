@@ -42,7 +42,8 @@ const ConfirmDeleteAction = props => {
 
 const ConfirmDeleteMetacardInteraction = props => {
   const { setDialogProps } = useContext(MetacardInteractionsDialogContext)
-  if (!props.isWritable) {
+  const { permissions } = props
+  if (!permissions.canWrite) {
     return null
   }
   const { itemName } = props

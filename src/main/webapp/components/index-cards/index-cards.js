@@ -53,7 +53,7 @@ export { ShareAction, DeleteAction }
 export const Actions = props => {
   const getPermissions = usePermissions(props)
 
-  if (!props.attributes) {
+  if (!props.attributes || !getPermissions) {
     return null
   }
   const actions = React.Children.map(props.children, child => {
