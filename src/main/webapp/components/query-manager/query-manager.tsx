@@ -2,7 +2,7 @@ import Button from '@material-ui/core/Button'
 import Popover from '@material-ui/core/Popover'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { merge, set } from 'immutable'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useContext } from 'react'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
 import {
   Actions,
@@ -11,6 +11,7 @@ import {
   IndexCardItem,
 } from '../index-cards'
 import { QueryType } from '../query-builder/types'
+import { WorkspaceContext } from '../workspace/workspace-context'
 import AddQuery from './add-query'
 import QueryEditorPopover from './query-editor-popover'
 import { QueryCardProps, QueryManagerProps, QuerySelectorProps } from './types'
@@ -22,6 +23,7 @@ const QueryCard = (props: QueryCardProps) => {
   const [{ active: isDrawing }] = useDrawInterface()
   const [wasDrawing, setWasDrawing] = useState(false)
   const drawAnchorEl = useRef(null)
+  const attributes = useContext(WorkspaceContext)
 
   useEffect(
     () => {
@@ -46,7 +48,7 @@ const QueryCard = (props: QueryCardProps) => {
         subHeader={'Has not been run'}
         onClick={onSearch}
       >
-        <Actions>
+        <Actions attributes={attributes}>
           <EditAction onEdit={handleOpen} />
           <DeleteAction />
         </Actions>

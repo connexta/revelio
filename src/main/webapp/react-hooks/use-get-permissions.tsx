@@ -27,11 +27,11 @@ const user = gql`
 `
 
 const usePermissions = (user: User = {}) => {
-  return (attributes: any) => {
+  return (attributes: any = {}) => {
     const securityAttributes = getSecurityAttributesFromMetacard(attributes)
     return getPermissions(
       user.email || '',
-      user.roles || '',
+      user.roles || [],
       securityAttributes,
       attributes.owner
     )
