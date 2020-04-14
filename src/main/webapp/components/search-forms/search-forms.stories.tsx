@@ -44,10 +44,10 @@ const startingForms = [
   },
 ]
 
-const userAttributes = {
-  email: 'admin@test.com',
-  roles: ['admin'],
-}
+// const userAttributes = {
+//   email: 'admin@test.com',
+//   roles: ['admin'],
+// }
 
 stories.add('route', () => {
   const [searchForms, setSearchForms]: any = useState(startingForms)
@@ -91,7 +91,6 @@ stories.add('route', () => {
         toggleDefaultForm={id => {
           setDefaultForm(id === defaultForm ? null : id)
         }}
-        userAttributes={userAttributes}
       />
     </SelectionProvider>
   )

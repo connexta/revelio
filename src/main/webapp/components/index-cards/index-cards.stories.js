@@ -35,6 +35,11 @@ const generateItems = n => {
   return items
 }
 
+const securityAttributes = {
+  security_access_individuals_read: [''],
+  security_access_administrators: [''],
+}
+
 stories.add('basic usage', () => {
   const n = number('Number of Items', 10)
   const items = generateItems(n)
@@ -45,9 +50,9 @@ stories.add('basic usage', () => {
       {items.map(item => {
         return (
           <IndexCardItem starred key={item.id} {...item}>
-            <Actions>
-              <ShareAction isAdmin={true} onShare={action('onShare')} />
-              <DeleteAction isWritable={true} onDelete={action('onDelete')} />
+            <Actions attributes={securityAttributes}>
+              <ShareAction onShare={action('onShare')} />
+              <DeleteAction onDelete={action('onDelete')} />
               <DuplicateAction onDuplicate={action('onDuplicate')} />
             </Actions>
           </IndexCardItem>
