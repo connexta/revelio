@@ -6,24 +6,48 @@ import Popover from '@material-ui/core/Popover'
 import TextField from '@material-ui/core/TextField'
 import Collapse from '@material-ui/core/Collapse'
 import { useState } from 'react'
-import { Typography } from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
 import { QueryType } from '../query-builder/types'
 import matchesFilter from '../../utils/matches-filter'
+import gql from 'graphql-tag'
+import { useQuery } from '@apollo/react-hooks'
+import { getIn } from 'immutable'
+import { ApolloError } from 'apollo-client'
+import { InlineRetry } from '../network-retry'
 
 type SectionProps = {
   title: string
   searchForms: QueryType[]
   startOpen?: boolean
+  onSelect: (query: QueryType) => void
+}
+type SearchFormSelectProps = {
+  searchForms: QueryType[]
+  loading?: boolean
+  error?: ApolloError
+  userEmail?: string
+  onSelect: (query: QueryType) => void
+  refetch?: () => void
+}
+type ContainerProps = {
+  onSelect: (query: QueryType) => void
+}
+
+type SearchFormListProps = {
+  searchForms: QueryType[]
+  userEmail?: string
+  onSelect: (query: QueryType) => void
 }
 
 const Section = (props: SectionProps) => {
   const [open, setOpen] = useState(props.startOpen || false)
   const Arrow = open ? KeyboardArrowUpIcon : KeyboardArrowDownIcon
-  const { searchForms } = props
+  const { searchForms, onSelect } = props
 
   return (
     <div>
@@ -48,9 +72,16 @@ const Section = (props: SectionProps) => {
         <div
           style={{ display: 'flex', flexDirection: 'column', width: '100%' }}
         >
-          {searchForms.map(form => {
+          {searchForms.map((form, index) => {
             return (
-              <Button style={{ textAlign: 'left', width: '100%' }}>
+              <Button
+                key={form.id || index}
+                onClick={() => {
+                  const { id: _, metacard_owner: _a, ...formAttrs } = form
+                  onSelect(formAttrs)
+                }}
+                style={{ textAlign: 'left', width: '100%' }}
+              >
                 <Typography style={{ width: '100%', textTransform: 'none' }}>
                   {form.title}
                 </Typography>
@@ -62,51 +93,70 @@ const Section = (props: SectionProps) => {
     </div>
   )
 }
-type SearchFormListProps = {
-  searchForms?: QueryType[]
-}
+
 const SearchFormList = (props: SearchFormListProps) => {
   const [filterText, setFilterText] = useState('')
-  const {
-    searchForms = [
-      { title: 'Search Form 1' },
-      { title: 'Search Form 2' },
-      { title: 'Another Search Form' },
-      { title: 'Yet Another' },
-    ],
-  } = props
+  const { searchForms, onSelect, userEmail } = props
 
   const searchFormsFilteredByText = searchForms.filter(searchForm =>
     matchesFilter({ filterText, str: searchForm.title || '' })
   )
-
   return (
-    <div style={{ padding: 10 }}>
+    <React.Fragment>
       <TextField
         value={filterText}
         onChange={e => setFilterText(e.target.value)}
         variant="outlined"
+        fullWidth
         placeholder="Type to filter"
       />
       <Section
-        searchForms={searchFormsFilteredByText}
+        onSelect={onSelect}
+        searchForms={searchFormsFilteredByText.filter(
+          form => form.metacard_owner === userEmail
+        )}
         startOpen
         title={'My Search Forms'}
       />
       <Section
-        searchForms={searchFormsFilteredByText}
+        onSelect={onSelect}
+        searchForms={searchFormsFilteredByText.filter(
+          form =>
+            form.metacard_owner !== userEmail &&
+            form.metacard_owner !== 'system'
+        )}
         title={'Shared Search Forms'}
       />
       <Section
-        searchForms={searchFormsFilteredByText}
+        onSelect={onSelect}
+        searchForms={searchFormsFilteredByText.filter(
+          form => form.metacard_owner === 'system'
+        )}
         title={'System Search Forms'}
       />
-    </div>
+    </React.Fragment>
   )
 }
 
-const SearchFormSelect = () => {
+export const SearchFormSelect = (props: SearchFormSelectProps) => {
   const [anchorEl, handleOpen, handleClose, isOpen] = useAnchorEl()
+  const { searchForms, loading, error, refetch, onSelect, userEmail } = props
+  const PopoverContent = () => {
+    if (loading) {
+      return <LinearProgress />
+    }
+    if (error) {
+      return <InlineRetry error={error} onRetry={refetch} />
+    }
+    return (
+      <SearchFormList
+        onSelect={onSelect}
+        searchForms={searchForms}
+        userEmail={userEmail}
+      />
+    )
+  }
+
   return (
     <React.Fragment>
       <div
@@ -116,7 +166,11 @@ const SearchFormSelect = () => {
           alignItems: 'center',
           width: 'fit-content',
         }}
-        onClick={handleOpen}
+        onClick={e => {
+          e.stopPropagation()
+          e.preventDefault()
+          handleOpen(e)
+        }}
       >
         <SearchIcon style={{ marginRight: 10 }} />
         <ListItemText>Use Another Search Form</ListItemText>
@@ -124,18 +178,63 @@ const SearchFormSelect = () => {
       <Popover
         anchorEl={anchorEl}
         open={isOpen}
-        onClose={handleClose}
+        onClose={(e: React.SyntheticEvent) => {
+          e.stopPropagation()
+          handleClose(e)
+        }}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         transformOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <SearchFormList />
+        <div
+          style={{ minWidth: 200, padding: 10 }}
+          onClick={e => e.stopPropagation()}
+        >
+          <PopoverContent />
+        </div>
       </Popover>
     </React.Fragment>
   )
 }
 
-const Container = () => {
-  return <SearchFormSelect />
+const query = gql`
+  query SearchFormSelect {
+    metacardsByTag(tag: "query-template") {
+      attributes {
+        id
+        title
+        filterTree
+        sorts
+        sources
+        detail_level
+        metacard_owner
+      }
+    }
+    user {
+      email
+    }
+  }
+`
+
+const Container = (props: ContainerProps) => {
+  const { loading, error, data, refetch } = useQuery(query)
+  const searchForms = getIn(data, ['metacardsByTag', 'attributes'], []).map(
+    (form: any) => {
+      const { __typename: _, ...baseForm } = form
+      return baseForm
+    }
+  )
+  const email = getIn(data, ['user', 'email'], undefined)
+
+  return (
+    <SearchFormSelect
+      onSelect={props.onSelect}
+      userEmail={email}
+      refetch={refetch}
+      searchForms={searchForms}
+      loading={loading}
+      error={error}
+    />
+  )
 }
 
 export default Container
