@@ -547,6 +547,10 @@ const exportResult = async (parent, args, { fetch }) => {
   const res = await fetch(
     `/services/catalog/sources/${source}/${id}?transform=${transformer}`
   )
+  // const type = res.headers.get('content-type')
+  // const contentDisposition = res.headers.get('content-disposition')
+  //  const blob = new Blob([res.body], { type })
+  //console.log(blob)
   return res
 }
 

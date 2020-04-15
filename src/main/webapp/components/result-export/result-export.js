@@ -100,7 +100,19 @@ const ResultExport = props => {
               transformer: encodedTransformer,
             },
           })
-          debugger
+          const response = res.data.exportResult
+          const type = response.headers._headers['content-type']
+          const fileName = response.headers._headers['content-disposition'][0]
+            .split('filename=')[1]
+            .replace(/"/g, '')
+          const blob = new Blob([response.body], { type })
+          const url = window.URL.createObjectURL(blob)
+          let downloadLink = document.createElement('a')
+          downloadLink.href = url
+          downloadLink.setAttribute('download', fileName)
+          downloadLink.click()
+          window.URL.revokeObjectURL(url)
+          downloadLink.remove()
           props.handleClose()
         }}
         color="primary"
