@@ -207,6 +207,7 @@ const query = gql`
         sources
         detail_level
         metacard_owner
+        metacard_tags
       }
     }
     user {
@@ -219,7 +220,10 @@ const Container = (props: ContainerProps) => {
   const { loading, error, data, refetch } = useQuery(query)
   const searchForms = getIn(data, ['metacardsByTag', 'attributes'], []).map(
     (form: any) => {
-      const { __typename: _, ...baseForm } = form
+      const { __typename: _, metacard_tags, ...baseForm } = form
+      if (metacard_tags && metacard_tags.includes('system-template')) {
+        return { ...baseForm, metacard_owner: 'system' }
+      }
       return baseForm
     }
   )
