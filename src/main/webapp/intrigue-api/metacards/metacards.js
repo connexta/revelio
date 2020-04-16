@@ -1,5 +1,6 @@
 const genSchema = require('./gen-schema')
 import { setIn, updateIn, merge, getIn } from 'immutable'
+
 const ROOT = '/search/catalog/internal'
 
 const typeDefs = `
