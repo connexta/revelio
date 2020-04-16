@@ -9,7 +9,7 @@ import AdvancedSearchQueryBuilder from '../query-builder/query-builder'
 import TextSearchQueryBuilder from '../text-search'
 import { QueryType } from '../query-builder/types'
 import { QueryEditorPopoverProps } from './types'
-
+import SearchFormSelect from '../search-form-select/search-form-select'
 const defaultSearchForms = {
   text: {
     label: 'Text Search',
@@ -46,6 +46,13 @@ const defaultSearchFormInteractions = (onSelect: (key: string) => void) => {
     }
   })
 }
+const searchFormSelectInteraction = (onSelect: (query: QueryType) => void) => {
+  return {
+    id: 'custom',
+    onSelect: () => {},
+    interaction: () => <SearchFormSelect onSelect={onSelect} />,
+  }
+}
 
 export default (props: QueryEditorPopoverProps) => {
   const { onSearch, QueryEditor, query = {}, anchorEl, onClose } = props
@@ -64,6 +71,14 @@ export default (props: QueryEditorPopoverProps) => {
       if (key !== query.type) {
         onChange(set(getBaseQueryFields(query), 'type', key))
       }
+    }),
+    searchFormSelectInteraction((selectedQuery: QueryType) => {
+      onChange({
+        ...selectedQuery,
+        type: 'custom',
+        id: query.id,
+        title: query.title,
+      })
     }),
   ]
 
@@ -86,7 +101,10 @@ export default (props: QueryEditorPopoverProps) => {
         <QueryEditor
           query={query}
           queryBuilder={getIn(
-            defaultSearchForms,
+            {
+              ...defaultSearchForms,
+              custom: { queryBuilder: AdvancedSearchQueryBuilder },
+            },
             [queryBuilder, 'queryBuilder'],
             TextSearchQueryBuilder
           )}
