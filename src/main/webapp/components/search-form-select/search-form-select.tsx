@@ -26,7 +26,7 @@ type SectionProps = {
   startOpen?: boolean
   onSelect: (query: QueryType) => void
 }
-type SearchFormSelectProps = {
+type SearchFormListProps = {
   searchForms: QueryType[]
   loading?: boolean
   error?: ApolloError
@@ -35,12 +35,6 @@ type SearchFormSelectProps = {
   refetch?: () => void
 }
 type ContainerProps = {
-  onSelect: (query: QueryType) => void
-}
-
-type SearchFormListProps = {
-  searchForms: QueryType[]
-  userEmail?: string
   onSelect: (query: QueryType) => void
 }
 
@@ -72,10 +66,10 @@ const Section = (props: SectionProps) => {
         <div
           style={{ display: 'flex', flexDirection: 'column', width: '100%' }}
         >
-          {searchForms.map((form, index) => {
+          {searchForms.map(form => {
             return (
               <Button
-                key={form.id || index}
+                key={form.id}
                 onClick={() => {
                   const { id: _, metacard_owner: _a, ...formAttrs } = form
                   onSelect(formAttrs)
@@ -96,8 +90,13 @@ const Section = (props: SectionProps) => {
 
 const SearchFormList = (props: SearchFormListProps) => {
   const [filterText, setFilterText] = useState('')
-  const { searchForms, onSelect, userEmail } = props
-
+  const { searchForms, onSelect, userEmail, loading, error, refetch } = props
+  if (loading) {
+    return <LinearProgress />
+  }
+  if (error) {
+    return <InlineRetry error={error} onRetry={refetch} />
+  }
   const searchFormsFilteredByText = searchForms.filter(searchForm =>
     matchesFilter({ filterText, str: searchForm.title || '' })
   )
@@ -138,24 +137,9 @@ const SearchFormList = (props: SearchFormListProps) => {
   )
 }
 
-export const SearchFormSelect = (props: SearchFormSelectProps) => {
+export const SearchFormSelect = (props: SearchFormListProps) => {
   const [anchorEl, handleOpen, handleClose, isOpen] = useAnchorEl()
   const { searchForms, loading, error, refetch, onSelect, userEmail } = props
-  const PopoverContent = () => {
-    if (loading) {
-      return <LinearProgress />
-    }
-    if (error) {
-      return <InlineRetry error={error} onRetry={refetch} />
-    }
-    return (
-      <SearchFormList
-        onSelect={onSelect}
-        searchForms={searchForms}
-        userEmail={userEmail}
-      />
-    )
-  }
 
   return (
     <React.Fragment>
@@ -189,7 +173,14 @@ export const SearchFormSelect = (props: SearchFormSelectProps) => {
           style={{ minWidth: 200, padding: 10 }}
           onClick={e => e.stopPropagation()}
         >
-          <PopoverContent />
+          <SearchFormList
+            loading={loading}
+            error={error}
+            refetch={refetch}
+            onSelect={onSelect}
+            searchForms={searchForms}
+            userEmail={userEmail}
+          />
         </div>
       </Popover>
     </React.Fragment>
