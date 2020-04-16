@@ -547,12 +547,13 @@ const exportResult = async (parent, args, { fetch }) => {
   const response = await fetch(
     `/services/catalog/sources/${source}/${id}?transform=${transformer}`
   )
-  const type = response.headers.get('content-type')
+  const type = 'data:' + response.headers.get('content-type')
   const fileName = response.headers
     .get('content-disposition')
     .split('filename=')[1]
     .replace(/"/g, '')
-  return { type, fileName, response }
+  const buffer = await response.buffer()
+  return { type, fileName, buffer }
 }
 
 const subscribeToWorkspace = async (parent, args, { fetch }) => {

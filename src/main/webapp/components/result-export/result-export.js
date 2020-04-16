@@ -100,8 +100,10 @@ const ResultExport = props => {
               transformer: encodedTransformer,
             },
           })
-          const { fileName, type, response } = res.data.exportResult
-          const blob = new Blob([response.body], { type: 'data:' + type })
+          const { fileName, type, buffer } = res.data.exportResult
+          const blob = new Blob([new Uint8Array(buffer.data)], {
+            type,
+          })
           const url = window.URL.createObjectURL(blob)
           let downloadLink = document.createElement('a')
           downloadLink.href = url
