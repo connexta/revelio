@@ -27,10 +27,33 @@ const useExportMutation = () => {
   return useMutation(exportMutation)
 }
 
+const saveFile = async ({ result, exportResult, encodedTransformer }) => {
+  const res = await exportResult({
+    variables: {
+      source: result.sourceId,
+      id: result.attributes.id,
+      transformer: encodedTransformer,
+    },
+  })
+  const { fileName, type, buffer } = res.data.exportResult
+  const blob = new Blob([new Uint8Array(buffer.data)], {
+    type,
+  })
+  const url = window.URL.createObjectURL(blob)
+  let downloadLink = document.createElement('a')
+  downloadLink.href = url
+  downloadLink.setAttribute('download', fileName)
+  downloadLink.click()
+  window.URL.revokeObjectURL(url)
+  downloadLink.remove()
+}
+
 const Container = props => {
   const { loading, error, data, refetch } = useQuery(getExportOptions, {
     variables: { transformerType: 'metacard' },
   })
+
+  const [exportResultHook] = useExportMutation()
   if (loading) {
     return <LinearProgress />
   }
@@ -48,13 +71,14 @@ const Container = props => {
       {...props}
       exportFormats={exportFormats}
       handleClose={props.handleClose}
+      exportResult={exportResultHook}
+      saveFile={saveFile}
     />
   )
 }
 
 const ResultExport = props => {
-  const [exportResultHook] = useExportMutation()
-  const { exportFormats } = props
+  const { exportFormats, exportResult, result } = props
   const [selectedFormat, setSelectedFormat] = React.useState('')
   const handleFormatChange = event => {
     setSelectedFormat(event.target.value)
@@ -90,27 +114,9 @@ const ResultExport = props => {
       <Button
         disabled={selectedFormat === '' ? true : false}
         fullWidth
-        onClick={async () => {
-          const result = props.result
+        onClick={() => {
           const encodedTransformer = getExportFormatId(selectedFormat)
-          const res = await exportResultHook({
-            variables: {
-              source: result.sourceId,
-              id: result.attributes.id,
-              transformer: encodedTransformer,
-            },
-          })
-          const { fileName, type, buffer } = res.data.exportResult
-          const blob = new Blob([new Uint8Array(buffer.data)], {
-            type,
-          })
-          const url = window.URL.createObjectURL(blob)
-          let downloadLink = document.createElement('a')
-          downloadLink.href = url
-          downloadLink.setAttribute('download', fileName)
-          downloadLink.click()
-          window.URL.revokeObjectURL(url)
-          downloadLink.remove()
+          props.saveFile({ result, exportResult, encodedTransformer })
           props.handleClose()
         }}
         color="primary"
