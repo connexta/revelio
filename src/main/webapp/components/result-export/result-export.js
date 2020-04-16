@@ -100,12 +100,8 @@ const ResultExport = props => {
               transformer: encodedTransformer,
             },
           })
-          const response = res.data.exportResult
-          const type = response.headers._headers['content-type']
-          const fileName = response.headers._headers['content-disposition'][0]
-            .split('filename=')[1]
-            .replace(/"/g, '')
-          const blob = new Blob([response.body], { type })
+          const { fileName, type, response } = res.data.exportResult
+          const blob = new Blob([response.body], { type: 'data:' + type })
           const url = window.URL.createObjectURL(blob)
           let downloadLink = document.createElement('a')
           downloadLink.href = url

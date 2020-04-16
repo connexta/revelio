@@ -19,7 +19,7 @@ export const ExportAction = props => {
       <Dialog fullWidth open={open} onClose={() => setOpen(false)}>
         <ExportModal {...props} closeDialog={() => setOpen(false)} />
       </Dialog>
-      <IconButton onClick={() => setOpen(true)}>
+      <IconButton onClick={() => setOpen(true)} size="small">
         <RedoIcon />
       </IconButton>
     </Box>

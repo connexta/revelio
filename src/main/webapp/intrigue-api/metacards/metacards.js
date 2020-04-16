@@ -1,6 +1,5 @@
 const genSchema = require('./gen-schema')
 import { setIn, updateIn, merge, getIn } from 'immutable'
-
 const ROOT = '/search/catalog/internal'
 
 const typeDefs = `
@@ -544,14 +543,15 @@ const deleteMetacard = async (parent, args, { catalog }) => {
 
 const exportResult = async (parent, args, { fetch }) => {
   const { id, source, transformer } = args
-  const res = await fetch(
+  const response = await fetch(
     `/services/catalog/sources/${source}/${id}?transform=${transformer}`
   )
-  // const type = res.headers.get('content-type')
-  // const contentDisposition = res.headers.get('content-disposition')
-  //  const blob = new Blob([res.body], { type })
-  //console.log(blob)
-  return res
+  const type = response.headers.get('content-type')
+  const fileName = response.headers
+    .get('content-disposition')
+    .split('filename=')[1]
+    .replace(/"/g, '')
+  return { type, fileName, response }
 }
 
 const subscribeToWorkspace = async (parent, args, { fetch }) => {
