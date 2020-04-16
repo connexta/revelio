@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { storiesOf } from '../../@storybook/react'
 import ResultExport from './result-export'
 
