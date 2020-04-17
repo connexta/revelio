@@ -6,6 +6,8 @@ import IconButton from '@material-ui/core/IconButton'
 import Popover from '@material-ui/core/Popover'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
 import { ResultListInteraction } from '../lists/result-list-interaction'
+import { ExportAction } from '../result-export/result-export-action'
+import Divider from '@material-ui/core/Divider'
 
 export default props => {
   const { results, setLists, lists } = props
@@ -25,7 +27,9 @@ export default props => {
                 variant: 'body1',
               }}
             >
+              <Divider />
               <Actions disableSpacing={true}>
+                <ExportAction result={metacard} />
                 <IconButton
                   onClick={e => {
                     setSelectedResult(metacard.attributes.id)

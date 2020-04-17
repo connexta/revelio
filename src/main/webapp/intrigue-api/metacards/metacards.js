@@ -101,6 +101,11 @@ const typeDefs = `
     value: String
   }
 
+type ExportFormats {
+    id: String
+    displayName: String
+}
+
   extend type Query {
     # #### Query the Catalog Framework for Metacards.
     #
@@ -126,6 +131,7 @@ const typeDefs = `
     #
     # NOTE: attributes need to be **whitelisted by an Admin** before they can be faceted
     facet(attribute: String!): [FacetResult]
+    exportOptions(transformerType: String!): [ExportFormats]
   }
 
   extend type Mutation {
@@ -137,6 +143,7 @@ const typeDefs = `
     # saveMetacardFromJson(id: ID!, attrs: Json!): MetacardAttributes
     cloneMetacard(id: ID!): MetacardAttributes
     deleteMetacard(id: ID!): ID
+    exportResult(source: String!, id: ID!, transformer: String!): Json 
     subscribeToWorkspace(id: ID!): Int 
     unsubscribeFromWorkspace(id: ID!): Int 
   }
@@ -411,6 +418,22 @@ const facet = async (parent, args, { catalog }) => {
   return facet
 }
 
+const exportOptions = async (parent, args, { fetch }) => {
+  const res = await fetch(`${ROOT}/transformers/${args.transformerType}`)
+  const exportFormats = await res.json()
+  return exportFormats.sort((format1, format2) => {
+    if (format1.displayName > format2.displayName) {
+      return 1
+    }
+
+    if (format1.displayName < format2.displayName) {
+      return -1
+    }
+
+    return 0
+  })
+}
+
 const createMetacard = async (parent, args, context) => {
   const { attrs } = args
 
@@ -519,6 +542,20 @@ const deleteMetacard = async (parent, args, { catalog }) => {
   return id
 }
 
+const exportResult = async (parent, args, { fetch }) => {
+  const { id, source, transformer } = args
+  const response = await fetch(
+    `/services/catalog/sources/${source}/${id}?transform=${transformer}`
+  )
+  const type = 'data:' + response.headers.get('content-type')
+  const fileName = response.headers
+    .get('content-disposition')
+    .split('filename=')[1]
+    .replace(/"/g, '')
+  const buffer = await response.buffer()
+  return { type, fileName, buffer }
+}
+
 const subscribeToWorkspace = async (parent, args, { fetch }) => {
   const { id } = args
   const res = await fetch(`${ROOT}/subscribe/${id}`, { method: 'POST' })
@@ -538,12 +575,14 @@ const resolvers = {
     metacardsById,
     metacardById,
     facet,
+    exportOptions,
   },
   Mutation: {
     createMetacard,
     saveMetacard,
     deleteMetacard,
     cloneMetacard,
+    exportResult,
     subscribeToWorkspace,
     unsubscribeFromWorkspace,
   },
