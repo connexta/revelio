@@ -11,7 +11,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import FormLabel from '@material-ui/core/FormLabel'
 import { getResultSetCql, getSources, saveFile } from './utils'
 
-const getExportOptions = () => {
+const getExportOptions = transformerType => {
   const exportOptions = gql`
     query ExportOptions($transformerType: String!) {
       exportOptions(transformerType: $transformerType) {
@@ -20,7 +20,7 @@ const getExportOptions = () => {
       }
     }
   `
-  return useQuery(exportOptions, { variables: { transformerType: 'metacard' } })
+  return useQuery(exportOptions, { variables: { transformerType } })
 }
 
 const useExportMutation = () => {
@@ -42,7 +42,10 @@ const useExportSetMutation = () => {
 }
 
 const Container = props => {
-  const { loading, error, data, refetch } = getExportOptions()
+  debugger
+  const transformerType =
+    !props.zipped && props.resultsToExport.length > 1 ? 'query' : 'metacard'
+  const { loading, error, data, refetch } = getExportOptions(transformerType)
   const [exportResultHook] = useExportMutation()
   const [exportResultSetHook] = useExportSetMutation()
   if (loading) {
@@ -117,19 +120,13 @@ const ResultExport = props => {
           const srcs = getSources(resultsToExport)
           const count = resultsToExport.length
           let res = null
-          const searches = [
-            {
-              srcs,
-              cql,
-              count,
-            },
-          ]
           if (zipped) {
             res = await exportResultSet({
               variables: {
                 transformer: 'zipCompression',
                 body: {
-                  searches,
+                  cql,
+                  srcs,
                   count,
                   args: {
                     transformerId: encodedTransformer,
@@ -144,7 +141,8 @@ const ResultExport = props => {
               variables: {
                 transformer: encodedTransformer,
                 body: {
-                  searches,
+                  cql,
+                  srcs,
                   count,
                 },
               },
@@ -152,6 +150,7 @@ const ResultExport = props => {
             const { type, fileName, buffer } = res.data.exportResultSet
             saveFile(type, fileName, buffer)
           } else {
+            const result = resultsToExport[0]
             res = await exportResult({
               variables: {
                 source: result.sourceId,
@@ -159,7 +158,7 @@ const ResultExport = props => {
                 transformer: encodedTransformer,
               },
             })
-            const { type, fileName, buffer } = res.data.exportResultSet
+            const { type, fileName, buffer } = res.data.exportResult
             saveFile(type, fileName, buffer)
           }
           props.handleClose()
