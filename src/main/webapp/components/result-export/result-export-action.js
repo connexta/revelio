@@ -19,6 +19,7 @@ export const CompressedExportMetacardInteraction = props => {
         setDialogProps({
           open: true,
           fullWidth: true,
+          onClose: () => setDialogProps({ open: false }),
           children: (
             <ExportModal
               {...props}
@@ -46,6 +47,7 @@ export const ExportMetacardInteraction = props => {
         setDialogProps({
           open: true,
           fullWidth: true,
+          onClose: () => setDialogProps({ open: false }),
           children: (
             <ExportModal
               {...props}
