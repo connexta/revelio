@@ -9,15 +9,20 @@ import Button from '@material-ui/core/Button'
 import MenuItem from '@material-ui/core/MenuItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import FormLabel from '@material-ui/core/FormLabel'
+import { getResultSetCql, getSources, saveFile } from './utils'
 
-const getExportOptions = gql`
-  query ExportOptions($transformerType: String!) {
-    exportOptions(transformerType: $transformerType) {
-      id
-      displayName
+const getExportOptions = () => {
+  const exportOptions = gql`
+    query ExportOptions($transformerType: String!) {
+      exportOptions(transformerType: $transformerType) {
+        id
+        displayName
+      }
     }
-  }
-`
+  `
+  return useQuery(exportOptions, { variables: { transformerType: 'metacard' } })
+}
+
 const useExportMutation = () => {
   const exportMutation = gql`
     mutation ExportResult($source: String!, $id: ID!, $transformer: String!) {
@@ -27,33 +32,19 @@ const useExportMutation = () => {
   return useMutation(exportMutation)
 }
 
-const saveFile = async ({ result, exportResult, encodedTransformer }) => {
-  const res = await exportResult({
-    variables: {
-      source: result.sourceId,
-      id: result.attributes.id,
-      transformer: encodedTransformer,
-    },
-  })
-  const { fileName, type, buffer } = res.data.exportResult
-  const blob = new Blob([new Uint8Array(buffer.data)], {
-    type,
-  })
-  const url = window.URL.createObjectURL(blob)
-  let downloadLink = document.createElement('a')
-  downloadLink.href = url
-  downloadLink.setAttribute('download', fileName)
-  downloadLink.click()
-  window.URL.revokeObjectURL(url)
-  downloadLink.remove()
+const useExportSetMutation = () => {
+  const exportSetMutation = gql`
+    mutation ExportResultSet($transformer: String!, $body: Json!) {
+      exportResultSet(transformer: $transformer, body: $body)
+    }
+  `
+  return useMutation(exportSetMutation)
 }
 
 const Container = props => {
-  const { loading, error, data, refetch } = useQuery(getExportOptions, {
-    variables: { transformerType: 'metacard' },
-  })
-
+  const { loading, error, data, refetch } = getExportOptions()
   const [exportResultHook] = useExportMutation()
+  const [exportResultSetHook] = useExportSetMutation()
   if (loading) {
     return <LinearProgress />
   }
@@ -72,13 +63,19 @@ const Container = props => {
       exportFormats={exportFormats}
       handleClose={props.handleClose}
       exportResult={exportResultHook}
-      saveFile={saveFile}
+      exportResultSet={exportResultSetHook}
     />
   )
 }
 
 const ResultExport = props => {
-  const { exportFormats, exportResult, result } = props
+  const {
+    exportFormats,
+    exportResult,
+    resultsToExport,
+    zipped,
+    exportResultSet,
+  } = props
   const [selectedFormat, setSelectedFormat] = React.useState('')
   const handleFormatChange = event => {
     setSelectedFormat(event.target.value)
@@ -114,9 +111,57 @@ const ResultExport = props => {
       <Button
         disabled={selectedFormat === '' ? true : false}
         fullWidth
-        onClick={() => {
+        onClick={async () => {
           const encodedTransformer = getExportFormatId(selectedFormat)
-          props.saveFile({ result, exportResult, encodedTransformer })
+          const cql = getResultSetCql(resultsToExport)
+          const srcs = getSources(resultsToExport)
+          const count = resultsToExport.length
+          let res = null
+          const searches = [
+            {
+              srcs,
+              cql,
+              count,
+            },
+          ]
+          if (zipped) {
+            res = await exportResultSet({
+              variables: {
+                transformer: 'zipCompression',
+                body: {
+                  searches,
+                  count,
+                  args: {
+                    transformerId: encodedTransformer,
+                  },
+                },
+              },
+            })
+            const { type, fileName, buffer } = res.data.exportResultSet
+            saveFile(type, fileName, buffer)
+          } else if (resultsToExport.length > 1) {
+            res = await exportResultSet({
+              variables: {
+                transformer: encodedTransformer,
+                body: {
+                  searches,
+                  count,
+                },
+              },
+            })
+            const { type, fileName, buffer } = res.data.exportResultSet
+            saveFile(type, fileName, buffer)
+          } else {
+            res = await exportResult({
+              variables: {
+                source: result.sourceId,
+                id: result.attributes.id,
+                transformer: encodedTransformer,
+              },
+            })
+            const { type, fileName, buffer } = res.data.exportResultSet
+            saveFile(type, fileName, buffer)
+          }
           props.handleClose()
         }}
         color="primary"

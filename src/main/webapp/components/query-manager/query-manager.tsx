@@ -59,6 +59,7 @@ const QueryCard = (props: QueryCardProps) => {
           <MetacardInteractionsDropdown>
             <CompressedExportMetacardInteraction
               resultsToExport={props.resultsToExport}
+              zipped={true}
             />
 
             <ExportMetacardInteraction

@@ -21,11 +21,13 @@ export default props => {
   const [selectedResult, setSelectedResult] = React.useState(null)
   const [anchorEl, handleOpen, handleClose, isOpen] = useAnchorEl()
 
-  const modifySelectedResults = resultId => {
-    const index = resultsToExport.indexOf(resultId)
+  const modifySelectedResults = result => {
+    const index = resultsToExport.indexOf(
+      item => result.attributes.id === item.attributes.id
+    )
     if (index === -1) {
       const updatedResults = resultsToExport
-      updatedResults.push(resultId)
+      updatedResults.push(result)
       setResultsToExport(updatedResults)
     } else {
       const updatedResults = [...resultsToExport]
@@ -53,10 +55,10 @@ export default props => {
                   style={{ marginRight: '50%' }}
                   size="small"
                   onChange={() => {
-                    modifySelectedResults(metacard.attributes.id)
+                    modifySelectedResults(metacard)
                   }}
                 />
-                <ExportAction result={metacard} />
+                <ExportAction resultsToExport={[metacard]} />
                 <IconButton
                   onClick={e => {
                     setSelectedResult(metacard.attributes.id)
