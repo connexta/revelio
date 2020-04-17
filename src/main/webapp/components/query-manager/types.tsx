@@ -9,7 +9,7 @@ export type QueryCardProps = {
   query?: QueryType
   onSearch: () => void
   onChange: (query: QueryType) => void
-  resultsToExport?: string[]
+  queryInteractions: Array<(query: QueryType) => React.ReactNode>
 }
 export type QuerySelectorProps = Overwrite<
   QueryCardProps,
@@ -23,7 +23,10 @@ export type AddQueryProps = QuerySelectorProps & {
   onCreate: (query: QueryType) => void
 }
 
-export type QueryEditorPopoverProps = QueryCardProps & {
+export type QueryEditorPopoverProps = Omit<
+  QueryCardProps,
+  'queryInteractions'
+> & {
   anchorEl: HTMLDivElement
   onClose: () => void
 }

@@ -4,53 +4,32 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { merge, set } from 'immutable'
 import React, { useEffect, useRef, useState, useContext } from 'react'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
-import { useApolloClient } from '@apollo/react-hooks'
 import {
   Actions,
   DeleteAction,
   EditAction,
   IndexCardItem,
 } from '../index-cards'
-import { MetacardInteractionsDropdown } from '../index-cards/metacard-interactions'
 import { QueryType } from '../query-builder/types'
 import { WorkspaceContext } from '../workspace/workspace-context'
 import AddQuery from './add-query'
 import QueryEditorPopover from './query-editor-popover'
 import { QueryCardProps, QueryManagerProps, QuerySelectorProps } from './types'
+import { MetacardInteractionsDropdown } from '../metacard-interaction'
+import { DuplicateMetacardInteraction } from '../index-cards/metacard-interactions'
 const { useDrawInterface } = require('../../react-hooks')
 const {
   ExportMetacardInteraction,
   CompressedExportMetacardInteraction,
 } = require('../result-export/result-export-action')
-import gql from 'graphql-tag'
-
-const getSources = gql`
-  query queryManagerSources {
-    sources {
-      sourceId
-    }
-  }
-`
 
 const QueryCard = (props: QueryCardProps) => {
-  const { onSearch, query = {} } = props
+  const { onSearch, query = {}, queryInteractions } = props
   const [anchorEl, handleOpen, handleClose] = useAnchorEl()
   const [{ active: isDrawing }] = useDrawInterface()
   const [wasDrawing, setWasDrawing] = useState(false)
   const drawAnchorEl = useRef(null)
   const attributes = useContext(WorkspaceContext)
-  const client = useApolloClient()
-  const srcs = async () => {
-    if (query.sources) {
-      return query.sources
-    } else {
-      const { data } = await client.query({
-        query: getSources,
-        fetchPolicy: 'cache-first',
-      })
-      return data.sources.map((source: any) => source.sourceId)
-    }
-  }
 
   useEffect(
     () => {
@@ -79,8 +58,11 @@ const QueryCard = (props: QueryCardProps) => {
           <EditAction onEdit={handleOpen} />
           <DeleteAction />
           <MetacardInteractionsDropdown>
-            <CompressedExportMetacardInteraction srcs={srcs} />
-            <ExportMetacardInteraction srcs={srcs} />
+            {queryInteractions.map((interaction, i) => {
+              return (
+                <React.Fragment key={i}>{interaction(query)}</React.Fragment>
+              )
+            })}
           </MetacardInteractionsDropdown>
         </Actions>
       </IndexCardItem>
@@ -97,7 +79,7 @@ const QueryCard = (props: QueryCardProps) => {
 }
 
 const QuerySelector = (props: QuerySelectorProps) => {
-  const { queries, currentQuery, onSearch } = props
+  const { queries, currentQuery, onSearch, queryInteractions } = props
   const hasQueries = queries && queries.length > 0
   const [anchorEl, handleOpen, handleClose, open] = useAnchorEl()
 
@@ -114,6 +96,15 @@ const QuerySelector = (props: QuerySelectorProps) => {
     <div style={{ display: 'flex' }}>
       <QueryCard
         {...props}
+        queryInteractions={[
+          ...queryInteractions,
+          (query: QueryType) => {
+            return <CompressedExportMetacardInteraction srcs={query.sources} />
+          },
+          (query: QueryType) => {
+            return <ExportMetacardInteraction srcs={query.sources} />
+          },
+        ]}
         query={queries.find(query => query.id === currentQuery)}
         onSearch={() => onSearch(currentQuery)}
       />
@@ -159,11 +150,28 @@ const QueryManager = (props: QueryManagerProps) => {
     props.onSave(id)
     props.onSearch(id)
   }
-
+  const queryInteractions = [
+    (query: QueryType) => {
+      return (
+        <DuplicateMetacardInteraction
+          itemName="Query"
+          onDuplicate={() => {
+            const { id: _, title, ...rest } = query
+            props.onCreate({ ...rest, title: `${title}(1)` })
+          }}
+        />
+      )
+    },
+  ]
   return (
     <React.Fragment>
       <AddQuery {...props} onChange={onChange} />
-      <QuerySelector {...props} onChange={onChange} onSearch={onSearch} />
+      <QuerySelector
+        {...props}
+        queryInteractions={queryInteractions}
+        onChange={onChange}
+        onSearch={onSearch}
+      />
     </React.Fragment>
   )
 }
