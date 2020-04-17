@@ -9,6 +9,7 @@ export type QueryCardProps = {
   query?: QueryType
   onSearch: () => void
   onChange: (query: QueryType) => void
+  resultsToExport?: string[]
 }
 export type QuerySelectorProps = Overwrite<
   QueryCardProps,

@@ -11,17 +11,26 @@ import Divider from '@material-ui/core/Divider'
 import Checkbox from '@material-ui/core/Checkbox'
 
 export default props => {
-  const { results, setLists, lists } = props
+  const {
+    results,
+    setLists,
+    lists,
+    resultsToExport,
+    setResultsToExport,
+  } = props
   const [selectedResult, setSelectedResult] = React.useState(null)
-  const [selectedResults, setSelectedResults] = React.useState([])
   const [anchorEl, handleOpen, handleClose, isOpen] = useAnchorEl()
 
   const modifySelectedResults = resultId => {
-    const index = selectedResults.indexOf(resultId)
+    const index = resultsToExport.indexOf(resultId)
     if (index === -1) {
-      setSelectedResults([...selectedResults, resultId])
+      const updatedResults = resultsToExport
+      updatedResults.push(resultId)
+      setResultsToExport(updatedResults)
     } else {
-      selectedResults.splice(index, 1)
+      const updatedResults = [...resultsToExport]
+      updatedResults.splice(index, 1)
+      setResultsToExport(updatedResults)
     }
   }
 
@@ -40,7 +49,6 @@ export default props => {
             >
               <Divider />
               <Actions disableSpacing={true}>
-                <ExportAction result={metacard} />
                 <Checkbox
                   style={{ marginRight: '50%' }}
                   size="small"
@@ -48,6 +56,7 @@ export default props => {
                     modifySelectedResults(metacard.attributes.id)
                   }}
                 />
+                <ExportAction result={metacard} />
                 <IconButton
                   onClick={e => {
                     setSelectedResult(metacard.attributes.id)

@@ -89,6 +89,7 @@ export default () => {
   const [currentQuery, setCurrentQuery] = useState(null)
   const [lists, setLists] = React.useState(null)
   const [queries, setQueries] = useState()
+  const [resultsToExport, setResultsToExport] = React.useState([])
 
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
@@ -195,6 +196,7 @@ export default () => {
                     saveQuery(queries.find(query => query.id === id))
                   }}
                   onChange={queries => setQueries(queries)}
+                  resultsToExport={resultsToExport}
                 />
 
                 <QueryStatus
@@ -216,6 +218,8 @@ export default () => {
                   results={results}
                   setLists={setLists}
                   lists={lists}
+                  resultsToExport={resultsToExport}
+                  setResultsToExport={setResultsToExport}
                 />
               </React.Fragment>
             )}

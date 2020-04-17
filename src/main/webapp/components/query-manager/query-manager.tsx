@@ -10,12 +10,17 @@ import {
   EditAction,
   IndexCardItem,
 } from '../index-cards'
+import { MetacardInteractionsDropdown } from '../index-cards/metacard-interactions'
 import { QueryType } from '../query-builder/types'
 import { WorkspaceContext } from '../workspace/workspace-context'
 import AddQuery from './add-query'
 import QueryEditorPopover from './query-editor-popover'
 import { QueryCardProps, QueryManagerProps, QuerySelectorProps } from './types'
 const { useDrawInterface } = require('../../react-hooks')
+const {
+  ExportMetacardInteraction,
+  CompressedExportMetacardInteraction,
+} = require('../result-export/result-export-action')
 
 const QueryCard = (props: QueryCardProps) => {
   const { onSearch, query = {} } = props
@@ -51,6 +56,15 @@ const QueryCard = (props: QueryCardProps) => {
         <Actions attributes={attributes}>
           <EditAction onEdit={handleOpen} />
           <DeleteAction />
+          <MetacardInteractionsDropdown>
+            <CompressedExportMetacardInteraction
+              resultsToExport={props.resultsToExport}
+            />
+
+            <ExportMetacardInteraction
+              resultsToExport={props.resultsToExport}
+            />
+          </MetacardInteractionsDropdown>
         </Actions>
       </IndexCardItem>
       <QueryEditorPopover
