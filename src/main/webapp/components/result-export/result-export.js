@@ -42,7 +42,6 @@ const useExportSetMutation = () => {
 }
 
 const Container = props => {
-  debugger
   const transformerType =
     !props.zipped && props.resultsToExport.length > 1 ? 'query' : 'metacard'
   const { loading, error, data, refetch } = getExportOptions(transformerType)

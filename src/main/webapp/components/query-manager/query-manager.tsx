@@ -61,7 +61,6 @@ const QueryCard = (props: QueryCardProps) => {
               resultsToExport={props.resultsToExport}
               zipped={true}
             />
-
             <ExportMetacardInteraction
               resultsToExport={props.resultsToExport}
             />
