@@ -179,15 +179,15 @@ export default () => {
           >
             <TextField
               variant="outlined"
-              style={{ margin: '10px', width: '60%' }}
+              style={{ margin: '10px', width: '70%' }}
               value={title}
               onChange={e => setTitle(e.target.value)}
               onBlur={() => {
-                saveWorkspace(setSaving, { title, ...attributes })
+                saveWorkspace(setSaving, { title, queries })
               }}
               onKeyDown={e => {
                 if (e.key === 'Enter') {
-                  saveWorkspace(setSaving, { title, ...attributes })
+                  const res = saveWorkspace(setSaving, { title, queries })
                 }
               }}
               InputProps={{

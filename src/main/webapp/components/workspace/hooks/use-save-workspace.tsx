@@ -17,12 +17,15 @@ export default () => {
     }
   `
   const [save] = useMutation(mutation)
-  return (setSaving: (isSaving: boolean) => void, workspace: Workspace) => {
+  return async (
+    setSaving: (isSaving: boolean) => void,
+    workspace: Workspace
+  ) => {
     setSaving(true)
     const queries = (workspace.queries || []).map((query: QueryType) => ({
       id: query.id,
     }))
-    save({
+    await save({
       variables: {
         id,
         attrs: {
