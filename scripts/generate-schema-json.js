@@ -17,7 +17,6 @@ const runIntrospectionQuery = () => {
   })
     .then(res => res.json())
     .then(json => console.log(JSON.stringify(json, null, 2)))
-    .catch(err => console.log('Error: ', err))
 }
 
 runIntrospectionQuery()
