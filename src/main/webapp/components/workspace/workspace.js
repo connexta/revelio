@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography'
 import gql from 'graphql-tag'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import React, { useState } from 'react'
 import loadable from 'react-loadable'
 import { useParams } from 'react-router-dom'
@@ -97,6 +99,7 @@ export default () => {
   const [lists, setLists] = React.useState(null)
   const [queries, setQueries] = useState()
   const [title, setTitle] = useState(null)
+  const [saving, setSaving] = useState(false)
 
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
@@ -106,7 +109,7 @@ export default () => {
     onClear()
     setQueries([query, ...queries])
     setCurrentQuery(query.id)
-    saveWorkspace({ queries: [query, ...queries] })
+    saveWorkspace(setSaving, { queries: [query, ...queries] })
     onSearch(queryToSearch(query))
   })
 
@@ -168,17 +171,42 @@ export default () => {
             overflow: 'auto',
           }}
         >
-          <TextField
-            variant="outlined"
-            style={{ margin: '10px', width: '60%' }}
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            InputProps={{
-              classes: {
-                input: classes.resize,
-              },
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'baseline',
             }}
-          />
+          >
+            <TextField
+              variant="outlined"
+              style={{ margin: '10px', width: '60%' }}
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              InputProps={{
+                classes: {
+                  input: classes.resize,
+                },
+              }}
+            />
+            {saving ? (
+              <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+                <CircularProgress size={30} />
+                <Typography variant="body1" style={{ paddingLeft: 10 }}>
+                  Saving
+                </Typography>{' '}
+              </div>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+                <CheckCircleIcon
+                  style={{ marginTop: '10px' }}
+                  color="primary"
+                />
+                <Typography variant="body1" style={{ paddingLeft: 10 }}>
+                  Saved
+                </Typography>{' '}
+              </div>
+            )}
+          </div>
           <Divider />
 
           <Tabs

@@ -17,11 +17,12 @@ export default () => {
     }
   `
   const [save] = useMutation(mutation)
-  return (workspace: Workspace) => {
+  return (setSaving: (isSaving: boolean) => void, workspace: Workspace) => {
+    setSaving(true)
     const queries = (workspace.queries || []).map((query: QueryType) => ({
       id: query.id,
     }))
-    save({
+    const res = save({
       variables: {
         id,
         attrs: {
@@ -31,5 +32,7 @@ export default () => {
         },
       },
     })
+    setSaving(false)
+    console.log(res)
   }
 }
