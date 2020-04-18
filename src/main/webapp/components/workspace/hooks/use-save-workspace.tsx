@@ -22,7 +22,7 @@ export default () => {
     const queries = (workspace.queries || []).map((query: QueryType) => ({
       id: query.id,
     }))
-    const res = save({
+    save({
       variables: {
         id,
         attrs: {
@@ -33,6 +33,5 @@ export default () => {
       },
     })
     setSaving(false)
-    console.log(res)
   }
 }

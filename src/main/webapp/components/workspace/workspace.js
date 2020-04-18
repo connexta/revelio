@@ -182,6 +182,14 @@ export default () => {
               style={{ margin: '10px', width: '60%' }}
               value={title}
               onChange={e => setTitle(e.target.value)}
+              onBlur={() => {
+                saveWorkspace(setSaving, { title, ...attributes })
+              }}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  saveWorkspace(setSaving, { title, ...attributes })
+                }
+              }}
               InputProps={{
                 classes: {
                   input: classes.resize,
