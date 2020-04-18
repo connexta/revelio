@@ -5,6 +5,8 @@ import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 import Typography from '@material-ui/core/Typography'
 import gql from 'graphql-tag'
+import TextField from '@material-ui/core/TextField'
+import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import loadable from 'react-loadable'
 import { useParams } from 'react-router-dom'
@@ -61,6 +63,11 @@ const workspaceById = gql`
     }
   }
 `
+const useStyles = makeStyles(theme => ({
+  resize: {
+    fontSize: '1.5rem',
+  },
+}))
 
 const queryToSearch = query => {
   const { sources, sorts, detail_level, filterTree } = query
@@ -84,11 +91,12 @@ const queryToSearch = query => {
 
 export default () => {
   const { id } = useParams()
-
+  const classes = useStyles()
   const [listResults, setListResults] = React.useState([])
   const [currentQuery, setCurrentQuery] = useState(null)
   const [lists, setLists] = React.useState(null)
   const [queries, setQueries] = useState()
+  const [title, setTitle] = useState(null)
 
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
@@ -113,6 +121,7 @@ export default () => {
   const { loading, error, data } = useQuery(workspaceById, {
     variables: { ids: [id] },
     onCompleted: data => {
+      setTitle(data.metacardsById[0].attributes[0].title)
       const queries = data.metacardsById[0].attributes[0].queries
       const lists = data.metacardsById[0].attributes[0].lists
       lists &&
@@ -142,7 +151,6 @@ export default () => {
 
   const attributes = data.metacardsById[0].attributes[0]
 
-  const { title } = attributes
   return (
     <WorkspaceContext.Provider value={attributes}>
       <div
@@ -160,9 +168,17 @@ export default () => {
             overflow: 'auto',
           }}
         >
-          <Typography variant="h4" component="h1" style={{ padding: 20 }}>
-            {title}
-          </Typography>
+          <TextField
+            variant="outlined"
+            style={{ margin: '10px', width: '60%' }}
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            InputProps={{
+              classes: {
+                input: classes.resize,
+              },
+            }}
+          />
           <Divider />
 
           <Tabs
