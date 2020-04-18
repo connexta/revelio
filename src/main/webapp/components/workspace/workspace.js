@@ -65,6 +65,7 @@ const workspaceById = gql`
     }
   }
 `
+//eslint-disable-next-line no-unused-vars
 const useStyles = makeStyles(theme => ({
   resize: {
     fontSize: '1.5rem',
@@ -187,7 +188,7 @@ export default () => {
               }}
               onKeyDown={e => {
                 if (e.key === 'Enter') {
-                  const res = saveWorkspace(setSaving, { title, queries })
+                  saveWorkspace(setSaving, { title, queries })
                 }
               }}
               InputProps={{
