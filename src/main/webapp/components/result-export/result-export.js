@@ -11,17 +11,14 @@ import ListItemText from '@material-ui/core/ListItemText'
 import FormLabel from '@material-ui/core/FormLabel'
 import { getResultSetCql, getSources, saveFile } from './utils'
 
-const getExportOptions = transformerType => {
-  const exportOptions = gql`
-    query ExportOptions($transformerType: String!) {
-      exportOptions(transformerType: $transformerType) {
-        id
-        displayName
-      }
+const exportOptions = gql`
+  query ExportOptions($transformerType: String!) {
+    exportOptions(transformerType: $transformerType) {
+      id
+      displayName
     }
-  `
-  return useQuery(exportOptions, { variables: { transformerType } })
-}
+  }
+`
 
 const useExportMutation = () => {
   const exportMutation = gql`
@@ -44,7 +41,9 @@ const useExportSetMutation = () => {
 const Container = props => {
   const transformerType =
     !props.zipped && props.resultsToExport.length > 1 ? 'query' : 'metacard'
-  const { loading, error, data, refetch } = getExportOptions(transformerType)
+  const { loading, error, data, refetch } = useQuery(exportOptions, {
+    variables: { transformerType },
+  })
   const [exportResultHook] = useExportMutation()
   const [exportResultSetHook] = useExportSetMutation()
   if (loading) {
