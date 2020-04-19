@@ -99,7 +99,6 @@ export default () => {
   const [currentQuery, setCurrentQuery] = useState(null)
   const [lists, setLists] = React.useState(null)
   const [queries, setQueries] = useState()
-  const [title, setTitle] = useState(null)
   const [saving, setSaving] = useState(false)
 
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
@@ -125,7 +124,6 @@ export default () => {
   const { loading, error, data } = useQuery(workspaceById, {
     variables: { ids: [id] },
     onCompleted: data => {
-      setTitle(data.metacardsById[0].attributes[0].title)
       const queries = data.metacardsById[0].attributes[0].queries
       const lists = data.metacardsById[0].attributes[0].lists
       lists &&
@@ -154,7 +152,7 @@ export default () => {
   }
 
   const attributes = data.metacardsById[0].attributes[0]
-
+  const { title } = attributes
   return (
     <WorkspaceContext.Provider value={attributes}>
       <div
@@ -181,14 +179,13 @@ export default () => {
             <TextField
               variant="outlined"
               style={{ margin: '10px', width: '70%' }}
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-              onBlur={() => {
-                saveWorkspace(setSaving, { title, queries })
+              defaultValue={title}
+              onBlur={e => {
+                saveWorkspace(setSaving, { title: e.target.value, queries })
               }}
               onKeyDown={e => {
                 if (e.key === 'Enter') {
-                  saveWorkspace(setSaving, { title, queries })
+                  saveWorkspace(setSaving, { title: e.target.value, queries })
                 }
               }}
               InputProps={{
