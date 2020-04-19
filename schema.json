@@ -5232,16 +5232,48 @@
                   "defaultValue": null
                 },
                 {
-                  "name": "body",
+                  "name": "ids",
                   "description": "",
                   "type": {
                     "kind": "NON_NULL",
                     "name": null,
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Json",
-                      "ofType": null
+                      "kind": "LIST",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "ID",
+                        "ofType": null
+                      }
                     }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "srcs",
+                  "description": "",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "LIST",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "String",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "opts",
+                  "description": "",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Json",
+                    "ofType": null
                   },
                   "defaultValue": null
                 }
