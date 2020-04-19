@@ -23,6 +23,7 @@ export const CompressedExportMetacardInteraction = props => {
           children: (
             <ExportModal
               {...props}
+              zipped={true}
               closeDialog={() => {
                 setDialogProps({ open: false })
               }}

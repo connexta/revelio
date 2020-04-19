@@ -144,7 +144,7 @@ type ExportFormats {
     cloneMetacard(id: ID!): MetacardAttributes
     deleteMetacard(id: ID!): ID
     exportResult(source: String!, id: ID!, transformer: String!): Json 
-    exportResultSet(transformer: String!, body: Json!): Json
+    exportResultSet(transformer: String!, ids: [ID]!, srcs: [String]! opts: Json): Json
     subscribeToWorkspace(id: ID!): Int 
     unsubscribeFromWorkspace(id: ID!): Int 
   }
@@ -550,15 +550,23 @@ const exportResult = async (parent, args, { fetch }) => {
   )
   const type = 'data:' + response.headers.get('content-type')
   const fileName = response.headers
-    .get('content-disposition')
+    .get('content-dispositionsrcs')
     .split('filename=')[1]
     .replace(/"/g, '')
   const buffer = await response.buffer()
   return { type, fileName, buffer }
 }
 
+const getResultSetCql = ids => {
+  const queries = ids.map(id => `(("id" ILIKE '${id}'))`)
+  return `(${queries.join(' OR ')})`
+}
+
 const exportResultSet = async (parent, args, { fetch }) => {
-  const { transformer, body } = args
+  const { transformer, ids, srcs, opts } = args
+  const cql = getResultSetCql(ids)
+  const count = ids.length
+  const body = opts ? { cql, srcs, count, args: opts } : { cql, srcs, count }
   const response = await fetch(`${ROOT}/cql/transform/${transformer}`, {
     method: 'POST',
     body: JSON.stringify(body),

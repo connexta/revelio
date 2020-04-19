@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button'
 import MenuItem from '@material-ui/core/MenuItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import FormLabel from '@material-ui/core/FormLabel'
-import { getResultSetCql, getSources, saveFile } from './utils'
+import { getResultSetIds, getSources, saveFile } from './utils'
 
 const exportOptions = gql`
   query ExportOptions($transformerType: String!) {
@@ -31,8 +31,18 @@ const useExportMutation = () => {
 
 const useExportSetMutation = () => {
   const exportSetMutation = gql`
-    mutation ExportResultSet($transformer: String!, $body: Json!) {
-      exportResultSet(transformer: $transformer, body: $body)
+    mutation ExportResultSet(
+      $transformer: String!
+      $ids: [ID]!
+      $srcs: [String]!
+      $opts: Json
+    ) {
+      exportResultSet(
+        transformer: $transformer
+        ids: $ids
+        srcs: $srcs
+        opts: $opts
+      )
     }
   `
   return useMutation(exportSetMutation)
@@ -44,8 +54,8 @@ const Container = props => {
   const { loading, error, data, refetch } = useQuery(exportOptions, {
     variables: { transformerType },
   })
-  const [exportResultHook] = useExportMutation()
-  const [exportResultSetHook] = useExportSetMutation()
+  const [exportResult] = useExportMutation()
+  const [exportResultSet] = useExportSetMutation()
   if (loading) {
     return <LinearProgress />
   }
@@ -57,14 +67,13 @@ const Container = props => {
     )
   }
   const exportFormats = data.exportOptions
-
   return (
     <ResultExport
       {...props}
       exportFormats={exportFormats}
       handleClose={props.handleClose}
-      exportResult={exportResultHook}
-      exportResultSet={exportResultSetHook}
+      exportResult={exportResult}
+      exportResultSet={exportResultSet}
     />
   )
 }
@@ -114,21 +123,17 @@ const ResultExport = props => {
         fullWidth
         onClick={async () => {
           const encodedTransformer = getExportFormatId(selectedFormat)
-          const cql = getResultSetCql(resultsToExport)
+          const ids = getResultSetIds(resultsToExport)
           const srcs = getSources(resultsToExport)
-          const count = resultsToExport.length
           let res = null
           if (zipped) {
             res = await exportResultSet({
               variables: {
                 transformer: 'zipCompression',
-                body: {
-                  cql,
-                  srcs,
-                  count,
-                  args: {
-                    transformerId: encodedTransformer,
-                  },
+                ids,
+                srcs,
+                opts: {
+                  transformerId: encodedTransformer,
                 },
               },
             })
@@ -138,11 +143,8 @@ const ResultExport = props => {
             res = await exportResultSet({
               variables: {
                 transformer: encodedTransformer,
-                body: {
-                  cql,
-                  srcs,
-                  count,
-                },
+                ids,
+                srcs,
               },
             })
             const { type, fileName, buffer } = res.data.exportResultSet

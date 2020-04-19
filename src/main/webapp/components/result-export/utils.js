@@ -1,7 +1,5 @@
-export const getResultSetCql = results => {
-  const ids = results.map(result => result.attributes.id)
-  const queries = ids.map(id => `(("id" ILIKE '${id}'))`)
-  return `(${queries.join(' OR ')})`
+export const getResultSetIds = results => {
+  return results.map(result => result.attributes.id)
 }
 
 export const getSources = results => {
