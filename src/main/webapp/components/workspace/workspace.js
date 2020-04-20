@@ -153,6 +153,7 @@ export default () => {
 
   const attributes = data.metacardsById[0].attributes[0]
   const { title } = attributes
+
   return (
     <WorkspaceContext.Provider value={attributes}>
       <div
@@ -199,7 +200,7 @@ export default () => {
                 <CircularProgress size={30} />
                 <Typography variant="body1" style={{ paddingLeft: 10 }}>
                   Saving
-                </Typography>{' '}
+                </Typography>
               </div>
             ) : (
               <div style={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -209,7 +210,7 @@ export default () => {
                 />
                 <Typography variant="body1" style={{ paddingLeft: 10 }}>
                   Saved
-                </Typography>{' '}
+                </Typography>
               </div>
             )}
           </div>
