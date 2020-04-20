@@ -550,7 +550,7 @@ const exportResult = async (parent, args, { fetch }) => {
   )
   const type = 'data:' + response.headers.get('content-type')
   const fileName = response.headers
-    .get('content-dispositionsrcs')
+    .get('content-disposition')
     .split('filename=')[1]
     .replace(/"/g, '')
   const buffer = await response.buffer()

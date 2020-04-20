@@ -4,6 +4,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { merge, set } from 'immutable'
 import React, { useEffect, useRef, useState, useContext } from 'react'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
+import { useApolloClient } from '@apollo/react-hooks'
 import {
   Actions,
   DeleteAction,
@@ -21,6 +22,15 @@ const {
   ExportMetacardInteraction,
   CompressedExportMetacardInteraction,
 } = require('../result-export/result-export-action')
+import gql from 'graphql-tag'
+
+const getSources = gql`
+  query queryExecutorSources {
+    sources {
+      sourceId
+    }
+  }
+`
 
 const QueryCard = (props: QueryCardProps) => {
   const { onSearch, query = {} } = props
@@ -29,6 +39,18 @@ const QueryCard = (props: QueryCardProps) => {
   const [wasDrawing, setWasDrawing] = useState(false)
   const drawAnchorEl = useRef(null)
   const attributes = useContext(WorkspaceContext)
+  const client = useApolloClient()
+  const srcs = async () => {
+    if (query.sources) {
+      return query.sources
+    } else {
+      const { data } = await client.query({
+        query: getSources,
+        fetchPolicy: 'cache-first',
+      })
+      return data.sources.map((source: any) => source.sourceId)
+    }
+  }
 
   useEffect(
     () => {
@@ -57,12 +79,8 @@ const QueryCard = (props: QueryCardProps) => {
           <EditAction onEdit={handleOpen} />
           <DeleteAction />
           <MetacardInteractionsDropdown>
-            <CompressedExportMetacardInteraction
-              resultsToExport={props.resultsToExport}
-            />
-            <ExportMetacardInteraction
-              resultsToExport={props.resultsToExport}
-            />
+            <CompressedExportMetacardInteraction srcs={srcs} />
+            <ExportMetacardInteraction srcs={srcs} />
           </MetacardInteractionsDropdown>
         </Actions>
       </IndexCardItem>

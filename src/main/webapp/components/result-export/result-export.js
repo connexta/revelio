@@ -10,6 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import FormLabel from '@material-ui/core/FormLabel'
 import { getResultSetIds, getSources, saveFile } from './utils'
+import { useSelectionInterface } from '../../react-hooks'
 
 const exportOptions = gql`
   query ExportOptions($transformerType: String!) {
@@ -49,8 +50,12 @@ const useExportSetMutation = () => {
 }
 
 const Container = props => {
+  const [selection, onSelect] = useSelectionInterface()
+  const resultIds = [...selection]
   const transformerType =
-    !props.zipped && props.resultsToExport.length > 1 ? 'query' : 'metacard'
+    !props.zipped && resultIds.length > 1 && !props.result
+      ? 'query'
+      : 'metacard'
   const { loading, error, data, refetch } = useQuery(exportOptions, {
     variables: { transformerType },
   })
@@ -74,6 +79,7 @@ const Container = props => {
       handleClose={props.handleClose}
       exportResult={exportResult}
       exportResultSet={exportResultSet}
+      ids={resultIds}
     />
   )
 }
@@ -81,10 +87,12 @@ const Container = props => {
 const ResultExport = props => {
   const {
     exportFormats,
+    result,
     exportResult,
     resultsToExport,
     zipped,
     exportResultSet,
+    ids,
   } = props
   const [selectedFormat, setSelectedFormat] = React.useState('')
   const handleFormatChange = event => {
@@ -123,9 +131,20 @@ const ResultExport = props => {
         fullWidth
         onClick={async () => {
           const encodedTransformer = getExportFormatId(selectedFormat)
-          const ids = getResultSetIds(resultsToExport)
-          const srcs = getSources(resultsToExport)
           let res = null
+          if (result) {
+            res = await exportResult({
+              variables: {
+                source: result.sourceId,
+                id: result.attributes.id,
+                transformer: encodedTransformer,
+              },
+            })
+            const { type, fileName, buffer } = res.data.exportResult
+            saveFile(type, fileName, buffer)
+            return props.handleClose()
+          }
+          const srcs = await props.srcs()
           if (zipped) {
             res = await exportResultSet({
               variables: {
@@ -139,7 +158,7 @@ const ResultExport = props => {
             })
             const { type, fileName, buffer } = res.data.exportResultSet
             saveFile(type, fileName, buffer)
-          } else if (resultsToExport.length > 1) {
+          } else {
             res = await exportResultSet({
               variables: {
                 transformer: encodedTransformer,
@@ -148,17 +167,6 @@ const ResultExport = props => {
               },
             })
             const { type, fileName, buffer } = res.data.exportResultSet
-            saveFile(type, fileName, buffer)
-          } else {
-            const result = resultsToExport[0]
-            res = await exportResult({
-              variables: {
-                source: result.sourceId,
-                id: result.attributes.id,
-                transformer: encodedTransformer,
-              },
-            })
-            const { type, fileName, buffer } = res.data.exportResult
             saveFile(type, fileName, buffer)
           }
           props.handleClose()

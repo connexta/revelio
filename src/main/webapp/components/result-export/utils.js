@@ -1,11 +1,3 @@
-export const getResultSetIds = results => {
-  return results.map(result => result.attributes.id)
-}
-
-export const getSources = results => {
-  return Array.from(new Set(results.map(result => result.sourceId)))
-}
-
 export const saveFile = async (type, fileName, buffer) => {
   const blob = new Blob([new Uint8Array(buffer.data)], {
     type,

@@ -5,36 +5,18 @@ import GetAppIcon from '@material-ui/icons/GetApp'
 import IconButton from '@material-ui/core/IconButton'
 import Popover from '@material-ui/core/Popover'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
+import { useSelectionInterface } from '../../react-hooks'
 import { ResultListInteraction } from '../lists/result-list-interaction'
 import { ExportAction } from '../result-export/result-export-action'
 import Divider from '@material-ui/core/Divider'
 import Checkbox from '@material-ui/core/Checkbox'
 
 export default props => {
-  const {
-    results,
-    setLists,
-    lists,
-    resultsToExport,
-    setResultsToExport,
-  } = props
+  const { results, setLists, lists } = props
   const [selectedResult, setSelectedResult] = React.useState(null)
   const [anchorEl, handleOpen, handleClose, isOpen] = useAnchorEl()
 
-  const modifySelectedResults = result => {
-    const index = resultsToExport.indexOf(
-      item => result.attributes.id === item.attributes.id
-    )
-    if (index === -1) {
-      const updatedResults = resultsToExport
-      updatedResults.push(result)
-      setResultsToExport(updatedResults)
-    } else {
-      const updatedResults = [...resultsToExport]
-      updatedResults.splice(index, 1)
-      setResultsToExport(updatedResults)
-    }
-  }
+  const [selection, onSelect] = useSelectionInterface()
 
   return (
     <React.Fragment>
@@ -53,12 +35,16 @@ export default props => {
               <Actions disableSpacing={true}>
                 <Checkbox
                   style={{ marginRight: '50%' }}
+                  checked={selection.has(metacard.attributes.id)}
                   size="small"
                   onChange={() => {
-                    modifySelectedResults(metacard)
+                    const newSelection = selection.has(metacard.attributes.id)
+                      ? selection.remove(metacard.attributes.id)
+                      : selection.add(metacard.attributes.id)
+                    onSelect(newSelection)
                   }}
                 />
-                <ExportAction resultsToExport={[metacard]} />
+                <ExportAction result={metacard} />
                 <IconButton
                   onClick={e => {
                     setSelectedResult(metacard.attributes.id)
@@ -85,7 +71,7 @@ export default props => {
               </Actions>
             </IndexCardItem>
           )),
-        [results]
+        [results, selection]
       )}
       <Popover
         open={isOpen}
