@@ -104,12 +104,19 @@ export default () => {
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
   const saveQuery = useSaveQuery()
-  const saveWorkspace = useSaveWorkspace()
+  const saveWorkspaceHook = useSaveWorkspace()
+
+  const saveWorkspace = async workspace => {
+    setSaving(true)
+    await saveWorkspaceHook(workspace)
+    setSaving(false)
+  }
+
   const createQuery = useCreateQuery(query => {
     onClear()
     setQueries([query, ...queries])
     setCurrentQuery(query.id)
-    saveWorkspace(setSaving, { queries: [query, ...queries] })
+    saveWorkspace({ queries: [query, ...queries] })
     onSearch(queryToSearch(query))
   })
 
@@ -182,11 +189,11 @@ export default () => {
               style={{ margin: '10px', width: '70%' }}
               defaultValue={title}
               onBlur={e => {
-                saveWorkspace(setSaving, { title: e.target.value, queries })
+                saveWorkspace({ title: e.target.value, queries })
               }}
               onKeyDown={e => {
                 if (e.key === 'Enter') {
-                  saveWorkspace(setSaving, { title: e.target.value, queries })
+                  saveWorkspace({ title: e.target.value, queries })
                 }
               }}
               InputProps={{
