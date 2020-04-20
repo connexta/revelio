@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button'
 import MenuItem from '@material-ui/core/MenuItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import FormLabel from '@material-ui/core/FormLabel'
-import { getResultSetIds, getSources, saveFile } from './utils'
+import { saveFile } from './utils'
 import { useSelectionInterface } from '../../react-hooks'
 
 const exportOptions = gql`
@@ -50,7 +50,7 @@ const useExportSetMutation = () => {
 }
 
 const Container = props => {
-  const [selection, onSelect] = useSelectionInterface()
+  const [selection] = useSelectionInterface()
   const resultIds = [...selection]
   const transformerType =
     !props.zipped && resultIds.length > 1 && !props.result
@@ -89,7 +89,6 @@ const ResultExport = props => {
     exportFormats,
     result,
     exportResult,
-    resultsToExport,
     zipped,
     exportResultSet,
     ids,
