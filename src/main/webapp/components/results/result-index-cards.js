@@ -9,14 +9,12 @@ import { useSelectionInterface } from '../../react-hooks'
 import { ResultListInteraction } from '../lists/result-list-interaction'
 import { ExportAction } from '../result-export/result-export-action'
 import Divider from '@material-ui/core/Divider'
-import Checkbox from '@material-ui/core/Checkbox'
+import ResultCheckbox from './result-checkbox'
 
 export default props => {
   const { results, setLists, lists } = props
   const [selectedResult, setSelectedResult] = React.useState(null)
   const [anchorEl, handleOpen, handleClose, isOpen] = useAnchorEl()
-
-  const [selection, onSelect] = useSelectionInterface()
 
   return (
     <React.Fragment>
@@ -33,17 +31,7 @@ export default props => {
             >
               <Divider />
               <Actions disableSpacing={true}>
-                <Checkbox
-                  style={{ marginRight: '50%' }}
-                  checked={selection.has(metacard.attributes.id)}
-                  size="small"
-                  onChange={() => {
-                    const newSelection = selection.has(metacard.attributes.id)
-                      ? selection.remove(metacard.attributes.id)
-                      : selection.add(metacard.attributes.id)
-                    onSelect(newSelection)
-                  }}
-                />
+                <ResultCheckbox id={metacard.attributes.id} />
                 <ExportAction result={metacard} />
                 <IconButton
                   onClick={e => {
@@ -71,7 +59,7 @@ export default props => {
               </Actions>
             </IndexCardItem>
           )),
-        [results, selection]
+        [results]
       )}
       <Popover
         open={isOpen}

@@ -25,7 +25,7 @@ const {
 import gql from 'graphql-tag'
 
 const getSources = gql`
-  query queryExecutorSources {
+  query queryManagerSources {
     sources {
       sourceId
     }
