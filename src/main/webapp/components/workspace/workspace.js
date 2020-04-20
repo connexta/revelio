@@ -3,12 +3,7 @@ import Divider from '@material-ui/core/Divider'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
-import Typography from '@material-ui/core/Typography'
 import gql from 'graphql-tag'
-import TextField from '@material-ui/core/TextField'
-import { makeStyles } from '@material-ui/core/styles'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import React, { useState } from 'react'
 import loadable from 'react-loadable'
 import { useParams } from 'react-router-dom'
@@ -66,12 +61,6 @@ const workspaceById = gql`
     }
   }
 `
-//eslint-disable-next-line no-unused-vars
-const useStyles = makeStyles(theme => ({
-  resize: {
-    fontSize: '2em',
-  },
-}))
 
 const queryToSearch = query => {
   const { sources, sorts, detail_level, filterTree } = query
@@ -95,7 +84,6 @@ const queryToSearch = query => {
 
 export default () => {
   const { id } = useParams()
-  const classes = useStyles()
   const [listResults, setListResults] = React.useState([])
   const [currentQuery, setCurrentQuery] = useState(null)
   const [lists, setLists] = React.useState(null)
