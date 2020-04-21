@@ -119,6 +119,7 @@
     "start": "cross-env NODE_OPTIONS=\"--inspect --max_old_space_size=8192\" ace start --middleware src/main/graphql-server/middleware.js",
     "start:prod": "cross-env NODE_ENV=production node target/server/bundle.middleware.js",
     "fmt": "ace format -w",
+    "graphql:schema": "node ./scripts/generate-schema-json > schema.json && yarn fmt",
     "start:test": "ace start --env=test",
     "test:api": "mocha src/main/webapp/intrigue-api/test",
     "pretest": "ace format && eslint src",
