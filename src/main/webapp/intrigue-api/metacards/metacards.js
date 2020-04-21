@@ -476,14 +476,21 @@ const createMetacard = async (parent, args, context) => {
 const saveMetacard = async (parent, args, context) => {
   const { id } = args
   let attributes = args.attributes
+  const { catalog, fromGraphqlName, toGraphqlName } = context
 
   const [oldMetacard] = await metacardsById(
     parent,
     { ids: [id], ...args },
     context
   )
-  const [oldMetacardAttrs] = oldMetacard.attributes
-  const { catalog, fromGraphqlName, toGraphqlName } = context
+  let [oldMetacardAttrs] = oldMetacard.attributes
+  if (typeof oldMetacardAttrs.queries === 'function') {
+    const queries = await oldMetacardAttrs.queries({}, context)
+    oldMetacardAttrs = {
+      ...oldMetacardAttrs,
+      queries: (queries || []).map(query => query.id),
+    }
+  }
   if (attributes.filterTree) {
     attributes = setIn(
       attributes,
@@ -521,6 +528,9 @@ const saveMetacard = async (parent, args, context) => {
       filterTree:
         res.updatedMetacards[0].attributes.filterTree &&
         JSON.parse(res.updatedMetacards[0].attributes.filterTree),
+      queries:
+        res.updatedMetacards[0].attributes.queries &&
+        res.updatedMetacards[0].attributes.queries.map(id => ({ id })),
     })
   }
 }
