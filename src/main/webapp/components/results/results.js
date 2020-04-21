@@ -84,7 +84,7 @@ const ExpandButton = props => {
 
 const Description = props => {
   const [expanded, setExpanded] = useState(false)
-  const { text } = props
+  const { text = '' } = props
   const long = text.length > 250
 
   return (

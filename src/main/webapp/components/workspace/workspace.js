@@ -3,24 +3,21 @@ import Divider from '@material-ui/core/Divider'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
-import Typography from '@material-ui/core/Typography'
-import AddIcon from '@material-ui/icons/Add'
 import gql from 'graphql-tag'
 import React, { useState } from 'react'
 import loadable from 'react-loadable'
 import { useParams } from 'react-router-dom'
+import { WorkspaceContext } from './workspace-context'
 import { useQueryExecutor } from '../../react-hooks'
-import useAnchorEl from '../../react-hooks/use-anchor-el'
-import { IndexCardItem, Actions } from '../index-cards'
+import { IndexCardItem } from '../index-cards'
 import Lists from '../lists'
-import IconButton from '@material-ui/core/IconButton'
 import { InlineRetry } from '../network-retry'
 import QueryEditor from '../query-editor'
 import QueryManager from '../query-manager'
 import QueryStatus from '../query-status'
+import { ResultIndexCards } from '../results'
 import { useCreateQuery, useSaveQuery, useSaveWorkspace } from './hooks'
-import { ResultListInteraction } from '../lists/result-list-interaction'
-import Popover from '@material-ui/core/Popover'
+import WorkspaceTitle from './workspace-title'
 
 const LoadingComponent = () => <LinearProgress />
 
@@ -39,6 +36,11 @@ const workspaceById = gql`
   query WorkspaceById($ids: [ID]!) {
     metacardsById(ids: $ids) {
       attributes {
+        security_access_individuals_read
+        security_access_individuals
+        security_access_administrators
+        security_access_groups_read
+        security_access_groups
         id
         title
         queries {
@@ -59,31 +61,6 @@ const workspaceById = gql`
     }
   }
 `
-
-const Results = ({ results, handleOpen, setResult }) =>
-  React.useMemo(
-    () =>
-      results.map(({ metacard }) => (
-        <IndexCardItem
-          key={metacard.attributes.id}
-          title={metacard.attributes.title}
-          subHeader={' '}
-        >
-          <Actions disableSpacing={true}>
-            <IconButton
-              onClick={e => {
-                setResult(metacard.attributes.id)
-                handleOpen(e)
-              }}
-              size="small"
-            >
-              <AddIcon />
-            </IconButton>
-          </Actions>
-        </IndexCardItem>
-      )),
-    [results]
-  )
 
 const queryToSearch = query => {
   const { sources, sorts, detail_level, filterTree } = query
@@ -107,18 +84,16 @@ const queryToSearch = query => {
 
 export default () => {
   const { id } = useParams()
-
   const [listResults, setListResults] = React.useState([])
   const [currentQuery, setCurrentQuery] = useState(null)
   const [lists, setLists] = React.useState(null)
   const [queries, setQueries] = useState()
-  const [selectedResult, setSelectedResult] = useState(null)
 
-  const [anchorEl, handleOpen, handleClose, isOpen] = useAnchorEl()
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
   const saveQuery = useSaveQuery()
-  const saveWorkspace = useSaveWorkspace()
+  const [saveWorkspace, saving] = useSaveWorkspace()
+
   const createQuery = useCreateQuery(query => {
     onClear()
     setQueries([query, ...queries])
@@ -166,155 +141,131 @@ export default () => {
   }
 
   const attributes = data.metacardsById[0].attributes[0]
-
   const { title } = attributes
+
   return (
-    <div
-      style={{
-        display: 'flex',
-        height: 'calc(100vh - 64px)',
-        overflow: 'hidden',
-      }}
-    >
+    <WorkspaceContext.Provider value={attributes}>
       <div
         style={{
-          boxSizing: 'border-box',
-          width: 400,
-          height: '100%',
-          overflow: 'auto',
+          display: 'flex',
+          height: 'calc(100vh - 64px)',
+          overflow: 'hidden',
         }}
       >
-        <Typography variant="h4" component="h1" style={{ padding: 20 }}>
-          {title}
-        </Typography>
-        <Divider />
-
-        <Tabs
-          value={tab}
-          onChange={(_, selectedIndex) => setTab(selectedIndex)}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
+        <div
+          style={{
+            boxSizing: 'border-box',
+            width: 400,
+            height: '100%',
+            overflow: 'auto',
+          }}
         >
-          <Tab label="Search" />
-          <Tab label="Lists" />
-        </Tabs>
+          <WorkspaceTitle
+            saving={saving}
+            saveWorkspace={saveWorkspace}
+            title={title}
+            queries={queries}
+          />
+          <Divider />
 
-        {tab === 0 &&
-          queries && (
-            <React.Fragment>
-              <QueryManager
-                QueryEditor={QueryEditor}
-                queries={queries}
-                currentQuery={currentQuery}
-                onSearch={id => {
-                  onClear()
-                  setCurrentQuery(id)
-                  onSearch(
-                    queryToSearch(queries.find(query => query.id === id))
-                  )
-                }}
-                onCreate={createQuery}
-                onSave={id => {
-                  saveQuery(queries.find(query => query.id === id))
-                }}
-                onChange={queries => setQueries(queries)}
-              />
+          <Tabs
+            value={tab}
+            onChange={(_, selectedIndex) => setTab(selectedIndex)}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+          >
+            <Tab label="Search" />
+            <Tab label="Lists" />
+          </Tabs>
 
-              <QueryStatus
-                sources={status}
-                onRun={srcs => {
-                  //setPageIndex(0)
-                  onSearch({
-                    ...queries.find(query => query.id === currentQuery),
-                    srcs,
-                  })
-                }}
-                onCancel={srcs => {
-                  srcs.forEach(src => {
-                    onCancel(src)
-                  })
-                }}
-              />
-              <Results
-                results={results}
-                handleOpen={handleOpen}
-                setResult={setSelectedResult}
-              />
-              <Popover
-                open={isOpen}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: 'center',
-                  horizontal: 'center',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
-                }}
-              >
-                <ResultListInteraction
-                  lists={lists}
-                  id={selectedResult}
-                  setList={list => {
-                    let isNewList = true
-                    lists.forEach(item => {
-                      if (list.id === item.id) {
-                        Object.assign(item, list)
-                        isNewList = false
-                        setLists(lists)
-                      }
+          {tab === 0 &&
+            queries && (
+              <React.Fragment>
+                <QueryManager
+                  QueryEditor={QueryEditor}
+                  queries={queries}
+                  currentQuery={currentQuery}
+                  onSearch={id => {
+                    onClear()
+                    setCurrentQuery(id)
+                    onSearch(
+                      queryToSearch(queries.find(query => query.id === id))
+                    )
+                  }}
+                  onCreate={createQuery}
+                  onSave={id => {
+                    saveQuery(queries.find(query => query.id === id))
+                  }}
+                  onChange={queries => setQueries(queries)}
+                />
+
+                <QueryStatus
+                  sources={status}
+                  onRun={sources => {
+                    //setPageIndex(0)
+                    onSearch(
+                      queryToSearch({
+                        ...queries.find(query => query.id === currentQuery),
+                        sources,
+                      })
+                    )
+                  }}
+                  onCancel={srcs => {
+                    srcs.forEach(src => {
+                      onCancel(src)
                     })
-                    if (isNewList) {
-                      setLists([...lists, list])
-                    }
                   }}
                 />
-              </Popover>
+                <ResultIndexCards
+                  results={results}
+                  setLists={setLists}
+                  lists={lists}
+                />
+              </React.Fragment>
+            )}
+
+          {tab === 1 && (
+            <React.Fragment>
+              <Lists
+                lists={lists}
+                onSelect={data => {
+                  const results = data.metacardsById.reduce((acc, metacard) => {
+                    return acc.concat(metacard.results)
+                  }, [])
+                  setListResults(results)
+                }}
+                onSave={() => {
+                  saveListsToWorkspace(lists)
+                }}
+                setList={list => {
+                  let isNewList = true
+                  lists.forEach(item => {
+                    if (list.id === item.id) {
+                      Object.assign(item, list)
+                      isNewList = false
+                    }
+                  })
+                  if (isNewList) {
+                    setLists([...lists, list])
+                  }
+                }}
+              />
+
+              {listResults.map(({ metacard }) => (
+                <IndexCardItem
+                  key={metacard.attributes.id}
+                  title={metacard.attributes.title}
+                  subHeader={' '}
+                />
+              ))}
             </React.Fragment>
           )}
-
-        {tab === 1 && (
-          <React.Fragment>
-            <Lists
-              lists={lists}
-              onSelect={data => {
-                const results = data.metacardsById.reduce((acc, metacard) => {
-                  return acc.concat(metacard.results)
-                }, [])
-                setListResults(results)
-              }}
-              onSave={() => {
-                saveListsToWorkspace(lists)
-              }}
-              setList={list => {
-                let isNewList = true
-                lists.forEach(item => {
-                  if (list.id === item.id) {
-                    Object.assign(item, list)
-                    isNewList = false
-                  }
-                })
-                if (isNewList) {
-                  setLists([...lists, list])
-                }
-              }}
-            />
-
-            {listResults.map(({ metacard }) => (
-              <IndexCardItem
-                key={metacard.attributes.id}
-                title={metacard.attributes.title}
-                subHeader={' '}
-              />
-            ))}
-          </React.Fragment>
-        )}
+        </div>
+        <div style={{ flex: '1' }}>
+          <Visualizations results={tab === 0 ? results : listResults} />
+        </div>
       </div>
-      <div style={{ flex: '1' }}>
-        <Visualizations results={tab === 0 ? results : listResults} />
-      </div>
-    </div>
+    </WorkspaceContext.Provider>
   )
 }

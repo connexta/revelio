@@ -1,5 +1,5 @@
 const genSchema = require('./gen-schema')
-import { setIn, updateIn, merge } from 'immutable'
+import { setIn, updateIn, merge, getIn } from 'immutable'
 
 const ROOT = '/search/catalog/internal'
 
@@ -101,6 +101,11 @@ const typeDefs = `
     value: String
   }
 
+type ExportFormats {
+    id: String
+    displayName: String
+}
+
   extend type Query {
     # #### Query the Catalog Framework for Metacards.
     #
@@ -126,6 +131,7 @@ const typeDefs = `
     #
     # NOTE: attributes need to be **whitelisted by an Admin** before they can be faceted
     facet(attribute: String!): [FacetResult]
+    exportOptions(transformerType: String!): [ExportFormats]
   }
 
   extend type Mutation {
@@ -137,6 +143,8 @@ const typeDefs = `
     # saveMetacardFromJson(id: ID!, attrs: Json!): MetacardAttributes
     cloneMetacard(id: ID!): MetacardAttributes
     deleteMetacard(id: ID!): ID
+    exportResult(source: String!, id: ID!, transformer: String!): Json 
+    exportResultSet(transformer: String!, ids: [ID]!, srcs: [String]! opts: Json): Json
     subscribeToWorkspace(id: ID!): Int 
     unsubscribeFromWorkspace(id: ID!): Int 
   }
@@ -151,9 +159,17 @@ const WILDCARD_FITLER = {
 }
 
 const getCql = ({ filterTree, cql }) => {
+  const checkForEmptySearch =
+    Array.isArray(getIn(filterTree, ['filters'], 0)) &&
+    getIn(filterTree, ['filters', 'length'], 0) === 0
+
+  if (checkForEmptySearch) {
+    return transformFilterToCQL(WILDCARD_FITLER)
+  }
   if (filterTree != undefined) {
     return transformFilterToCQL(filterTree)
   }
+
   if (cql != undefined) {
     return cql
   }
@@ -403,6 +419,22 @@ const facet = async (parent, args, { catalog }) => {
   return facet
 }
 
+const exportOptions = async (parent, args, { fetch }) => {
+  const res = await fetch(`${ROOT}/transformers/${args.transformerType}`)
+  const exportFormats = await res.json()
+  return exportFormats.sort((format1, format2) => {
+    if (format1.displayName > format2.displayName) {
+      return 1
+    }
+
+    if (format1.displayName < format2.displayName) {
+      return -1
+    }
+
+    return 0
+  })
+}
+
 const createMetacard = async (parent, args, context) => {
   const { attrs } = args
 
@@ -444,14 +476,21 @@ const createMetacard = async (parent, args, context) => {
 const saveMetacard = async (parent, args, context) => {
   const { id } = args
   let attributes = args.attributes
+  const { catalog, fromGraphqlName, toGraphqlName } = context
 
   const [oldMetacard] = await metacardsById(
     parent,
     { ids: [id], ...args },
     context
   )
-  const [oldMetacardAttrs] = oldMetacard.attributes
-  const { catalog, fromGraphqlName, toGraphqlName } = context
+  let [oldMetacardAttrs] = oldMetacard.attributes
+  if (typeof oldMetacardAttrs.queries === 'function') {
+    const queries = await oldMetacardAttrs.queries({}, context)
+    oldMetacardAttrs = {
+      ...oldMetacardAttrs,
+      queries: (queries || []).map(query => query.id),
+    }
+  }
   if (attributes.filterTree) {
     attributes = setIn(
       attributes,
@@ -489,6 +528,9 @@ const saveMetacard = async (parent, args, context) => {
       filterTree:
         res.updatedMetacards[0].attributes.filterTree &&
         JSON.parse(res.updatedMetacards[0].attributes.filterTree),
+      queries:
+        res.updatedMetacards[0].attributes.queries &&
+        res.updatedMetacards[0].attributes.queries.map(id => ({ id })),
     })
   }
 }
@@ -511,6 +553,46 @@ const deleteMetacard = async (parent, args, { catalog }) => {
   return id
 }
 
+const exportResult = async (parent, args, { fetch }) => {
+  const { id, source, transformer } = args
+  const response = await fetch(
+    `/services/catalog/sources/${source}/${id}?transform=${transformer}`
+  )
+  const type = 'data:' + response.headers.get('content-type')
+  const fileName = response.headers
+    .get('content-disposition')
+    .split('filename=')[1]
+    .replace(/"/g, '')
+  const buffer = await response.buffer()
+  return { type, fileName, buffer }
+}
+
+const getResultSetCql = ids => {
+  const queries = ids.map(id => `(("id" ILIKE '${id}'))`)
+  return `(${queries.join(' OR ')})`
+}
+
+const exportResultSet = async (parent, args, { fetch }) => {
+  const { transformer, ids, srcs, opts } = args
+  const cql = getResultSetCql(ids)
+  const count = ids.length
+  const body = opts ? { cql, srcs, count, args: opts } : { cql, srcs, count }
+  const response = await fetch(`${ROOT}/cql/transform/${transformer}`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  const type = 'data:' + response.headers.get('content-type')
+  const fileName = response.headers
+    .get('content-disposition')
+    .split('filename=')[1]
+    .replace(/"/g, '')
+  const buffer = await response.buffer()
+  return { type, fileName, buffer }
+}
+
 const subscribeToWorkspace = async (parent, args, { fetch }) => {
   const { id } = args
   const res = await fetch(`${ROOT}/subscribe/${id}`, { method: 'POST' })
@@ -530,12 +612,15 @@ const resolvers = {
     metacardsById,
     metacardById,
     facet,
+    exportOptions,
   },
   Mutation: {
     createMetacard,
     saveMetacard,
     deleteMetacard,
     cloneMetacard,
+    exportResult,
+    exportResultSet,
     subscribeToWorkspace,
     unsubscribeFromWorkspace,
   },

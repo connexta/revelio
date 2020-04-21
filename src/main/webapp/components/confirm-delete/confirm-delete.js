@@ -19,7 +19,8 @@ import {
 
 const ConfirmDeleteAction = props => {
   const [open, setOpen] = useState(false)
-  if (!props.isWritable) {
+  const { permissions } = props
+  if (!permissions.canWrite) {
     return null
   }
   return (
@@ -41,7 +42,8 @@ const ConfirmDeleteAction = props => {
 
 const ConfirmDeleteMetacardInteraction = props => {
   const { setDialogProps } = useContext(MetacardInteractionsDialogContext)
-  if (!props.isWritable) {
+  const { permissions } = props
+  if (!permissions.canWrite) {
     return null
   }
   const { itemName } = props

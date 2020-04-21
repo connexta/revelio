@@ -11,14 +11,14 @@ import React from 'react'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
 import { AttributeDefinition, QueryType } from '../query-builder/types'
 
-type QueryInteraction = {
+type SearchInteraction = {
   id: string
   onSelect: () => void
   interaction: React.FunctionComponent<{}>
 }
 
 type HeaderProps = {
-  queryInteractions?: QueryInteraction[]
+  searchInteractions?: SearchInteraction[]
   query?: QueryType
   addOptionsRef?: (el: HTMLDivElement) => void
   onChange: (query: QueryType) => void
@@ -51,8 +51,8 @@ const Header = (props: HeaderProps) => {
       </IconButton>
 
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        {props.queryInteractions &&
-          props.queryInteractions.map(interaction => {
+        {props.searchInteractions &&
+          props.searchInteractions.map(interaction => {
             const { id, onSelect, interaction: Interaction } = interaction
             return (
               <MenuItem
@@ -95,7 +95,7 @@ const Footer = (props: FooterProps) => {
 
 export type EditorProps = {
   attributeDefinitions?: AttributeDefinition[]
-  queryInteractions?: QueryInteraction[]
+  searchInteractions?: SearchInteraction[]
   query?: QueryType
   onSearch: () => void
   queryBuilder: React.FunctionComponent<{
@@ -121,7 +121,7 @@ export default (props: EditorProps) => {
       >
         <Header
           query={query}
-          queryInteractions={props.queryInteractions}
+          searchInteractions={props.searchInteractions}
           addOptionsRef={el => setAddOptionsRef(el)}
           onChange={props.onChange}
         />

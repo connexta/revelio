@@ -29,10 +29,6 @@ const searchForms = gql`
         ...SearchFormAttributes
       }
     }
-    user {
-      email
-      roles
-    }
   }
   ${fragment}
 `
@@ -104,19 +100,12 @@ const useCreate = () => {
         .filter(({ id }: { id: string }) => id !== data.createMetacard.id)
         .concat(data.createMetacard)
 
-      const user = getIn(cache.readQuery({ query }), ['user'], {})
-      const { email, roles } = user
       cache.writeQuery({
         query,
         data: {
           metacardsByTag: {
             attributes,
             __typename: 'QueryResponse',
-          },
-          user: {
-            email,
-            roles,
-            __typename: 'User',
           },
         },
       })
@@ -191,7 +180,6 @@ export default () => {
     updateUserPrefs(userPreferences)
   }
 
-  const userAttributes = getIn(data, ['user'], [])
   return (
     <SearchFormsRoute
       onCreate={onCreate}
@@ -203,7 +191,6 @@ export default () => {
       userDefaultForm={userDefaultForm}
       toggleDefaultForm={toggleDefaultForm}
       refetch={refetch}
-      userAttributes={userAttributes}
     />
   )
 }

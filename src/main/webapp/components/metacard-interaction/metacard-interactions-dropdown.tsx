@@ -1,11 +1,12 @@
-import React, { createContext, useState, Fragment } from 'react'
-import IconButton from '@material-ui/core/IconButton'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
-import Menu from '@material-ui/core/Menu'
-import useAnchorEl from '../../react-hooks/use-anchor-el'
-import MenuItem from '@material-ui/core/MenuItem'
 import Box from '@material-ui/core/Box'
 import Dialog, { DialogProps } from '@material-ui/core/Dialog'
+import IconButton from '@material-ui/core/IconButton'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
+import React, { createContext, Fragment, useState } from 'react'
+import useAnchorEl from '../../react-hooks/use-anchor-el'
+import { Permissions } from '../../react-hooks/use-get-permissions'
 
 const MetacardInteractionsDialogContext = createContext<any>({
   setProps: () => {
@@ -22,7 +23,7 @@ type MetacardInteractionsDropdownProps = {
 }
 
 const MetacardInteractionsDropdown = (
-  props: MetacardInteractionsDropdownProps
+  props: MetacardInteractionsDropdownProps & { permissions?: Permissions }
 ) => {
   const [anchorEl, open, close, isOpen] = useAnchorEl()
 
@@ -48,7 +49,11 @@ const MetacardInteractionsDropdown = (
                 style={{ padding: 0 }}
                 onClick={() => close()}
               >
-                {child}
+                {React.isValidElement(child)
+                  ? React.cloneElement(child, {
+                      permissions: props.permissions,
+                    })
+                  : null}
               </MenuItem>
             )
           })}

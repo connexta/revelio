@@ -6,7 +6,7 @@ import useState from '../../@storybook/use-state'
 import sampleQueries from '../../sample-data/sample-queries.json'
 import QueryEditor from '../query-editor'
 const stories = storiesOf('Query Manager', module)
-import { NavigationBarContext } from '../../nav-bar-context'
+import { NavigationBarContext } from '../nav-bar'
 
 import { button } from '@storybook/addon-knobs'
 
@@ -30,6 +30,7 @@ stories.add('Basic', () => {
     <NavigationBarContext.Provider value={navBarLeftRef}>
       <div ref={el => setNavBarLeftRef(el)} />
       <QueryManager
+        queryInteractions={[]}
         queries={queries}
         currentQuery={query}
         QueryEditor={QueryEditor}

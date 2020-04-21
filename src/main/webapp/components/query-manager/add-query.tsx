@@ -2,7 +2,7 @@ import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import SearchIcon from '@material-ui/icons/Search'
 import React from 'react'
-import { NavigationBarContext } from '../../nav-bar-context'
+const { NavigationBarContext } = require('../nav-bar')
 import QueryEditorPopover from './query-editor-popover'
 import { AddQueryProps } from './types'
 const ReactDOM = require('react-dom')

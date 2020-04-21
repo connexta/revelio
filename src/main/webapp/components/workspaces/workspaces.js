@@ -25,15 +25,11 @@ import { Notification } from '../notification/notification'
 import { useClone, useCreate, useDelete, useSubscribe } from './hooks/'
 import { SubscribeAction, SubscribeMetacardInteraction } from './subscribe'
 import FilterWorkspaces from './filter-workspaces'
-const {
-  getPermissions,
-  getSecurityAttributesFromMetacard,
-} = require('../sharing/sharing-utils')
 
 const LoadingComponent = () => <LinearProgress />
 
 const Workspaces = props => {
-  const { workspaces, onCreate, onDelete, onDuplicate, userAttributes } = props
+  const { workspaces, onCreate, onDelete, onDuplicate } = props
   const [subscribe, unsubscribe] = useSubscribe()
   const [message, setMessage] = React.useState(null)
   const history = useHistory()
@@ -52,30 +48,21 @@ const Workspaces = props => {
       {workspaces.map(workspace => {
         const isSubscribed = workspace.userIsSubscribed
         workspace = workspace.attributes
-        const securityAttributes = getSecurityAttributesFromMetacard(workspace)
-        const { canShare, canWrite, readOnly } = getPermissions(
-          userAttributes.email,
-          userAttributes.roles,
-          securityAttributes,
-          workspace.owner
-        )
         return (
           <IndexCardItem
             {...workspace}
             key={workspace.id}
             onClick={() => history.push(`/workspaces/${workspace.id}`)}
           >
-            <Actions>
+            <Actions attributes={workspace}>
               <ShareAction
                 id={workspace.id}
                 title={workspace.title}
                 metacardType="workspace"
-                isAdmin={canShare}
               />
               <DeleteAction
                 onDelete={() => onDelete(workspace)}
                 itemName="workspace"
-                isWritable={canWrite}
               />
               <SubscribeAction
                 subscribe={subscribe}
@@ -86,13 +73,12 @@ const Workspaces = props => {
                 isSubscribed={isSubscribed}
               />
               <DuplicateAction onDuplicate={() => onDuplicate(workspace)} />
-              <ReadOnly isReadOnly={readOnly} indexCardType="workspace" />
+              <ReadOnly indexCardType="workspace" />
               <MetacardInteractionsDropdown>
                 <ShareMetacardInteraction
                   id={workspace.id}
                   title={workspace.title}
                   metacardType="workspace"
-                  isAdmin={canShare}
                 />
                 <EditMetacardInteraction
                   itemName="Workspace"
@@ -101,7 +87,6 @@ const Workspaces = props => {
                 <ConfirmDeleteMetacardInteraction
                   itemName="Workspace"
                   onDelete={() => onDelete(workspace)}
-                  isWritable={canWrite}
                 />
                 <DuplicateMetacardInteraction
                   onDuplicate={() => onDuplicate(workspace)}
@@ -169,7 +154,6 @@ export default () => {
         onCreate={onCreate}
         onDelete={onDelete}
         onDuplicate={onDuplicate}
-        userAttributes={data.user}
       />
     </React.Fragment>
   )

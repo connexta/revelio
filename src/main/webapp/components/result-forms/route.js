@@ -1,36 +1,26 @@
-import React, { Fragment, useState } from 'react'
-
-import gql from 'graphql-tag'
-import { useQuery, useMutation } from '@apollo/react-hooks'
-
-import ResultForms from './result-forms'
-
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import Dialog from '@material-ui/core/Dialog'
-
 import LinearProgress from '@material-ui/core/LinearProgress'
-import { Notification } from '../notification/notification'
+import gql from 'graphql-tag'
+import React, { Fragment, useState } from 'react'
 import {
-  getSecurityAttributesFromMetacard,
-  getPermissions,
-} from '../sharing/sharing-utils'
-
-import {
-  IndexCards,
-  IndexCardItem,
+  Actions,
   AddCardItem,
   DeleteAction,
-  ShareAction,
-  Actions,
+  IndexCardItem,
+  IndexCards,
   ReadOnly,
+  ShareAction,
 } from '../index-cards'
-import RetryComponent from '../network-retry/snackbar-retry'
-
 import {
-  MetacardInteractionsDropdown,
-  ShareMetacardInteraction,
   ConfirmDeleteMetacardInteraction,
   EditMetacardInteraction,
+  MetacardInteractionsDropdown,
+  ShareMetacardInteraction,
 } from '../index-cards/metacard-interactions'
+import RetryComponent from '../network-retry/snackbar-retry'
+import { Notification } from '../notification/notification'
+import ResultForms from './result-forms'
 
 const Loading = () => {
   return <LinearProgress />
@@ -63,15 +53,7 @@ const AddItem = props => {
 }
 
 const Item = props => {
-  const { form, Editor, onDelete, user } = props
-
-  const securityAttributes = getSecurityAttributesFromMetacard(form)
-  const { canShare, canWrite, readOnly } = getPermissions(
-    user.email,
-    user.roles,
-    securityAttributes,
-    form.owner
-  )
+  const { form, Editor, onDelete } = props
   const [editing, setEditing] = useState(false)
 
   const onSave = data => {
@@ -91,25 +73,19 @@ const Item = props => {
         </Dialog>
       ) : null}
       <IndexCardItem {...form} onClick={() => setEditing(true)}>
-        <Actions>
+        <Actions attributes={form}>
           <ShareAction
             id={form.id}
             title={form.title}
             metacardType="attribute-group"
-            isAdmin={canShare}
           />
-          <DeleteAction
-            itemName="result form"
-            onDelete={onDelete}
-            isWritable={canWrite}
-          />
-          <ReadOnly isReadOnly={readOnly} indexCardType="Result Form" />
+          <DeleteAction itemName="result form" onDelete={onDelete} />
+          <ReadOnly indexCardType="Result Form" />
           <MetacardInteractionsDropdown>
             <ShareMetacardInteraction
               id={form.id}
               title={form.title}
               metacardType="attribute-group"
-              isAdmin={canShare}
             />
             <EditMetacardInteraction
               itemName="Result Form"
@@ -118,7 +94,6 @@ const Item = props => {
             <ConfirmDeleteMetacardInteraction
               itemName="Result Form"
               onDelete={onDelete}
-              isWritable={canWrite}
             />
           </MetacardInteractionsDropdown>
         </Actions>
@@ -139,7 +114,6 @@ export const Route = props => {
     onSave,
     onDelete,
     refetch,
-    userAttributes,
   } = props
 
   if (loading) {
@@ -185,7 +159,6 @@ export const Route = props => {
                 setMessage('Result Form Deleted')
               }}
               form={form}
-              user={userAttributes}
             />
           )
         })}
@@ -220,10 +193,6 @@ const resultForms = gql`
         ...ResultFormAttributes
       }
     }
-    user {
-      email
-      roles
-    }
   }
   ${fragment}
 `
@@ -241,22 +210,16 @@ const useCreate = () => {
   return useMutation(mutation, {
     update: (cache, { data }) => {
       const query = resultForms
-      const { metacardsByTag, user } = cache.readQuery({ query })
+      const { metacardsByTag } = cache.readQuery({ query })
       const attributes = metacardsByTag.attributes
         .filter(({ id }) => id !== data.createMetacard.id)
         .concat(data.createMetacard)
-      const { email, roles } = user
       cache.writeQuery({
         query,
         data: {
           metacardsByTag: {
             attributes,
             __typename: 'QueryResponse',
-          },
-          user: {
-            email,
-            roles,
-            __typename: 'User',
           },
         },
       })
@@ -406,7 +369,6 @@ export default () => {
   }
 
   const forms = data.metacardsByTag.attributes
-  const user = data.user
 
   return (
     <Route
@@ -416,7 +378,6 @@ export default () => {
       onSave={onSave}
       onDelete={onDelete}
       refetch={refetch}
-      userAttributes={user}
     />
   )
 }
