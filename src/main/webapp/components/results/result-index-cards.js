@@ -8,6 +8,7 @@ import useAnchorEl from '../../react-hooks/use-anchor-el'
 import { ResultListInteraction } from '../lists/result-list-interaction'
 import { ExportAction } from '../result-export/result-export-action'
 import Divider from '@material-ui/core/Divider'
+import ResultCheckbox from './result-checkbox'
 
 export default props => {
   const { results, setLists, lists } = props
@@ -29,6 +30,7 @@ export default props => {
             >
               <Divider />
               <Actions disableSpacing={true}>
+                <ResultCheckbox id={metacard.attributes.id} />
                 <ExportAction result={metacard} />
                 <IconButton
                   onClick={e => {
