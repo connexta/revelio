@@ -1,6 +1,4 @@
-import React, { Fragment } from 'react'
-
-import { getIn } from 'immutable'
+import React from 'react'
 
 import Button from '@material-ui/core/Button'
 import Drawer from '@material-ui/core/Drawer'
@@ -9,33 +7,27 @@ import AccessibleForwardIcon from '@material-ui/icons/AccessibleForward'
 import CloudIcon from '@material-ui/icons/Cloud'
 import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark'
 import FindInPageIcon from '@material-ui/icons/FindInPage'
-import HomeIcon from '@material-ui/icons/Home'
+
 import InfoSharpIcon from '@material-ui/icons/InfoSharp'
 
 import SearchIcon from '@material-ui/icons/Search'
 import ViewListIcon from '@material-ui/icons/ViewList'
 
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-import Divider from '@material-ui/core/Divider'
 import LinearProgress from '@material-ui/core/LinearProgress'
 
 import { useTheme } from '@material-ui/core/styles'
 import { ThemeProvider } from './theme'
 
-import gql from 'graphql-tag'
-import { useQuery } from '@apollo/react-hooks'
-
 import { SelectionProvider } from './react-hooks/use-selection-interface'
 import { DrawProvider } from './react-hooks/use-draw-interface'
 import { Link as ReactLink, Route, matchPath } from 'react-router-dom'
-
+import ListItemIcon from '@material-ui/core/ListItemIcon'
 import loadable from 'react-loadable'
 
 import url from 'url'
 import NavBar, { NavigationBarContext } from './components/nav-bar'
+import NavMenu from './components/nav-menu'
 export const LoadingComponent = () => <LinearProgress />
 
 const Link = props => {
@@ -195,64 +187,6 @@ export const hasPath = path => {
     })
     return match
   })
-}
-
-const query = gql`
-  query NavigationBar {
-    systemProperties {
-      branding
-      product
-    }
-  }
-`
-
-const NavMenu = props => {
-  const { data } = useQuery(query)
-
-  const branding = getIn(data, ['systemProperties', 'branding'], '')
-  const product = getIn(data, ['systemProperties', 'product'], '')
-
-  const { routes, onClose } = props
-
-  return (
-    <List style={{ width: 300 }}>
-      {branding !== '' ? (
-        <Fragment>
-          <ListItem>
-            <ListItemText
-              primaryTypographyProps={{ style: { fontSize: '2rem' } }}
-              secondaryTypographyProps={{ style: { fontSize: '1.3rem' } }}
-              primary={branding}
-              secondary={product}
-            />
-          </ListItem>
-          <Divider />
-        </Fragment>
-      ) : null}
-      {routes.map(route => {
-        const { path, link: Link } = route
-        return (
-          <ListItem key={path}>
-            <Link onClick={onClose} />
-          </ListItem>
-        )
-      })}
-      <Divider />
-      <ListItem>
-        <Button
-          fullWidth
-          href="/"
-          component="a"
-          style={{ justifyContent: 'flex-start' }}
-        >
-          <ListItemIcon>
-            <HomeIcon style={{ marginRight: 10 }} />
-          </ListItemIcon>
-          <ListItemText primary={`${branding || ''} Home`} />
-        </Button>
-      </ListItem>
-    </List>
-  )
 }
 
 const AppRouter = () => {
