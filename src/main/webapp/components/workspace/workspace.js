@@ -88,18 +88,11 @@ export default () => {
   const [currentQuery, setCurrentQuery] = useState(null)
   const [lists, setLists] = React.useState(null)
   const [queries, setQueries] = useState()
-  const [saving, setSaving] = useState(false)
 
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
   const saveQuery = useSaveQuery()
-  const saveWorkspaceHook = useSaveWorkspace()
-
-  const saveWorkspace = async workspace => {
-    setSaving(true)
-    await saveWorkspaceHook(workspace)
-    setSaving(false)
-  }
+  const [saveWorkspace, saving] = useSaveWorkspace()
 
   const createQuery = useCreateQuery(query => {
     onClear()
