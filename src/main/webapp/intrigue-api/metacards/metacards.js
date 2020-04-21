@@ -144,6 +144,7 @@ type ExportFormats {
     cloneMetacard(id: ID!): MetacardAttributes
     deleteMetacard(id: ID!): ID
     exportResult(source: String!, id: ID!, transformer: String!): Json 
+    exportResultSet(transformer: String!, ids: [ID]!, srcs: [String]! opts: Json): Json
     subscribeToWorkspace(id: ID!): Int 
     unsubscribeFromWorkspace(id: ID!): Int 
   }
@@ -475,14 +476,21 @@ const createMetacard = async (parent, args, context) => {
 const saveMetacard = async (parent, args, context) => {
   const { id } = args
   let attributes = args.attributes
+  const { catalog, fromGraphqlName, toGraphqlName } = context
 
   const [oldMetacard] = await metacardsById(
     parent,
     { ids: [id], ...args },
     context
   )
-  const [oldMetacardAttrs] = oldMetacard.attributes
-  const { catalog, fromGraphqlName, toGraphqlName } = context
+  let [oldMetacardAttrs] = oldMetacard.attributes
+  if (typeof oldMetacardAttrs.queries === 'function') {
+    const queries = await oldMetacardAttrs.queries({}, context)
+    oldMetacardAttrs = {
+      ...oldMetacardAttrs,
+      queries: (queries || []).map(query => query.id),
+    }
+  }
   if (attributes.filterTree) {
     attributes = setIn(
       attributes,
@@ -520,6 +528,9 @@ const saveMetacard = async (parent, args, context) => {
       filterTree:
         res.updatedMetacards[0].attributes.filterTree &&
         JSON.parse(res.updatedMetacards[0].attributes.filterTree),
+      queries:
+        res.updatedMetacards[0].attributes.queries &&
+        res.updatedMetacards[0].attributes.queries.map(id => ({ id })),
     })
   }
 }
@@ -556,6 +567,32 @@ const exportResult = async (parent, args, { fetch }) => {
   return { type, fileName, buffer }
 }
 
+const getResultSetCql = ids => {
+  const queries = ids.map(id => `(("id" ILIKE '${id}'))`)
+  return `(${queries.join(' OR ')})`
+}
+
+const exportResultSet = async (parent, args, { fetch }) => {
+  const { transformer, ids, srcs, opts } = args
+  const cql = getResultSetCql(ids)
+  const count = ids.length
+  const body = opts ? { cql, srcs, count, args: opts } : { cql, srcs, count }
+  const response = await fetch(`${ROOT}/cql/transform/${transformer}`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  const type = 'data:' + response.headers.get('content-type')
+  const fileName = response.headers
+    .get('content-disposition')
+    .split('filename=')[1]
+    .replace(/"/g, '')
+  const buffer = await response.buffer()
+  return { type, fileName, buffer }
+}
+
 const subscribeToWorkspace = async (parent, args, { fetch }) => {
   const { id } = args
   const res = await fetch(`${ROOT}/subscribe/${id}`, { method: 'POST' })
@@ -583,6 +620,7 @@ const resolvers = {
     deleteMetacard,
     cloneMetacard,
     exportResult,
+    exportResultSet,
     subscribeToWorkspace,
     unsubscribeFromWorkspace,
   },

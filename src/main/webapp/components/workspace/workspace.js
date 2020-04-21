@@ -3,7 +3,6 @@ import Divider from '@material-ui/core/Divider'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
-import Typography from '@material-ui/core/Typography'
 import gql from 'graphql-tag'
 import React, { useState } from 'react'
 import loadable from 'react-loadable'
@@ -18,6 +17,7 @@ import QueryManager from '../query-manager'
 import QueryStatus from '../query-status'
 import { ResultIndexCards } from '../results'
 import { useCreateQuery, useSaveQuery, useSaveWorkspace } from './hooks'
+import WorkspaceTitle from './workspace-title'
 
 const LoadingComponent = () => <LinearProgress />
 
@@ -84,7 +84,6 @@ const queryToSearch = query => {
 
 export default () => {
   const { id } = useParams()
-
   const [listResults, setListResults] = React.useState([])
   const [currentQuery, setCurrentQuery] = useState(null)
   const [lists, setLists] = React.useState(null)
@@ -93,7 +92,8 @@ export default () => {
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
   const saveQuery = useSaveQuery()
-  const saveWorkspace = useSaveWorkspace()
+  const [saveWorkspace, saving] = useSaveWorkspace()
+
   const createQuery = useCreateQuery(query => {
     onClear()
     setQueries([query, ...queries])
@@ -141,8 +141,8 @@ export default () => {
   }
 
   const attributes = data.metacardsById[0].attributes[0]
-
   const { title } = attributes
+
   return (
     <WorkspaceContext.Provider value={attributes}>
       <div
@@ -160,9 +160,12 @@ export default () => {
             overflow: 'auto',
           }}
         >
-          <Typography variant="h4" component="h1" style={{ padding: 20 }}>
-            {title}
-          </Typography>
+          <WorkspaceTitle
+            saving={saving}
+            saveWorkspace={saveWorkspace}
+            title={title}
+            queries={queries}
+          />
           <Divider />
 
           <Tabs

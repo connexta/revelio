@@ -33,4 +33,4 @@ Chaos mode enables a 10% random failure for use in development.
 
 To enable chaos mode, do:
 
-    CHAOS_MODE=1 yarn start
+    CHAOS_ENABLED=1 yarn start
