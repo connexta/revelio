@@ -66,7 +66,7 @@ export default (props: QueryEditorPopoverProps) => {
     }
   }
 
-  const queryInteractions = [
+  const searchInteractions = [
     ...defaultSearchFormInteractions(key => {
       if (key !== query.type) {
         onChange(set(getBaseQueryFields(query), 'type', key))
@@ -108,7 +108,7 @@ export default (props: QueryEditorPopoverProps) => {
             [queryBuilder, 'queryBuilder'],
             TextSearchQueryBuilder
           )}
-          queryInteractions={queryInteractions}
+          searchInteractions={searchInteractions}
           onSearch={onSearch}
           onChange={q => onChange({ ...getBaseQueryFields(query), ...q })}
         />

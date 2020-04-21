@@ -30,6 +30,7 @@ stories.add('Basic', () => {
     <NavigationBarContext.Provider value={navBarLeftRef}>
       <div ref={el => setNavBarLeftRef(el)} />
       <QueryManager
+        queryInteractions={[]}
         queries={queries}
         currentQuery={query}
         QueryEditor={QueryEditor}

@@ -18,6 +18,9 @@ const exportOptions = gql`
       id
       displayName
     }
+    sources {
+      sourceId
+    }
   }
 `
 
@@ -75,6 +78,7 @@ const Container = props => {
   return (
     <ResultExport
       {...props}
+      allSources={(data.sources || []).map(source => source.sourceId)}
       exportFormats={exportFormats}
       handleClose={props.handleClose}
       exportResult={exportResult}
@@ -143,7 +147,7 @@ const ResultExport = props => {
             saveFile(type, fileName, buffer)
             return props.handleClose()
           }
-          const srcs = await props.srcs()
+          const srcs = props.srcs || props.allSources
           if (zipped) {
             res = await exportResultSet({
               variables: {
