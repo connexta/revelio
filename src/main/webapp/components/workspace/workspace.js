@@ -202,12 +202,14 @@ export default () => {
 
                 <QueryStatus
                   sources={status}
-                  onRun={srcs => {
+                  onRun={sources => {
                     //setPageIndex(0)
-                    onSearch({
-                      ...queries.find(query => query.id === currentQuery),
-                      srcs,
-                    })
+                    onSearch(
+                      queryToSearch({
+                        ...queries.find(query => query.id === currentQuery),
+                        sources,
+                      })
+                    )
                   }}
                   onCancel={srcs => {
                     srcs.forEach(src => {
