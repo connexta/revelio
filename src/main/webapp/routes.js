@@ -2,12 +2,8 @@ import React, { Fragment } from 'react'
 
 import { getIn } from 'immutable'
 
-import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
 import Drawer from '@material-ui/core/Drawer'
-import IconButton from '@material-ui/core/IconButton'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
 
 import AccessibleForwardIcon from '@material-ui/icons/AccessibleForward'
 import CloudIcon from '@material-ui/icons/Cloud'
@@ -15,7 +11,7 @@ import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark'
 import FindInPageIcon from '@material-ui/icons/FindInPage'
 import HomeIcon from '@material-ui/icons/Home'
 import InfoSharpIcon from '@material-ui/icons/InfoSharp'
-import MenuIcon from '@material-ui/icons/Menu'
+
 import SearchIcon from '@material-ui/icons/Search'
 import ViewListIcon from '@material-ui/icons/ViewList'
 
@@ -36,13 +32,10 @@ import { SelectionProvider } from './react-hooks/use-selection-interface'
 import { DrawProvider } from './react-hooks/use-draw-interface'
 import { Link as ReactLink, Route, matchPath } from 'react-router-dom'
 
-import User from './components/user/user'
-import UserSettings from './components/user-settings'
 import loadable from 'react-loadable'
-import { NavigationBarContext } from './nav-bar-context'
 
 import url from 'url'
-
+import NavBar, { NavigationBarContext } from './components/nav-bar'
 export const LoadingComponent = () => <LinearProgress />
 
 const Link = props => {
@@ -202,34 +195,6 @@ export const hasPath = path => {
     })
     return match
   })
-}
-
-const NavBar = props => {
-  const { palette } = useTheme()
-  const { title = 'That MF Electric Boogaloo', onMenuOpen } = props
-  return (
-    <AppBar style={{ position: 'static', background: palette.navbar }}>
-      <Toolbar>
-        <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="open drawer"
-          onClick={onMenuOpen}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" noWrap>
-          {title}
-        </Typography>
-        <div
-          style={{ marginLeft: 10, flexGrow: 1 }}
-          ref={props.navBarLeftRef}
-        />
-        <UserSettings />
-        <User />
-      </Toolbar>
-    </AppBar>
-  )
 }
 
 const query = gql`
