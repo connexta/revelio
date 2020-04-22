@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default props => {
-  const { title, saving, saveWorkspace, queries } = props
+  const { title, saving, saveWorkspace } = props
   const classes = useStyles()
 
   return (
@@ -28,11 +28,11 @@ export default props => {
         style={{ margin: '10px', width: '70%' }}
         defaultValue={title}
         onBlur={e => {
-          saveWorkspace({ title: e.target.value, queries })
+          saveWorkspace({ title: e.target.value })
         }}
         onKeyDown={e => {
           if (e.key === 'Enter') {
-            saveWorkspace({ title: e.target.value, queries })
+            saveWorkspace({ title: e.target.value })
           }
         }}
         InputProps={{

@@ -14,9 +14,13 @@ export default () => {
       saveMetacard(id: $id, attributes: $attrs) {
         id
         title
+        queries {
+          id
+        }
       }
     }
   `
+
   const [save, { loading }] = useMutation(mutation)
   return [
     async (workspace: Workspace) => {
@@ -28,7 +32,7 @@ export default () => {
           id,
           attrs: {
             ...workspace,
-            queries,
+            ...(workspace.queries && { queries }),
             metacard_type: 'workspace',
           },
         },
