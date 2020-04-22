@@ -155,7 +155,7 @@ const { transformFilterToCQL } = require('./CQLUtils')
 const WILDCARD_FITLER = {
   property: 'anyText',
   type: 'ILIKE',
-  value: '%',
+  value: '*',
 }
 
 const getCql = ({ filterTree, cql }) => {
