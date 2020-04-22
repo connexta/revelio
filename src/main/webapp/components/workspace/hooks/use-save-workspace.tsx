@@ -24,15 +24,17 @@ export default () => {
   const [save, { loading }] = useMutation(mutation)
   return [
     async (workspace: Workspace) => {
-      const queries = (workspace.queries || []).map((query: QueryType) => ({
-        id: query.id,
-      }))
+      const queries =
+        workspace.queries &&
+        workspace.queries.map((query: QueryType) => ({
+          id: query.id,
+        }))
       save({
         variables: {
           id,
           attrs: {
             ...workspace,
-            ...(workspace.queries && { queries }),
+            queries,
             metacard_type: 'workspace',
           },
         },
