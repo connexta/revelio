@@ -14,7 +14,7 @@ const {
 import AttributeDropdown from '../filter/attribute-dropdown'
 
 import ComparatorDropdown from '../filter/comparator-dropdown'
-import { Box } from '@material-ui/core'
+import Box from '@material-ui/core/Box'
 
 const getDate = (value: any) => {
   if (value == null) return null

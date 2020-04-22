@@ -10,7 +10,7 @@
     "src/main/webapp/react-hooks/**/*",
     "src/main/webapp/intrigue-api/**/*",
     "src/main/webapp/theme/**/*",
-    "src/main/webapp/create-client-apollo.js"
+    "src/main/webapp/create-apollo-client.js"
   ],
   "exclude": [
     "node_modules",

@@ -8,7 +8,7 @@ import ResultFormSelect from './result-form-select'
 import SourceSelect from '../sources-select'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
-import { LinearProgress } from '@material-ui/core'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import InlineRetry from '../network-retry/inline-retry'
 import { useApolloFallback } from '../../react-hooks'
 
