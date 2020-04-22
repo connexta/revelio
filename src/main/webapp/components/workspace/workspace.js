@@ -164,7 +164,6 @@ export default () => {
             saving={saving}
             saveWorkspace={saveWorkspace}
             title={title}
-            queries={queries}
           />
           <Divider />
 

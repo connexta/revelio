@@ -14,15 +14,21 @@ export default () => {
       saveMetacard(id: $id, attributes: $attrs) {
         id
         title
+        queries {
+          id
+        }
       }
     }
   `
+
   const [save, { loading }] = useMutation(mutation)
   return [
     async (workspace: Workspace) => {
-      const queries = (workspace.queries || []).map((query: QueryType) => ({
-        id: query.id,
-      }))
+      const queries =
+        workspace.queries &&
+        workspace.queries.map((query: QueryType) => ({
+          id: query.id,
+        }))
       save({
         variables: {
           id,
