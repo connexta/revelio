@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { QueryType } from '../../query-builder/types'
 
-const queryAttributes = gql`
+export const queryAttributes = gql`
   fragment QueryAttributes on MetacardAttributes {
     title
     filterTree
