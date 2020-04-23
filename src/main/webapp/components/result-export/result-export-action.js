@@ -34,7 +34,7 @@ export const CompressedExportMetacardInteraction = props => {
     >
       <MetacardInteraction
         Icon={RedoIcon}
-        message="Export Selected (Comporessed)"
+        message="Export Selected (Compressed)"
       />
     </Box>
   )
