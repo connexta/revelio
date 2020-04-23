@@ -26,7 +26,8 @@ export default (onCreate: any) => {
   `
   const [create] = useMutation(mutation, {
     onCompleted: data => {
-      onCreate(data.createMetacard)
+      const { __typename, ...query } = data.createMetacard
+      onCreate(query)
     },
   })
 
