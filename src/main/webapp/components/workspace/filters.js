@@ -38,16 +38,23 @@ const Filters = ({ onApply, onChange }) => {
     [filters]
   )
 
-  useEffect(() => {
-    if (enable) {
-      onChange(filters)
-    } else {
-      onChange([])
-    }
-  }, [enable])
+  useEffect(
+    () => {
+      if (enable) {
+        onChange(filters)
+      } else {
+        onChange([])
+      }
+    },
+    [enable]
+  )
 
   return (
-    <Section title="Filters" enable={enable} onChange={() => setEnable(!enable)}>
+    <Section
+      title="Filters"
+      enable={enable}
+      onChange={() => setEnable(!enable)}
+    >
       <Box display="flex" alignItems="center" justifyContent="center">
         <Box padding="16px">
           <Button

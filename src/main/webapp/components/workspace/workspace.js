@@ -239,12 +239,14 @@ export default () => {
                   sources={status}
                   onRun={sources => {
                     //setPageIndex(0)
-                    onSearch(
-                      queryToSearch({
-                        ...queries.find(query => query.id === currentQuery),
-                        sources,
-                      })
+                    const searchQuery = queries.find(
+                      query => query.id === currentQuery
                     )
+                    const queryWithFilters = addFiltersToQuery(
+                      searchQuery,
+                      filters
+                    )
+                    onSearch(queryToSearch(queryWithFilters))
                   }}
                   onCancel={srcs => {
                     srcs.forEach(src => {
