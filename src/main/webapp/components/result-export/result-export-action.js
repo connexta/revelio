@@ -60,7 +60,7 @@ export const ExportMetacardInteraction = props => {
         })
       }}
     >
-      <MetacardInteraction Icon={RedoIcon} message="Export Selected" />
+      <MetacardInteraction Icon={RedoIcon} message={props.message} />
     </Box>
   )
 }

@@ -6,9 +6,10 @@ import IconButton from '@material-ui/core/IconButton'
 import Popover from '@material-ui/core/Popover'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
 import { ResultListInteraction } from '../lists/result-list-interaction'
-import { ExportAction } from '../result-export/result-export-action'
 import Divider from '@material-ui/core/Divider'
 import ResultCheckbox from './result-checkbox'
+import { MetacardInteractionsDropdown } from '../metacard-interaction'
+import { ExportMetacardInteraction } from '../result-export/result-export-action'
 
 export default props => {
   const { results, setLists, lists } = props
@@ -38,7 +39,6 @@ export default props => {
                     flexDirection: 'row',
                   }}
                 >
-                  <ExportAction result={metacard} />
                   <IconButton
                     onClick={e => {
                       setSelectedResult(metacard.attributes.id)
@@ -62,6 +62,12 @@ export default props => {
                     </IconButton>
                   ) : null}
                   {props.actions || null}
+                  <MetacardInteractionsDropdown size="small">
+                    <ExportMetacardInteraction
+                      result={metacard}
+                      message="Export Result"
+                    />
+                  </MetacardInteractionsDropdown>
                 </div>
               </Actions>
             </IndexCardItem>
