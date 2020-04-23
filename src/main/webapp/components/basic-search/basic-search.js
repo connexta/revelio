@@ -266,7 +266,7 @@ const createQuery = filterMap => {
 
   return {
     filterTree: toFilterTree(filterMap),
-    sources: sources || null,
+    sourceIds: sources || null,
     sorts,
   }
 }
