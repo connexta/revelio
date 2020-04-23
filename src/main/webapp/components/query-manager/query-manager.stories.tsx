@@ -47,6 +47,9 @@ stories.add('Basic', () => {
         onCreate={() => {
           action('onCreate')
         }}
+        onDelete={id => {
+          action('onDelete')(id)
+        }}
       />
     </NavigationBarContext.Provider>
   )
