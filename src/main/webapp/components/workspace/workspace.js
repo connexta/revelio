@@ -113,7 +113,7 @@ export default () => {
   const { loading, error, data } = useQuery(workspaceById, {
     variables: { ids: [id] },
     onCompleted: data => {
-      const queries = data.metacardsById[0].attributes[0].queries
+      const queries = data.metacardsById[0].attributes[0].queries || []
       const lists = data.metacardsById[0].attributes[0].lists
       lists &&
         setLists(
