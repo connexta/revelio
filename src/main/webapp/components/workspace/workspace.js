@@ -246,7 +246,12 @@ export default () => {
                       searchQuery,
                       filters
                     )
-                    onSearch(queryToSearch(queryWithFilters))
+                    onSearch(
+                      queryToSearch({
+                        ...searchQuery,
+                        sources,
+                      })
+                    )
                   }}
                   onCancel={srcs => {
                     srcs.forEach(src => {
