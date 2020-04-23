@@ -31,30 +31,38 @@ export default props => {
               <Divider />
               <Actions disableSpacing={true}>
                 <ResultCheckbox id={metacard.attributes.id} />
-                <ExportAction result={metacard} />
-                <IconButton
-                  onClick={e => {
-                    setSelectedResult(metacard.attributes.id)
-                    handleOpen(e)
+                <div
+                  style={{
+                    marginLeft: 'auto',
+                    display: 'flex',
+                    flexDirection: 'row',
                   }}
-                  size="small"
                 >
-                  <AddIcon />
-                </IconButton>
-                {metacard.attributes['resource-download-url'] ? (
+                  <ExportAction result={metacard} />
                   <IconButton
-                    onClick={() => {
-                      window.open(
-                        metacard.attributes['resource-download-url'],
-                        '_blank'
-                      )
+                    onClick={e => {
+                      setSelectedResult(metacard.attributes.id)
+                      handleOpen(e)
                     }}
                     size="small"
                   >
-                    <GetAppIcon />
+                    <AddIcon />
                   </IconButton>
-                ) : null}
-                {props.actions || null}
+                  {metacard.attributes['resource-download-url'] ? (
+                    <IconButton
+                      onClick={() => {
+                        window.open(
+                          metacard.attributes['resource-download-url'],
+                          '_blank'
+                        )
+                      }}
+                      size="small"
+                    >
+                      <GetAppIcon />
+                    </IconButton>
+                  ) : null}
+                  {props.actions || null}
+                </div>
               </Actions>
             </IndexCardItem>
           )),

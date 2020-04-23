@@ -7,7 +7,6 @@ export default props => {
   const { id } = props
   return (
     <Checkbox
-      style={{ marginRight: '50%' }}
       checked={selection.has(id)}
       size="small"
       onChange={() => {
