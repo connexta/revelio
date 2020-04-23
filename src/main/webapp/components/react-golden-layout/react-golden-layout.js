@@ -118,7 +118,7 @@ const useStyles = makeStyles(theme => {
           },
 
           '& .lm_tab.lm_active ': {
-            borderBottom: `2px solid ${primary}`,
+            border: `2px solid ${primary}`,
             '& .lm_title': {
               color: primary,
             },

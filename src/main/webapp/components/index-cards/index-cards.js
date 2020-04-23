@@ -13,6 +13,7 @@ import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import moment from 'moment'
+import { withStyles } from '@material-ui/core/styles'
 import { usePermissions } from '../../react-hooks'
 
 import { CustomTooltip } from '../tooltip'
@@ -105,6 +106,13 @@ export const AddCardItem = props => {
   )
 }
 
+const StyledCardHeader = withStyles({
+  content: {
+    width: '100%',
+    flex: '1 1 auto',
+  },
+})(CardHeader)
+
 export const IndexCardItem = props => {
   const {
     headerAction,
@@ -120,7 +128,7 @@ export const IndexCardItem = props => {
   return (
     <ItemContainer onClick={onClick}>
       <CardActionArea component={'div'}>
-        <CardHeader
+        <StyledCardHeader
           title={title}
           subheader={subHeader || moment(modified).fromNow()}
           action={headerAction}
