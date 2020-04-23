@@ -24,7 +24,7 @@ const {
 } = require('../result-export/result-export-action')
 
 const QueryCard = (props: QueryCardProps) => {
-  const { onSearch, query = {}, queryInteractions } = props
+  const { onSearch, onDelete, query = {}, queryInteractions } = props
   const [anchorEl, handleOpen, handleClose] = useAnchorEl()
   const [{ active: isDrawing }] = useDrawInterface()
   const [wasDrawing, setWasDrawing] = useState(false)
@@ -56,7 +56,7 @@ const QueryCard = (props: QueryCardProps) => {
       >
         <Actions attributes={attributes}>
           <EditAction onEdit={handleOpen} />
-          <DeleteAction />
+          <DeleteAction itemName="query" onDelete={onDelete} />
           <MetacardInteractionsDropdown>
             {queryInteractions.map((interaction, i) => {
               return (
@@ -79,7 +79,7 @@ const QueryCard = (props: QueryCardProps) => {
 }
 
 const QuerySelector = (props: QuerySelectorProps) => {
-  const { queries, currentQuery, onSearch, queryInteractions } = props
+  const { queries, currentQuery, onSearch, onDelete, queryInteractions } = props
   const hasQueries = queries && queries.length > 0
   const [anchorEl, handleOpen, handleClose, open] = useAnchorEl()
 
@@ -89,6 +89,7 @@ const QuerySelector = (props: QuerySelectorProps) => {
       query={query}
       key={query.id}
       onSearch={() => onSearch(query.id!)}
+      onDelete={() => onDelete(query.id!)}
     />
   ))
 
@@ -112,6 +113,7 @@ const QuerySelector = (props: QuerySelectorProps) => {
         ]}
         query={queries.find(query => query.id === currentQuery)}
         onSearch={() => onSearch(currentQuery)}
+        onDelete={() => onDelete(currentQuery)}
       />
       <Button
         color="primary"
@@ -155,6 +157,7 @@ const QueryManager = (props: QueryManagerProps) => {
     props.onSave(id)
     props.onSearch(id)
   }
+
   const queryInteractions = [
     (query: QueryType) => {
       return (

@@ -16,8 +16,14 @@ import QueryEditor from '../query-editor'
 import QueryManager from '../query-manager'
 import QueryStatus from '../query-status'
 import { ResultIndexCards } from '../results'
-import { useCreateQuery, useSaveQuery, useSaveWorkspace } from './hooks'
+import {
+  useCreateQuery,
+  useDeleteQuery,
+  useSaveQuery,
+  useSaveWorkspace,
+} from './hooks'
 import WorkspaceTitle from './workspace-title'
+import { get } from 'immutable'
 
 const LoadingComponent = () => <LinearProgress />
 
@@ -90,6 +96,17 @@ export default () => {
   const [queries, setQueries] = useState()
 
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
+
+  const deleteQuery = useDeleteQuery(id => {
+    const updatedQueries = queries.filter(query => query.id !== id)
+    setQueries(updatedQueries)
+    if (currentQuery === id) {
+      onClear()
+      setCurrentQuery(get(updatedQueries[0], 'id', null))
+    }
+
+    saveWorkspace({ queries: updatedQueries })
+  })
 
   const saveQuery = useSaveQuery()
   const [saveWorkspace, saving] = useSaveWorkspace()
@@ -193,6 +210,7 @@ export default () => {
                     )
                   }}
                   onCreate={createQuery}
+                  onDelete={deleteQuery}
                   onSave={id => {
                     saveQuery(queries.find(query => query.id === id))
                   }}
