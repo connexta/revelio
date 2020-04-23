@@ -20,6 +20,7 @@ const MetacardInteractionsDialogContext = createContext<any>({
 
 type MetacardInteractionsDropdownProps = {
   children: React.ReactNode
+  size?: 'small' | 'medium'
 }
 
 const MetacardInteractionsDropdown = (
@@ -36,7 +37,7 @@ const MetacardInteractionsDropdown = (
         }}
         style={{ marginLeft: 'auto' }}
       >
-        <IconButton onClick={open}>
+        <IconButton onClick={open} size={props.size}>
           <MoreVertIcon />
         </IconButton>
         <Menu anchorEl={anchorEl} open={isOpen} onClose={close}>

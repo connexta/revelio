@@ -102,7 +102,12 @@ const QuerySelector = (props: QuerySelectorProps) => {
             return <CompressedExportMetacardInteraction srcs={query.sources} />
           },
           (query: QueryType) => {
-            return <ExportMetacardInteraction srcs={query.sources} />
+            return (
+              <ExportMetacardInteraction
+                srcs={query.sources}
+                message="Export Selected"
+              />
+            )
           },
         ]}
         query={queries.find(query => query.id === currentQuery)}
