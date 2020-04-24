@@ -40,6 +40,12 @@ const SimpleSearch = props => {
     setShowInspector(true)
   }
 
+  const transformToSourceIds = query => {
+    if (query.sources) {
+      query.sourceIds = query.sources.map(source => source)
+      delete query.sources
+    }
+  }
   return (
     <div
       style={{
@@ -69,6 +75,7 @@ const SimpleSearch = props => {
               setPageIndex(0)
               setQuery(query)
               onClear()
+              transformToSourceIds(query)
               onSearch(query)
             }}
           />
