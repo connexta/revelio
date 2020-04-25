@@ -116,7 +116,7 @@ const useStyles = makeStyles(theme => {
             alignItems: 'center',
             justifyContent: 'space-between',
             boxShadow: 'none',
-            borderBottom: '1px solid white'
+            borderBottom: '1px solid white',
           },
 
           '& .lm_tab.lm_active ': {
