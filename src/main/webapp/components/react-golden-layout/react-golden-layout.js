@@ -98,6 +98,7 @@ const useStyles = makeStyles(theme => {
         '& .lm_tabs': {
           height: '100%',
           position: 'static',
+          boxSizong: 'border-box',
 
           '& .lm_title': {
             fontFamily,
@@ -115,6 +116,7 @@ const useStyles = makeStyles(theme => {
             alignItems: 'center',
             justifyContent: 'space-between',
             boxShadow: 'none',
+            borderBottom: '1px solid white'
           },
 
           '& .lm_tab.lm_active ': {

@@ -10,7 +10,6 @@ import Divider from '@material-ui/core/Divider'
 import ResultCheckbox from './result-checkbox'
 import { MetacardInteractionsDropdown } from '../metacard-interaction'
 import { ExportMetacardInteraction } from '../result-export/result-export-action'
-import { makeStyles } from '@material-ui/core/styles'
 
 export default props => {
   const { results, setLists, lists } = props
