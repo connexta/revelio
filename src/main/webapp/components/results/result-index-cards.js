@@ -27,6 +27,7 @@ export default props => {
               subHeader={' '}
               titleTypographyProps={{
                 variant: 'body1',
+                noWrap: true,
               }}
             >
               <Divider />
