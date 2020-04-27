@@ -26,6 +26,7 @@ import WorkspaceTitle from './workspace-title'
 import { get } from 'immutable'
 import Filters from './filters'
 import { defaultQuery } from '../query-builder/filter/filter-utils'
+import { AddQuery } from '../query-manager'
 
 const LoadingComponent = () => <LinearProgress />
 
@@ -218,6 +219,12 @@ export default () => {
             <Tab label="Search" />
             <Tab label="Lists" />
           </Tabs>
+
+          <AddQuery
+            QueryEditor={QueryEditor}
+            onCreate={createQuery}
+            showSecondarySection={tab === 0 && queries && queries.length === 0}
+          />
 
           {tab === 0 &&
             queries && (

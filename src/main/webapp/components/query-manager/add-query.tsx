@@ -9,7 +9,7 @@ const ReactDOM = require('react-dom')
 
 export default (props: AddQueryProps) => {
   const [query, setQuery] = React.useState({})
-  const { QueryEditor, queries, onCreate } = props
+  const { QueryEditor, onCreate, showSecondarySection } = props
 
   const navBarLeftRef = React.useContext(NavigationBarContext)
   const [anchorEl, setAnchorEl] = React.useState<any>(null)
@@ -21,7 +21,6 @@ export default (props: AddQueryProps) => {
     setAnchorEl(null)
   }
 
-  const hasQueries = queries && queries.length > 0
   const CreateSearch = () =>
     navBarLeftRef
       ? ReactDOM.createPortal(
@@ -36,7 +35,7 @@ export default (props: AddQueryProps) => {
     <React.Fragment>
       <CreateSearch />
 
-      {!hasQueries && (
+      {showSecondarySection && (
         <div style={{ textAlign: 'center', marginTop: '10px' }}>
           <Typography color="textSecondary">
             New searches will appear here

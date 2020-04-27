@@ -1,2 +1,2 @@
-import QueryManager from './query-manager'
-export { QueryManager as default }
+export { default } from './query-manager'
+export { default as AddQuery } from './add-query'

@@ -27,8 +27,9 @@ export type QuerySelectorProps = Overwrite<
   currentQuery: string
 }
 
-export type AddQueryProps = QuerySelectorProps & {
+export type AddQueryProps = Omit<QueryEditorProps, 'onSearch'> & {
   onCreate: (query: QueryType) => void
+  showSecondarySection: boolean
 }
 
 export type QueryEditorPopoverProps = QueryEditorProps & {
