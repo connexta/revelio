@@ -248,7 +248,7 @@ export default () => {
                     )
                     onSearch(
                       queryToSearch({
-                        ...searchQuery,
+                        ...queryWithFilters,
                         sources,
                       })
                     )
