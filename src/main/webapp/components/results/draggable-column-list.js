@@ -7,8 +7,7 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 
 const DroppableList = props => {
-  const { onDragEnd, onSelect, columns } = props
-  const { filterText, isDragDisabled } = props
+  const { onDragEnd, onSelect, columns, filterText, isDragDisabled } = props
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>

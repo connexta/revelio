@@ -92,7 +92,7 @@ const TransferListModal = props => {
       .filter(column => column.hidden)
       .map(column => column.title)
 
-    if (onColumnUpdate instanceof Function) {
+    if (typeof onColumnUpdate === 'function') {
       onColumnUpdate(order, hide)
     }
 

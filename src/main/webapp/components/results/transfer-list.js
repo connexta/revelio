@@ -10,6 +10,8 @@ import ListItemText from '@material-ui/core/ListItemText'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 
+import { reorderList } from '../../utils'
+
 import DroppableList from './draggable-column-list'
 
 const Attributes = props => {
@@ -135,11 +137,13 @@ const TransferList = props => {
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
-  const [lr] = list.splice(startIndex, 1)
-  list.splice(endIndex, 0, lr)
-  list.forEach((column, index) => (column.tableData.columnOrder = index))
+  const reorderedList = reorderList(list, startIndex, endIndex)
 
-  return list
+  reorderedList.forEach(
+    (column, index) => (column.tableData.columnOrder = index)
+  )
+
+  return reorderedList
 }
 
 const DisplayedColumns = props => {
@@ -157,14 +161,13 @@ const DisplayedColumns = props => {
       return
     }
 
-    const these_items = reorder(
+    const reorderedColumns = reorder(
       columns,
       result.source.index,
       result.destination.index
     )
 
-    //write it back up
-    onColumnChange(these_items)
+    onColumnChange(reorderedColumns)
   }
 
   return (
