@@ -51,7 +51,7 @@ const FilterWorkspaces = ({ onFilter, userAttributes }) => {
 
   return (
     <React.Fragment>
-      <List component="nav" style={{ maxWidth: '14%' }}>
+      <List component="nav" style={{ width: 'fit-content' }}>
         <ListItem button onClick={handleClickListItem}>
           <ListItemText
             primary="Filter workspaces"
