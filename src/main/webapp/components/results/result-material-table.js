@@ -55,7 +55,7 @@ const onColumnDragged = (onColumnUpdate, columns) => () => {
       .filter(column => column.hidden)
       .map(column => column.title)
 
-    onColumnUpdate(columnOrder, columnHide)
+    onColumnUpdate({ columnOrder, columnHide })
   }
 }
 

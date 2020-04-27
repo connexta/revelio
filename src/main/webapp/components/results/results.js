@@ -88,12 +88,12 @@ const TransferListModal = props => {
 
   const handleSave = () => {
     const order = columnOrder.map(column => column.title)
-    const hide = columnOrder
+    const columnHide = columnOrder
       .filter(column => column.hidden)
       .map(column => column.title)
 
     if (typeof onColumnUpdate === 'function') {
-      onColumnUpdate(order, hide)
+      onColumnUpdate({ columnOrder: order, columnHide })
     }
 
     onClose()
@@ -326,10 +326,10 @@ const Container = props => {
     )
   }
 
-  const onColumnUpdate = (columnOrder, columnHide) => {
+  const onColumnUpdate = columnChanges => {
     const newPreferences = mergeDeepOverwriteLists(
       fromJS(userPrefs),
-      fromJS({ columnOrder, columnHide })
+      fromJS(columnChanges)
     )
 
     if (!fromJS(userPrefs).equals(newPreferences)) {
