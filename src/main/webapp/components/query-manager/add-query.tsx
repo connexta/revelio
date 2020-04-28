@@ -7,9 +7,27 @@ import QueryEditorPopover from './query-editor-popover'
 import { AddQueryProps } from './types'
 const ReactDOM = require('react-dom')
 
+type CreateSearchProps = {
+  handleOpen: () => void
+}
+export const CreateSearch = (props: CreateSearchProps) => {
+  return (
+    <div style={{ textAlign: 'center', marginTop: '10px' }}>
+      <Typography color="textSecondary">
+        New searches will appear here
+        <br />
+        <SearchIcon style={{ fontSize: '9rem' }} />
+      </Typography>
+      <Button variant="contained" color="primary" onClick={props.handleOpen}>
+        Create a Search
+      </Button>
+    </div>
+  )
+}
+
 export default (props: AddQueryProps) => {
   const [query, setQuery] = React.useState({})
-  const { QueryEditor, onCreate, showSecondarySection } = props
+  const { QueryEditor, onCreate } = props
 
   const navBarLeftRef = React.useContext(NavigationBarContext)
   const [anchorEl, setAnchorEl] = React.useState<any>(null)
@@ -35,18 +53,8 @@ export default (props: AddQueryProps) => {
     <React.Fragment>
       <CreateSearch />
 
-      {showSecondarySection && (
-        <div style={{ textAlign: 'center', marginTop: '10px' }}>
-          <Typography color="textSecondary">
-            New searches will appear here
-            <br />
-            <SearchIcon style={{ fontSize: '9rem' }} />
-          </Typography>
-          <Button variant="contained" color="primary" onClick={handleOpen}>
-            Create a Search
-          </Button>
-        </div>
-      )}
+      {typeof props.render === 'function' && props.render(handleOpen)}
+
       <QueryEditorPopover
         query={query}
         QueryEditor={QueryEditor}

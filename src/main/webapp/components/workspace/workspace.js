@@ -26,7 +26,7 @@ import WorkspaceTitle from './workspace-title'
 import { get } from 'immutable'
 import Filters from './filters'
 import { defaultQuery } from '../query-builder/filter/filter-utils'
-import { AddQuery } from '../query-manager'
+import { AddQuery, CreateSearch } from '../query-manager'
 
 const LoadingComponent = () => <LinearProgress />
 
@@ -110,6 +110,7 @@ export default () => {
   const [lists, setLists] = useState(null)
   const [queries, setQueries] = useState()
   const [filters, setFilters] = useState()
+  const [tab, setTab] = useState(0)
 
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
@@ -133,6 +134,7 @@ export default () => {
     setCurrentQuery(query.id)
     saveWorkspace({ queries: [query, ...queries] })
     onSearch(queryToSearch(query))
+    setTab(0)
   })
 
   //eslint-disable-next-line no-unused-vars
@@ -140,8 +142,6 @@ export default () => {
     // TO-DO Implement save functionality
     // saveWorkspace({ lists })
   }
-
-  const [tab, setTab] = useState(0)
 
   const { loading, error, data } = useQuery(workspaceById, {
     variables: { ids: [id] },
@@ -223,7 +223,10 @@ export default () => {
           <AddQuery
             QueryEditor={QueryEditor}
             onCreate={createQuery}
-            showSecondarySection={tab === 0 && queries && queries.length === 0}
+            render={handleOpen => {
+              const shouldRender = tab === 0 && queries && queries.length === 0
+              return shouldRender && <CreateSearch handleOpen={handleOpen} />
+            }}
           />
 
           {tab === 0 &&

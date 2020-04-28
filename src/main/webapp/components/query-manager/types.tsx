@@ -29,7 +29,9 @@ export type QuerySelectorProps = Overwrite<
 
 export type AddQueryProps = Omit<QueryEditorProps, 'onSearch'> & {
   onCreate: (query: QueryType) => void
-  showSecondarySection: boolean
+  render: (
+    handleOpen: () => void
+  ) => React.FunctionComponent<{ handleOpen: () => void }>
 }
 
 export type QueryEditorPopoverProps = QueryEditorProps & {
