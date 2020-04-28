@@ -332,10 +332,7 @@ const Container = props => {
       fromJS(columnChanges)
     )
 
-    if (!fromJS(userPrefs).equals(newPreferences)) {
-      const userPreferences = newPreferences.toJS()
-      updateUserPrefs(userPreferences)
-    }
+    updateUserPrefs(newPreferences.toJS())
   }
 
   return (
