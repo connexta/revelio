@@ -12,7 +12,6 @@ import {
 } from '../index-cards'
 import { QueryType } from '../query-builder/types'
 import { WorkspaceContext } from '../workspace/workspace-context'
-import AddQuery from './add-query'
 import QueryEditorPopover from './query-editor-popover'
 import { QueryCardProps, QueryManagerProps, QuerySelectorProps } from './types'
 import { MetacardInteractionsDropdown } from '../metacard-interaction'
@@ -172,15 +171,12 @@ const QueryManager = (props: QueryManagerProps) => {
     },
   ]
   return (
-    <React.Fragment>
-      <AddQuery {...props} onChange={onChange} />
-      <QuerySelector
-        {...props}
-        queryInteractions={queryInteractions}
-        onChange={onChange}
-        onSearch={onSearch}
-      />
-    </React.Fragment>
+    <QuerySelector
+      {...props}
+      queryInteractions={queryInteractions}
+      onChange={onChange}
+      onSearch={onSearch}
+    />
   )
 }
 export default QueryManager
