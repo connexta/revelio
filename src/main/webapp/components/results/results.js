@@ -1,5 +1,5 @@
-import React, { useState, forwardRef } from 'react'
-import { Set, fromJS } from 'immutable'
+import React, { useState, memo } from 'react'
+import { Set, fromJS, OrderedSet } from 'immutable'
 import {
   useKeyPressed,
   useSelectionInterface,
@@ -14,49 +14,14 @@ import Less from '@material-ui/icons/UnfoldLess'
 import Thumbnail from '../thumbnail/thumbnail'
 import Button from '@material-ui/core/Button'
 
-import MaterialTable from 'material-table'
-
 import LinearProgress from '@material-ui/core/LinearProgress'
-import AddBox from '@material-ui/icons/AddBox'
-import ArrowDownward from '@material-ui/icons/ArrowDownward'
-import Check from '@material-ui/icons/Check'
-import ChevronLeft from '@material-ui/icons/ChevronLeft'
-import ChevronRight from '@material-ui/icons/ChevronRight'
-import Clear from '@material-ui/icons/Clear'
-import DeleteOutline from '@material-ui/icons/DeleteOutline'
-import Edit from '@material-ui/icons/Edit'
-import FilterList from '@material-ui/icons/FilterList'
-import FirstPage from '@material-ui/icons/FirstPage'
-import LastPage from '@material-ui/icons/LastPage'
-import Remove from '@material-ui/icons/Remove'
-import SaveAlt from '@material-ui/icons/SaveAlt'
-import Search from '@material-ui/icons/Search'
-import ViewColumn from '@material-ui/icons/ViewColumn'
-import ErrorMessage from '../network-retry/inline-retry'
 
-const tableIcons = {
-  Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-  Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-  Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-  Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-  DetailPanel: forwardRef((props, ref) => (
-    <ChevronRight {...props} ref={ref} />
-  )),
-  Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-  Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
-  Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-  FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-  LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-  NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-  PreviousPage: forwardRef((props, ref) => (
-    <ChevronLeft {...props} ref={ref} />
-  )),
-  ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-  Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-  SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
-  ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-  ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
-}
+import ErrorMessage from '../network-retry/inline-retry'
+import Dialog from '@material-ui/core/Dialog'
+
+import TransferList from './transfer-list'
+const MemoizedTransferList = memo(TransferList)
+import ResultsTable from './result-material-table'
 
 const cellStyles = {
   minWidth: 150,
@@ -112,6 +77,85 @@ const Description = props => {
   )
 }
 
+const TransferListModal = props => {
+  const { open, onClose, onColumnUpdate } = props
+
+  const [columnOrder, setColumnOrder] = useState(OrderedSet())
+
+  const handleCancel = () => {
+    onClose()
+  }
+
+  const handleSave = () => {
+    const order = columnOrder.map(column => column.title)
+    const columnHide = columnOrder
+      .filter(column => column.hidden)
+      .map(column => column.title)
+
+    if (typeof onColumnUpdate === 'function') {
+      onColumnUpdate({ columnOrder: order, columnHide })
+    }
+
+    onClose()
+  }
+
+  return (
+    <Dialog open={open}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          maxHeight: '100%',
+          padding: 20,
+          boxSizing: 'border-box',
+          ...props.style,
+        }}
+      >
+        <MemoizedTransferList setColumnOrder={setColumnOrder} {...props} />
+        <div
+          style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}
+        >
+          <Button variant="outlined" color="secondary" onClick={handleCancel}>
+            Cancel
+          </Button>
+          <div style={{ width: 10, display: 'inline-block' }} />
+          <Button variant="contained" color="primary" onClick={handleSave}>
+            Save
+          </Button>
+        </div>
+      </div>
+    </Dialog>
+  )
+}
+
+const ColumnOptions = props => {
+  const { columns, onColumnUpdate } = props
+  const [show, setShow] = useState(false)
+
+  return (
+    <div style={{ maxWidth: '100%' }}>
+      <TransferListModal
+        label="Columns"
+        open={show}
+        onClose={() => {
+          setShow(false)
+        }}
+        onColumnUpdate={onColumnUpdate}
+        columns={columns}
+        required
+      />
+      <Button
+        onClick={() => {
+          setShow(!show)
+        }}
+      >
+        Columns
+      </Button>
+    </div>
+  )
+}
+
 const computeSelected = (selection, allRows, rowData, start, end, e) => {
   const { id } = rowData
   if (e.ctrlKey || e.metaKey) {
@@ -154,22 +198,30 @@ const RenderAttribute = field => rowData => {
   return getCellContent(field, rowData[field])
 }
 
-const attributesToColumns = (attributes, hidden = false) => {
-  return attributes.map(attribute => {
-    return {
-      title: attribute,
-      field: attribute,
-      render: RenderAttribute(attribute),
-      hidden,
-    }
-  })
+const attributeToColumn = (attribute, hidden = true) => {
+  return {
+    title: attribute,
+    field: attribute,
+    render: RenderAttribute(attribute),
+    hidden,
+  }
 }
 
-const allAttributesToColumns = (displayedAttrs, hiddenAttrs) => {
-  const displayedColumns = attributesToColumns(displayedAttrs)
-  const hiddenColumns = attributesToColumns(hiddenAttrs, true)
+const attributesToColumns = (attributes, columnOrder, columnHide) => {
+  const mutableAttributes = attributes.asMutable()
 
-  return [...displayedColumns, ...hiddenColumns]
+  const orderedColumns = columnOrder.map(attribute => {
+    if (mutableAttributes.includes(attribute)) {
+      mutableAttributes.delete(attribute)
+    }
+    return attributeToColumn(attribute, columnHide.includes(attribute))
+  })
+
+  const otherColumns = mutableAttributes.map(attribute => {
+    return attributeToColumn(attribute, columnHide.includes(attribute))
+  })
+
+  return [...orderedColumns, ...otherColumns]
 }
 
 const getAttributeSet = result => {
@@ -186,10 +238,24 @@ const getAttributeKeysFromResults = results => {
 }
 
 const Results = props => {
-  const { results, attributes, onSelect, onColumnUpdate } = props
+  const {
+    results,
+    onSelect,
+    columnOrder = [],
+    hiddenColumns = [],
+    onColumnUpdate,
+  } = props
   const selection = Set(props.selection)
   const [lastSelected, setLastSelected] = useState(null)
   const allowTextSelect = !useKeyPressed('Shift')
+
+  if (Set(results).isEmpty()) {
+    return (
+      <Typography align="center" variant="h6">
+        Please select a result set to display the table.
+      </Typography>
+    )
+  }
 
   const data = results.map(result => {
     // need the copy because material-table adds a tableData object
@@ -202,16 +268,13 @@ const Results = props => {
     return attributes
   })
 
-  const allAttributes = getAttributeKeysFromResults(fromJS(results))
-  const hidden = allAttributes.subtract(fromJS(attributes))
+  const resultAttributes = getAttributeKeysFromResults(fromJS(results))
 
-  const columns = allAttributesToColumns(attributes, hidden)
-
-  const onSelectionChange = selectedRows => {
-    const selectedIds = selectedRows.map(rowData => rowData.id)
-    const setOfIds = Set(selectedIds)
-    onSelect(setOfIds)
-  }
+  const columns = attributesToColumns(
+    resultAttributes,
+    columnOrder,
+    hiddenColumns
+  )
 
   const onRowClick = (e, rowData) => {
     e.stopPropagation()
@@ -228,37 +291,16 @@ const Results = props => {
     setLastSelected(e.shiftKey ? lastSelected : rowId)
   }
 
-  const onColumnDragged = () => {
-    if (onColumnUpdate instanceof Function) {
-      const columnOrder = columns
-        .filter(column => !column.hidden)
-        .sort((a, b) => {
-          return a.tableData.columnOrder - b.tableData.columnOrder
-        })
-        .map(column => column.title)
-
-      onColumnUpdate(columnOrder)
-    }
-  }
-
   return (
     <div style={{ maxWidth: '100%' }}>
-      <MaterialTable
-        icons={tableIcons}
-        options={{ selection: true, showTitle: false }}
+      <ColumnOptions columns={columns} onColumnUpdate={onColumnUpdate} />
+      <ResultsTable
         columns={columns}
         data={data}
-        onSelectionChange={onSelectionChange}
+        onSelect={onSelect}
         onRowClick={onRowClick}
-        style={{
-          userSelect: allowTextSelect ? 'auto' : 'none',
-        }}
-        onColumnDragged={onColumnDragged}
-        localization={{
-          toolbar: {
-            searchPlaceholder: 'Search Results',
-          },
-        }}
+        allowTextSelect={allowTextSelect}
+        onColumnUpdate={onColumnUpdate}
       />
     </div>
   )
@@ -272,6 +314,7 @@ const Container = props => {
     updateUserPrefs,
     { error, loading, refetch },
   ] = useUserPrefs()
+
   if (loading) {
     return <LoadingComponent />
   }
@@ -283,21 +326,21 @@ const Container = props => {
     )
   }
 
+  const onColumnUpdate = columnChanges => {
+    const newPreferences = mergeDeepOverwriteLists(
+      fromJS(userPrefs),
+      fromJS(columnChanges)
+    )
+
+    updateUserPrefs(newPreferences.toJS())
+  }
+
   return (
     <WithSelectionInterface
       {...props}
-      attributes={userPrefs.columnOrder || props.attributes || []}
-      onColumnUpdate={columnOrder => {
-        const newPreferences = mergeDeepOverwriteLists(
-          fromJS(userPrefs),
-          fromJS({ columnOrder })
-        )
-
-        if (!fromJS(userPrefs).equals(newPreferences)) {
-          const userPreferences = newPreferences.toJS()
-          updateUserPrefs(userPreferences)
-        }
-      }}
+      columnOrder={userPrefs.columnOrder || props.attributes || []}
+      hiddenColumns={userPrefs.columnHide}
+      onColumnUpdate={onColumnUpdate}
     />
   )
 }

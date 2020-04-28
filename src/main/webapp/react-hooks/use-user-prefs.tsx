@@ -9,6 +9,7 @@ const query = gql`
         alertExpiration
         alertPersistence
         columnOrder
+        columnHide
         dateTimeFormat {
           datetimefmt
           timefmt
@@ -72,12 +73,14 @@ const useUserPrefs = () => {
     },
   })
   const onSetUserPrefs = (userPreferences: any) => {
-    setUserPrefs({
-      variables: { userPreferences },
-      optimisticResponse: {
-        updateUserPreferences: userPreferences,
-      },
-    })
+    if (!fromJS(userPrefs).equals(fromJS(userPreferences))) {
+      setUserPrefs({
+        variables: { userPreferences },
+        optimisticResponse: {
+          updateUserPreferences: userPreferences,
+        },
+      })
+    }
   }
 
   return [userPrefs, onSetUserPrefs, restOfQuery]
