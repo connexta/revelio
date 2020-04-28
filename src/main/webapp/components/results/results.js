@@ -254,6 +254,11 @@ const Results = props => {
           userSelect: allowTextSelect ? 'auto' : 'none',
         }}
         onColumnDragged={onColumnDragged}
+        localization={{
+          toolbar: {
+            searchPlaceholder: 'Search Results',
+          },
+        }}
       />
     </div>
   )

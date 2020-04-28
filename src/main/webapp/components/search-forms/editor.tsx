@@ -79,7 +79,7 @@ const Footer = (props: FooterProps) => {
         </Button>
         <Box style={{ width: 10, display: 'inline-block' }} />
         <Button variant="contained" color="primary" onClick={props.onSave}>
-          Save
+          Save Search Form
         </Button>
       </Box>
     </Box>

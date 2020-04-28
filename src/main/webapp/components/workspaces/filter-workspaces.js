@@ -2,6 +2,8 @@ import React from 'react'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 
@@ -49,12 +51,15 @@ const FilterWorkspaces = ({ onFilter, userAttributes }) => {
 
   return (
     <React.Fragment>
-      <List component="nav">
+      <List component="nav" style={{ width: 'fit-content' }}>
         <ListItem button onClick={handleClickListItem}>
           <ListItemText
             primary="Filter workspaces"
             secondary={options[selectedIndex]}
           />
+          <ListItemIcon>
+            <KeyboardArrowDownIcon />
+          </ListItemIcon>
         </ListItem>
       </List>
       <Menu

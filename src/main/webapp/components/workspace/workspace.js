@@ -234,7 +234,7 @@ export default () => {
                   }}
                   onChange={queries => setQueries(queries)}
                 />
-
+                {Object.keys(status).length !== 0 ? <Divider /> : null}
                 <QueryStatus
                   sources={status}
                   onRun={sources => {
@@ -263,6 +263,7 @@ export default () => {
                   onApply={() => onSearchQuery(currentQuery)}
                   onChange={filters => setFilters(filters)}
                 />
+                {Object.keys(status).length !== 0 ? <Divider /> : null}
                 <ResultIndexCards
                   results={results}
                   setLists={setLists}
