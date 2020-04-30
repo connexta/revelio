@@ -165,13 +165,13 @@ export default () => {
     },
   })
 
-  const onSearchQuery = id => {
+  const onSearchQuery = (id, resultCountOnly) => {
     const query = queries.find(query => query.id === id)
     const queryWithFilters = addFiltersToQuery(query, filters)
 
     onClear()
     setCurrentQuery(id)
-    onSearch(queryToSearch(queryWithFilters))
+    onSearch(queryToSearch(queryWithFilters), resultCountOnly)
   }
 
   if (loading) {
