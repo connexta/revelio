@@ -47,7 +47,7 @@ const ExpandButton = props => {
   )
 }
 
-const Description = props => {
+const Expandable = props => {
   const [expanded, setExpanded] = useState(false)
   const { text = '' } = props
   const long = text.length > 250
@@ -187,10 +187,8 @@ const getCellContent = (attribute, value) => {
           <Thumbnail src={value} />
         </div>
       )
-    case 'description':
-      return <Description text={value} />
     default:
-      return <Typography style={{ ...cellStyles }}>{value}</Typography>
+      return <Expandable text={value} />
   }
 }
 
