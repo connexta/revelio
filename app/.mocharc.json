@@ -1,0 +1,6 @@
+{
+  "file": "./test/mocha.setup.js",
+  "require": ["./test/babel-register.js", "esm"],
+  "extension": ["tsx", "js"],
+  "spec": ["./src/**/*.spec.js"]
+}

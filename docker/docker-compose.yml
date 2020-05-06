@@ -1,0 +1,29 @@
+version: "3.7"
+
+services:
+  graphql:
+    build: ../graphql
+    image: revelio/graphql:latest
+    restart: on-failure
+    environment:
+      - DDF_LOCATION=https://127.0.0.1:8993
+    ports:
+      - "8080:8080"
+    networks:
+      - revelio
+  app:
+    build: ../app
+    image: revelio/webapp:latest
+    restart: on-failure
+    environment:
+      - GRAPHQL_BASE_URL=http://localhost:8080/graphql
+    ports:
+      - "3000:3000"
+    networks:
+      - revelio
+    depends_on:
+      - graphql
+
+networks:
+  revelio:
+    name: revelio

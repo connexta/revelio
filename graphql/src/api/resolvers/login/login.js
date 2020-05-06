@@ -1,0 +1,33 @@
+const ROOT = '/search/catalog/internal'
+
+const typeDefs = `
+    extend type Mutation {
+        logIn(username: String!, password: String!): String
+    }`
+
+const btoa = (arg) => {
+  return Buffer.from(arg).toString('base64')
+}
+
+const logIn = async (parent, args, { fetch }) => {
+  const { username, password } = args
+  const authorization = 'Basic ' + btoa(`${username}:${password}`)
+  const res = await fetch(ROOT, {
+    headers: {
+      authorization,
+    },
+  })
+  const cookie = res.headers.get('set-cookie').split(';')[0]
+  return btoa(cookie)
+}
+
+const resolvers = {
+  Mutation: {
+    logIn,
+  },
+}
+
+module.exports = {
+  resolvers,
+  typeDefs,
+}
