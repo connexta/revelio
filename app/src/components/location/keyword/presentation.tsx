@@ -45,7 +45,7 @@ const Keyword: React.SFC<Props> = ({
         options={suggestions}
         loading={loading}
         inputValue={keyword}
-        onChange={(_, value) => {
+        onChange={(_e: any, value: any) => {
           if (value) {
             const { id, name } = value
             getGeoFeature({ id, name })

@@ -25,6 +25,9 @@ import { get } from 'immutable'
 import dynamic from 'next/dynamic'
 import Filters from './filters'
 import { defaultQuery } from '../query-builder/filter/filter-utils'
+import { AddQuery, CreateSearch } from '../query-manager'
+import Pagination from './pagination'
+import { useUserPrefs } from '../../react-hooks'
 
 const LoadingComponent = () => <LinearProgress />
 
@@ -65,9 +68,11 @@ const workspaceById = gql`
 
 const queryToSearch = (query, options = {}) => {
   const { sources, sorts, detail_level, filterTree } = query
-  const { resultCountOnly } = options
+  const { resultCountOnly, startIndex, pageSize } = options
+
   const pagingFields = {
-    pageSize: resultCountOnly && 0,
+    startIndex,
+    pageSize: resultCountOnly ? 0 : pageSize,
   }
   return {
     filterTree,
@@ -106,6 +111,7 @@ export default props => {
   const [queries, setQueries] = useState()
   const [filters, setFilters] = useState()
   const [tab, setTab] = useState(0)
+  const [page, setPage] = useState(1)
 
   const { results, status, onSearch, onCancel, onClear } = useQueryExecutor()
 
@@ -123,12 +129,16 @@ export default props => {
   const saveQuery = useSaveQuery()
   const [saveWorkspace, saving] = useSaveWorkspace(id)
 
+  const [userPrefs] = useUserPrefs()
+  const pageSize = get(userPrefs, 'resultCount', 0)
   const createQuery = useCreateQuery(query => {
     onClear()
     setQueries([query, ...queries])
     setCurrentQuery(query.id)
     saveWorkspace({ queries: [query, ...queries] })
-    onSearch(queryToSearch(query))
+    onSearch(queryToSearch(query, { pageSize }))
+    setTab(0)
+    setPage(1)
   })
 
   //eslint-disable-next-line no-unused-vars
@@ -159,13 +169,14 @@ export default props => {
     },
   })
 
-  const onSearchQuery = (id, options) => {
+  const onSearchQuery = (id, options = { pageSize }) => {
     const query = queries.find(query => query.id === id)
     const queryWithFilters = addFiltersToQuery(query, filters)
 
     onClear()
     setCurrentQuery(id)
     onSearch(queryToSearch(queryWithFilters, options))
+    setPage(options.page ? options.page : 1)
   }
 
   if (loading) {
@@ -252,25 +263,33 @@ export default props => {
                       ...queryWithFilters,
                       sources,
                     })
-                  )
-                }}
-                onCancel={srcs => {
-                  srcs.forEach(src => {
-                    onCancel(src)
-                  })
-                }}
-              />
-              <Filters
-                onApply={() => onSearchQuery(currentQuery)}
-                onChange={filters => setFilters(filters)}
-              />
-              <ResultIndexCards
-                results={results}
-                setLists={setLists}
-                lists={lists}
-              />
-            </React.Fragment>
-          )}
+                  }}
+                />
+                <Filters
+                  onApply={() => onSearchQuery(currentQuery)}
+                  onChange={filters => setFilters(filters)}
+                />
+                {Object.keys(status).length !== 0 ? <Divider /> : null}
+                {results.length > 0 && (
+                  <Pagination
+                    page={page}
+                    resultCount={
+                      Object.keys(status).length !== 0 &&
+                      status[Object.keys(status)[0]].info &&
+                      status[Object.keys(status)[0]].info.hits
+                    }
+                    onSelect={options => {
+                      onSearchQuery(currentQuery, options)
+                    }}
+                  />
+                )}
+                <ResultIndexCards
+                  results={results}
+                  setLists={setLists}
+                  lists={lists}
+                />
+              </React.Fragment>
+            )}
 
           {tab === 1 && (
             <React.Fragment>
