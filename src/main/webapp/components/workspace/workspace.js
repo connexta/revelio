@@ -71,8 +71,12 @@ const workspaceById = gql`
   }
 `
 
-const queryToSearch = query => {
+const queryToSearch = (query, options = {}) => {
   const { sources, sorts, detail_level, filterTree } = query
+  const { resultCountOnly } = options
+  const pagingFields = {
+    pageSize: resultCountOnly && 0,
+  }
   return {
     filterTree,
     sourceIds: sources,
@@ -87,6 +91,7 @@ const queryToSearch = query => {
         sortOrder: sort.substring(splitIndex + 1, sort.length),
       }
     }),
+    ...pagingFields,
     detail_level: detail_level === 'All Fields' ? undefined : detail_level,
   }
 }
@@ -165,13 +170,13 @@ export default () => {
     },
   })
 
-  const onSearchQuery = id => {
+  const onSearchQuery = (id, options) => {
     const query = queries.find(query => query.id === id)
     const queryWithFilters = addFiltersToQuery(query, filters)
 
     onClear()
     setCurrentQuery(id)
-    onSearch(queryToSearch(queryWithFilters))
+    onSearch(queryToSearch(queryWithFilters, options))
   }
 
   if (loading) {

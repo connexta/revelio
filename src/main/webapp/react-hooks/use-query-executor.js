@@ -140,7 +140,7 @@ const useQueryExecutor = () => {
         type: 'success',
         src,
         status: data.metacards.status,
-        results: data.metacards.results,
+        results: data.metacards.results || [],
       })
     },
     [dispatch]
