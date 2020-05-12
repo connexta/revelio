@@ -49,11 +49,11 @@ const onColumnDragged = (onColumnUpdate, columns) => () => {
       .sort((a, b) => {
         return a.tableData.columnOrder - b.tableData.columnOrder
       })
-      .map(column => column.title)
+      .map(column => column.original)
 
     const columnHide = columns
       .filter(column => column.hidden)
-      .map(column => column.title)
+      .map(column => column.original)
 
     onColumnUpdate({ columnOrder, columnHide })
   }
