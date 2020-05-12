@@ -54,16 +54,6 @@ const reducer = (state, action) => {
   }
 }
 
-const statusFragment = gql`
-  fragment StatusFragment on QueryResponse {
-    status {
-      count
-      hits
-      elapsed
-    }
-  }
-`
-
 const simpleSearch = gql`
   query SimpleSearch($filterTree: Json, $settings: QuerySettingsInput) {
     metacards(filterTree: $filterTree, settings: $settings) {
@@ -76,19 +66,13 @@ const simpleSearch = gql`
         }
         metacard
       }
-      ...StatusFragment
+      status {
+        count
+        hits
+        elapsed
+      }
     }
   }
-  ${statusFragment}
-`
-
-const resultCount = gql`
-  query SimpleSearch($filterTree: Json, $settings: QuerySettingsInput) {
-    metacards(filterTree: $filterTree, settings: $settings) {
-      ...StatusFragment
-    }
-  }
-  ${statusFragment}
 `
 
 const querySettingsInputKeys = [
@@ -163,7 +147,7 @@ const useQueryExecutor = () => {
   )
 
   const onSearch = useCallback(
-    async (query, resultCountOnly) => {
+    async query => {
       const { filterTree, ...settings } = query
       const querySettings = getQuerySettings(settings)
       if (!querySettings.sourceIds) {
@@ -183,7 +167,7 @@ const useQueryExecutor = () => {
       sourceIds.map(async src => {
         try {
           const { data } = await client.query({
-            query: resultCountOnly ? resultCount : simpleSearch,
+            query: simpleSearch,
             variables: {
               filterTree,
               settings: { ...querySettings, sourceIds: [src] },

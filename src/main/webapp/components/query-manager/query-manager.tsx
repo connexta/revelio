@@ -178,7 +178,7 @@ const QueryManager = (props: QueryManagerProps) => {
           message={'Refresh Result Count'}
           onRefresh={() => {
             const { id } = query
-            props.onSearch(id!, true)
+            props.onSearch(id!, { resultCountOnly: true })
           }}
         />
       )
