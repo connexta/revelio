@@ -87,10 +87,10 @@ const TransferListModal = props => {
   }
 
   const handleSave = () => {
-    const order = columnOrder.map(column => column.title)
+    const order = columnOrder.map(column => column.original)
     const columnHide = columnOrder
       .filter(column => column.hidden)
-      .map(column => column.title)
+      .map(column => column.original)
 
     if (typeof onColumnUpdate === 'function') {
       onColumnUpdate({ columnOrder: order, columnHide })
@@ -196,10 +196,19 @@ const RenderAttribute = field => rowData => {
   return getCellContent(field, rowData[field])
 }
 
+const fixFieldAttribute = attribute => {
+  if (attribute.includes('.')) {
+    return attribute.replace('.', '_')
+  }
+
+  return attribute
+}
+
 const attributeToColumn = (attribute, hidden = true) => {
   return {
     title: attribute,
-    field: attribute,
+    field: fixFieldAttribute(attribute),
+    original: attribute,
     render: RenderAttribute(attribute),
     hidden,
   }

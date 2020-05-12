@@ -15,7 +15,10 @@ import { WorkspaceContext } from '../workspace/workspace-context'
 import QueryEditorPopover from './query-editor-popover'
 import { QueryCardProps, QueryManagerProps, QuerySelectorProps } from './types'
 import { MetacardInteractionsDropdown } from '../metacard-interaction'
-import { DuplicateMetacardInteraction } from '../index-cards/metacard-interactions'
+import {
+  DuplicateMetacardInteraction,
+  RefreshMetacardInteraction,
+} from '../index-cards/metacard-interactions'
 const { useDrawInterface } = require('../../react-hooks')
 const {
   ExportMetacardInteraction,
@@ -165,6 +168,17 @@ const QueryManager = (props: QueryManagerProps) => {
           onDuplicate={() => {
             const { id: _, title, ...rest } = query
             props.onCreate({ ...rest, title: `${title}(1)` })
+          }}
+        />
+      )
+    },
+    (query: QueryType) => {
+      return (
+        <RefreshMetacardInteraction
+          message={'Refresh Result Count'}
+          onRefresh={() => {
+            const { id } = query
+            props.onSearch(id!, { resultCountOnly: true })
           }}
         />
       )

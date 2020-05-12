@@ -19,7 +19,7 @@ export type QueryCardProps = QueryEditorProps & {
 export type QuerySelectorProps = Overwrite<
   QueryCardProps,
   {
-    onSearch: (id: string) => void
+    onSearch: (id: string, options?: any) => void
     onDelete: (id: string) => void
   }
 > & {
