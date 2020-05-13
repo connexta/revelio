@@ -1,5 +1,7 @@
 import React, { useState, memo } from 'react'
-import { Set, fromJS, OrderedSet } from 'immutable'
+import { Set, fromJS, OrderedSet, getIn } from 'immutable'
+import gql from 'graphql-tag'
+import { useQuery } from '@apollo/react-hooks'
 import {
   useKeyPressed,
   useSelectionInterface,
@@ -196,6 +198,13 @@ const RenderAttribute = field => rowData => {
   return getCellContent(field, rowData[field])
 }
 
+/* This method is needed because material-table can use the column field 
+ * to look up values in data objects. 
+ * This was causing material-table to fail because some of our attribute names
+ * have a '.' in them. 
+ * Material-table was trying to parse the name and use
+ * the parts as object and property.
+ */
 const fixFieldAttribute = attribute => {
   if (attribute.includes('.')) {
     return attribute.replace('.', '_')
@@ -204,9 +213,9 @@ const fixFieldAttribute = attribute => {
   return attribute
 }
 
-const attributeToColumn = (attribute, hidden = true) => {
+const attributeToColumn = (attribute, hidden = true, attributeAliases) => {
   return {
-    title: attribute,
+    title: attributeAliases.get(attribute, attribute),
     field: fixFieldAttribute(attribute),
     original: attribute,
     render: RenderAttribute(attribute),
@@ -214,18 +223,31 @@ const attributeToColumn = (attribute, hidden = true) => {
   }
 }
 
-const attributesToColumns = (attributes, columnOrder, columnHide) => {
+const attributesToColumns = (
+  attributes,
+  columnOrder,
+  columnHide,
+  attributeAliases
+) => {
   const mutableAttributes = attributes.asMutable()
 
   const orderedColumns = columnOrder.map(attribute => {
     if (mutableAttributes.includes(attribute)) {
       mutableAttributes.delete(attribute)
     }
-    return attributeToColumn(attribute, columnHide.includes(attribute))
+    return attributeToColumn(
+      attribute,
+      columnHide.includes(attribute),
+      attributeAliases
+    )
   })
 
   const otherColumns = mutableAttributes.map(attribute => {
-    return attributeToColumn(attribute, columnHide.includes(attribute))
+    return attributeToColumn(
+      attribute,
+      columnHide.includes(attribute),
+      attributeAliases
+    )
   })
 
   return [...orderedColumns, ...otherColumns]
@@ -255,6 +277,7 @@ const Results = props => {
   const selection = Set(props.selection)
   const [lastSelected, setLastSelected] = useState(null)
   const allowTextSelect = !useKeyPressed('Shift')
+  const attributeAliases = fromJS(props.attributeAliases || {})
 
   if (Set(results).isEmpty()) {
     return (
@@ -280,7 +303,8 @@ const Results = props => {
   const columns = attributesToColumns(
     resultAttributes,
     columnOrder,
-    hiddenColumns
+    hiddenColumns,
+    attributeAliases
   )
 
   const onRowClick = (e, rowData) => {
@@ -313,22 +337,48 @@ const Results = props => {
   )
 }
 
+const attributeAliasQuery = gql`
+  query SearchSettings {
+    systemProperties {
+      attributeAliases
+    }
+  }
+`
+
 const LoadingComponent = () => <LinearProgress />
 
 const Container = props => {
   const [
     userPrefs,
     updateUserPrefs,
-    { error, loading, refetch },
+    {
+      error: userPrefsError,
+      loading: userPrefsLoading,
+      refetch: userPrefsRefetch,
+    },
   ] = useUserPrefs()
 
-  if (loading) {
+  const {
+    data: aliasData,
+    error: aliasError,
+    loading: aliasLoading,
+    refetch: aliasRefetch,
+  } = useQuery(attributeAliasQuery)
+
+  if (userPrefsLoading || aliasLoading) {
     return <LoadingComponent />
   }
-  if (error) {
+  if (userPrefsError) {
     return (
-      <ErrorMessage onRetry={refetch} error={error}>
+      <ErrorMessage onRetry={userPrefsRefetch} error={userPrefsError}>
         Error Retrieving Column Order
+      </ErrorMessage>
+    )
+  }
+  if (aliasError) {
+    return (
+      <ErrorMessage onRetry={aliasRefetch} error={aliasError}>
+        Error Retrieving Attribute Aliases
       </ErrorMessage>
     )
   }
@@ -348,6 +398,11 @@ const Container = props => {
       columnOrder={userPrefs.columnOrder || props.attributes || []}
       hiddenColumns={userPrefs.columnHide}
       onColumnUpdate={onColumnUpdate}
+      attributeAliases={getIn(
+        aliasData,
+        ['systemProperties', 'attributeAliases'],
+        {}
+      )}
     />
   )
 }

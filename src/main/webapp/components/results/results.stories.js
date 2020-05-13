@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Results } from './results'
 import { storiesOf } from '../../@storybook/react'
 
+import { object } from '@connexta/ace/@storybook/addon-knobs'
+
 import genResults from '../../sample-data/gen-results'
 
 const stories = storiesOf('Result', module)
@@ -15,6 +17,11 @@ const attributes = [
   'checksum',
   'id',
 ]
+
+const attributeAliases = {
+  title: 'aliased-title',
+  'made-up-attribute': 'still-fake',
+}
 
 stories.add('Basic', () => {
   const [selection, setSelected] = useState([])
@@ -41,6 +48,7 @@ stories.add('Basic', () => {
           attributes={attributes}
           selection={selection}
           onSelect={setSelected}
+          attributeAliases={object('Attribute Aliases', attributeAliases)}
         />
       </div>
     </div>
