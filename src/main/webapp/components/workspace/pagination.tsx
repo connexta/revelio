@@ -22,7 +22,7 @@ export default (props: PaginationProps) => {
   return (
     <Pagination
       page={page}
-      count={Math.floor(resultCount / pageSize)}
+      count={Math.ceil(resultCount / pageSize)}
       onChange={onChange}
     />
   )
