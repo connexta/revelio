@@ -1,8 +1,11 @@
-sudo: 'required'
+sudo: "required"
 services:
-  - 'docker'
+  - "docker"
 node_js:
-  - '10.16.1'
+  - "10.16.1"
+env:
+  - TEST_DIR=app
+  - TEST_DIR=graphql
 cache: yarn
 before_install:
   - nvm install 10
@@ -10,20 +13,25 @@ before_install:
   - export PATH="$HOME/.yarn/bin:$PATH"
 script:
   - set -e
+  - cd $TEST_DIR
   - yarn install --frozen-lockfile
   - yarn test
-  - yarn build
-  - cp RoadMap.html target/storybook/.
   - set +e
 branches:
   only:
     - master
     - docker
+before_deploy:
+  - cp RoadMap.html target/github-pages/.
+  - cd app
+  - yarn install --frozen-lockfile
+  - yarn build:storybook
+  - mv target/storybook ../target/github-pages/.
 deploy:
   - provider: pages
     skip-cleanup: true
     github-token: $GITHUB_TOKEN
-    local-dir: target/storybook/
+    local-dir: target/github-pages/
     target-branch: gh-pages
     on:
       branch: master

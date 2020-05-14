@@ -1,0 +1,50 @@
+{
+  "name": "@connexta/revelio-graphql",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --inspect -r ts-node/register ./src/index.tsx",
+    "prebuild": "rimraf dist",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "fmt": "prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
+    "lint": "eslint .",
+    "test:prettier": "prettier --check \"**/*.{js,jsx,ts,tsx,json}\"",
+    "test": "yarn test:prettier && yarn lint && yarn build",
+    "copy:package": "cpx package.json dist",
+    "prebuild:library": "rimraf dist && yarn copy:package",
+    "build:library": "tsc -p library.tsconfig.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "abort-controller": "^3.0.0",
+    "apollo-server-express": "^2.12.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "graphql": "^15.0.0",
+    "immutable": "^4.0.0-rc.12",
+    "isomorphic-fetch": "^2.2.1",
+    "moment": "^2.25.3",
+    "querystring": "^0.2.0",
+    "universal-cookie": "^4.0.3",
+    "url": "^0.11.0",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/compression": "^1.7.0",
+    "@types/isomorphic-fetch": "^0.0.35",
+    "@types/uuid": "^7.0.3",
+    "@typescript-eslint/eslint-plugin": "^2.31.0",
+    "@typescript-eslint/parser": "^2.31.0",
+    "cpx": "^1.5.0",
+    "eslint": "^6.8.0",
+    "nodemon": "^2.0.3",
+    "prettier": "^2.0.5",
+    "rimraf": "^3.0.2",
+    "ts-node": "^8.10.1",
+    "typescript": "^3.8.3"
+  }
+}

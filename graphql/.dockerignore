@@ -1,0 +1,10 @@
+.git
+.project
+.vscode
+.settings
+.vs_code
+.settings
+target/
+node_modules/
+dist/
+yarn-error.log
