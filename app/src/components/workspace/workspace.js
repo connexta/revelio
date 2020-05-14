@@ -25,7 +25,6 @@ import { get } from 'immutable'
 import dynamic from 'next/dynamic'
 import Filters from './filters'
 import { defaultQuery } from '../query-builder/filter/filter-utils'
-import { AddQuery, CreateSearch } from '../query-manager'
 import Pagination from './pagination'
 import { useUserPrefs } from '../../react-hooks'
 import Box from '@material-ui/core/Box'
@@ -265,49 +264,55 @@ export default props => {
                       ...queryWithFilters,
                       sources,
                     })
-                  }}
-                />
+                  )
+                }}
+                onCancel={srcs => {
+                  srcs.forEach(src => {
+                    onCancel(src)
+                  })
+                }}
+              />
 
-                {Object.keys(status).length !== 0 ? <Divider /> : null}
-                <Box
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    flexGrow: 1,
-                    maxHeight: 'calc(53vh - 32px)',
-                  }}
-                >
-                  <Box style={{ flexGrow: 1, overflowY: 'auto' }}>
-                    <Filters
-                      onApply={() => onSearchQuery(currentQuery)}
-                      onChange={filters => setFilters(filters)}
-                    />
-                    <ResultIndexCards
-                      results={results}
-                      setLists={setLists}
-                      lists={lists}
-                    />
-                  </Box>
-
-                  <Box style={{ flexShrink: 0 }}>
-                    {results.length > 0 && (
-                      <Pagination
-                        page={page}
-                        resultCount={
-                          Object.keys(status).length !== 0 &&
-                          status[Object.keys(status)[0]].info &&
-                          status[Object.keys(status)[0]].info.hits
-                        }
-                        onSelect={options => {
-                          onSearchQuery(currentQuery, options)
-                        }}
-                      />
-                    )}
-                  </Box>
+              {Object.keys(status).length !== 0 ? <Divider /> : null}
+              <Box
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  flexGrow: 1,
+                  maxHeight: 'calc(53vh - 32px)',
+                }}
+              >
+                <Box style={{ flexGrow: 1, overflowY: 'auto' }}>
+                  <Filters
+                    onApply={() => onSearchQuery(currentQuery)}
+                    onChange={filters => setFilters(filters)}
+                  />
+                  <ResultIndexCards
+                    results={results}
+                    setLists={setLists}
+                    lists={lists}
+                  />
                 </Box>
-              </React.Fragment>
-            )}
+
+                <Box style={{ flexShrink: 0 }}>
+                  {results.length > 0 && (
+                    <Pagination
+                      page={page}
+                      resultCount={
+                        Object.keys(status).length !== 0 &&
+                        status[Object.keys(status)[0]].info &&
+                        status[Object.keys(status)[0]].info.hits
+                      }
+                      onSelect={options => {
+                        onSearchQuery(currentQuery, options)
+                      }}
+                    />
+                  )}
+                </Box>
+              </Box>
+            </React.Fragment>
+          )}
 
           {tab === 1 && (
             <React.Fragment>
