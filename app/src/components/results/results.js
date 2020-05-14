@@ -198,10 +198,10 @@ const RenderAttribute = field => rowData => {
   return getCellContent(field, rowData[field])
 }
 
-/* This method is needed because material-table can use the column field 
- * to look up values in data objects. 
+/* This method is needed because material-table can use the column field
+ * to look up values in data objects.
  * This was causing material-table to fail because some of our attribute names
- * have a '.' in them. 
+ * have a '.' in them.
  * Material-table was trying to parse the name and use
  * the parts as object and property.
  */
