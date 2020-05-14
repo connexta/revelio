@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Results } from './results'
 import { storiesOf } from '../../@storybook/react'
 
-import { object } from '@connexta/ace/@storybook/addon-knobs'
+import { object } from '@storybook/addon-knobs'
 
 import genResults from '../../sample-data/gen-results'
 
