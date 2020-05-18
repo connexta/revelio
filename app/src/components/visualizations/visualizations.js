@@ -13,7 +13,7 @@ import Histogram from '../histogram/histogram'
 import Inspector from '../inspector/inspector'
 import ResultTable from '../results/results'
 import Gallery from '../gallery'
-
+import OtherMap from '../3d-map'
 import {
   ClusterMap,
   RENDERER_STYLE,
@@ -44,6 +44,11 @@ const AddVisualization = () => {
       type: 'component',
       title: '2D Map',
       componentName: '2d-map',
+    },
+    '3D Map': {
+      type: 'component',
+      title: '3D Map',
+      componentName: '3d-map',
     },
     Table: {
       type: 'component',
@@ -281,6 +286,7 @@ const Visualizations = props => {
     inspector: InspectorVis,
     table: TableVis,
     '2d-map': MapVis,
+    '3d-map': OtherMap,
     histogram: HistogramVis,
     gallery: GalleryVis,
   }

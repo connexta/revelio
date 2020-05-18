@@ -63,5 +63,5 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'warn',
     ...graphqlRules(),
   },
-  ignorePatterns: ['node_modules/', 'target/'],
+  ignorePatterns: ['node_modules/', 'target/', 'public/Cesium/'],
 }
