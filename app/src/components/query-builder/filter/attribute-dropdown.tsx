@@ -31,7 +31,7 @@ const AttributeDropdown = (
         disableClearable
         options={attributeDefinitions.map(definition => definition.id)}
         value={filter.property}
-        onChange={(_, newProperty: string) => {
+        onChange={(_: any, newProperty: string) => {
           const prevType = getType(filter.property)
           const newType = getType(newProperty)
           if (prevType !== newType) {
