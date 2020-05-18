@@ -1,6 +1,6 @@
 import url from 'url'
 const defaultDdfUrl = 'https://localhost:8993'
-const defaultWebappUrl = 'http://localhost:3000'
+const defaultWebappUrl = 'https://localhost:3000'
 const parsableAttributes: Record<string, any> = {
   FETCH_ORIGIN: () =>
     process.env['FETCH_ORIGIN'] && url.parse(process.env['FETCH_ORIGIN']),

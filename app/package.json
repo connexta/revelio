@@ -2,10 +2,10 @@
   "name": "@connexta/revelio",
   "version": "2.0.0",
   "scripts": {
-    "dev": "next",
+    "dev": "cross-env NODE_ENV=development node src/server.js",
     "build": "next build",
     "build:storybook": "build-storybook -c .storybook -o target/storybook",
-    "start": "next start",
+    "start": "cross-env NODE_ENV=production node src/server.js",
     "fmt": "prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
     "storybook": "start-storybook -p 8081 -c .storybook",
     "lint": "eslint .",
@@ -33,6 +33,7 @@
     "golden-layout": "^1.5.9",
     "graphql": "^14.0.2",
     "graphql-tag": "2.10.3",
+    "https": "^1.0.0",
     "immutable": "^4.0.0-rc.12",
     "isomorphic-unfetch": "^3.0.0",
     "lodash.throttle": "^4.1.1",
@@ -48,6 +49,7 @@
     "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^16.7.0",
     "universal-cookie": "^4.0.3",
+    "url": "^0.11.0",
     "uuid": "^7.0.3"
   },
   "license": "ISC",

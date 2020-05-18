@@ -3,7 +3,7 @@ import getConfig from 'next/config'
 const { publicRuntimeConfig } = getConfig()
 
 const defaultConfig = {
-  GRAPHQL_BASE_URL: 'http://localhost:8080/graphql',
+  GRAPHQL_BASE_URL: 'https://localhost:8080/graphql',
 }
 
 module.exports = key => {

@@ -2,6 +2,8 @@ import express from 'express'
 import apolloServer from './apollo-server'
 import compression from 'compression'
 import config from './configuration'
+import https from 'https'
+import fs from 'fs'
 const app = express()
 const port = config('EXPRESS_PORT')
 
@@ -36,6 +38,14 @@ app.use(compression())
 
 app.use('/graphql', apolloServer)
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`)
-})
+https
+  .createServer(
+    {
+      key: fs.readFileSync('../server.key'),
+      cert: fs.readFileSync('../server.crt'),
+    },
+    app
+  )
+  .listen(port, () => {
+    console.log(`Server is running on port ${port}`)
+  })

@@ -21,6 +21,7 @@ export const initOnContext = ctx => {
   // as antipattern since it disables project wide Automatic Static Optimization.
   if (process.env.NODE_ENV === 'development') {
     if (inAppContext) {
+      // eslint-disable-next-line no-console
       console.warn(
         'Warning: You have opted-out of Automatic Static Optimization due to `withApollo` in `pages/_app`.\n' +
           'Read more: https://err.sh/next.js/opt-out-auto-static-optimization\n'
@@ -152,6 +153,7 @@ export const withApollo = ({ ssr = false } = {}) => PageComponent => {
             // Prevent Apollo Client GraphQL errors from crashing SSR.
             // Handle them in components via the data.error prop:
             // https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-query-data-error
+            // eslint-disable-next-line no-console
             console.error('Error while running `getDataFromTree`', error)
           }
 
