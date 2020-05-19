@@ -33,7 +33,7 @@ deploy:
   - provider: pages
     skip-cleanup: true
     github-token: $GITHUB_TOKEN
-    local-dir: target/github-pages/
+    local-dir: $TRAVIS_BUILD_DIR/target/github-pages/
     target-branch: gh-pages
     on:
       branch: master
