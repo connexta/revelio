@@ -22,11 +22,13 @@ branches:
     - master
     - docker
 before_deploy:
-  - cp RoadMap.html target/github-pages/.
+  - cd $TRAVIS_BUILD_DIR
+  - mkdir -p target/github-pages/
+  - cp RoadMap.html target/github-pages/
   - cd app
   - yarn install --frozen-lockfile
   - yarn build:storybook
-  - mv target/storybook ../target/github-pages/.
+  - mv target/storybook ../target/github-pages/
 deploy:
   - provider: pages
     skip-cleanup: true
