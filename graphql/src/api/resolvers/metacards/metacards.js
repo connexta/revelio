@@ -223,8 +223,8 @@ const queries = (ids = []) => async (args, context) => {
   return res.attributes
 }
 
-const lists = (lists, toGraphqlName) => async () => {
-  return lists.map(list => renameKeys(toGraphqlName, list))
+const lists = (lists, toGraphqlName) => {
+  return lists ? lists.map((list) => renameKeys(toGraphqlName, list)) : []
 }
 
 const makeActionIdUnique = (id, action) => {
@@ -503,8 +503,10 @@ const saveMetacard = async (parent, args, context) => {
     attributes = setIn(attributes, ['queries'], queries)
   }
 
-  if(attributes.lists) {
-    attributes.lists = attributes.lists.map(list => renameKeys(fromGraphqlName, list))
+  if (attributes.lists) {
+    attributes.lists = attributes.lists.map((list) =>
+      renameKeys(fromGraphqlName, list)
+    )
   }
 
   const newMetacardAttrs = merge(oldMetacardAttrs, attributes)
