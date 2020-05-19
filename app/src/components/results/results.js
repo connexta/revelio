@@ -393,7 +393,7 @@ const Container = props => {
     <WithSelectionInterface
       {...props}
       columnOrder={userPrefs.columnOrder || props.attributes || []}
-      hiddenColumns={userPrefs.columnHide}
+      hiddenColumns={userPrefs.columnHide || []}
       onColumnUpdate={onColumnUpdate}
       attributeAliases={getIn(
         aliasData,
