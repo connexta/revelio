@@ -14,7 +14,10 @@ import Popover from '@material-ui/core/Popover'
 import Box from '@material-ui/core/Box'
 import { v4 as newUuid } from 'uuid'
 import { AudioIcon, ImageIcon, TargetIcon, VideoIcon } from './icons'
+import { FilterList } from '../workspace/filters'
+import { defaultFilter } from '../query-builder/filter/filter-utils'
 
+const anyTextFilter = { ...defaultFilter, value: '*' }
 const iconList = {
   folder: <FolderIcon />,
   code: <CodeIcon />,
@@ -77,10 +80,14 @@ export const ListCreate = props => {
       id: newUuid().replace(/-/g, ''),
       list_icon: 'folder',
       list_bookmarks: [],
+      list_cql: undefined,
       query: undefined,
       title: 'Untitled List',
     }
   )
+  const [filters, setFilters] = React.useState([anyTextFilter])
+  const [showFilters, setShowFilters] = React.useState(false)
+  const [filterType, setFilterType] = React.useState('AND')
 
   const handleIconChange = event => {
     setList({ ...list, list_icon: event.target.value })
@@ -111,10 +118,56 @@ export const ListCreate = props => {
           { label: 'Yes', value: true },
           { label: 'No', value: false },
         ]}
-        value={list.useFilter === true}
-        onChange={e => setList({ ...list, useFilter: e })}
+        value={showFilters === true}
+        onChange={e => setShowFilters(e)}
       />
-      {/*TODO Add Filtering capablities*/}
+      {showFilters ? (
+        <React.Fragment>
+          <Box display="flex" alignItems="center" justifyContent="center">
+            <TextField
+              select
+              label="Type"
+              value={filterType}
+              onChange={e => {
+                setFilterType(e.target.value)
+                setList({
+                  ...list,
+                  list_cql: `{type=${filterType}, filters=${JSON.stringify(
+                    filters
+                  )}}`,
+                })
+              }}
+              style={{ height: '100%', width: '50%', padding: '10px' }}
+            >
+              <MenuItem key="AND" value="AND">
+                AND
+              </MenuItem>
+              <MenuItem key="OR" value="OR">
+                OR
+              </MenuItem>
+            </TextField>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={() => {
+                setList({
+                  ...list,
+                  list_cql: `{type=${filterType}, filters=${JSON.stringify([
+                    ...filters,
+                    anyTextFilter,
+                  ])}}`,
+                })
+                setFilters([...filters, anyTextFilter])
+              }}
+            >
+              Add filter
+            </Button>
+          </Box>
+          <Box maxHeight="200px" overflow="auto" marginBottom="25px">
+            <FilterList filters={filters} onChange={setFilters} />
+          </Box>
+        </React.Fragment>
+      ) : null}
       <TextField
         select
         variant="outlined"

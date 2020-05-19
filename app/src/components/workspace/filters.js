@@ -9,7 +9,7 @@ import Filter from '../query-builder/filter/individual-filter'
 
 const anyTextFilter = { ...defaultFilter, value: '*' }
 
-const FilterList = ({ filters, onChange }) =>
+export const FilterList = ({ filters, onChange }) =>
   filters.map((filter, i) => (
     <Box key={i} style={{ padding: '0px 16px' }}>
       <Filter
