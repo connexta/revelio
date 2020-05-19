@@ -141,10 +141,8 @@ export default props => {
     setPage(1)
   })
 
-  //eslint-disable-next-line no-unused-vars
   const saveListsToWorkspace = lists => {
-    // TO-DO Implement save functionality
-    // saveWorkspace({ lists })
+    saveWorkspace({ lists })
   }
 
   const { loading, error, data } = useQuery(workspaceById, {

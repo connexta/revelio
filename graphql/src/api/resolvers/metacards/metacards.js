@@ -223,12 +223,8 @@ const queries = (ids = []) => async (args, context) => {
   return res.attributes
 }
 
-const lists = (id, fetch, toGraphqlName) => async () => {
-  const res = await fetch(`${ROOT}/workspaces/${id}`)
-  const data = await res.json()
-  return data.lists !== undefined
-    ? data.lists.map((list) => renameKeys(toGraphqlName, list))
-    : null
+const lists = (lists, toGraphqlName) => async () => {
+  return lists.map(list => renameKeys(toGraphqlName, list))
 }
 
 const makeActionIdUnique = (id, action) => {
@@ -315,7 +311,7 @@ const metacards = async (parent, args, context) => {
     return {
       ...attributes,
       queries: queries(attributes.queries),
-      lists: lists(attributes.id, fetch, toGraphqlName),
+      lists: lists(attributes.lists, toGraphqlName),
       thumbnail: createThumbnailUrl(result),
       filterTree: () => filterTree && JSON.parse(filterTree),
     }
@@ -505,6 +501,10 @@ const saveMetacard = async (parent, args, context) => {
   if (attributes.queries) {
     const queries = attributes.queries.map((query) => query.id)
     attributes = setIn(attributes, ['queries'], queries)
+  }
+
+  if(attributes.lists) {
+    attributes.lists = attributes.lists.map(list => renameKeys(fromGraphqlName, list))
   }
 
   const newMetacardAttrs = merge(oldMetacardAttrs, attributes)
