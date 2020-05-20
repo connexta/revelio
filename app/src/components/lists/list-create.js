@@ -205,8 +205,8 @@ export const ListCreate = props => {
           color="secondary"
           style={{ width: '49%' }}
           onClick={() => {
+            onSave(list)
             props.setList(list)
-            onSave()
             onClose()
           }}
         >

@@ -140,7 +140,7 @@ const Lists = props => {
       })
     : []
 
-  return lists ? (
+  return lists.length !== 0 ? (
     <React.Fragment>
       <div style={{ display: 'flex' }}>
         {selected

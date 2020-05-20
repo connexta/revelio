@@ -141,8 +141,9 @@ export default props => {
     setPage(1)
   })
 
-  const saveListsToWorkspace = lists => {
-    saveWorkspace({ lists })
+  const saveListsToWorkspace = list => {
+    debugger
+    saveWorkspace({ lists: [...lists, list] })
   }
 
   const { loading, error, data } = useQuery(workspaceById, {
@@ -290,6 +291,7 @@ export default props => {
                     results={results}
                     setLists={setLists}
                     lists={lists}
+                    saveLists={saveListsToWorkspace}
                   />
                 </Box>
 

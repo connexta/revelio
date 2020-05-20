@@ -12,7 +12,7 @@ import { MetacardInteractionsDropdown } from '../metacard-interaction'
 import { ExportMetacardInteraction } from '../result-export/result-export-action'
 
 export default props => {
-  const { results, setLists, lists } = props
+  const { results, setLists, lists, saveLists } = props
   const [selectedResult, setSelectedResult] = React.useState(null)
   const [anchorEl, handleOpen, handleClose, isOpen] = useAnchorEl()
 
@@ -104,6 +104,7 @@ export default props => {
               setLists([...lists, list])
             }
           }}
+          saveLists={saveLists}
         />
       </Popover>
     </React.Fragment>
