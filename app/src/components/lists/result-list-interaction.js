@@ -5,21 +5,11 @@ import { ListCreatePopover } from './list-create'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
-import FolderIcon from '@material-ui/icons/Folder'
 import Divider from '@material-ui/core/Divider'
 import Checkbox from '@material-ui/core/Checkbox'
-import CodeIcon from '@material-ui/icons/Code'
-import ArchiveIcon from '@material-ui/icons/Archive'
-import ListIcon from '@material-ui/icons/List'
 import FormLabel from '@material-ui/core/FormLabel'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
-
-const iconList = {
-  folder: <FolderIcon />,
-  code: <CodeIcon />,
-  archive: <ArchiveIcon />,
-  tasks: <ListIcon />,
-}
+import ListIcons from './icons'
 
 const CreateNewList = props => {
   const [anchorEl, handleOpen, handleClose, isOpen] = useAnchorEl()
@@ -59,7 +49,7 @@ const List = props => {
           }
         }}
       />
-      <ListItemIcon>{iconList[list.list_icon]}</ListItemIcon>
+      <ListItemIcon>{ListIcons[list.list_icon]}</ListItemIcon>
       <ListItemText primary={list.title} />
     </MenuItem>
   )

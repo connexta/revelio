@@ -1,8 +1,4 @@
 import React from 'react'
-import FolderIcon from '@material-ui/icons/Folder'
-import ArchiveIcon from '@material-ui/icons/Archive'
-import CodeIcon from '@material-ui/icons/Code'
-import ListIcon from '@material-ui/icons/List'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import FormControl from '@material-ui/core/FormControl'
@@ -13,21 +9,11 @@ import { RadioButton } from '../input'
 import Popover from '@material-ui/core/Popover'
 import Box from '@material-ui/core/Box'
 import { v4 as newUuid } from 'uuid'
-import { AudioIcon, ImageIcon, TargetIcon, VideoIcon } from './icons'
+import ListIcons from './icons'
 import { FilterList } from '../workspace/filters'
 import { defaultFilter } from '../query-builder/filter/filter-utils'
 
 const anyTextFilter = { ...defaultFilter, value: '*' }
-const iconList = {
-  folder: <FolderIcon />,
-  code: <CodeIcon />,
-  archive: <ArchiveIcon />,
-  tasks: <ListIcon />,
-  audio: <AudioIcon />,
-  image: <ImageIcon />,
-  target: <TargetIcon />,
-  video: <VideoIcon />,
-}
 
 const ListIconType = props => {
   const { label } = props
@@ -38,7 +24,7 @@ const ListIconType = props => {
         alignItems: 'center',
       }}
     >
-      <ListItemIcon>{iconList[label]}</ListItemIcon>
+      <ListItemIcon>{ListIcons[label]}</ListItemIcon>
       <ListItemText primary={label} />
     </div>
   )
@@ -176,7 +162,7 @@ export const ListCreate = props => {
         onChange={handleIconChange}
         style={{ marginBottom: '20px' }}
       >
-        {Object.keys(iconList).map(item => {
+        {Object.keys(ListIcons).map(item => {
           return (
             <MenuItem key={item} value={item}>
               <ListIconType label={item} />

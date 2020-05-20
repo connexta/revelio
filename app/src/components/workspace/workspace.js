@@ -142,7 +142,6 @@ export default props => {
   })
 
   const saveListsToWorkspace = list => {
-    debugger
     saveWorkspace({ lists: [...lists, list] })
   }
 

@@ -4,9 +4,8 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import Popover from '@material-ui/core/Popover'
 import Typography from '@material-ui/core/Typography'
-import ArchiveIcon from '@material-ui/icons/Archive'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import FolderIcon from '@material-ui/icons/Folder'
+import ListIcons from './icons'
 import gql from 'graphql-tag'
 import { ListCreatePopover } from './list-create'
 import useAnchorEl from '../../react-hooks/use-anchor-el'
@@ -31,20 +30,15 @@ const searchByID = gql`
   }
 `
 
-const ListIconMap = {
-  archive: ArchiveIcon,
-  folder: FolderIcon,
-}
-
 const ListTitle = props => {
   const { title, icon } = props
-  const Icon = ListIconMap[icon]
+  const Icon = ListIcons[icon]
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       {Icon ? (
         <React.Fragment>
-          <Icon /> <div style={{ width: 5 }} />
+          {Icon} <div style={{ width: 5 }} />
         </React.Fragment>
       ) : null}
 

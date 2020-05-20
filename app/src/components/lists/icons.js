@@ -1,6 +1,11 @@
 import React from 'react'
 import SvgIcon from '@material-ui/core/SvgIcon'
 import { makeStyles } from '@material-ui/core/styles'
+import FolderIcon from '@material-ui/icons/Folder'
+import ArchiveIcon from '@material-ui/icons/Archive'
+import CodeIcon from '@material-ui/icons/Code'
+import ListIcon from '@material-ui/icons/List'
+import VideoIcon from '@material-ui/icons/Videocam'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -8,7 +13,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export const AudioIcon = props => {
+const AudioIcon = props => {
   const style = useStyles()
   return (
     <SvgIcon {...props}>
@@ -49,7 +54,7 @@ export const AudioIcon = props => {
   )
 }
 
-export const ImageIcon = props => {
+const ImageIcon = props => {
   const style = useStyles()
   return (
     <SvgIcon {...props}>
@@ -86,7 +91,7 @@ export const ImageIcon = props => {
   )
 }
 
-export const TargetIcon = props => {
+const TargetIcon = props => {
   const style = useStyles()
   return (
     <SvgIcon {...props}>
@@ -113,68 +118,13 @@ export const TargetIcon = props => {
   )
 }
 
-export const VideoIcon = props => {
-  const style = useStyles()
-  return (
-    <SvgIcon {...props}>
-      <path
-        fill="none"
-        className={style.root}
-        d="M 17.28,13.79
-           C 17.28,13.79 17.29,15.73 17.29,15.73
-             17.29,15.73 15.97,14.76 15.97,14.76
-             15.97,14.76 17.28,13.79 17.28,13.79M 18.39,11.55
-           C 18.39,11.55 14.10,14.79 14.10,14.79
-             14.10,14.79 14.10,14.79 14.10,14.79
-             14.10,14.79 18.43,18.00 18.43,18.00
-             18.43,18.00 18.39,11.55 18.39,11.55
-             18.39,11.55 18.39,11.55 18.39,11.55 Z
-           M 15.03,14.78
-           C 15.03,14.78 17.84,12.68 17.84,12.68
-             17.84,12.68 17.85,16.88 17.85,16.88
-             17.85,16.88 15.03,14.78 15.03,14.78 Z
-           M 11.82,11.62
-           C 12.45,11.62 12.98,12.13 12.98,12.78
-             12.98,12.78 12.98,16.77 12.98,16.77
-             12.98,17.40 12.46,17.92 11.82,17.92
-             11.82,17.92 7.83,17.92 7.83,17.92
-             7.20,17.92 6.67,17.41 6.67,16.77
-             6.67,16.77 6.67,12.77 6.67,12.77
-             6.67,12.13 7.18,11.61 7.83,11.61
-             7.83,11.61 11.82,11.61 11.82,11.61M 11.82,10.50
-           C 11.82,10.50 7.83,10.50 7.83,10.50
-             6.58,10.50 5.55,11.52 5.55,12.77
-             5.55,12.77 5.55,16.75 5.55,16.75
-             5.55,18.00 6.57,19.04 7.83,19.04
-             7.83,19.04 11.82,19.04 11.82,19.04
-             13.07,19.04 14.10,18.02 14.10,16.75
-             14.10,16.75 14.10,12.77 14.10,12.77
-             14.10,11.52 13.08,10.50 11.82,10.50
-             11.82,10.50 11.82,10.50 11.82,10.50 Z
-           M 7.83,18.48
-           C 6.88,18.48 6.12,17.71 6.12,16.77
-             6.12,16.77 6.12,12.77 6.12,12.77
-             6.12,11.82 6.88,11.05 7.83,11.05
-             7.83,11.05 11.82,11.05 11.82,11.05
-             12.77,11.05 13.53,11.82 13.53,12.77
-             13.53,12.77 13.53,16.75 13.53,16.75
-             13.53,17.70 12.77,18.46 11.82,18.46
-             11.82,18.46 7.83,18.46 7.83,18.46
-             7.83,18.46 7.83,18.48 7.83,18.48 Z
-           M 14.50,7.75
-           C 14.50,7.75 19.53,7.75 19.53,7.75
-             19.53,7.75 17.01,5.64 17.01,5.64
-             17.01,5.64 14.50,3.51 14.50,3.51
-             14.50,3.51 14.50,7.75 14.50,7.75 Z
-           M 19.53,20.49
-           C 19.53,20.49 4.47,20.49 4.47,20.49
-             4.47,20.49 4.47,3.51 4.47,3.51
-             4.47,3.51 14.16,3.51 14.16,3.51
-             14.16,3.51 14.50,3.51 14.50,3.51
-             14.50,3.51 17.01,5.64 17.01,5.64
-             17.01,5.64 19.53,7.88 19.53,7.88
-             19.53,7.88 19.53,20.49 19.53,20.49 Z"
-      />
-    </SvgIcon>
-  )
+export default {
+  folder: <FolderIcon />,
+  code: <CodeIcon />,
+  archive: <ArchiveIcon />,
+  tasks: <ListIcon />,
+  audio: <AudioIcon />,
+  image: <ImageIcon />,
+  target: <TargetIcon />,
+  video: <VideoIcon />,
 }
