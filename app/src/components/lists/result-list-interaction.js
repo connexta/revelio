@@ -47,12 +47,12 @@ const List = props => {
         checked={checked}
         onClick={() => {
           setChecked(!checked)
-          if(list.list_bookmarks) {
-          const indexOfId = list.list_bookmarks.indexOf(id)
-          indexOfId === -1
-            ? list.list_bookmarks.push(id)
-            : list.list_bookmarks.splice(indexOfId, 1)
-          setList(list)
+          if (list.list_bookmarks) {
+            const indexOfId = list.list_bookmarks.indexOf(id)
+            indexOfId === -1
+              ? list.list_bookmarks.push(id)
+              : list.list_bookmarks.splice(indexOfId, 1)
+            setList(list)
           } else {
             list.list_bookmarks = [id]
             setList(list)
@@ -75,7 +75,9 @@ export const ResultListInteraction = props => {
         <FormLabel>Add/Remove from lists</FormLabel>
         <Divider />
         {lists.map((list, index) => {
-          const selected = list.list_bookmarks ? list.list_bookmarks.includes(id) : false
+          const selected = list.list_bookmarks
+            ? list.list_bookmarks.includes(id)
+            : false
           return (
             <List
               key={index}
@@ -87,7 +89,7 @@ export const ResultListInteraction = props => {
           )
         })}
         <Divider />
-        <CreateNewList setList={setList} saveLists={saveLists}/>
+        <CreateNewList setList={setList} saveLists={saveLists} />
       </Box>
     )
   }
